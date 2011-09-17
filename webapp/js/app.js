@@ -251,8 +251,8 @@ States.authorized = function () {
 	});
 };
 States.unauthorized = function () {
-	// warm up instances (HTTP+HTTPS)
-	new Image().src = 'oauth2';
+	// wake up an instance in background
+	new Image().src = 'wake';
 };
 $(function () {
 	// global error handler
