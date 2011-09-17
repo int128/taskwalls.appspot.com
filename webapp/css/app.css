@@ -7,7 +7,7 @@
 	font-family: verdana, arial, sans-serif;
 }
 
-html, body {
+html,body {
 	height: 100%;
 }
 
@@ -57,7 +57,7 @@ a:VISITED {
 }
 
 #content {
-	padding-bottom: 5em;
+	
 }
 
 #footer {
@@ -69,9 +69,7 @@ a:VISITED {
 	color: dimgray;
 	font-size: 90%;
 	text-align: center;
-	background: silver;
-	background: -moz-linear-gradient(top, white, silver);
-	background: -webkit-gradient(linear, left top, left bottom, from(white), to(silver));
+	background-color: rgba(255, 255, 255, 0.8);
 }
 
 .authorized,.unauthorized {
