@@ -4,7 +4,7 @@
  * (c) hidetake.org, 2011.
  */
 * {
-	font-family: verdana, arial, sans-serif;
+	font-family: 'trebuchet ms', sans-serif;
 }
 
 html,body {
@@ -14,7 +14,7 @@ html,body {
 body {
 	margin: 0;
 	padding: 0;
-	font-size: 90%;
+	font-size: 13px;
 }
 
 a:LINK {
@@ -170,6 +170,10 @@ tr.past {
 	
 }
 
+tr.today>td.weekday-column,tr.today>td.date-column {
+	font-weight: bold;
+}
+
 tr.w0>td.weekday-column,tr.w0>td.date-column {
 	color: red;
 }
@@ -213,7 +217,8 @@ tr.w1>td.task-column {
 }
 
 .task.task-status-completed {
-	border-left: solid 5px khaki;
+	border-left: solid 5px #ddd;
+	color: #888;
 }
 
 .task.ui-draggable-dragging {
@@ -228,7 +233,7 @@ tr.w1>td.task-column {
 .task>.task-tag {
 	float: right;
 	font-size: 120%;
-	color: silver;
+	color: #888;
 }
 
 .task-drag-hover {
