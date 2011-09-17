@@ -27,12 +27,15 @@ Tasklists.get = function (callback) {
  * @class represents tasks model
  * @param {String} tasklistID task list ID
  * @param {Array} items
+ * @param {Array} tags
  * @property {String} tasklistID task list ID
  * @property {Array} items
+ * @property {Array} tags
  */
-function Tasks (tasklistID, items) {
+function Tasks (tasklistID, items, tags) {
 	this.tasklistID = tasklistID;
 	this.items = items;
+	this.tags = tags;
 };
 /**
  * Get tasks from server.
@@ -41,7 +44,7 @@ function Tasks (tasklistID, items) {
  */
 Tasks.get = function (tasklistID, callback) {
 	$.get('tasks/list', {tasklistID: tasklistID}, function (response) {
-		var instance = new Tasks(tasklistID, response.items);
+		var instance = new Tasks(tasklistID, response.items, response.tags);
 		if ($.isFunction(callback)) {
 			callback(instance);
 		}
@@ -119,9 +122,38 @@ function TasklistsUI () {};
  */
 TasklistsUI.load = function (tasklists) {
 	$.each(tasklists.items, function (i, tasklist) {
-		$('#tasklists').append($('<option/>')
+		$('#tasklists').append($('<span/>')
 				.attr('value', tasklist.id)
 				.text(tasklist.title));
+	});
+};
+/**
+ * @class UI element of tags
+ */
+function TagsUI () {};
+/**
+ * @param {Tasks} tasks
+ */
+TagsUI.load = function (tasks) {
+	$('#tags').empty();
+	$('.tag-bubble').hide();
+	$.each(tasks.tags, function (i, tag) {
+		$('<span/>').text(tag)
+			.mouseenter(function () {
+				$('.tag-bubble>.body>.name').text(tag);
+				$('.tag-bubble')
+					.css('left', $(this).position().left)
+					.show()
+					.mouseenter(function () {
+						$(this).clearQueue();
+					})
+					.mouseleave(function () {
+						$(this).fadeOut();
+					});
+			}).mouseleave(function () {
+				$('.tag-bubble').delay(3000).fadeOut();
+			})
+			.appendTo($('#tags'));
 	});
 };
 /**
@@ -145,7 +177,7 @@ TasksUI.load = function (tasks) {
 			.append($('<td class="month-column"/>')
 					.append($('<div/>').text(date.getMonth() + 1)))
 			.append($('<td class="weekday-column"/>')
-					.append($.message('weekday' + date.getDay())))
+					.append($.resource('weekday' + date.getDay())))
 			.append($('<td class="date-column"/>')
 					.append($('<div/>').text(date.getDate())))
 			.append($('<td class="task-column"/>'))
@@ -232,8 +264,8 @@ DateUtil.futureOrPast = function (date, future, today, past) {
 };
 $(function () {
 	$.extend({
-		message: function (key) {
-			return $('#m-' + key).clone(true).removeClass('messages');
+		resource: function (key) {
+			return $('#rc-' + key).clone(true).removeClass('resource').removeAttr('id');
 		},
 		isDevelopment: function () {
 			return location.hostname == 'localhost';
@@ -248,6 +280,7 @@ States.authorized = function () {
 	});
 	Tasks.getDefault(function (tasks) {
 		TasksUI.load(tasks);
+		TagsUI.load(tasks);
 	});
 };
 States.unauthorized = function () {
