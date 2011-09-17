@@ -144,14 +144,14 @@ TagsUI.load = function (tasks) {
 				$('.tag-bubble')
 					.css('left', $(this).position().left)
 					.show()
+					.clearQueue()
 					.mouseenter(function () {
-						$(this).clearQueue();
-					})
-					.mouseleave(function () {
-						$(this).fadeOut();
+						$(this).clearQueue()
+							.show()
+							.mouseleave(function () {
+								$(this).fadeOut();
+							});
 					});
-			}).mouseleave(function () {
-				$('.tag-bubble').delay(3000).fadeOut();
 			})
 			.appendTo($('#tags'));
 	});

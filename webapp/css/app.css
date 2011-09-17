@@ -49,7 +49,7 @@ a:VISITED {
 }
 
 #myheader>h1:FIRST-LETTER {
-	font-size: 120%;
+	font-size: 130%;
 }
 
 #content {
@@ -133,7 +133,7 @@ a:VISITED {
 
 #tags>span {
 	margin-right: 10px;
-	border-bottom: solid 2px gold;
+	border-bottom: solid 3px gold;
 }
 
 .tag-bubble {
@@ -144,7 +144,7 @@ a:VISITED {
 .tag-bubble>.head {
 	content: '';
 	position: relative;
-	top: 5px;
+	top: 3px;
 	left: 15px;
 	width: 0;
 	height: 0;
@@ -156,7 +156,7 @@ a:VISITED {
 
 .tag-bubble>.body {
 	position: relative;
-	top: 5px;
+	top: 3px;
 	left: -100px;
 	min-width: 200px;
 	min-height: 100px;
@@ -244,6 +244,7 @@ tr.w1>td.task-column {
 .task {
 	float: left;
 	width: 200px;
+	min-height: 50px;
 	margin-left: 15px;
 	padding: 5px;
 	border: solid 1px #ddd;
