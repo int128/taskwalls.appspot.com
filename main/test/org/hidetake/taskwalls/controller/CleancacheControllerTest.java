@@ -1,8 +1,8 @@
-package org.hidetake.lab.controller.tasks;
+package org.hidetake.taskwalls.controller;
 
 import javax.servlet.http.Cookie;
 
-import org.hidetake.lab.service.oauth2.CachedToken;
+import org.hidetake.taskwalls.service.oauth2.CachedToken;
 import org.junit.Test;
 import org.slim3.memcache.Memcache;
 import org.slim3.tester.ControllerTestCase;
@@ -28,7 +28,7 @@ public class CleancacheControllerTest extends ControllerTestCase
 		assertThat(Memcache.<CachedToken> get("hogeSessionKey").getRefreshToken(),
 				is("hogeRefresh"));
 
-		tester.start("/tasks/cleancache");
+		tester.start("/cleancache");
 		CleancacheController controller = tester.getController();
 		assertThat(controller, is(notNullValue()));
 		assertThat(tester.isRedirect(), is(false));

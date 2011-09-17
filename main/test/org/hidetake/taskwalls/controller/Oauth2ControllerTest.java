@@ -1,4 +1,4 @@
-package org.hidetake.lab.controller.tasks;
+package org.hidetake.taskwalls.controller;
 
 import org.junit.Test;
 import org.slim3.tester.ControllerTestCase;
@@ -13,7 +13,7 @@ public class Oauth2ControllerTest extends ControllerTestCase
 	@Test
 	public void withoutCode() throws Exception
 	{
-		tester.start("/tasks/oauth2");
+		tester.start("/oauth2");
 		Oauth2Controller controller = tester.getController();
 		assertThat(controller, is(notNullValue()));
 		assertThat(tester.isRedirect(), is(false));

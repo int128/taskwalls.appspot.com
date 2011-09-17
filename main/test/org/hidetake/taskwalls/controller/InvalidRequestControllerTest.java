@@ -1,4 +1,4 @@
-package org.hidetake.lab.controller.tasks;
+package org.hidetake.taskwalls.controller;
 
 import org.slim3.tester.ControllerTestCase;
 import org.junit.Test;
@@ -12,7 +12,7 @@ public class InvalidRequestControllerTest extends ControllerTestCase
 	@Test
 	public void run() throws Exception
 	{
-		tester.start("/tasks/invalidRequest");
+		tester.start("/invalidRequest");
 		InvalidRequestController controller = tester.getController();
 		assertThat(controller, is(notNullValue()));
 		assertThat(tester.isRedirect(), is(false));

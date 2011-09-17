@@ -1,4 +1,4 @@
-package org.hidetake.lab.controller.tasks;
+package org.hidetake.taskwalls.controller;
 
 import javax.servlet.http.Cookie;
 
@@ -14,7 +14,7 @@ public class LogoutControllerTest extends ControllerTestCase
 	public void run() throws Exception
 	{
 		tester.request.addCookie(new Cookie(ControllerBase.COOKIE_KEY_SESSIONID, "hogeSessionKey"));
-		tester.start("/tasks/logout");
+		tester.start("/logout");
 		LogoutController controller = tester.getController();
 		assertThat(controller, is(notNullValue()));
 		assertThat(tester.isRedirect(), is(true));
