@@ -1,0 +1,206 @@
+@CHARSET "UTF-8";
+/*
+ * app.css
+ * (c) hidetake.org, 2011.
+ */
+a:LINK {
+	color: dimgray;
+}
+
+a:VISITED {
+	color: dimgray;
+}
+
+.messages {
+	display: none;
+}
+
+#myheader {
+	position: fixed;
+	z-index: 10;
+	top: 0;
+	left: 0;
+	width: 100%;
+	background: rgba(255, 255, 255, 0.9);
+	box-shadow: 0 0 3px 3px rgba(0, 0, 0, 0.3);
+}
+
+#myheader>h1 {
+	float: left;
+	margin: .5em;
+	padding: 0;
+	font-size: 100%;
+	text-transform: uppercase;
+}
+
+#myheader>h1:FIRST-LETTER {
+	font-size: 120%;
+}
+
+#content {
+	padding: 0;
+	padding-bottom: 5em;
+}
+
+.authorized,.unauthorized {
+	display: none;
+}
+
+.development {
+	display: none;
+}
+
+#loading {
+	display: none;
+	width: 100px;
+	height: 100px;
+	position: fixed;
+	top: 50%;
+	left: 50%;
+	margin-top: -50px;
+	margin-left: -50px;
+	background-color: rgba(0, 0, 0, 0.6);
+	background-image: url('/css/loading2.gif');
+	background-repeat: no-repeat;
+	background-position: center;
+	border-radius: 5px;
+	-moz-border-radius: 5px;
+}
+
+#global-error-message {
+	display: none;
+	width: 400px;
+	height: auto;
+	position: fixed;
+	top: 50%;
+	left: 50%;
+	margin-top: -20px;
+	margin-left: -200px;
+	background-color: rgba(0, 0, 0, 0.6);
+	border-radius: 5px;
+	-moz-border-radius: 5px;
+	color: white;
+	text-align: center;
+	padding: 1em;
+}
+
+/*
+ * Login.
+ */
+#login-notice {
+	margin-top: 5em;
+	text-align: center;
+}
+
+/*
+ * Header.
+ */
+.header-stack {
+	float: right;
+	margin: .5em;
+}
+
+/*
+ * Tasks grid.
+ */
+#calendar {
+	border-collapse: collapse;
+	width: 100%;
+}
+
+#calendar>tbody>tr>td {
+	vertical-align: middle;
+}
+
+td.month-column {
+	padding-left: 15px;
+	padding-right: 15px;
+	text-align: center;
+	color: transparent;
+}
+
+tr.d1>td.month-column {
+	color: black;
+}
+
+tr.d1>td.month-column>div {
+	font-size: 200%;
+	text-shadow: #aaa 1px 1px 1px;
+}
+
+tr.d1 {
+	border-top: solid 1px #ccc;
+}
+
+tr.today {
+	background: #eee;
+}
+
+tr.past {
+	
+}
+
+tr.w0>td.weekday-column,tr.w0>td.date-column {
+	color: red;
+}
+
+td.weekday-column {
+	padding-right: 15px;
+	text-align: right;
+	color: dimgray;
+	text-shadow: #ddd 1px 1px 1px;
+}
+
+td.date-column {
+	padding-right: 15px;
+	text-align: right;
+	font-size: 120%;
+	text-shadow: #ddd 1px 1px 1px;
+}
+
+td.task-column {
+	border-top: solid 1px #ccc;
+}
+
+tr.w1>td.task-column {
+	border-top: solid 1px #888;
+}
+
+/*
+ * A task.
+ */
+.task {
+	float: left;
+	width: 200px;
+	margin-left: 15px;
+	padding: 5px;
+	border: solid 1px #ddd;
+	border-left: solid 5px gold;
+	border-radius: 3px;
+	-moz-border-radius: 3px;
+	background: -moz-linear-gradient(top, #fff, #ffd);
+	background: -webkit-gradient(linear, left top, left bottom, from(#fff), to(#ffd) );
+}
+
+.task.task-status-completed {
+	border-left: solid 5px khaki;
+}
+
+.task.ui-draggable-dragging {
+	z-index: 3;
+	box-shadow: 0 0 5px 5px rgba(0, 0, 0, 0.3);
+}
+
+.task>.task-iscompleted {
+	
+}
+
+.task>.task-tag {
+	float: right;
+	font-size: 120%;
+	color: silver;
+}
+
+.task-drag-hover {
+	
+}
