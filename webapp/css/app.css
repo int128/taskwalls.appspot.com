@@ -3,6 +3,20 @@
  * app.css
  * (c) hidetake.org, 2011.
  */
+* {
+	font-family: verdana, arial, sans-serif;
+}
+
+html, body {
+	height: 100%;
+}
+
+body {
+	margin: 0;
+	padding: 0;
+	font-size: 90%;
+}
+
 a:LINK {
 	color: dimgray;
 }
@@ -13,6 +27,11 @@ a:VISITED {
 
 .messages {
 	display: none;
+}
+
+#root {
+	position: relative;
+	min-height: 100%;
 }
 
 #myheader {
@@ -38,8 +57,21 @@ a:VISITED {
 }
 
 #content {
-	padding: 0;
 	padding-bottom: 5em;
+}
+
+#footer {
+	position: absolute;
+	bottom: 0;
+	width: 100%;
+	padding-top: 1em;
+	padding-bottom: 1em;
+	color: dimgray;
+	font-size: 90%;
+	text-align: center;
+	background: silver;
+	background: -moz-linear-gradient(top, white, silver);
+	background: -webkit-gradient(linear, left top, left bottom, from(white), to(silver));
 }
 
 .authorized,.unauthorized {

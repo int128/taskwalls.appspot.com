@@ -306,30 +306,10 @@ $(function () {
 		if ($.isFunction(States.unauthorized)) {
 			States.unauthorized();
 		}
-		var sslbase = 'https://lab-hidetake-org.appspot.com';
-		if ($.isDevelopment()) {
-			sslbase = location.protocol + '//' + location.host;
-		}
+		var sslbase = location.protocol + '//' + location.host;
 		$('a.session-login').attr('href', 'https://accounts.google.com/o/oauth2/auth?redirect_uri='
 				+ (sslbase + location.pathname + 'oauth2')
 				+ '&response_type=code&scope=https://www.googleapis.com/auth/tasks&client_id=965159379100.apps.googleusercontent.com');
 		$('.unauthorized').hide().show();
 	}
 });
-
-
-
-
-
-
-// analytics
-if (location.hostname != 'localhost') {
-var _gaq = _gaq || [];
-_gaq.push(['_setAccount', 'UA-3232369-2']);
-_gaq.push(['_trackPageview']);
-(function() {
-  var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
-  ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
-  var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
-})();
-}
