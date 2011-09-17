@@ -16,9 +16,8 @@ public class Oauth2ControllerTest extends ControllerTestCase
 		tester.start("/oauth2");
 		Oauth2Controller controller = tester.getController();
 		assertThat(controller, is(notNullValue()));
-		assertThat(tester.isRedirect(), is(false));
-		assertThat(tester.getDestinationPath(), is(nullValue()));
-		assertThat(tester.response.getStatus(), is(403));
+		assertThat(tester.isRedirect(), is(true));
+		assertThat(tester.getDestinationPath(), is("./"));
 	}
 
 	// @Test

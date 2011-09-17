@@ -34,8 +34,7 @@ public class Oauth2Controller extends Controller
 	{
 		String authorizationCode = asString("code");
 		if (authorizationCode == null) {
-			response.sendError(403);
-			return null;
+			return redirect("./");
 		}
 
 		// exchange authorization code and token
