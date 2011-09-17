@@ -1,8 +1,6 @@
 package org.hidetake.taskwalls.controller;
 
 import java.io.IOException;
-import java.net.URI;
-import java.net.URISyntaxException;
 import java.security.MessageDigest;
 import java.util.UUID;
 import java.util.logging.Logger;
@@ -30,7 +28,6 @@ public class Oauth2Controller extends Controller
 {
 
 	private static final Logger logger = Logger.getLogger(Oauth2Controller.class.getName());
-	private static final String HOME_PATH = "./";
 
 	@Override
 	public Navigation run() throws Exception
@@ -50,7 +47,7 @@ public class Oauth2Controller extends Controller
 				Constants.clientCredential.getClientId(),
 				Constants.clientCredential.getClientSecret(),
 				authorizationCode,
-				getOAuth2RedirectURI());
+				request.getRequestURL().toString());
 		AccessTokenResponse tokenResponse = execute(grant);
 		CachedToken token = new CachedToken(tokenResponse.accessToken, tokenResponse.refreshToken);
 
@@ -67,7 +64,7 @@ public class Oauth2Controller extends Controller
 		String sessionKey = new String(encoded, 0, encoded.length - 1);
 		Memcache.put(sessionKey, token);
 
-		return redirect(getHomeURI() + "#s=" + sessionKey);
+		return redirect("./#s=" + sessionKey);
 	}
 
 	@Override
@@ -115,32 +112,6 @@ public class Oauth2Controller extends Controller
 		}
 		// 3rd retry
 		return grant.execute();
-	}
-
-	/**
-	 * Get redirect URI for OAuth2 authorization.
-	 * @return HTTPS URI
-	 */
-	private String getOAuth2RedirectURI()
-	{
-		if (isDevelopment()) {
-			return request.getRequestURL().toString();
-		}
-		return Constants.HTTPS_BASE + request.getRequestURI();
-	}
-
-	/**
-	 * Get home URI.
-	 * @return HTTP URI
-	 * @throws URISyntaxException
-	 */
-	private String getHomeURI() throws URISyntaxException
-	{
-		if (isDevelopment()) {
-			return new URI(request.getRequestURL().toString()).resolve(HOME_PATH).toString();
-		}
-		return new URI(Constants.HTTP_BASE).resolve(request.getRequestURI()).resolve(HOME_PATH)
-				.toString();
 	}
 
 }
