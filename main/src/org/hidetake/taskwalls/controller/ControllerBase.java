@@ -78,7 +78,12 @@ public abstract class ControllerBase extends Controller
 	 */
 	protected Navigation jsonResponse(GenericJson object) throws IOException
 	{
+		if (!"XMLHttpRequest".equals(request.getHeader("X-Requested-With"))) {
+			logger.warning("X-Requested-With did not match XHR");
+			return null;
+		}
 		String json = GenericJsonWrapper.toString(object);
+		response.setHeader("X-Content-Type-Options", "nosniff");
 		response.setContentType("application/json");
 		response.setCharacterEncoding("UTF-8");
 		response.getWriter().append(json);
