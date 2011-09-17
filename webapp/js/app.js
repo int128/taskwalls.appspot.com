@@ -30,7 +30,7 @@ Tasklists.get = function (callback) {
  * @param {Array} tags
  * @property {String} tasklistID task list ID
  * @property {Array} items
- * @property {Array} tags
+ * @property {Tags} tags
  */
 function Tasks (tasklistID, items, tags) {
 	this.tasklistID = tasklistID;
@@ -44,7 +44,7 @@ function Tasks (tasklistID, items, tags) {
  */
 Tasks.get = function (tasklistID, callback) {
 	$.get('tasks/list', {tasklistID: tasklistID}, function (response) {
-		var instance = new Tasks(tasklistID, response.items, response.tags);
+		var instance = new Tasks(tasklistID, response.items, new Tags(response.tags));
 		if ($.isFunction(callback)) {
 			callback(instance);
 		}
@@ -112,6 +112,12 @@ Tasks.prototype.days = function (marginDays) {
 	}
 	return result;
 };
+/**
+ * @class represents tags of task
+ */
+function Tags (items) {
+	this.items = items;
+};
 // UI
 /**
  * @class UI element of {@link Tasklists}.
@@ -132,12 +138,12 @@ TasklistsUI.load = function (tasklists) {
  */
 function TagsUI () {};
 /**
- * @param {Tasks} tasks
+ * @param {Tags} tags
  */
-TagsUI.load = function (tasks) {
+TagsUI.load = function (tags) {
 	$('#tags').empty();
 	$('.tag-bubble').hide();
-	$.each(tasks.tags, function (i, tag) {
+	$.each(tags.items, function (i, tag) {
 		$('<span/>').text(tag)
 			.mouseenter(function () {
 				$('.tag-bubble>.body>.name').text(tag);
@@ -184,7 +190,8 @@ TasksUI.load = function (tasks) {
 			.appendTo($('#calendar>tbody'));
 	});
 	$.each(tasks.items, function (i, task) {
-		new TaskUI(task).appendTo($('#t' + task.dueTime + '>td.task-column'));
+		var taskUI = new TaskUI(task);
+		$('#t' + task.dueTime + '>td.task-column').append(taskUI.element);
 	});
 	$('.task-column').droppable({
 		accept: '.task',
@@ -203,13 +210,6 @@ function TaskUI (task) {
 	this.element = $('<div class="task"/>');
 	this.refresh(task);
 }
-/**
- * Append this element.
- * @param element
- */
-TaskUI.prototype.appendTo = function (element) {
-	this.element.appendTo(element);
-};
 /**
  * Refresh view.
  * @param task JSON task
@@ -278,9 +278,10 @@ States.authorized = function () {
 	Tasklists.get(function (tasklists) {
 		TasklistsUI.load(tasklists);
 	});
+	/** @param {Tasks} tasks */
 	Tasks.getDefault(function (tasks) {
 		TasksUI.load(tasks);
-		TagsUI.load(tasks);
+		TagsUI.load(tasks.tags);
 	});
 };
 States.unauthorized = function () {
