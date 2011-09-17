@@ -16,7 +16,7 @@ function Tasklists (items) {
  * @param {Function} callback async callback function
  */
 Tasklists.get = function (callback) {
-	$.get('tasklists/list', null, function (response) {
+	$.getJSON('tasklists/list', null, function (response) {
 		var instance = new Tasklists(response.items);
 		if ($.isFunction(callback)) {
 			callback(instance);
@@ -43,7 +43,7 @@ function Tasks (tasklistID, items, tags) {
  * @param {Function} callback async callback function
  */
 Tasks.get = function (tasklistID, callback) {
-	$.get('tasks/list', {tasklistID: tasklistID}, function (response) {
+	$.getJSON('tasks/list', {tasklistID: tasklistID}, function (response) {
 		var instance = new Tasks(tasklistID, response.items, new Tags(response.tags));
 		if ($.isFunction(callback)) {
 			callback(instance);
