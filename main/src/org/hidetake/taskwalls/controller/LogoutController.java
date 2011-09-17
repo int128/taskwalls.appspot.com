@@ -1,4 +1,4 @@
-package org.hidetake.taskwalls.controller.tasks;
+package org.hidetake.taskwalls.controller;
 
 import javax.servlet.http.Cookie;
 
