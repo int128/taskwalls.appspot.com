@@ -1,4 +1,4 @@
-package org.hidetake.lab.util;
+package org.hidetake.taskwalls.util;
 
 import java.io.IOException;
 import java.io.InputStream;

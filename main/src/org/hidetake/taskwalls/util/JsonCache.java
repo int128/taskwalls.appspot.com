@@ -1,9 +1,9 @@
-package org.hidetake.lab.util;
+package org.hidetake.taskwalls.util;
 
 import java.io.IOException;
 import java.io.Serializable;
 
-import org.hidetake.lab.service.oauth2.JacksonFactoryLocator;
+import org.hidetake.taskwalls.service.oauth2.JacksonFactoryLocator;
 import org.slim3.memcache.Memcache;
 import org.slim3.util.AppEngineUtil;
 

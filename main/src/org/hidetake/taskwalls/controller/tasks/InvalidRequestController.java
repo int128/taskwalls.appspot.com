@@ -1,4 +1,4 @@
-package org.hidetake.lab.controller.tasks;
+package org.hidetake.taskwalls.controller.tasks;
 
 import org.slim3.controller.Controller;
 import org.slim3.controller.Navigation;

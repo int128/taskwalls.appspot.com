@@ -1,14 +1,14 @@
-package org.hidetake.lab.controller.tasks;
+package org.hidetake.taskwalls.controller.tasks;
 
 import java.io.IOException;
 import java.util.logging.Logger;
 
 import javax.servlet.http.Cookie;
 
-import org.hidetake.lab.service.oauth2.CachedToken;
-import org.hidetake.lab.service.oauth2.JacksonFactoryLocator;
-import org.hidetake.lab.service.oauth2.NetHttpTransportLocator;
-import org.hidetake.lab.util.GenericJsonWrapper;
+import org.hidetake.taskwalls.service.oauth2.CachedToken;
+import org.hidetake.taskwalls.service.oauth2.JacksonFactoryLocator;
+import org.hidetake.taskwalls.service.oauth2.NetHttpTransportLocator;
+import org.hidetake.taskwalls.util.GenericJsonWrapper;
 import org.slim3.controller.Controller;
 import org.slim3.controller.Navigation;
 import org.slim3.memcache.Memcache;

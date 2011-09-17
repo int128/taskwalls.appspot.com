@@ -1,8 +1,8 @@
-package org.hidetake.lab.controller.tasks;
+package org.hidetake.taskwalls.controller.tasks;
 
 import java.util.logging.Logger;
 
-import org.hidetake.lab.service.oauth2.CachedToken;
+import org.hidetake.taskwalls.service.oauth2.CachedToken;
 import org.slim3.controller.Navigation;
 import org.slim3.memcache.Memcache;
 import org.slim3.util.AppEngineUtil;

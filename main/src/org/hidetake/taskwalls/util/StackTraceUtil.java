@@ -1,4 +1,4 @@
-package org.hidetake.lab.util;
+package org.hidetake.taskwalls.util;
 
 import java.io.PrintWriter;
 import java.io.StringWriter;
