@@ -8,6 +8,7 @@ import javax.servlet.http.Cookie;
 import org.hidetake.taskwalls.service.oauth2.CachedToken;
 import org.hidetake.taskwalls.service.oauth2.JacksonFactoryLocator;
 import org.hidetake.taskwalls.service.oauth2.NetHttpTransportLocator;
+import org.hidetake.taskwalls.util.AjaxPreconditions;
 import org.hidetake.taskwalls.util.GenericJsonWrapper;
 import org.slim3.controller.Controller;
 import org.slim3.controller.Navigation;
@@ -71,17 +72,18 @@ public abstract class ControllerBase extends Controller
 	}
 
 	/**
-	 * Represents JSON response navigation.
+	 * Returns JSON response.
+	 * This method checks the request is XHR.
 	 * @param object object to serialize as JSON
 	 * @return always null
 	 * @throws IOException
 	 */
 	protected Navigation jsonResponse(GenericJson object) throws IOException
 	{
-		if (!"XMLHttpRequest".equals(request.getHeader("X-Requested-With"))) {
-			logger.warning("X-Requested-With did not match XHR");
+		if (!AjaxPreconditions.isXHR(request)) {
 			return null;
 		}
+
 		String json = GenericJsonWrapper.toString(object);
 		response.setHeader("X-Content-Type-Options", "nosniff");
 		response.setContentType("application/json");

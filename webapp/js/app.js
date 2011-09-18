@@ -284,6 +284,8 @@ States.authorized = function () {
 		TagsUI.load(tasks.tags);
 	});
 };
+States.authorizing = function () {
+};
 States.unauthorized = function () {
 	// wake up an instance in background
 	new Image().src = 'wake';
@@ -320,14 +322,7 @@ $(function () {
 		$('.development').hide().show();
 	}
 	// determine authorization state
-	var q = location.hash.match(/^#(s=.*)/);
-	if (q) {
-		// step2: receive session key via hash
-		document.cookie = q[1];
-		location.hash = '';
-		location.replace(location.pathname);
-	}
-	else if (document.cookie.match(/^s=|; s=/)) {
+	if (document.cookie.match(/^s=|; s=/)) {
 		// step3: authorized
 		if ($.isFunction(States.authorized)) {
 			States.authorized();
@@ -336,14 +331,28 @@ $(function () {
 		$('.authorized').hide().show();
 	}
 	else {
-		// step1: unauthorized
-		if ($.isFunction(States.unauthorized)) {
-			States.unauthorized();
+		var q = location.search.match(/\?code=(.*)/);
+		if (q) {
+			// step2: received authorization code
+			if ($.isFunction(States.authorizing)) {
+				States.authorizing();
+			}
+			$.post('oauth2', {code: q[1]}, function () {
+				location.replace(location.pathname);
+			});
 		}
-		var sslbase = location.protocol + '//' + location.host;
-		$('a.session-login').attr('href', 'https://accounts.google.com/o/oauth2/auth?redirect_uri='
-				+ (sslbase + location.pathname + 'oauth2')
-				+ '&response_type=code&scope=https://www.googleapis.com/auth/tasks&client_id=965159379100.apps.googleusercontent.com');
-		$('.unauthorized').hide().show();
+		else if (location.search == '?error=access_denied') {
+			location.replace(location.pathname);
+		}
+		else {
+			// step1: unauthorized
+			if ($.isFunction(States.unauthorized)) {
+				States.unauthorized();
+			}
+			$('a.session-login').attr('href', 'https://accounts.google.com/o/oauth2/auth?redirect_uri='
+					+ (location.protocol + '//' + location.host + location.pathname)
+					+ '&response_type=code&scope=https://www.googleapis.com/auth/tasks&client_id=965159379100.apps.googleusercontent.com');
+			$('.unauthorized').hide().show();
+		}
 	}
 });
