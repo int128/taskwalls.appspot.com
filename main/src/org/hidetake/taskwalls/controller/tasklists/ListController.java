@@ -1,6 +1,7 @@
 package org.hidetake.taskwalls.controller.tasklists;
 
 import org.hidetake.taskwalls.controller.ControllerBase;
+import org.hidetake.taskwalls.util.AjaxPreconditions;
 import org.hidetake.taskwalls.util.JsonCache;
 import org.slim3.controller.Navigation;
 
@@ -20,6 +21,9 @@ public class ListController extends ControllerBase
 	public Navigation run() throws Exception
 	{
 		cache.productionPolicy.setExpiration(Expiration.byDeltaSeconds(10));
+		if (!AjaxPreconditions.isXHR(request)) {
+			return null;
+		}
 
 		JsonCache.Entry entry = cache.keys(getClass(), sessionKey);
 		TaskLists taskLists = entry.get(TaskLists.class);

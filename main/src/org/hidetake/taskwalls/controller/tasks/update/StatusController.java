@@ -6,6 +6,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import org.hidetake.taskwalls.controller.ControllerBase;
+import org.hidetake.taskwalls.util.AjaxPreconditions;
 import org.slim3.controller.Navigation;
 import org.slim3.controller.validator.Validators;
 
@@ -25,8 +26,11 @@ public class StatusController extends ControllerBase
 	@Override
 	public Navigation run() throws Exception
 	{
+		if (!AjaxPreconditions.isXHR(request)) {
+			return null;
+		}
 		if (!validate()) {
-			response.sendError(400, errors.toString());
+			response.sendError(400);
 			return null;
 		}
 

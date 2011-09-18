@@ -8,7 +8,6 @@ import javax.servlet.http.Cookie;
 import org.hidetake.taskwalls.service.oauth2.CachedToken;
 import org.hidetake.taskwalls.service.oauth2.JacksonFactoryLocator;
 import org.hidetake.taskwalls.service.oauth2.NetHttpTransportLocator;
-import org.hidetake.taskwalls.util.AjaxPreconditions;
 import org.hidetake.taskwalls.util.GenericJsonWrapper;
 import org.slim3.controller.Controller;
 import org.slim3.controller.Navigation;
@@ -80,10 +79,6 @@ public abstract class ControllerBase extends Controller
 	 */
 	protected Navigation jsonResponse(GenericJson object) throws IOException
 	{
-		if (!AjaxPreconditions.isXHR(request)) {
-			return null;
-		}
-
 		String json = GenericJsonWrapper.toString(object);
 		response.setHeader("X-Content-Type-Options", "nosniff");
 		response.setContentType("application/json");
