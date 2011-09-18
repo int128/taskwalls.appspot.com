@@ -27,7 +27,7 @@ Tasklists.get = function (callback) {
  * @class represents tasks model
  * @param {String} tasklistID task list ID
  * @param {Array} items
- * @param {Array} tags
+ * @param {Tags} tags
  * @property {String} tasklistID task list ID
  * @property {Array} items
  * @property {Tags} tags
@@ -151,6 +151,9 @@ TagsUI.load = function (tags) {
 					.css('left', $(this).position().left)
 					.show()
 					.clearQueue()
+					.click(function () {
+						;
+					})
 					.mouseenter(function () {
 						$(this).clearQueue()
 							.show()
@@ -190,8 +193,7 @@ TasksUI.load = function (tasks) {
 			.appendTo($('#calendar>tbody'));
 	});
 	$.each(tasks.items, function (i, task) {
-		var taskUI = new TaskUI(task);
-		$('#t' + task.dueTime + '>td.task-column').append(taskUI.element);
+		$('#t' + task.dueTime + '>td.task-column').append(new TaskUIElement(task).element);
 	});
 	$('.task-column').droppable({
 		accept: '.task',
@@ -205,8 +207,9 @@ TasksUI.load = function (tasks) {
 };
 /**
  * @class UI element of task.
+ * @param task JSON task
  */
-function TaskUI (task) {
+function TaskUIElement (task) {
 	this.element = $('<div class="task"/>');
 	this.refresh(task);
 }
@@ -214,7 +217,7 @@ function TaskUI (task) {
  * Refresh view.
  * @param task JSON task
  */
-TaskUI.prototype.refresh = function (task) {
+TaskUIElement.prototype.refresh = function (task) {
 	var context = this;
 	this.element.empty()
 		.addClass('task-status-' + task.status)
@@ -234,6 +237,8 @@ TaskUI.prototype.refresh = function (task) {
 		$('>.iscompleted', this.element).attr('checked', 'checked');
 	}
 	$.each(task.tags, function (i, tag) {
+		var safe = encodeURIComponent(tag).replace(/%/g, '');
+		context.element.addClass('task-tag-' + safe);
 		context.element.append($('<div class="task-tag"/>').text(tag));
 	});
 };
