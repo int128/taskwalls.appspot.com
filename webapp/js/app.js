@@ -56,41 +56,26 @@ Tasks.updateStatus = function (task, callback) {
 	$.post('tasks/update/status', task, callback);
 };
 /**
- * Get tasks in default tasklist from server.
- * @param {Function} async callback function
- */
-Tasks.getDefault = function (callback) {
-	Tasks.get('@default', callback);
-};
-/**
- * @returns {Number} latest date in tasks
+ * @returns latest date time in milliseconds
  */
 Tasks.prototype.latestTime = function () {
 	if (this.items.length == 0) {
 		return new Date().getTime();
 	}
-	var maxTime = -Infinity;
-	$.each(this.items, function (i, task) {
-		if (task.dueTime > maxTime) {
-			maxTime = task.dueTime;
-		}
-	});
-	return maxTime;
+	return Math.max.apply(null, $.map(this.items, function (task) {
+		return task.dueTime;
+	}));
 };
 /**
- * @returns {Number} earliest date in tasks
+ * @returns earliest date time in milliseconds
  */
 Tasks.prototype.earliestTime = function () {
 	if (this.items.length == 0) {
 		return new Date().getTime();
 	}
-	var minTime = Infinity;
-	$.each(this.items, function (i, task) {
-		if (task.dueTime < minTime) {
-			minTime = task.dueTime;
-		}
-	});
-	return minTime;
+	return Math.min.apply(null, $.map(this.items, function (task) {
+		return task.dueTime;
+	}));
 };
 /**
  * Get array of date from earliest to latest date in tasks.
@@ -135,7 +120,7 @@ TasklistsUI.load = function (tasklists) {
 						$(this).clearQueue()
 							.show()
 							.mouseleave(function () {
-								$(this).fadeOut();
+								$(this).hide();
 							});
 					});
 			})
@@ -145,32 +130,31 @@ TasklistsUI.load = function (tasklists) {
 /**
  * @class UI element of {@link Tasks}.
  */
-function TasksUI () {};
+function TasksUI () {
+	$('#calendar').empty().append($('<tbody/>'));
+	/**
+	 * Latest date in the calendar.
+	 * @type Date
+	 */
+	this.latest = new Date();
+	this.latest.setHours(0, 0, 0, 0);
+	/**
+	 * Earliest date in the calendar.
+	 * @type Date
+	 */
+	this.earliest = new Date();
+	this.earliest.setHours(0, 0, 0, 0);
+};
 /**
  * @param {Tasks} tasks
  */
-TasksUI.load = function (tasks) {
-	$('#calendar').empty().append($('<tbody/>'));
-	/**
-	 * @param {Date} date
-	 */
-	$.each(tasks.days(7), function (i, date) {
-		$('<tr/>')
-			.attr('id', 't' + date.getTime())
-			.addClass('w' + date.getDay())
-			.addClass('d' + date.getDate())
-			.addClass(DateUtil.futureOrPast(date, 'future', 'today', 'past'))
-			.append($('<td class="month-column"/>')
-					.append($('<div/>').text(date.getMonth() + 1)))
-			.append($('<td class="weekday-column"/>')
-					.append($.resource('weekday' + date.getDay())))
-			.append($('<td class="date-column"/>')
-					.append($('<div/>').text(date.getDate())))
-			.append($('<td class="task-column"/>'))
-			.appendTo($('#calendar>tbody'));
-	});
+TasksUI.prototype.load = function (tasks) {
+	this.extend(tasks.earliestTime());
+	this.extend(tasks.latestTime());
 	$.each(tasks.items, function (i, task) {
-		$('#t' + task.dueTime + '>td.task-column').append(new TaskUIElement(task).element);
+		var date = new Date(task.dueTime);
+		date.setHours(0, 0, 0, 0);
+		$('#t' + date.getTime() + '>td.task-column').append(new TaskUIElement(task).element);
 	});
 	$('.task-column').droppable({
 		accept: '.task',
@@ -181,6 +165,45 @@ TasksUI.load = function (tasks) {
 	$('.task').draggable({
 		revert: true
 	});
+};
+/**
+ * Extend rows of the calendar.
+ * @param {Number} time time to extend
+ */
+TasksUI.prototype.extend = function (time) {
+	var date = new Date(time);
+	date.setHours(0, 0, 0, 0);
+	if (date < this.earliest) {
+		while (this.earliest >= date) {
+			this.earliest = new Date(this.earliest.getTime() - 86400000);
+			$('#calendar>tbody').prepend(this.createDateRow(this.earliest));
+		}
+	}
+	else if (date > this.latest) {
+		while (this.latest <= date) {
+			this.latest = new Date(this.latest.getTime() + 86400000);
+			$('#calendar>tbody').append(this.createDateRow(this.latest));
+		}
+	}
+};
+/**
+ * Create a table row of date.
+ * @param {Date} date date (time parts must be zero)
+ * @returns {jQuery}
+ */
+TasksUI.prototype.createDateRow = function (date) {
+	return $('<tr/>')
+		.attr('id', 't' + date.getTime())
+		.addClass('w' + date.getDay())
+		.addClass('d' + date.getDate())
+		.addClass(DateUtil.futureOrPast(date, 'future', 'today', 'past'))
+		.append($('<td class="month-column"/>')
+				.append($('<div/>').text(date.getMonth() + 1)))
+		.append($('<td class="weekday-column"/>')
+				.append($.resource('weekday' + date.getDay())))
+		.append($('<td class="date-column"/>')
+				.append($('<div/>').text(date.getDate())))
+		.append($('<td class="task-column"/>'));
 };
 /**
  * @class UI element of task.
@@ -198,6 +221,7 @@ TaskUIElement.prototype.refresh = function (task) {
 	var context = this;
 	this.element.empty()
 		.addClass('task-status-' + task.status)
+		.addClass('tasklist-' + task.tasklistID)
 		.text(task.title)
 		.prepend($('<input class="iscompleted" type="checkbox"/>').change(function () {
 			if (this.checked) {
@@ -214,11 +238,32 @@ TaskUIElement.prototype.refresh = function (task) {
 		$('>.iscompleted', this.element).attr('checked', 'checked');
 	}
 };
+// controller
+function States () {}
+States.authorized = function () {
+	var tasksUI = new TasksUI();
+	/** @param {Tasks} tasks */
+	Tasks.get('@default', function (tasks) {
+		tasksUI.load(tasks);
+	});
+	/** @param {Tasklists} tasklists */
+	Tasklists.get(function (tasklists) {
+		TasklistsUI.load(tasklists);
+		$.each(tasklists.items, function (i, tasklist) {
+		});
+	});
+};
+States.authorizing = function () {
+};
+States.unauthorized = function () {
+	// wake up an instance in background
+	new Image().src = 'wake';
+};
 // utility
 /**
  * @class DateUtil
  */
-function DateUtil () {};
+var DateUtil = {};
 /**
  * @param {Date} date
  * @param future
@@ -249,24 +294,6 @@ $(function () {
 		}
 	});
 });
-// controller
-function States () {}
-States.authorized = function () {
-	/** @param {Tasklists} tasklists */
-	Tasklists.get(function (tasklists) {
-		TasklistsUI.load(tasklists);
-	});
-	/** @param {Tasks} tasks */
-	Tasks.getDefault(function (tasks) {
-		TasksUI.load(tasks);
-	});
-};
-States.authorizing = function () {
-};
-States.unauthorized = function () {
-	// wake up an instance in background
-	new Image().src = 'wake';
-};
 $(function () {
 	// global error handler
 	var _window_onerror_handling = false;
