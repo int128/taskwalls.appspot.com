@@ -131,17 +131,17 @@ a:VISITED {
 	vertical-align: bottom;
 }
 
-#tags>span {
+#tasklists>span {
 	margin-right: 10px;
 	border-bottom: solid 3px gold;
 }
 
-.tag-bubble {
+.tasklist-bubble {
 	display: none;
 	position: absolute;
 }
 
-.tag-bubble>.head {
+.tasklist-bubble>.head {
 	content: '';
 	position: relative;
 	top: 3px;
@@ -154,7 +154,7 @@ a:VISITED {
 	border-bottom: 12px solid rgba(0, 0, 0, 0.7);
 }
 
-.tag-bubble>.body {
+.tasklist-bubble>.body {
 	position: relative;
 	top: 3px;
 	left: -100px;

@@ -27,15 +27,12 @@ Tasklists.get = function (callback) {
  * @class represents tasks model
  * @param {String} tasklistID task list ID
  * @param {Array} items
- * @param {Tags} tags
  * @property {String} tasklistID task list ID
  * @property {Array} items
- * @property {Tags} tags
  */
-function Tasks (tasklistID, items, tags) {
+function Tasks (tasklistID, items) {
 	this.tasklistID = tasklistID;
 	this.items = items;
-	this.tags = tags;
 };
 /**
  * Get tasks from server.
@@ -44,7 +41,7 @@ function Tasks (tasklistID, items, tags) {
  */
 Tasks.get = function (tasklistID, callback) {
 	$.getJSON('tasks/list', {tasklistID: tasklistID}, function (response) {
-		var instance = new Tasks(tasklistID, response.items, new Tags(response.tags));
+		var instance = new Tasks(tasklistID, response.items);
 		if ($.isFunction(callback)) {
 			callback(instance);
 		}
@@ -112,12 +109,6 @@ Tasks.prototype.days = function (marginDays) {
 	}
 	return result;
 };
-/**
- * @class represents tags of task
- */
-function Tags (items) {
-	this.items = items;
-};
 // UI
 /**
  * @class UI element of {@link Tasklists}.
@@ -127,27 +118,13 @@ function TasklistsUI () {};
  * @param {Tasklists} tasklists
  */
 TasklistsUI.load = function (tasklists) {
+	$('#tasklists').empty();
+	$('.tasklist-bubble').hide();
 	$.each(tasklists.items, function (i, tasklist) {
-		$('#tasklists').append($('<span/>')
-				.attr('value', tasklist.id)
-				.text(tasklist.title));
-	});
-};
-/**
- * @class UI element of tags
- */
-function TagsUI () {};
-/**
- * @param {Tags} tags
- */
-TagsUI.load = function (tags) {
-	$('#tags').empty();
-	$('.tag-bubble').hide();
-	$.each(tags.items, function (i, tag) {
-		$('<span/>').text(tag)
+		$('<span/>').text(tasklist.title)
 			.mouseenter(function () {
-				$('.tag-bubble>.body>.name').text(tag);
-				$('.tag-bubble')
+				$('.tasklist-bubble>.body>.name').text(tasklist.title);
+				$('.tasklist-bubble')
 					.css('left', $(this).position().left)
 					.show()
 					.clearQueue()
@@ -162,7 +139,7 @@ TagsUI.load = function (tags) {
 							});
 					});
 			})
-			.appendTo($('#tags'));
+			.appendTo($('#tasklists'));
 	});
 };
 /**
@@ -236,11 +213,6 @@ TaskUIElement.prototype.refresh = function (task) {
 	if (task.status == 'completed') {
 		$('>.iscompleted', this.element).attr('checked', 'checked');
 	}
-	$.each(task.tags, function (i, tag) {
-		var safe = encodeURIComponent(tag).replace(/%/g, '');
-		context.element.addClass('task-tag-' + safe);
-		context.element.append($('<div class="task-tag"/>').text(tag));
-	});
 };
 // utility
 /**
@@ -280,13 +252,13 @@ $(function () {
 // controller
 function States () {}
 States.authorized = function () {
+	/** @param {Tasklists} tasklists */
 	Tasklists.get(function (tasklists) {
 		TasklistsUI.load(tasklists);
 	});
 	/** @param {Tasks} tasks */
 	Tasks.getDefault(function (tasks) {
 		TasksUI.load(tasks);
-		TagsUI.load(tasks.tags);
 	});
 };
 States.authorizing = function () {
