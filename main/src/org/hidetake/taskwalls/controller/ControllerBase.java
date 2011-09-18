@@ -43,6 +43,9 @@ public abstract class ControllerBase extends Controller
 	@Override
 	protected Navigation setUp()
 	{
+		if (request.getCookies() == null) {
+			return forward("invalidRequest");
+		}
 		sessionKey = null;
 		for (Cookie cookie : request.getCookies()) {
 			if (COOKIE_KEY_SESSIONID.equals(cookie.getName())) {
@@ -53,6 +56,7 @@ public abstract class ControllerBase extends Controller
 		if (sessionKey == null) {
 			return forward("invalidRequest");
 		}
+
 		CachedToken token = Memcache.get(sessionKey);
 		if (token == null) {
 			return forward("invalidRequest");
