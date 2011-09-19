@@ -142,16 +142,17 @@ function TasksUI () {
 	 * @type Date
 	 */
 	this.earliest = new Date();
-	this.earliest.setHours(0, 0, 0, 0);
+	this.earliest.setHours(24, 0, 0, 0);
 	// build table with today
-	$('#calendar').empty().append($('<tbody/>').append(this.createDateRow(this.earliest)));
+	$('#calendar').empty().append($('<tbody/>'));
+	this.extendMonth(this.earliest);
 };
 /**
  * @param {Tasks} tasks
  */
 TasksUI.prototype.load = function (tasks) {
-	this.extend(tasks.earliestTime());
-	this.extend(tasks.latestTime());
+	this.extendMonth(tasks.earliestTime());
+	this.extendMonth(tasks.latestTime());
 	$.each(tasks.items, function (i, task) {
 		var date = new Date(task.dueTime);
 		date.setHours(0, 0, 0, 0);
@@ -169,7 +170,7 @@ TasksUI.prototype.load = function (tasks) {
 };
 /**
  * Extend rows of the calendar.
- * @param {Number} time time to extend
+ * @param {Number} time date to extend
  */
 TasksUI.prototype.extend = function (time) {
 	var date = new Date(time);
@@ -186,6 +187,18 @@ TasksUI.prototype.extend = function (time) {
 			$('#calendar>tbody').append(this.createDateRow(this.latest));
 		}
 	}
+};
+/**
+ * Extend rows of the calendar.
+ * @param {Number} time date to extend
+ */
+TasksUI.prototype.extendMonth = function (time) {
+	var date = new Date(time);
+	date.setHours(0, 0, 0, 0);
+	date.setDate(1);
+	this.extend(date.getTime());
+	date.setMonth(date.getMonth() + 1);
+	this.extend(date.getTime());
 };
 /**
  * Create a table row of date.
