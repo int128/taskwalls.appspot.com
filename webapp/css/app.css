@@ -132,8 +132,16 @@ a:VISITED {
 }
 
 #tasklists>span {
-	margin-right: 10px;
-	border-bottom: solid 3px #ccc;
+	margin-right: 12px;
+}
+
+#tasklists>span:BEFORE {
+	content: '';
+	padding-right: 12px;
+	margin-right: 3px;
+	border-radius: 3px;
+	-moz-border-radius: 3px;
+	background: #ddd;
 }
 
 .tasklist-bubble {
@@ -145,13 +153,13 @@ a:VISITED {
 	content: '';
 	position: relative;
 	top: 3px;
-	left: 15px;
+	left: 12px;
 	width: 0;
 	height: 0;
 	margin-left: -12px;
 	border-right: 12px solid transparent;
 	border-left: 12px solid transparent;
-	border-bottom: 12px solid rgba(0, 0, 0, 0.7);
+	border-bottom: 12px solid rgba(0, 0, 0, 0.8);
 }
 
 .tasklist-bubble>.body {
@@ -275,20 +283,20 @@ tr.w1>td.task-column {
 /*
  * Colors.
  */
-#tasklists>span.tasklistcolor-0 {
-	border-bottom-color: #fc0;
+#tasklists>span.tasklistcolor-0:BEFORE {
+	background-color: #fc0;
 }
 
-#tasklists>span.tasklistcolor-1 {
-	border-bottom-color: #9f0;
+#tasklists>span.tasklistcolor-1:BEFORE {
+	background-color: #9f0;
 }
 
-#tasklists>span.tasklistcolor-2 {
-	border-bottom-color: #30f;
+#tasklists>span.tasklistcolor-2:BEFORE {
+	background-color: #30f;
 }
 
-#tasklists>span.tasklistcolor-3 {
-	border-bottom-color: #c06;
+#tasklists>span.tasklistcolor-3:BEFORE {
+	background-color: #c06;
 }
 
 .task.tasklistcolor-0 {
