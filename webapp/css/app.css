@@ -154,10 +154,9 @@ a:VISITED {
 	content: '';
 	position: relative;
 	top: 3px;
-	left: 12px;
+	left: -5px;
 	width: 0;
 	height: 0;
-	margin-left: -12px;
 	border-right: 12px solid transparent;
 	border-left: 12px solid transparent;
 	border-bottom: 12px solid rgba(0, 0, 0, 0.8);
@@ -167,13 +166,26 @@ a:VISITED {
 	position: relative;
 	top: 3px;
 	left: -100px;
-	min-width: 200px;
-	min-height: 100px;
-	padding: .5em;
+	width: 200px;
+	padding: 1em;
 	border-radius: 5px;
 	-moz-border-radius: 5px;
-	background: rgba(0, 0, 0, 0.7);
+	background: rgba(0, 0, 0, 0.8);
 	color: white;
+}
+
+.tasklist-bubble>.body>.change-color {
+	margin-top: .5em;
+	text-align: center;
+}
+
+.tasklist-mark {
+	padding-right: 15px;
+	margin-left: 10px;
+	margin-right: 10px;
+	border-radius: 3px;
+	-moz-border-radius: 3px;
+	background: #ddd;
 }
 
 /*
@@ -282,19 +294,19 @@ tr.w1>td.task-column {
 /*
  * Colors.
  */
-#tasklists>span.tasklistcolor-0:BEFORE {
+#tasklists>span.tasklistcolor-0:BEFORE,span.tasklistcolor-0.tasklist-mark {
 	background-color: #fc0;
 }
 
-#tasklists>span.tasklistcolor-1:BEFORE {
+#tasklists>span.tasklistcolor-1:BEFORE,span.tasklistcolor-1.tasklist-mark {
 	background-color: #9f0;
 }
 
-#tasklists>span.tasklistcolor-2:BEFORE {
+#tasklists>span.tasklistcolor-2:BEFORE,span.tasklistcolor-2.tasklist-mark {
 	background-color: #30f;
 }
 
-#tasklists>span.tasklistcolor-3:BEFORE {
+#tasklists>span.tasklistcolor-3:BEFORE,span.tasklistcolor-3.tasklist-mark {
 	background-color: #c06;
 }
 

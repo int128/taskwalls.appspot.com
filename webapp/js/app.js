@@ -113,7 +113,6 @@ TasklistsUI.prototype.load = function (tasklists) {
 				$('.tasklist-' + tasklist.id).fadeToggle();
 			})
 			.mouseenter(function () {
-				$('.tasklist-bubble>.body>.name').text(tasklist.title);
 				$('.tasklist-bubble')
 					.css('left', $(this).position().left)
 					.show()
