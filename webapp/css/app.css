@@ -133,6 +133,7 @@ a:VISITED {
 
 #tasklists>span {
 	margin-right: 12px;
+	cursor: pointer;
 }
 
 #tasklists>span:BEFORE {
@@ -259,8 +260,6 @@ tr.w1>td.task-column {
 	border-left: solid 5px #ccc;
 	border-radius: 3px;
 	-moz-border-radius: 3px;
-	background: -moz-linear-gradient(top, #fff, #ffd);
-	background: -webkit-gradient(linear, left top, left bottom, from(#fff), to(#ffd) );
 }
 
 .task.task-status-completed {
@@ -301,16 +300,24 @@ tr.w1>td.task-column {
 
 .task.tasklistcolor-0 {
 	border-left-color: #fc0;
+	background: -moz-linear-gradient(top, #fff, #ffd);
+	background: -webkit-gradient(linear, left top, left bottom, from(#fff), to(#ffd) );
 }
 
 .task.tasklistcolor-1 {
 	border-left-color: #9f0;
+	background: -moz-linear-gradient(top, #fff, #efe);
+	background: -webkit-gradient(linear, left top, left bottom, from(#fff), to(#efe) );
 }
 
 .task.tasklistcolor-2 {
 	border-left-color: #30f;
+	background: -moz-linear-gradient(top, #fff, #eef);
+	background: -webkit-gradient(linear, left top, left bottom, from(#fff), to(#eef) );
 }
 
 .task.tasklistcolor-3 {
 	border-left-color: #c06;
+	background: -moz-linear-gradient(top, #fff, #fee);
+	background: -webkit-gradient(linear, left top, left bottom, from(#fff), to(#fee) );
 }
