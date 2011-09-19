@@ -46,7 +46,15 @@ public class ListController extends ControllerBase
 			if (due != null) {
 				task.put("dueTime", due.getValue());
 			}
-			task.put("tasklistID", tasklistID);
+
+			String[] uriParts = task.getSelfLink().split("/");
+			if (uriParts.length > 3) {
+				task.put("tasklistID", uriParts[uriParts.length - 3]);
+			}
+			else {
+				// fall back (usually not happen)
+				task.put("tasklistID", tasklistID);
+			}
 		}
 
 		return jsonResponse(tasks);
