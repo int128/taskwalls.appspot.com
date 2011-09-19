@@ -133,7 +133,7 @@ a:VISITED {
 
 #tasklists>span {
 	margin-right: 10px;
-	border-bottom: solid 3px gold;
+	border-bottom: solid 3px #ccc;
 }
 
 .tasklist-bubble {
@@ -248,7 +248,7 @@ tr.w1>td.task-column {
 	margin-left: 15px;
 	padding: 5px;
 	border: solid 1px #ddd;
-	border-left: solid 5px gold;
+	border-left: solid 5px #ccc;
 	border-radius: 3px;
 	-moz-border-radius: 3px;
 	background: -moz-linear-gradient(top, #fff, #ffd);
@@ -256,7 +256,6 @@ tr.w1>td.task-column {
 }
 
 .task.task-status-completed {
-	border-left: solid 5px #ddd;
 	color: #888;
 }
 
@@ -271,4 +270,39 @@ tr.w1>td.task-column {
 
 .task-drag-hover {
 	
+}
+
+/*
+ * Colors.
+ */
+#tasklists>span.tasklistcolor-0 {
+	border-bottom-color: #fc0;
+}
+
+#tasklists>span.tasklistcolor-1 {
+	border-bottom-color: #9f0;
+}
+
+#tasklists>span.tasklistcolor-2 {
+	border-bottom-color: #30f;
+}
+
+#tasklists>span.tasklistcolor-3 {
+	border-bottom-color: #c06;
+}
+
+.task.tasklistcolor-0 {
+	border-left-color: #fc0;
+}
+
+.task.tasklistcolor-1 {
+	border-left-color: #9f0;
+}
+
+.task.tasklistcolor-2 {
+	border-left-color: #30f;
+}
+
+.task.tasklistcolor-3 {
+	border-left-color: #c06;
 }

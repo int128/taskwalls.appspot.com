@@ -102,11 +102,13 @@ function TasklistsUI () {};
 /**
  * @param {Tasklists} tasklists
  */
-TasklistsUI.load = function (tasklists) {
+TasklistsUI.prototype.load = function (tasklists) {
 	$('#tasklists').empty();
 	$('.tasklist-bubble').hide();
 	$.each(tasklists.items, function (i, tasklist) {
-		$('<span/>').text(tasklist.title)
+		$('<span/>')
+			.addClass('tasklistcolor-' + tasklist.colorID)
+			.text(tasklist.title)
 			.click(function () {
 				$('.tasklist-' + tasklist.id).fadeToggle();
 			})
@@ -217,6 +219,13 @@ TasksUI.prototype.createDateRow = function (date) {
 		.append($('<td class="task-column"/>'));
 };
 /**
+ * 
+ * @param tasklist
+ */
+TasksUI.prototype.applyColor = function (tasklist) {
+	$('.tasklist-' + tasklist.id).addClass('tasklistcolor-' + tasklist.colorID);
+};
+/**
  * @class UI element of task.
  * @param task JSON task
  */
@@ -252,6 +261,7 @@ TaskUIElement.prototype.refresh = function (task) {
 // controller
 function States () {}
 States.authorized = function () {
+	var tasklistsUI = new TasklistsUI();
 	var tasksUI = new TasksUI();
 	// get tasks of the default tasklist
 	Tasks.get('@default', function (tasks) {
@@ -261,15 +271,21 @@ States.authorized = function () {
 		}
 		// get tasklists
 		Tasklists.get(function (tasklists) {
-			TasklistsUI.load(tasklists);
-			// get tasks except the default tasklist
 			$.each(tasklists.items, function (i, tasklist) {
-				if (tasklist.id != defaultTasklistID) {
+				if (tasklist.colorID == undefined) {
+					tasklist.colorID = i % 4; //colors
+				}
+				if (tasklist.id == defaultTasklistID) {
+					tasksUI.applyColor(tasklist);
+				}
+				else {
 					Tasks.get(tasklist.id, function (tasks) {
-						tasksUI.load(tasks);
+						tasksUI.load(tasks, tasklist);
+						tasksUI.applyColor(tasklist);
 					});
 				}
 			});
+			tasklistsUI.load(tasklists);
 		});
 		tasksUI.load(tasks);
 	});
