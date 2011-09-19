@@ -242,15 +242,25 @@ TaskUIElement.prototype.refresh = function (task) {
 function States () {}
 States.authorized = function () {
 	var tasksUI = new TasksUI();
-	/** @param {Tasks} tasks */
+	// get tasks of the default tasklist
 	Tasks.get('@default', function (tasks) {
-		tasksUI.load(tasks);
-	});
-	/** @param {Tasklists} tasklists */
-	Tasklists.get(function (tasklists) {
-		TasklistsUI.load(tasklists);
-		$.each(tasklists.items, function (i, tasklist) {
+		var defaultTasklistID = null;
+		if (tasks.items.length > 1) {
+			defaultTasklistID = tasks.items[0].tasklistID;
+		}
+		// get tasklists
+		Tasklists.get(function (tasklists) {
+			TasklistsUI.load(tasklists);
+			// get tasks except the default tasklist
+			$.each(tasklists.items, function (i, tasklist) {
+				if (tasklist.id != defaultTasklistID) {
+					Tasks.get(tasklist.id, function (tasks) {
+						tasksUI.load(tasks);
+					});
+				}
+			});
 		});
+		tasksUI.load(tasks);
 	});
 };
 States.authorizing = function () {
