@@ -269,12 +269,6 @@ tr.w1>td.task-column {
 	
 }
 
-.task>.task-tag {
-	float: right;
-	font-size: 120%;
-	color: #888;
-}
-
 .task-drag-hover {
 	
 }
