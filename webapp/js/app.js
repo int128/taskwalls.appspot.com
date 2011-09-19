@@ -107,21 +107,18 @@ TasklistsUI.load = function (tasklists) {
 	$('.tasklist-bubble').hide();
 	$.each(tasklists.items, function (i, tasklist) {
 		$('<span/>').text(tasklist.title)
+			.click(function () {
+				$('.tasklist-' + tasklist.id).fadeToggle();
+			})
 			.mouseenter(function () {
 				$('.tasklist-bubble>.body>.name').text(tasklist.title);
 				$('.tasklist-bubble')
 					.css('left', $(this).position().left)
 					.show()
-					.clearQueue()
-					.click(function () {
-						;
-					})
 					.mouseenter(function () {
-						$(this).clearQueue()
-							.show()
-							.mouseleave(function () {
-								$(this).hide();
-							});
+						$(this).show().mouseleave(function () {
+							$(this).hide();
+						});
 					});
 			})
 			.appendTo($('#tasklists'));
