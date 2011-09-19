@@ -131,7 +131,6 @@ TasklistsUI.load = function (tasklists) {
  * @class UI element of {@link Tasks}.
  */
 function TasksUI () {
-	$('#calendar').empty().append($('<tbody/>'));
 	/**
 	 * Latest date in the calendar.
 	 * @type Date
@@ -144,6 +143,8 @@ function TasksUI () {
 	 */
 	this.earliest = new Date();
 	this.earliest.setHours(0, 0, 0, 0);
+	// build table with today
+	$('#calendar').empty().append($('<tbody/>').append(this.createDateRow(this.earliest)));
 };
 /**
  * @param {Tasks} tasks
