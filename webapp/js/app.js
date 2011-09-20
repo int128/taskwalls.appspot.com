@@ -98,15 +98,24 @@ Tasks.prototype.days = function (marginDays) {
 /**
  * @class UI element of {@link Tasklists}.
  */
-function UITasklists () {};
+function UITasklists () {
+	$('#tasklists').empty();
+	$('.tasklist-bubble').hide();
+};
+/**
+ * Tasklist color has been changed via UI.
+ * @param tasklist tasklist JSON (colorID property has been updated)
+ */
+UITasklists.prototype.onColorChanged = function (tasklist) {};
 /**
  * @param {Tasklists} tasklists
  */
 UITasklists.prototype.load = function (tasklists) {
-	$('#tasklists').empty();
-	$('.tasklist-bubble').hide();
+	var onColorChanged = this.onColorChanged;
 	$.each(tasklists.items, function (i, tasklist) {
-		$('#tasklists').append(new UITasklist(tasklist).element);
+		var uiTasklist = new UITasklist(tasklist);
+		uiTasklist.onColorChanged = onColorChanged;
+		$('#tasklists').append(uiTasklist.element);
 	});
 };
 /**
@@ -116,6 +125,15 @@ UITasklists.prototype.load = function (tasklists) {
 function UITasklist (tasklist) {
 	this.refresh(tasklist);
 };
+/**
+ * Tasklist color has been changed via UI.
+ * @param tasklist tasklist JSON (colorID property has been updated)
+ */
+UITasklist.prototype.onColorChanged = function (tasklist) {};
+/**
+ * Refresh view of this tasklist item.
+ * @param tasklist JSON tasklist
+ */
 UITasklist.prototype.refresh = function (tasklist) {
 	var context = this;
 	this.element = $('<span/>')
@@ -129,8 +147,8 @@ UITasklist.prototype.refresh = function (tasklist) {
 		$('.tasklist-bubble>.body>.change-color>.tasklist-mark')
 			.unbind('click')
 			.click(function () {
-				context.changeColorTo(this);
-				// TODO: change color of tasks
+				tasklist.colorID = context.changeColorTo(this);
+				context.onColorChanged(tasklist);
 			});
 		$('.tasklist-bubble')
 			.css('left', $(this).position().left)
@@ -143,18 +161,22 @@ UITasklist.prototype.refresh = function (tasklist) {
 	});
 };
 /**
- * Change color of this element same to the specified element.
+ * Change this element to be same color as the reference element.
  * @param {Element} reference element which has class .tasklistcolor-*
+ * @returns {Number} color ID
  */
 UITasklist.prototype.changeColorTo = function (reference) {
+	var colorID = undefined;
 	for (var i = 0; i < Constants.tasklistColors; i++) {
 		if ($(reference).hasClass('tasklistcolor-' + i)) {
 			this.element.addClass('tasklistcolor-' + i);
+			colorID = i;
 		}
 		else {
 			this.element.removeClass('tasklistcolor-' + i);
 		}
 	}
+	return colorID;
 };
 /**
  * @class UI element of {@link Tasks}.
@@ -249,10 +271,13 @@ UITasks.prototype.createDateRow = function (date) {
 		.append($('<td class="task-column"/>'));
 };
 /**
- * 
- * @param tasklist
+ * Apply specified color to these tasks.
+ * @param tasklist JSON tasklist (colorID property must be set)
  */
-UITasks.prototype.applyColor = function (tasklist) {
+UITasks.prototype.applyTasklistColor = function (tasklist) {
+	for (var i = 0; i < Constants.tasklistColors; i++) {
+		$('.tasklist-' + tasklist.id).removeClass('tasklistcolor-' + i);
+	}
 	$('.tasklist-' + tasklist.id).addClass('tasklistcolor-' + tasklist.colorID);
 };
 /**
@@ -291,7 +316,7 @@ UITask.prototype.refresh = function (task) {
 // controller
 function States () {}
 States.authorized = function () {
-	var uiTasklist = new UITasklists();
+	var uiTasklists = new UITasklists();
 	var uiTasks = new UITasks();
 	// get tasks of the default tasklist
 	Tasks.get('@default', function (tasks) {
@@ -306,19 +331,23 @@ States.authorized = function () {
 					tasklist.colorID = i % Constants.tasklistColors;
 				}
 				if (tasklist.id == defaultTasklistID) {
-					uiTasks.applyColor(tasklist);
+					uiTasks.applyTasklistColor(tasklist);
 				}
 				else {
 					Tasks.get(tasklist.id, function (tasks) {
 						uiTasks.load(tasks, tasklist);
-						uiTasks.applyColor(tasklist);
+						uiTasks.applyTasklistColor(tasklist);
 					});
 				}
 			});
-			uiTasklist.load(tasklists);
+			uiTasklists.load(tasklists);
 		});
 		uiTasks.load(tasks);
 	});
+	// when tasklist color has been changed
+	uiTasklists.onColorChanged = function (tasklist) {
+		uiTasks.applyTasklistColor(tasklist);
+	};
 };
 States.authorizing = function () {
 };
