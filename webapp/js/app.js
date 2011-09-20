@@ -106,24 +106,56 @@ TasklistsUI.prototype.load = function (tasklists) {
 	$('#tasklists').empty();
 	$('.tasklist-bubble').hide();
 	$.each(tasklists.items, function (i, tasklist) {
-		$('<span/>')
-			.addClass('tasklistcolor-' + tasklist.colorID)
-			.text(tasklist.title)
-			.click(function () {
-				$('.tasklist-' + tasklist.id).fadeToggle();
-			})
-			.mouseenter(function () {
-				$('.tasklist-bubble')
-					.css('left', $(this).position().left)
-					.show()
-					.mouseenter(function () {
-						$(this).show().mouseleave(function () {
-							$(this).hide();
-						});
-					});
-			})
-			.appendTo($('#tasklists'));
+		$('#tasklists').append(new TasklistUIElement(tasklist).element);
 	});
+};
+/**
+ * UI element of the tasklist.
+ * @param tasklist JSON tasklist
+ * @returns {TasklistUIElement}
+ */
+function TasklistUIElement (tasklist) {
+	this.refresh(tasklist);
+};
+TasklistUIElement.prototype.refresh = function (tasklist) {
+	var context = this;
+	this.element = $('<span/>')
+		.addClass('tasklistcolor-' + tasklist.colorID)
+		.text(tasklist.title)
+		.appendTo($('#tasklists'));
+	this.element.click(function () {
+		$('.tasklist-' + tasklist.id).fadeToggle();
+	});
+	this.element.mouseenter(function () {
+		$('.tasklist-bubble>.body>.change-color>.tasklist-mark')
+			.unbind('click')
+			.click(function () {
+				context.changeColorTo(this);
+				// TODO: change color of tasks
+			});
+		$('.tasklist-bubble')
+			.css('left', $(this).position().left)
+			.show()
+			.mouseenter(function () {
+				$(this).show().mouseleave(function () {
+					$(this).hide();
+				});
+			});
+	});
+};
+/**
+ * Change color of this element same to the specified element.
+ * @param {Element} reference element which has class .tasklistcolor-*
+ */
+TasklistUIElement.prototype.changeColorTo = function (reference) {
+	for (var i = 0; i < Constants.tasklistColors; i++) {
+		if ($(reference).hasClass('tasklistcolor-' + i)) {
+			this.element.addClass('tasklistcolor-' + i);
+		}
+		else {
+			this.element.removeClass('tasklistcolor-' + i);
+		}
+	}
 };
 /**
  * @class UI element of {@link Tasks}.
@@ -272,7 +304,7 @@ States.authorized = function () {
 		Tasklists.get(function (tasklists) {
 			$.each(tasklists.items, function (i, tasklist) {
 				if (tasklist.colorID == undefined) {
-					tasklist.colorID = i % 4; //colors
+					tasklist.colorID = i % Constants.tasklistColors;
 				}
 				if (tasklist.id == defaultTasklistID) {
 					tasksUI.applyColor(tasklist);
@@ -296,6 +328,8 @@ States.unauthorized = function () {
 	new Image().src = 'wake';
 };
 // utility
+var Constants = {};
+Constants.tasklistColors = 4;
 /**
  * @class DateUtil
  */
