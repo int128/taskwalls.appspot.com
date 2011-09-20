@@ -98,26 +98,25 @@ Tasks.prototype.days = function (marginDays) {
 /**
  * @class UI element of {@link Tasklists}.
  */
-function TasklistsUI () {};
+function UITasklists () {};
 /**
  * @param {Tasklists} tasklists
  */
-TasklistsUI.prototype.load = function (tasklists) {
+UITasklists.prototype.load = function (tasklists) {
 	$('#tasklists').empty();
 	$('.tasklist-bubble').hide();
 	$.each(tasklists.items, function (i, tasklist) {
-		$('#tasklists').append(new TasklistUIElement(tasklist).element);
+		$('#tasklists').append(new UITasklist(tasklist).element);
 	});
 };
 /**
  * UI element of the tasklist.
  * @param tasklist JSON tasklist
- * @returns {TasklistUIElement}
  */
-function TasklistUIElement (tasklist) {
+function UITasklist (tasklist) {
 	this.refresh(tasklist);
 };
-TasklistUIElement.prototype.refresh = function (tasklist) {
+UITasklist.prototype.refresh = function (tasklist) {
 	var context = this;
 	this.element = $('<span/>')
 		.addClass('tasklistcolor-' + tasklist.colorID)
@@ -147,7 +146,7 @@ TasklistUIElement.prototype.refresh = function (tasklist) {
  * Change color of this element same to the specified element.
  * @param {Element} reference element which has class .tasklistcolor-*
  */
-TasklistUIElement.prototype.changeColorTo = function (reference) {
+UITasklist.prototype.changeColorTo = function (reference) {
 	for (var i = 0; i < Constants.tasklistColors; i++) {
 		if ($(reference).hasClass('tasklistcolor-' + i)) {
 			this.element.addClass('tasklistcolor-' + i);
@@ -160,7 +159,7 @@ TasklistUIElement.prototype.changeColorTo = function (reference) {
 /**
  * @class UI element of {@link Tasks}.
  */
-function TasksUI () {
+function UITasks () {
 	/**
 	 * Latest date in the calendar.
 	 * @type Date
@@ -180,13 +179,13 @@ function TasksUI () {
 /**
  * @param {Tasks} tasks
  */
-TasksUI.prototype.load = function (tasks) {
+UITasks.prototype.load = function (tasks) {
 	this.extendMonth(tasks.earliestTime());
 	this.extendMonth(tasks.latestTime());
 	$.each(tasks.items, function (i, task) {
 		var date = new Date(task.dueTime);
 		date.setHours(0, 0, 0, 0);
-		$('#t' + date.getTime() + '>td.task-column').append(new TaskUIElement(task).element);
+		$('#t' + date.getTime() + '>td.task-column').append(new UITask(task).element);
 	});
 	$('.task-column').droppable({
 		accept: '.task',
@@ -202,7 +201,7 @@ TasksUI.prototype.load = function (tasks) {
  * Extend rows of the calendar.
  * @param {Number} time date to extend
  */
-TasksUI.prototype.extend = function (time) {
+UITasks.prototype.extend = function (time) {
 	var date = new Date(time);
 	date.setHours(0, 0, 0, 0);
 	if (date < this.earliest) {
@@ -222,7 +221,7 @@ TasksUI.prototype.extend = function (time) {
  * Extend rows of the calendar.
  * @param {Number} time date to extend
  */
-TasksUI.prototype.extendMonth = function (time) {
+UITasks.prototype.extendMonth = function (time) {
 	var date = new Date(time);
 	date.setHours(0, 0, 0, 0);
 	date.setDate(1);
@@ -235,7 +234,7 @@ TasksUI.prototype.extendMonth = function (time) {
  * @param {Date} date date (time parts must be zero)
  * @returns {jQuery}
  */
-TasksUI.prototype.createDateRow = function (date) {
+UITasks.prototype.createDateRow = function (date) {
 	return $('<tr/>')
 		.attr('id', 't' + date.getTime())
 		.addClass('w' + date.getDay())
@@ -253,14 +252,14 @@ TasksUI.prototype.createDateRow = function (date) {
  * 
  * @param tasklist
  */
-TasksUI.prototype.applyColor = function (tasklist) {
+UITasks.prototype.applyColor = function (tasklist) {
 	$('.tasklist-' + tasklist.id).addClass('tasklistcolor-' + tasklist.colorID);
 };
 /**
  * @class UI element of task.
  * @param task JSON task
  */
-function TaskUIElement (task) {
+function UITask (task) {
 	this.element = $('<div class="task"/>');
 	this.refresh(task);
 }
@@ -268,7 +267,7 @@ function TaskUIElement (task) {
  * Refresh view.
  * @param task JSON task
  */
-TaskUIElement.prototype.refresh = function (task) {
+UITask.prototype.refresh = function (task) {
 	var context = this;
 	this.element.empty()
 		.addClass('task-status-' + task.status)
@@ -292,8 +291,8 @@ TaskUIElement.prototype.refresh = function (task) {
 // controller
 function States () {}
 States.authorized = function () {
-	var tasklistsUI = new TasklistsUI();
-	var tasksUI = new TasksUI();
+	var uiTasklist = new UITasklists();
+	var uiTasks = new UITasks();
 	// get tasks of the default tasklist
 	Tasks.get('@default', function (tasks) {
 		var defaultTasklistID = null;
@@ -307,18 +306,18 @@ States.authorized = function () {
 					tasklist.colorID = i % Constants.tasklistColors;
 				}
 				if (tasklist.id == defaultTasklistID) {
-					tasksUI.applyColor(tasklist);
+					uiTasks.applyColor(tasklist);
 				}
 				else {
 					Tasks.get(tasklist.id, function (tasks) {
-						tasksUI.load(tasks, tasklist);
-						tasksUI.applyColor(tasklist);
+						uiTasks.load(tasks, tasklist);
+						uiTasks.applyColor(tasklist);
 					});
 				}
 			});
-			tasklistsUI.load(tasklists);
+			uiTasklist.load(tasklists);
 		});
-		tasksUI.load(tasks);
+		uiTasks.load(tasks);
 	});
 };
 States.authorizing = function () {
