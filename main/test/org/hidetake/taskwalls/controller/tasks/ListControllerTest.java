@@ -21,7 +21,7 @@ public class ListControllerTest extends ControllerTestCase
 		ListController controller = tester.getController();
 		assertThat(controller, is(notNullValue()));
 		assertThat(tester.isRedirect(), is(false));
-		assertThat(tester.getDestinationPath(), is("/tasks/invalidRequest"));
+		assertThat(tester.getDestinationPath(), is("/invalidRequest"));
 	}
 
 }
