@@ -246,6 +246,7 @@ td.month-column {
 
 td.weekday-column {
 	width: 3em;
+	padding-right: 1em;
 	text-align: center;
 	color: dimgray;
 	text-shadow: #ddd 1px 1px 1px;
@@ -253,7 +254,7 @@ td.weekday-column {
 
 td.date-column {
 	width: 3em;
-	padding-right: 5px;
+	padding-left: 1em;
 	text-align: center;
 	font-size: 120%;
 	text-shadow: #ddd 1px 1px 1px;

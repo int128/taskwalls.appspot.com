@@ -264,10 +264,10 @@ UITasks.prototype.createDateRow = function (date) {
 		.addClass(DateUtil.futureOrPast(date, 'future', 'today', 'past'))
 		.append($('<td class="month-column"/>')
 				.append($('<div/>').text(date.getMonth() + 1)))
-		.append($('<td class="weekday-column"/>')
-				.append($.resource('weekday' + date.getDay())))
 		.append($('<td class="date-column"/>')
 				.append($('<div/>').text(date.getDate())))
+		.append($('<td class="weekday-column"/>')
+				.append($.resource('weekday' + date.getDay())))
 		.append($('<td class="task-column"/>'));
 };
 /**
