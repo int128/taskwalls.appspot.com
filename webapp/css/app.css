@@ -193,6 +193,7 @@ a:VISITED {
  */
 #calendar {
 	border-collapse: collapse;
+	table-layout: fixed;
 	width: 100%;
 }
 
@@ -200,11 +201,12 @@ a:VISITED {
 	vertical-align: middle;
 }
 
-td.month-column {
-	padding-left: 15px;
-	padding-right: 15px;
-	text-align: center;
-	color: transparent;
+tr.past {
+	
+}
+
+tr.today>td.weekday-column,tr.today>td.date-column {
+	font-weight: bold;
 }
 
 tr.d1>td.month-column {
@@ -216,47 +218,51 @@ tr.d1>td.month-column>div {
 	text-shadow: #aaa 1px 1px 1px;
 }
 
-tr.d1 {
-	border-top: solid 1px #ccc;
-}
-
-tr.today>td {
-	border-top: solid 1px red;
-	border-bottom: solid 1px red;
-}
-
-tr.past {
-	
-}
-
-tr.today>td.weekday-column,tr.today>td.date-column {
-	font-weight: bold;
+tr.d1>td {
+	border-top: solid 1px #888;
 }
 
 tr.w0>td.weekday-column,tr.w0>td.date-column {
 	color: red;
 }
 
+tr.w1>td.weekday-column,tr.w1>td.date-column,tr.w1>td.task-column {
+	border-top: solid 1px #888;
+}
+
+td.weekday-column,td.date-column,td.task-column {
+	border-top: solid 1px #ccc;
+}
+
+tr.today>td.weekday-column,tr.today>td.date-column,tr.today>td.task-column {
+	background-color: #ddd;
+}
+
+td.month-column {
+	width: 3em;
+	text-align: center;
+	color: transparent;
+}
+
 td.weekday-column {
-	padding-right: 15px;
-	text-align: right;
+	width: 3em;
+	text-align: center;
 	color: dimgray;
 	text-shadow: #ddd 1px 1px 1px;
 }
 
 td.date-column {
-	padding-right: 15px;
-	text-align: right;
+	width: 3em;
+	padding-right: 5px;
+	text-align: center;
 	font-size: 120%;
 	text-shadow: #ddd 1px 1px 1px;
 }
 
 td.task-column {
-	border-top: solid 1px #ccc;
-}
-
-tr.w1>td.task-column {
-	border-top: solid 1px #888;
+	width: auto;
+	padding-left: 5px;
+	border-left: solid 1px #ccc;
 }
 
 /*
