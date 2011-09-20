@@ -411,8 +411,9 @@ $(function () {
 	$(document).ajaxStop(function (event, xhr) {
 		$('#loading').fadeOut();
 	});
+	/** @param {XMLHttpRequest} xhr */
 	$(document).ajaxError(function (event, xhr) {
-		if (xhr.status == 403) {
+		if (xhr.status == 403 || xhr.status == 404) {
 			Session.login();
 		}
 		else {
