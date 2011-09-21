@@ -28,8 +28,7 @@ public class ListController extends ControllerBase
 			return null;
 		}
 		if (!validate()) {
-			response.sendError(400);
-			return null;
+			return forwardInvalidRequest();
 		}
 		String tasklistID = asString("tasklistID");
 

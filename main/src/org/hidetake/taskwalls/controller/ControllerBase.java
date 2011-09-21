@@ -44,7 +44,7 @@ public abstract class ControllerBase extends Controller
 	protected Navigation setUp()
 	{
 		if (request.getCookies() == null) {
-			return forward("/invalidRequest");
+			return forwardInvalidRequest();
 		}
 		sessionKey = null;
 		for (Cookie cookie : request.getCookies()) {
@@ -54,12 +54,12 @@ public abstract class ControllerBase extends Controller
 			}
 		}
 		if (sessionKey == null) {
-			return forward("/invalidRequest");
+			return forwardInvalidRequest();
 		}
 
 		CachedToken token = Memcache.get(sessionKey);
 		if (token == null) {
-			return forward("/invalidRequest");
+			return forwardInvalidRequest();
 		}
 		HttpTransport httpTransport = NetHttpTransportLocator.get();
 		JacksonFactory jsonFactory = JacksonFactoryLocator.get();
@@ -90,6 +90,15 @@ public abstract class ControllerBase extends Controller
 		response.getWriter().append(json);
 		response.flushBuffer();
 		return null;
+	}
+
+	/**
+	 * Forwards to invalid request handler.
+	 * @return
+	 */
+	protected Navigation forwardInvalidRequest()
+	{
+		return forward("/invalidRequest");
 	}
 
 	@Override
