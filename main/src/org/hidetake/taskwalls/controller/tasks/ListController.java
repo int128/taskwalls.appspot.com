@@ -28,7 +28,7 @@ public class ListController extends ControllerBase
 			return null;
 		}
 		if (!validate()) {
-			return forwardInvalidRequest();
+			return null;
 		}
 		String tasklistID = asString("tasklistID");
 
