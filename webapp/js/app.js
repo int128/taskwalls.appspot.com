@@ -18,10 +18,23 @@ function Tasklists (items) {
 Tasklists.get = function (callback) {
 	$.getJSON('tasklists/list', null, function (response) {
 		var instance = new Tasklists(response.items);
+		$.each(instance.items, function (i, tasklist) {
+			if (tasklist.colorID == undefined) {
+				tasklist.colorID = i % Constants.tasklistColors;
+			}
+		});
 		if ($.isFunction(callback)) {
 			callback(instance);
 		}
 	});
+};
+/**
+ * Update color of the tasklist.
+ * @param tasklist JSON tasklist
+ * @param {Function} callback
+ */
+Tasklists.updateColor = function (tasklist, callback) {
+	$.post('tasklists/update/color', tasklist);
 };
 /**
  * @class represents tasks model
@@ -327,9 +340,6 @@ States.authorized = function () {
 		// get tasklists
 		Tasklists.get(function (tasklists) {
 			$.each(tasklists.items, function (i, tasklist) {
-				if (tasklist.colorID == undefined) {
-					tasklist.colorID = i % Constants.tasklistColors;
-				}
 				if (tasklist.id == defaultTasklistID) {
 					uiTasks.applyTasklistColor(tasklist);
 				}
@@ -347,6 +357,9 @@ States.authorized = function () {
 	// when tasklist color has been changed
 	uiTasklists.onColorChanged = function (tasklist) {
 		uiTasks.applyTasklistColor(tasklist);
+		Tasklists.updateColor(tasklist, function () {
+			// TODO: what to do when completed?
+		});
 	};
 };
 States.authorizing = function () {
