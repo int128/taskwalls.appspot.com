@@ -36,14 +36,14 @@ public class Oauth2Controller extends Controller
 	public Navigation run() throws Exception
 	{
 		if (!isPost()) {
-			return null;
+			return forward("/errors/preconditionFailed");
 		}
 		if (!AjaxPreconditions.isXHR(request)) {
-			return null;
+			return forward("/errors/preconditionFailed");
 		}
 		String authorizationCode = asString("code");
 		if (authorizationCode == null) {
-			return null;
+			return forward("/errors/preconditionFailed");
 		}
 
 		// exchange authorization code and token
