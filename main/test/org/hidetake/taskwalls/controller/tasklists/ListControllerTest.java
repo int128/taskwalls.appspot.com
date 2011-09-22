@@ -11,13 +11,13 @@ public class ListControllerTest extends ControllerTestCase
 {
 
 	@Test
-	public void run() throws Exception
+	public void noSession() throws Exception
 	{
-		tester.start("/tasks/tasklists/list");
+		tester.start("/tasklists/list");
 		ListController controller = tester.getController();
 		assertThat(controller, is(notNullValue()));
 		assertThat(tester.isRedirect(), is(false));
-		assertThat(tester.getDestinationPath(), is(nullValue()));
+		assertThat(tester.getDestinationPath(), is("/errors/noSession"));
 	}
 
 }
