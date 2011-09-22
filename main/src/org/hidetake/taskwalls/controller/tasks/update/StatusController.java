@@ -19,12 +19,14 @@ public class StatusController extends ControllerBase
 	@Override
 	public Navigation run() throws Exception
 	{
+		if (!isPost()) {
+			return forward("/errors/preconditionFailed");
+		}
 		if (!AjaxPreconditions.isXHR(request)) {
-			return null;
+			return forward("/errors/preconditionFailed");
 		}
 		if (!validate()) {
-			response.sendError(400);
-			return null;
+			return forward("/errors/preconditionFailed");
 		}
 
 		Task task = new Task();

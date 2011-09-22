@@ -24,11 +24,15 @@ public class ListController extends ControllerBase
 	public Navigation run() throws Exception
 	{
 		cache.productionPolicy.setExpiration(Expiration.byDeltaSeconds(10));
+
+		if (!isGet()) {
+			return forward("/errors/preconditionFailed");
+		}
 		if (!AjaxPreconditions.isXHR(request)) {
-			return null;
+			return forward("/errors/preconditionFailed");
 		}
 		if (!validate()) {
-			return null;
+			return forward("/errors/preconditionFailed");
 		}
 		String tasklistID = asString("tasklistID");
 
