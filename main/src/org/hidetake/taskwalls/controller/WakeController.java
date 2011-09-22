@@ -9,6 +9,7 @@ public class WakeController extends Controller
 	@Override
 	public Navigation run() throws Exception
 	{
+		response.setContentType("image/png");
 		return null;
 	}
 
