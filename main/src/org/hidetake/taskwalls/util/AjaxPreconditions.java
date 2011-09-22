@@ -5,6 +5,9 @@ import javax.servlet.http.HttpServletRequest;
 public class AjaxPreconditions
 {
 
+	public static final String XHR_HEADER_NAME = "X-Requested-With";
+	public static final String XHR_HEADER_VALUE = "XMLHttpRequest";
+
 	private AjaxPreconditions()
 	{
 	}
@@ -16,7 +19,7 @@ public class AjaxPreconditions
 	 */
 	public static boolean isXHR(HttpServletRequest request)
 	{
-		return "XMLHttpRequest".equals(request.getHeader("X-Requested-With"));
+		return XHR_HEADER_VALUE.equals(request.getHeader(XHR_HEADER_NAME));
 	}
 
 }
