@@ -16,6 +16,16 @@ public class UpdateControllerTest extends ControllerTestCase
 {
 
 	@Test
+	public void noSession() throws Exception
+	{
+		tester.start("/tasklists/options/update");
+		UpdateController controller = tester.getController();
+		assertThat(controller, is(notNullValue()));
+		assertThat(tester.isRedirect(), is(false));
+		assertThat(tester.getDestinationPath(), is("/errors/noSession"));
+	}
+
+	@Test
 	public void validationFailed() throws Exception
 	{
 		SessionUtil.enable(tester);
