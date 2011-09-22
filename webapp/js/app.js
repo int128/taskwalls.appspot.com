@@ -34,7 +34,7 @@ Tasklists.get = function (callback) {
  * @param {Function} callback
  */
 Tasklists.updateColor = function (tasklist, callback) {
-	$.post('tasklists/update/color', tasklist);
+	$.post('tasklists/options/update', tasklist);
 };
 /**
  * @class represents tasks model
