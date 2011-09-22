@@ -1,5 +1,5 @@
 /.apt_generated
-/build
+/www-test
 /webapp/WEB-INF/lib
 /webapp/WEB-INF/classes
 /webapp/WEB-INF/appengine-generated/datastore-indexes-auto.xml

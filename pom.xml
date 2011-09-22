@@ -39,6 +39,7 @@
 		<slim3.version>1.0.13</slim3.version>
 		<generated.src>.apt_generated</generated.src>
 		<generated.war>webapp</generated.war>
+		<test.war>www-test</test.war>
 	</properties>
 	<dependencies>
 		<dependency>
@@ -109,8 +110,8 @@
 		<sourceDirectory>main/src</sourceDirectory>
 		<testSourceDirectory>main/test</testSourceDirectory>
 		<outputDirectory>${generated.war}/WEB-INF/classes</outputDirectory>
-		<testOutputDirectory>build/test-classes</testOutputDirectory>
-		<directory>build</directory>
+		<testOutputDirectory>${test.war}/WEB-INF/classes</testOutputDirectory>
+		<directory>${test.war}</directory>
 		<plugins>
 			<plugin>
 				<groupId>org.codehaus.mojo</groupId>
@@ -170,7 +171,7 @@
 							<goal>copy-dependencies</goal>
 						</goals>
 						<configuration>
-							<outputDirectory>build/lib</outputDirectory>
+							<outputDirectory>${test.war}/WEB-INF/lib</outputDirectory>
 							<includeArtifactIds>slim3-gen</includeArtifactIds>
 							<overWriteReleases>false</overWriteReleases>
 							<overWriteSnapshots>true</overWriteSnapshots>
