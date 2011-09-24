@@ -3,10 +3,13 @@ package org.hidetake.taskwalls.model;
 import java.io.Serializable;
 
 import org.hidetake.taskwalls.meta.TasklistOptionsMeta;
+import org.hidetake.taskwalls.service.TasklistOptionsService;
 import org.slim3.datastore.Attribute;
 import org.slim3.datastore.Datastore;
 import org.slim3.datastore.Model;
 
+import com.google.api.services.tasks.model.TaskList;
+import com.google.api.services.tasks.model.TaskLists;
 import com.google.appengine.api.datastore.Key;
 
 /**
@@ -22,6 +25,23 @@ public class TasklistOptions implements Serializable
 	@Attribute(primaryKey = true)
 	private Key key;
 	private int colorID;
+
+	/**
+	 * Merge {@link TasklistOptions} to given {@link TaskLists}.
+	 * @param taskLists
+	 * @return
+	 */
+	public static TaskLists mergeTo(TaskLists taskLists)
+	{
+		TasklistOptionsMeta m = TasklistOptionsMeta.get();
+		for (TaskList taskList : taskLists.getItems()) {
+			TasklistOptions tasklistOptions = TasklistOptionsService.get(taskList.getId());
+			if (tasklistOptions != null) {
+				taskList.put(m.colorID.getName(), tasklistOptions.getColorID());
+			}
+		}
+		return taskLists;
+	}
 
 	public static Key createKey(String id)
 	{

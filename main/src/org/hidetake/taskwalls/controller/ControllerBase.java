@@ -38,7 +38,7 @@ public abstract class ControllerBase extends Controller
 	/**
 	 * Tasks API service.
 	 */
-	protected Tasks taskService;
+	protected Tasks tasksService;
 
 	@Override
 	protected Navigation setUp()
@@ -70,7 +70,7 @@ public abstract class ControllerBase extends Controller
 				Constants.clientCredential.getClientId(),
 				Constants.clientCredential.getClientSecret(),
 				token.getRefreshToken());
-		taskService = new Tasks(httpTransport, resource, jsonFactory);
+		tasksService = new Tasks(httpTransport, resource, jsonFactory);
 		return null;
 	}
 

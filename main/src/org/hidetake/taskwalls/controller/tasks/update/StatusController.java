@@ -1,11 +1,11 @@
 package org.hidetake.taskwalls.controller.tasks.update;
 
 import org.hidetake.taskwalls.controller.ControllerBase;
+import org.hidetake.taskwalls.model.TaskExtension;
 import org.hidetake.taskwalls.util.AjaxPreconditions;
 import org.slim3.controller.Navigation;
 import org.slim3.controller.validator.Validators;
 
-import com.google.api.client.util.DateTime;
 import com.google.api.services.tasks.Tasks.TasksOperations.Patch;
 import com.google.api.services.tasks.model.Task;
 
@@ -32,17 +32,12 @@ public class StatusController extends ControllerBase
 		Task task = new Task();
 		task.setId(asString("id"));
 		task.setStatus(asString("status"));
+		Patch patch = tasksService.tasks.patch(asString("tasklistID"), task.getId(), task);
+		Task patched = patch.execute();
 
-		Patch patch = taskService.tasks.patch(asString("tasklistID"), task.getId(), task);
-		task = patch.execute();
+		TaskExtension.extend(patched);
 
-		// TODO: move to model?
-		DateTime due = task.getDue();
-		if (due != null) {
-			task.put("dueTime", due.getValue());
-		}
-
-		return jsonResponse(task);
+		return jsonResponse(patched);
 	}
 
 	private boolean validate()
