@@ -355,6 +355,7 @@ UITask.prototype.refresh = function (task) {
 					if ($(this).val() && $(this).val() != task.title) {
 						var original = task.title;
 						task.title = $(this).val();
+						$(this).attr('disabled', 'disabled');
 						Tasks.updateTitle(task, function (updated) {
 							context.refresh(updated);
 						}, function () {
