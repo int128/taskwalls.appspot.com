@@ -376,7 +376,8 @@ UITask.prototype.refresh = function (task) {
 						return false;
 					}
 				})
-				.focus();
+				.focus()
+				.select();
 		}));
 	if (task.status == 'completed') {
 		$('>.status_completed', this.element).attr('checked', 'checked');
