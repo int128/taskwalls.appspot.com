@@ -37,6 +37,7 @@ public class StatusController extends ControllerBase
 		}
 		else {
 			task.setStatus("needsAction");
+			// FIXME: not worked
 			task.setCompleted(null);
 		}
 		Task patched = patch.execute();
