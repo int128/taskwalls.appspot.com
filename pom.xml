@@ -97,7 +97,7 @@
 		<dependency>
 			<groupId>com.google.apis</groupId>
 			<artifactId>google-api-services-tasks</artifactId>
-			<version>v1-1.2.0-beta</version>
+			<version>v1-1.2.2-beta</version>
 		</dependency>
 		<dependency>
 			<groupId>org.mockito</groupId>
