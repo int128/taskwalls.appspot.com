@@ -287,6 +287,14 @@ div.task.task-status-completed {
 	color: #888;
 }
 
+div.task>textarea.title {
+	position: relative;
+	width: 100%;
+	height: 3em;
+	border: none;
+	background: transparent;
+}
+
 div.task.ajax-in-progress {
 	opacity: 0.5;
 }

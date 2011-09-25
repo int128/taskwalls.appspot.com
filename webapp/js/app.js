@@ -77,6 +77,22 @@ Tasks.updateStatus = function (task, success, error) {
 	});
 };
 /**
+ * Update title of task.
+ * @param task JSON task
+ * @param {Function} success
+ * @param {Function} error
+ */
+Tasks.updateTitle = function (task, success, error) {
+	$.ajax({
+		type: 'POST',
+		url: 'tasks/update/title',
+		data: task,
+		dataType: 'json',
+		success: success,
+		error: error
+	});
+};
+/**
  * @returns latest date time in milliseconds
  */
 Tasks.prototype.latestTime = function () {
@@ -319,8 +335,8 @@ UITask.prototype.refresh = function (task) {
 		.addClass('task-status-' + task.status)
 		.addClass('tasklist-' + task.tasklistID)
 		.removeClass('ajax-in-progress')
-		.text(task.title)
-		.prepend($('<input class="status_completed" type="checkbox"/>').change(function () {
+		.append($('<input class="status_completed" type="checkbox"/>').change(function () {
+			// updates task status
 			task.status_completed = this.checked;
 			Tasks.updateStatus(task, function (updated) {
 				context.refresh(updated);
@@ -328,6 +344,39 @@ UITask.prototype.refresh = function (task) {
 				context.refresh(task);
 			});
 			context.element.addClass('ajax-in-progress');
+		}))
+		.append($('<span class="title"/>').text(task.title).click(function () {
+			context.element.empty();
+			$('<textarea class="title"/>')
+				.val(task.title)
+				.appendTo(context.element)
+				.blur(function () {
+					// updates task title
+					if ($(this).val() && $(this).val() != task.title) {
+						var original = task.title;
+						task.title = $(this).val();
+						Tasks.updateTitle(task, function (updated) {
+							context.refresh(updated);
+						}, function () {
+							task.title = original;
+							context.refresh(task);
+						});
+						context.element.addClass('ajax-in-progress');
+					}
+					else {
+						context.refresh(task);
+					}
+				})
+				.keydown(function (event) {
+					if (event.keyCode == 27) { // ESC
+						context.refresh(task);
+					}
+					else if (event.keyCode == 13) { // Enter
+						$(this).blur();
+						return false;
+					}
+				})
+				.focus();
 		}));
 	if (task.status == 'completed') {
 		$('>.status_completed', this.element).attr('checked', 'checked');
