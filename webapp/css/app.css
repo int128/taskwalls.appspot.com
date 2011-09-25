@@ -82,6 +82,7 @@ a:VISITED {
 
 #loading {
 	display: none;
+	z-index: 100;
 	width: 100px;
 	height: 100px;
 	position: fixed;
@@ -99,6 +100,7 @@ a:VISITED {
 
 #global-error-message {
 	display: none;
+	z-index: 90;
 	width: 400px;
 	height: auto;
 	position: fixed;
@@ -283,6 +285,10 @@ div.task {
 
 div.task.task-status-completed {
 	color: #888;
+}
+
+div.task.ajax-in-progress {
+	opacity: 0.5;
 }
 
 div.task.ui-draggable-dragging {

@@ -63,10 +63,18 @@ Tasks.get = function (tasklistID, callback) {
 /**
  * Update status of task.
  * @param task JSON task
- * @param {Function} callback
+ * @param {Function} success
+ * @param {Function} error
  */
-Tasks.updateStatus = function (task, callback) {
-	$.post('tasks/update/status', task, callback);
+Tasks.updateStatus = function (task, success, error) {
+	$.ajax({
+		type: 'POST',
+		url: 'tasks/update/status',
+		data: task,
+		dataType: 'json',
+		success: success,
+		error: error
+	});
 };
 /**
  * @returns latest date time in milliseconds
@@ -310,20 +318,19 @@ UITask.prototype.refresh = function (task) {
 	this.element.empty()
 		.addClass('task-status-' + task.status)
 		.addClass('tasklist-' + task.tasklistID)
+		.removeClass('ajax-in-progress')
 		.text(task.title)
-		.prepend($('<input class="iscompleted" type="checkbox"/>').change(function () {
-			if (this.checked) {
-				task.status = 'completed';
-			}
-			else {
-				task.status = 'needsAction';
-			}
-			Tasks.updateStatus(task, function (response) {
-				context.refresh(response);
+		.prepend($('<input class="status_completed" type="checkbox"/>').change(function () {
+			task.status_completed = this.checked;
+			Tasks.updateStatus(task, function (updated) {
+				context.refresh(updated);
+			}, function () {
+				context.refresh(task);
 			});
+			context.element.addClass('ajax-in-progress');
 		}));
 	if (task.status == 'completed') {
-		$('>.iscompleted', this.element).attr('checked', 'checked');
+		$('>.status_completed', this.element).attr('checked', 'checked');
 	}
 };
 // controller
@@ -419,6 +426,7 @@ $(function () {
 	});
 	// ajax error handler
 	$(document).ajaxStart(function (event, xhr) {
+		$('#global-error-message').fadeOut();
 		$('#loading').fadeIn();
 	});
 	$(document).ajaxStop(function (event, xhr) {

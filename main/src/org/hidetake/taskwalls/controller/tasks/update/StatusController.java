@@ -31,8 +31,14 @@ public class StatusController extends ControllerBase
 
 		Task task = new Task();
 		task.setId(asString("id"));
-		task.setStatus(asString("status"));
 		Patch patch = tasksService.tasks.patch(asString("tasklistID"), task.getId(), task);
+		if (asBoolean("status_completed")) {
+			task.setStatus("completed");
+		}
+		else {
+			task.setStatus("needsAction");
+			task.setCompleted(null);
+		}
 		Task patched = patch.execute();
 
 		TaskExtension.extend(patched);
@@ -43,10 +49,9 @@ public class StatusController extends ControllerBase
 	private boolean validate()
 	{
 		Validators v = new Validators(request);
-		v.add("status", v.required(), v.regexp("needsAction|completed"));
 		v.add("tasklistID", v.required());
 		v.add("id", v.required());
+		v.add("status_completed", v.required(), v.regexp("true|false"));
 		return v.validate();
 	}
-
 }
