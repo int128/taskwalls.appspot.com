@@ -405,21 +405,21 @@ UITask.prototype.refresh = function (task) {
 		 * @param {Element} column column dropped on
 		 * @param {Date} date
 		 */
-		.bind('dropped', function (event, column, date) {
+		.one('dropped', function (event, column, date) {
 			var original = task.dueTime;
 			// due time must be in UTC
 			task.dueTime = date.getTime() - date.getTimezoneOffset() * 60 * 1000;
-			context.element.addClass('ajax-in-progress');
-			var ghost = $(this).clone(false).appendTo($(column));
+			var oldplace = $(this).wrap('<div/>').parent();
 			Tasks.updateDueTime(task, function (updated) {
-				ghost.replaceWith(context.element);
+				oldplace.remove();
 				context.refresh(updated);
 			}, function () {
 				// restore previous state
-				ghost.remove();
 				task.dueTime = original;
-				context.element.removeClass('ajax-in-progress');
+				oldplace.replaceWith(context.element);
+				context.refresh(task);
 			});
+			$(this).addClass('ajax-in-progress').appendTo($(column));
 		})
 		.draggable();
 	if (task.status == 'completed') {
