@@ -518,6 +518,7 @@ $(function () {
 		$(this).fadeOut();
 	});
 	// ajax error handler
+	$('#loading').show().hide();
 	$(document).ajaxStart(function (event, xhr) {
 		$('#global-error-message').fadeOut();
 		$('#loading').fadeIn();
