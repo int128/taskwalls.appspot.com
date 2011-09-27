@@ -93,6 +93,22 @@ Tasks.updateTitle = function (task, success, error) {
 	});
 };
 /**
+ * Update title of task.
+ * @param task JSON task
+ * @param {Function} success
+ * @param {Function} error
+ */
+Tasks.updateDueTime = function (task, success, error) {
+	$.ajax({
+		type: 'POST',
+		url: 'tasks/update/dueTime',
+		data: task,
+		dataType: 'json',
+		success: success,
+		error: error
+	});
+};
+/**
  * @returns latest date time in milliseconds
  */
 Tasks.prototype.latestTime = function () {
@@ -236,7 +252,8 @@ function UITasks () {
 	this.extendMonth(this.earliest);
 };
 /**
- * @param {Tasks} tasks
+ * Load tasks.
+ * @param {Tasks} tasks array of JSON task
  */
 UITasks.prototype.load = function (tasks) {
 	this.extendMonth(tasks.earliestTime());
@@ -245,15 +262,6 @@ UITasks.prototype.load = function (tasks) {
 		var date = new Date(task.dueTime);
 		date.setHours(0, 0, 0, 0);
 		$('#t' + date.getTime() + '>td.task-column').append(new UITask(task).element);
-	});
-	$('.task-column').droppable({
-		accept: '.task',
-		tolerance: 'pointer',
-		hoverClass: 'task-drag-hover',
-		activeClass: 'task-drag-active'
-	});
-	$('.task').draggable({
-		revert: true
 	});
 };
 /**
@@ -305,7 +313,19 @@ UITasks.prototype.createDateRow = function (date) {
 				.append($('<div/>').text(date.getDate())))
 		.append($('<td class="weekday-column"/>')
 				.append($.resource('weekday' + date.getDay())))
-		.append($('<td class="task-column"/>'));
+		.append($('<td class="task-column"/>'))
+		.droppable({
+			accept: 'div.task',
+			tolerance: 'pointer',
+			hoverClass: 'hover',
+			drop: function (event, ui) {
+				// check if dropped row is different from last one
+				$(ui.draggable).css({top: 0, left: 0});
+				if ($(ui.draggable).parents('#' + this.id).size() == 0) {
+					$(ui.draggable).trigger('dropped', [$('>td.task-column', this), date]);
+				}
+			}
+		});
 };
 /**
  * Apply specified color to these tasks.
@@ -336,7 +356,7 @@ UITask.prototype.refresh = function (task) {
 		.addClass('tasklist-' + task.tasklistID)
 		.removeClass('ajax-in-progress')
 		.append($('<input class="status_completed" type="checkbox"/>').change(function () {
-			// updates task status
+			// updates task status when checkbox changed
 			task.status_completed = this.checked;
 			Tasks.updateStatus(task, function (updated) {
 				context.refresh(updated);
@@ -346,12 +366,12 @@ UITask.prototype.refresh = function (task) {
 			context.element.addClass('ajax-in-progress');
 		}))
 		.append($('<span class="title"/>').text(task.title).click(function () {
+			// updates task title when title clicked
 			context.element.empty();
 			$('<textarea class="title"/>')
 				.val(task.title)
 				.appendTo(context.element)
 				.blur(function () {
-					// updates task title
 					if ($(this).val() && $(this).val() != task.title) {
 						var original = task.title;
 						task.title = $(this).val();
@@ -379,7 +399,28 @@ UITask.prototype.refresh = function (task) {
 				})
 				.focus()
 				.select();
-		}));
+		}))
+		/**
+		 * @param {Element} column column dropped on
+		 * @param {Date} date
+		 */
+		.bind('dropped', function (event, column, date) {
+			// updates task due time when dropped on anothor row
+			var original = task.dueTime;
+			task.dueTime = date.getTime();
+			context.element.addClass('ajax-in-progress');
+			var ghost = $(this).clone(false).appendTo($(column));
+			Tasks.updateDueTime(task, function (updated) {
+				ghost.replaceWith(context.element);
+				context.refresh(updated);
+			}, function () {
+				// restore previous state
+				ghost.remove();
+				task.dueTime = original;
+				context.element.removeClass('ajax-in-progress');
+			});
+		})
+		.draggable();
 	if (task.status == 'completed') {
 		$('>.status_completed', this.element).attr('checked', 'checked');
 	}
