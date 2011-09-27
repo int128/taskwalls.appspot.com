@@ -217,7 +217,7 @@ tr.d1>td.month-column {
 
 tr.d1>td.month-column>div {
 	font-size: 200%;
-	text-shadow: #aaa 1px 1px 1px;
+	text-shadow: #888 1px 1px 1px;
 }
 
 tr.d1>td {
@@ -237,7 +237,7 @@ td.weekday-column,td.date-column,td.task-column {
 }
 
 tr.today>td.weekday-column,tr.today>td.date-column,tr.today>td.task-column {
-	background-color: #ddd;
+	background-color: #eee;
 }
 
 td.month-column {
@@ -251,25 +251,25 @@ td.weekday-column {
 	padding-right: 1em;
 	text-align: center;
 	color: dimgray;
-	text-shadow: #ddd 1px 1px 1px;
+	text-shadow: #ccc 1px 1px 1px;
 }
 
 td.date-column {
 	width: 3em;
 	padding-left: 1em;
 	text-align: center;
-	font-size: 120%;
-	text-shadow: #ddd 1px 1px 1px;
+	font-size: 130%;
+	text-shadow: #ccc 1px 1px 1px;
 }
 
 td.task-column {
 	width: auto;
 	padding-left: 5px;
-	border-left: solid 1px #ccc;
+	border-left: solid 1px #888;
 }
 
-#calendar>tbody>tr.hover {
-	background: #ddd;
+#calendar>tbody>tr.hover>td {
+	background: #fee;
 }
 
 /*
@@ -280,6 +280,8 @@ div.task {
 	width: 200px;
 	min-height: 50px;
 	margin-left: 15px;
+	margin-bottom: 1px;
+	margin-top: 1px;
 	padding: 5px;
 	border: solid 1px #ddd;
 	border-left: solid 5px #ccc;
@@ -304,8 +306,8 @@ div.task.ajax-in-progress {
 }
 
 div.task.ui-draggable-dragging {
-	z-index: 3;
-	box-shadow: 0 0 5px 5px rgba(0, 0, 0, 0.3);
+	z-index: 10;
+	box-shadow: 2px 2px 1px 1px rgba(0, 0, 0, 0.3);
 }
 
 /*
