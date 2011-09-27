@@ -401,13 +401,14 @@ UITask.prototype.refresh = function (task) {
 				.select();
 		}))
 		/**
+		 * Updates task due time when dropped on anothor row.
 		 * @param {Element} column column dropped on
 		 * @param {Date} date
 		 */
 		.bind('dropped', function (event, column, date) {
-			// updates task due time when dropped on anothor row
 			var original = task.dueTime;
-			task.dueTime = date.getTime();
+			// due time must be in UTC
+			task.dueTime = date.getTime() - date.getTimezoneOffset() * 60 * 1000;
 			context.element.addClass('ajax-in-progress');
 			var ghost = $(this).clone(false).appendTo($(column));
 			Tasks.updateDueTime(task, function (updated) {
