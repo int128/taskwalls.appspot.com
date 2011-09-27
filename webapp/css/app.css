@@ -90,7 +90,7 @@ a:VISITED {
 	left: 50%;
 	margin-top: -50px;
 	margin-left: -50px;
-	background-color: rgba(0, 0, 0, 0.6);
+	background-color: rgba(0, 0, 0, 0.8);
 	background-image: url('/css/loading2.gif');
 	background-repeat: no-repeat;
 	background-position: center;
@@ -108,7 +108,7 @@ a:VISITED {
 	left: 50%;
 	margin-top: -20px;
 	margin-left: -200px;
-	background-color: rgba(0, 0, 0, 0.6);
+	background-color: rgba(0, 0, 0, 0.8);
 	border-radius: 5px;
 	-moz-border-radius: 5px;
 	color: white;
