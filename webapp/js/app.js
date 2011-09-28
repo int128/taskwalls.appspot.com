@@ -546,7 +546,20 @@ $(function () {
 		$('.development').hide().show();
 	}
 	// determine authorization state
-	if (document.cookie.match(/^s=|; s=/)) {
+	var q = location.search.match(/\?code=(.*)/);
+	if (q) {
+		// step2: received authorization code
+		if ($.isFunction(States.authorizing)) {
+			States.authorizing();
+		}
+		$.post('oauth2', {code: q[1]}, function () {
+			location.replace(location.pathname);
+		});
+	}
+	else if (location.search == '?error=access_denied') {
+		location.replace(location.pathname);
+	}
+	else if (document.cookie.match(/^s=|; s=/)) {
 		// step3: authorized
 		if ($.isFunction(States.authorized)) {
 			States.authorized();
@@ -554,25 +567,10 @@ $(function () {
 		$('.authorized').hide().show();
 	}
 	else {
-		var q = location.search.match(/\?code=(.*)/);
-		if (q) {
-			// step2: received authorization code
-			if ($.isFunction(States.authorizing)) {
-				States.authorizing();
-			}
-			$.post('oauth2', {code: q[1]}, function () {
-				location.replace(location.pathname);
-			});
+		// step1: unauthorized
+		if ($.isFunction(States.unauthorized)) {
+			States.unauthorized();
 		}
-		else if (location.search == '?error=access_denied') {
-			location.replace(location.pathname);
-		}
-		else {
-			// step1: unauthorized
-			if ($.isFunction(States.unauthorized)) {
-				States.unauthorized();
-			}
-			$('.unauthorized').hide().show();
-		}
+		$('.unauthorized').hide().show();
 	}
 });
