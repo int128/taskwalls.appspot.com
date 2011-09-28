@@ -498,7 +498,7 @@ DateUtil.futureOrPast = function (date, future, today, past) {
 $(function () {
 	$.extend({
 		resource: function (key) {
-			return $('#rc-' + key).clone(true).removeClass('resource').removeAttr('id');
+			return $('#rc-' + key).clone().removeClass('resource').removeAttr('id');
 		},
 		isDevelopment: function () {
 			return location.hostname == 'localhost';
