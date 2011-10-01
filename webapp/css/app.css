@@ -63,7 +63,6 @@ a:VISITED {
 	padding-top: 1em;
 	padding-bottom: 1em;
 	color: dimgray;
-	font-size: 90%;
 	text-align: center;
 	background-color: rgba(255, 255, 255, 0.8);
 }
@@ -203,8 +202,8 @@ a:VISITED {
 	vertical-align: middle;
 }
 
-tr.past {
-	
+tr.past>td.task-column>div.task.task-status-needsAction {
+	color: red;
 }
 
 tr.today>td.weekday-column,tr.today>td.date-column {
@@ -277,6 +276,7 @@ td.task-column {
  */
 div.task {
 	float: left;
+	overflow: hidden;
 	width: 200px;
 	min-height: 50px;
 	margin-left: 15px;
@@ -290,7 +290,7 @@ div.task {
 }
 
 div.task.task-status-completed {
-	color: #888;
+	color: dimgray;
 }
 
 div.task>textarea.title {
