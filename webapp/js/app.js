@@ -355,7 +355,31 @@ UITask.prototype.refresh = function (task) {
 		.addClass('task-status-' + task.status)
 		.addClass('tasklist-' + task.tasklistID)
 		.removeClass('ajax-in-progress')
-		.append($('<input class="status_completed" type="checkbox"/>').change(function () {
+		.append($.resource('task-template').children())
+		/**
+		 * Updates task due time when dropped on anothor row.
+		 * @param {Element} column column dropped on
+		 * @param {Date} date
+		 */
+		.one('dropped', function (event, column, date) {
+			var original = task.dueTime;
+			// due time must be in UTC
+			task.dueTime = date.getTime() - date.getTimezoneOffset() * 60 * 1000;
+			var oldplace = $(this).wrap('<div/>').parent();
+			Tasks.updateDueTime(task, function (updated) {
+				oldplace.remove();
+				context.refresh(updated);
+			}, function () {
+				// restore previous state
+				task.dueTime = original;
+				oldplace.replaceWith(context.element);
+				context.refresh(task);
+			});
+			$(this).addClass('ajax-in-progress').appendTo($(column));
+		})
+		.draggable();
+	$('>input.status_completed', this.element)
+		.change(function () {
 			// updates task status when checkbox changed
 			task.status_completed = this.checked;
 			Tasks.updateStatus(task, function (updated) {
@@ -364,12 +388,22 @@ UITask.prototype.refresh = function (task) {
 				context.refresh(task);
 			});
 			context.element.addClass('ajax-in-progress');
-		}))
-		.append($('<span class="title"/>').text(task.title).click(function () {
+		})
+		.click(function () {
+			// prevent from bubbling for task click
+			return false;
+		});
+	if (task.status == 'completed') {
+		$('>input.status_completed', this.element).attr('checked', 'checked');
+	}
+	$('>span.title', this.element).text(task.title)
+		.click(function () {
 			// updates task title when title clicked
+			var height = $(this).height();
 			context.element.empty();
 			$('<textarea class="title"/>')
 				.val(task.title)
+				.height(height)
 				.appendTo(context.element)
 				.blur(function () {
 					if ($(this).val() && $(this).val() != task.title) {
@@ -399,31 +433,11 @@ UITask.prototype.refresh = function (task) {
 				})
 				.focus()
 				.select();
-		}))
-		/**
-		 * Updates task due time when dropped on anothor row.
-		 * @param {Element} column column dropped on
-		 * @param {Date} date
-		 */
-		.one('dropped', function (event, column, date) {
-			var original = task.dueTime;
-			// due time must be in UTC
-			task.dueTime = date.getTime() - date.getTimezoneOffset() * 60 * 1000;
-			var oldplace = $(this).wrap('<div/>').parent();
-			Tasks.updateDueTime(task, function (updated) {
-				oldplace.remove();
-				context.refresh(updated);
-			}, function () {
-				// restore previous state
-				task.dueTime = original;
-				oldplace.replaceWith(context.element);
-				context.refresh(task);
-			});
-			$(this).addClass('ajax-in-progress').appendTo($(column));
-		})
-		.draggable();
-	if (task.status == 'completed') {
-		$('>.status_completed', this.element).attr('checked', 'checked');
+			// prevent from bubbling for task click
+			return false;
+		});
+	if (task.notes) {
+		$('>div.notes', this.element).text(task.notes);
 	}
 };
 // controller
