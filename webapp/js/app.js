@@ -342,7 +342,6 @@ UITasks.prototype.applyTasklistColor = function (tasklist) {
  * @param task JSON task
  */
 function UITask (task) {
-	this.element = $('<div class="task"/>');
 	this.refresh(task);
 }
 /**
@@ -351,17 +350,21 @@ function UITask (task) {
  */
 UITask.prototype.refresh = function (task) {
 	var context = this;
-	this.element.empty()
+	var originalElement = this.element;
+	this.element = $('<div class="task"/>');
+	if (originalElement) {
+		$(originalElement).replaceWith(this.element);
+	}
+	this.element.append($.resource('task-template').children())
 		.addClass('task-status-' + task.status)
 		.addClass('tasklist-' + task.tasklistID)
 		.removeClass('ajax-in-progress')
-		.append($.resource('task-template').children())
 		/**
 		 * Updates task due time when dropped on anothor row.
 		 * @param {Element} column column dropped on
 		 * @param {Date} date
 		 */
-		.one('dropped', function (event, column, date) {
+		.trigger('dropped', function (event, column, date) {
 			var original = task.dueTime;
 			// due time must be in UTC
 			task.dueTime = date.getTime() - date.getTimezoneOffset() * 60 * 1000;
