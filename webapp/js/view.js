@@ -202,7 +202,7 @@ function UITask (task, tasklists) {
 UITask.prototype.refresh = function (task) {
 	var context = this;
 	(function () {
-		var originalElement = this.element;
+		var originalElement = context.element;
 		context.element = $('<div class="task"/>');
 		if (originalElement) {
 			$(originalElement).replaceWith(context.element);
@@ -218,20 +218,21 @@ UITask.prototype.refresh = function (task) {
 		 * @param {Date} date
 		 */
 		.bind('dropped', function (event, column, date) {
-			var original = task.dueTime;
+			var originalDueTime = task.dueTime;
 			// due time must be in UTC
 			task.dueTime = date.getTime() - date.getTimezoneOffset() * 60 * 1000;
-			var oldplace = $(this).wrap('<div/>').parent();
+			var oldplace = context.element.wrap('<div/>').parent();
+			context.element.addClass('ajax-in-progress').appendTo($(column));
 			Tasks.updateDueTime(task, function (updated) {
 				oldplace.remove();
 				context.refresh(updated);
 			}, function () {
 				// restore previous state
-				task.dueTime = original;
-				oldplace.replaceWith(context.element);
+				task.dueTime = originalDueTime;
+				context.element.remove();
+				context.element = oldplace;
 				context.refresh(task);
 			});
-			$(this).addClass('ajax-in-progress').appendTo($(column));
 		})
 		.draggable();
 	$('>input.status_completed', this.element)
