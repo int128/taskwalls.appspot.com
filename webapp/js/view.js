@@ -169,8 +169,8 @@ UITasks.prototype.createDateRow = function (date) {
 			tolerance: 'pointer',
 			hoverClass: 'hover',
 			drop: function (event, ui) {
-				// check if dropped row is different from last one
 				$(ui.draggable).css({top: 0, left: 0});
+				// check if dropped row is different from last one
 				if ($(ui.draggable).parents('#' + this.id).size() == 0) {
 					$(ui.draggable).trigger('dropped', [$('>td.task-column', this), date]);
 				}
@@ -208,13 +208,12 @@ UITask.prototype.refresh = function (task) {
 	this.element.append($.resource('task-template').children())
 		.addClass('task-status-' + task.status)
 		.addClass('tasklist-' + task.tasklistID)
-		.removeClass('ajax-in-progress')
 		/**
-		 * Updates task due time when dropped on anothor row.
+		 * Updates task due time when dropped on another row.
 		 * @param {Element} column column dropped on
 		 * @param {Date} date
 		 */
-		.trigger('dropped', function (event, column, date) {
+		.bind('dropped', function (event, column, date) {
 			var original = task.dueTime;
 			// due time must be in UTC
 			task.dueTime = date.getTime() - date.getTimezoneOffset() * 60 * 1000;
