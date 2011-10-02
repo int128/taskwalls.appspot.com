@@ -19,38 +19,23 @@ $(function () {
 // controller
 function States () {}
 States.authorized = function () {
-	var uiTasklists = new UITasklists();
-	var uiTasks = new UITasks();
-	// get tasks of the default tasklist
-	Tasks.get('@default', function (tasks) {
-		var defaultTasklistID = null;
-		if (tasks.items.length > 1) {
-			defaultTasklistID = tasks.items[0].tasklistID;
-		}
-		// get tasklists
-		Tasklists.get(function (tasklists) {
-			$.each(tasklists.items, function (i, tasklist) {
-				if (tasklist.id == defaultTasklistID) {
-					uiTasks.applyTasklistColor(tasklist);
-				}
-				else {
-					Tasks.get(tasklist.id, function (tasks) {
-						uiTasks.load(tasks, tasklist);
-						uiTasks.applyTasklistColor(tasklist);
-					});
-				}
+	// get tasklists
+	Tasklists.get(function (tasklists) {
+		var uiTasklists = new UITasklists(tasklists);
+		var uiTasks = new UITasks(tasklists);
+		$.each(tasklists.items, function (i, tasklist) {
+			Tasks.get(tasklist.id, function (tasks) {
+				uiTasks.add(tasks);
 			});
-			uiTasklists.load(tasklists);
 		});
-		uiTasks.load(tasks);
+		// when tasklist color has been changed
+		uiTasklists.onColorChanged = function (tasklist) {
+			uiTasks.applyTasklistColor(tasklist);
+			Tasklists.updateColor(tasklist, function () {
+				// TODO: what to do when completed?
+			});
+		};
 	});
-	// when tasklist color has been changed
-	uiTasklists.onColorChanged = function (tasklist) {
-		uiTasks.applyTasklistColor(tasklist);
-		Tasklists.updateColor(tasklist, function () {
-			// TODO: what to do when completed?
-		});
-	};
 };
 States.authorizing = function () {
 };
@@ -64,6 +49,7 @@ $(function () {
 	window.onerror = function () {
 		if (!_window_onerror_handling) {
 			_window_onerror_handling = true;
+			$('#loading').hide();
 			$('#global-error-message').fadeIn();
 		}
 	};

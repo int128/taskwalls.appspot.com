@@ -1,19 +1,10 @@
 /**
  * @class UI element of {@link Tasklists}.
+ * @param {Tasklists} tasklists tasklist JSON
  */
-function UITasklists () {
+function UITasklists (tasklists) {
 	$('#tasklists').empty();
 	$('.tasklist-bubble').hide();
-};
-/**
- * Tasklist color has been changed via UI.
- * @param tasklist tasklist JSON (colorID property has been updated)
- */
-UITasklists.prototype.onColorChanged = function (tasklist) {};
-/**
- * @param {Tasklists} tasklists
- */
-UITasklists.prototype.load = function (tasklists) {
 	var onColorChanged = this.onColorChanged;
 	$.each(tasklists.items, function (i, tasklist) {
 		var uiTasklist = new UITasklist(tasklist);
@@ -21,6 +12,11 @@ UITasklists.prototype.load = function (tasklists) {
 		$('#tasklists').append(uiTasklist.element);
 	});
 };
+/**
+ * Tasklist color has been changed via UI.
+ * @param tasklist tasklist JSON (colorID property has been updated)
+ */
+UITasklists.prototype.onColorChanged = function (tasklist) {};
 /**
  * UI element of the tasklist.
  * @param tasklist JSON tasklist
@@ -83,8 +79,10 @@ UITasklist.prototype.changeColorTo = function (reference) {
 };
 /**
  * @class UI element of {@link Tasks}.
+ * @param {Tasklists} tasklists the tasklists
  */
-function UITasks () {
+function UITasks (tasklists) {
+	this.tasklists = tasklists;
 	/**
 	 * Latest date in the calendar.
 	 * @type Date
@@ -102,16 +100,17 @@ function UITasks () {
 	this.extendMonth(this.earliest);
 };
 /**
- * Load tasks.
+ * Add tasks.
  * @param {Tasks} tasks array of JSON task
  */
-UITasks.prototype.load = function (tasks) {
+UITasks.prototype.add = function (tasks) {
+	var tasklists = this.tasklists;
 	this.extendMonth(tasks.earliestTime());
 	this.extendMonth(tasks.latestTime());
 	$.each(tasks.items, function (i, task) {
 		var date = new Date(task.dueTime);
 		date.setHours(0, 0, 0, 0);
-		$('#t' + date.getTime() + '>td.task-column').append(new UITask(task).element);
+		$('#t' + date.getTime() + '>td.task-column').append(new UITask(task, tasklists).element);
 	});
 };
 /**
@@ -189,25 +188,30 @@ UITasks.prototype.applyTasklistColor = function (tasklist) {
 };
 /**
  * @class UI element of task.
- * @param task JSON task
+ * @param {Object} task JSON task
+ * @param {Tasklists} tasklists the tasklists
  */
-function UITask (task) {
+function UITask (task, tasklists) {
+	this.tasklists = tasklists;
 	this.refresh(task);
 }
 /**
  * Refresh view.
- * @param task JSON task
+ * @param {Object} task JSON task
  */
 UITask.prototype.refresh = function (task) {
 	var context = this;
-	var originalElement = this.element;
-	this.element = $('<div class="task"/>');
-	if (originalElement) {
-		$(originalElement).replaceWith(this.element);
-	}
+	(function () {
+		var originalElement = this.element;
+		context.element = $('<div class="task"/>');
+		if (originalElement) {
+			$(originalElement).replaceWith(context.element);
+		}
+	})();
 	this.element.append($.resource('task-template').children())
 		.addClass('task-status-' + task.status)
 		.addClass('tasklist-' + task.tasklistID)
+		.addClass('tasklistcolor-' + this.tasklists.getByID(task.tasklistID).colorID)
 		/**
 		 * Updates task due time when dropped on another row.
 		 * @param {Element} column column dropped on

@@ -31,6 +31,21 @@ Tasklists.updateColor = function (tasklist, callback) {
 	$.post('tasklists/options/update', tasklist);
 };
 /**
+ * Get item by tasklist ID.
+ * @param {String} tasklistID
+ * @returns {Object} tasklist JSON
+ */
+Tasklists.prototype.getByID = function (tasklistID) {
+	var result = {};
+	$.each(this.items, function (i, tasklist) {
+		if (tasklist.id == tasklistID) {
+			result = tasklist;
+			return false;
+		}
+	});
+	return result;
+};
+/**
  * @class represents tasks model
  * @param {String} tasklistID task list ID
  * @param {Array} items
