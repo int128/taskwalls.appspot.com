@@ -188,7 +188,7 @@ UITasks.prototype.applyTasklistColor = function (tasklist) {
 };
 /**
  * @class UI element of task.
- * @param {Object} task JSON task
+ * @param task JSON task
  * @param {Tasklists} tasklists the tasklists
  */
 function UITask (task, tasklists) {
@@ -197,17 +197,15 @@ function UITask (task, tasklists) {
 }
 /**
  * Refresh view.
- * @param {Object} task JSON task
+ * @param task JSON task
  */
 UITask.prototype.refresh = function (task) {
 	var context = this;
-	(function () {
-		var originalElement = context.element;
-		context.element = $('<div class="task"/>');
-		if (originalElement) {
-			$(originalElement).replaceWith(context.element);
-		}
-	})();
+	var originalElement = this.element;
+	this.element = $('<div class="task"/>');
+	if (originalElement) {
+		$(originalElement).replaceWith(this.element);
+	}
 	this.element.append($.resource('task-template').children())
 		.addClass('task-status-' + task.status)
 		.addClass('tasklist-' + task.tasklistID)
@@ -229,8 +227,7 @@ UITask.prototype.refresh = function (task) {
 			}, function () {
 				// restore previous state
 				task.dueTime = originalDueTime;
-				context.element.remove();
-				context.element = oldplace;
+				context.element.appendTo(oldplace).unwrap();
 				context.refresh(task);
 			});
 		})
