@@ -146,12 +146,12 @@ a:VISITED {
 	background: #ddd;
 }
 
-.tasklist-bubble {
+#tasklist-bubble {
 	display: none;
 	position: absolute;
 }
 
-.tasklist-bubble>.head {
+#tasklist-bubble>.head {
 	content: '';
 	position: relative;
 	top: 3px;
@@ -163,7 +163,7 @@ a:VISITED {
 	border-bottom: 12px solid rgba(0, 0, 0, 0.8);
 }
 
-.tasklist-bubble>.body {
+#tasklist-bubble>.body {
 	position: relative;
 	top: 3px;
 	left: -100px;
@@ -175,7 +175,7 @@ a:VISITED {
 	color: white;
 }
 
-.tasklist-bubble>.body>.change-color {
+#tasklist-bubble>.body>.change-color {
 	margin-top: .5em;
 	text-align: center;
 }

@@ -14,6 +14,7 @@ Tasklists.get = function (callback) {
 		var instance = new Tasklists(response.items);
 		$.each(instance.items, function (i, tasklist) {
 			if (tasklist.colorID == undefined) {
+				// auto generate
 				tasklist.colorID = i % Constants.tasklistColors;
 			}
 		});
@@ -23,12 +24,20 @@ Tasklists.get = function (callback) {
 	});
 };
 /**
- * Update color of the tasklist.
- * @param tasklist JSON tasklist
- * @param {Function} callback
+ * Update the tasklist options.
+ * @param {Object} tasklist tasklist JSON
+ * @param {Function} success
+ * @param {Function} error
  */
-Tasklists.updateColor = function (tasklist, callback) {
-	$.post('tasklists/options/update', tasklist);
+Tasklists.updateOptions = function (tasklist, success, error) {
+	$.ajax({
+		type: 'POST',
+		url: 'tasklists/options/update',
+		data: tasklist,
+		dataType: 'json',
+		success: success,
+		error: error
+	});
 };
 /**
  * Get item by tasklist ID.

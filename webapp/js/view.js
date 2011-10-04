@@ -1,22 +1,20 @@
 /**
  * @class UI element of {@link Tasklists}.
- * @param {Tasklists} tasklists tasklist JSON
  */
-function UITasklists (tasklists) {
+function UITasklists () {
 	$('#tasklists').empty();
 	$('.tasklist-bubble').hide();
-	var onColorChanged = this.onColorChanged;
+};
+/**
+ * Add tasklists.
+ * @param {Tasklists} tasklists
+ */
+UITasklists.prototype.add = function (tasklists) {
 	$.each(tasklists.items, function (i, tasklist) {
 		var uiTasklist = new UITasklist(tasklist);
-		uiTasklist.onColorChanged = onColorChanged;
 		$('#tasklists').append(uiTasklist.element);
 	});
 };
-/**
- * Tasklist color has been changed via UI.
- * @param tasklist tasklist JSON (colorID property has been updated)
- */
-UITasklists.prototype.onColorChanged = function (tasklist) {};
 /**
  * UI element of the tasklist.
  * @param tasklist JSON tasklist
@@ -24,11 +22,6 @@ UITasklists.prototype.onColorChanged = function (tasklist) {};
 function UITasklist (tasklist) {
 	this.refresh(tasklist);
 };
-/**
- * Tasklist color has been changed via UI.
- * @param tasklist tasklist JSON (colorID property has been updated)
- */
-UITasklist.prototype.onColorChanged = function (tasklist) {};
 /**
  * Refresh view of this tasklist item.
  * @param tasklist JSON tasklist
@@ -43,13 +36,7 @@ UITasklist.prototype.refresh = function (tasklist) {
 		$('.tasklist-' + tasklist.id).fadeToggle();
 	});
 	this.element.mouseenter(function () {
-		$('.tasklist-bubble>.body>.change-color>.tasklist-mark')
-			.unbind('click')
-			.click(function () {
-				tasklist.colorID = context.changeColorTo(this);
-				context.onColorChanged(tasklist);
-			});
-		$('.tasklist-bubble')
+		$('#tasklist-bubble')
 			.css('left', $(this).position().left)
 			.show()
 			.mouseenter(function () {
@@ -58,24 +45,27 @@ UITasklist.prototype.refresh = function (tasklist) {
 				});
 			});
 	});
-};
-/**
- * Change this element to be same color as the reference element.
- * @param {Element} reference element which has class .tasklistcolor-*
- * @returns {Number} color ID
- */
-UITasklist.prototype.changeColorTo = function (reference) {
-	var colorID = undefined;
-	for (var i = 0; i < Constants.tasklistColors; i++) {
-		if ($(reference).hasClass('tasklistcolor-' + i)) {
-			this.element.addClass('tasklistcolor-' + i);
-			colorID = i;
-		}
-		else {
-			this.element.removeClass('tasklistcolor-' + i);
-		}
-	}
-	return colorID;
+	$('#tasklist-bubble>.body>.change-color').empty();
+	$.each(Constants.tasklistColorIDs(), function (i, colorID) {
+		$('<span class="tasklist-mark"/>')
+			.appendTo($('#tasklist-bubble>.body>.change-color'))
+			.addClass('tasklistcolor-' + colorID)
+			.click(function () {
+				var original = tasklist.colorID;
+				tasklist.colorID = colorID;
+				Tasklists.updateOptions(tasklist, function () {
+					$('.tasklist-' + tasklist.id)
+						.removeClass('tasklistcolor-' + original)
+						.addClass('tasklistcolor-' + colorID);
+					context.element
+						.removeClass('tasklistcolor-' + original)
+						.addClass('tasklistcolor-' + colorID);
+				}, function () {
+					// revert
+					tasklist.colorID = original;
+				});
+			});
+	});
 };
 /**
  * @class UI element of {@link Tasks}.
@@ -175,16 +165,6 @@ UITasks.prototype.createDateRow = function (date) {
 				}
 			}
 		});
-};
-/**
- * Apply specified color to these tasks.
- * @param tasklist JSON tasklist (colorID property must be set)
- */
-UITasks.prototype.applyTasklistColor = function (tasklist) {
-	for (var i = 0; i < Constants.tasklistColors; i++) {
-		$('.tasklist-' + tasklist.id).removeClass('tasklistcolor-' + i);
-	}
-	$('.tasklist-' + tasklist.id).addClass('tasklistcolor-' + tasklist.colorID);
 };
 /**
  * @class UI element of task.

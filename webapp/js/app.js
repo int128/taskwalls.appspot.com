@@ -21,20 +21,14 @@ function States () {}
 States.authorized = function () {
 	// get tasklists
 	Tasklists.get(function (tasklists) {
-		var uiTasklists = new UITasklists(tasklists);
+		var uiTasklists = new UITasklists();
+		uiTasklists.add(tasklists);
 		var uiTasks = new UITasks(tasklists);
 		$.each(tasklists.items, function (i, tasklist) {
 			Tasks.get(tasklist.id, function (tasks) {
 				uiTasks.add(tasks);
 			});
 		});
-		// when tasklist color has been changed
-		uiTasklists.onColorChanged = function (tasklist) {
-			uiTasks.applyTasklistColor(tasklist);
-			Tasklists.updateColor(tasklist, function () {
-				// TODO: what to do when completed?
-			});
-		};
 	});
 };
 States.authorizing = function () {
@@ -113,5 +107,25 @@ $(function () {
 		$('.unauthorized').hide().show();
 	}
 });
-var Constants = {};
-Constants.tasklistColors = 4;
+/**
+ * @class constants
+ */
+var Constants = {
+	tasklistColors: 4,
+	/**
+	 * Generates array of color IDs.
+	 * @returns {Array} array of number
+	 */
+	tasklistColorIDs: function () {
+		var IDs = [];
+		for (var colorID = 0; colorID < this.tasklistColors; colorID++) {
+			IDs.push(colorID);
+		}
+		return IDs;
+	}
+};
+
+
+
+
+
