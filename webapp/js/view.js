@@ -88,6 +88,10 @@ function UITasks (tasklists) {
 	// build table with today
 	$('#calendar').empty().append($('<tbody/>'));
 	this.extendMonth(this.earliest);
+	// initialize dialogs
+	$('#new-task-dialog>form').submit(function () {
+		return false;
+	});
 };
 /**
  * Add tasks.
@@ -164,6 +168,15 @@ UITasks.prototype.createDateRow = function (date) {
 					$(ui.draggable).trigger('dropped', [$('>td.task-column', this), date]);
 				}
 			}
+		})
+		.click(function (event) {
+			if ($(event.target).hasClass('task-column')) {
+				$('#new-task-dialog').css({left: event.pageX, top: event.pageY}).toggle();
+				$('#new-task-dialog>div.due').text(date.toLocaleDateString());
+			}
+			else {
+				$('#new-task-dialog').hide();
+			}
 		});
 };
 /**
@@ -222,10 +235,6 @@ UITask.prototype.refresh = function (task) {
 				context.refresh(task);
 			});
 			context.element.addClass('ajax-in-progress');
-		})
-		.click(function () {
-			// prevent from bubbling for task click
-			return false;
 		});
 	if (task.status == 'completed') {
 		$('>input.status_completed', this.element).attr('checked', 'checked');
@@ -267,8 +276,6 @@ UITask.prototype.refresh = function (task) {
 				})
 				.focus()
 				.select();
-			// prevent from bubbling for task click
-			return false;
 		});
 	if (task.notes) {
 		$('>div.notes', this.element).text(task.notes);
