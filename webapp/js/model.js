@@ -79,6 +79,22 @@ Tasks.get = function (tasklistID, callback) {
 	});
 };
 /**
+ * Create a task.
+ * @param task JSON task
+ * @param {Function} success
+ * @param {Function} error
+ */
+Tasks.create = function (task, success, error) {
+	$.ajax({
+		type: 'POST',
+		url: 'tasks/create',
+		data: task,
+		dataType: 'json',
+		success: success,
+		error: error
+	});
+};
+/**
  * Update status of task.
  * @param task JSON task
  * @param {Function} success

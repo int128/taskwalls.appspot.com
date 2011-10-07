@@ -22,3 +22,19 @@ DateUtil.futureOrPast = function (date, future, today, past) {
 	}
 	return today;
 };
+/**
+ * @class form utility
+ */
+var FormUtil = {};
+/**
+ * Convert name-value array to hash object.
+ * @param {Array} nameValueMap
+ * @returns {Object}
+ */
+FormUtil.nameValueToHash = function (nameValueMap) {
+	var result = {};
+	$.each(nameValueMap, function (i, entry) {
+		result[entry.name] = entry.value;
+	});
+	return result;
+};
