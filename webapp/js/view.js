@@ -102,7 +102,8 @@ UITasks.prototype.add = function (tasks) {
 	$.each(tasks.items, function (i, task) {
 		var date = new Date(task.dueTime);
 		date.setHours(0, 0, 0, 0);
-		$('#t' + date.getTime() + '>td.task-column').append(new UITask(task, tasklists).element);
+		new UITask(task, tasklists).element.insertBefore(
+			$('#t' + date.getTime() + '>td.task-column>.new-task'));
 	});
 };
 /**
@@ -155,7 +156,11 @@ UITasks.prototype.createDateRow = function (date) {
 				.append($('<div/>').text(date.getDate())))
 		.append($('<td class="weekday-column"/>')
 				.append($.resource('weekday' + date.getDay())))
-		.append($('<td class="task-column"/>'))
+		.append($('<td class="task-column"/>')
+				.append($('<div class="new-task">+</div>')
+						.click(function (event) {
+							context.newTaskDialog.open({left: event.pageX, top: event.pageY}, date);
+						})))
 		.droppable({
 			accept: 'div.task',
 			tolerance: 'pointer',
@@ -166,14 +171,6 @@ UITasks.prototype.createDateRow = function (date) {
 				if ($(ui.draggable).parents('#' + this.id).size() == 0) {
 					$(ui.draggable).trigger('dropped', [$('>td.task-column', this), date]);
 				}
-			}
-		})
-		.click(function (event) {
-			if ($(event.target).hasClass('task-column')) {
-				context.newTaskDialog.open({left: event.pageX, top: event.pageY}, date);
-			}
-			else {
-				context.newTaskDialog.close();
 			}
 		});
 };
@@ -287,7 +284,6 @@ function UINewTaskDialog (uiTasks) {
 	this.uiTasks = uiTasks;
 	this.element = $('#new-task-dialog');
 	$('>form', this.element)
-		.unbind('submit')
 		.unbind('change')
 		.change(function () {
 			var data = FormUtil.nameValueToHash($(this).serializeArray());
@@ -316,7 +312,7 @@ function UINewTaskDialog (uiTasks) {
 /**
  * Open a dialog.
  * @param css CSS properties (e.g. left, top)
- * @param date {Date} due date
+ * @param {Date} date due date
  */
 UINewTaskDialog.prototype.open = function (css, date) {
 	$('>.due', this.element).text(date.toLocaleDateString());
@@ -339,12 +335,6 @@ UINewTaskDialog.prototype.open = function (css, date) {
 				.text(tasklist.title)
 				.appendTo(tasklistsElement));
 	});
-	this.element.css(css).toggle();
+	this.element.css(css).slideToggle();
 	$('>form input[name="title"]', this.element).focus();
-};
-/**
- * Close the dialog.
- */
-UINewTaskDialog.prototype.close = function () {
-	$('#new-task-dialog').hide();
 };

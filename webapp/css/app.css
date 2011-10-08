@@ -263,7 +263,6 @@ td.date-column {
 
 td.task-column {
 	width: auto;
-	height: 64px;
 	padding-left: 5px;
 	border-left: solid 1px #888;
 }
@@ -314,6 +313,37 @@ div.task.ajax-in-progress {
 div.task.ui-draggable-dragging {
 	z-index: 10;
 	box-shadow: 0px 2px 1px 1px rgba(0, 0, 0, 0.3);
+}
+
+/*
+ * Helpers.
+ */
+td.task-column>.new-task {
+	float: left;
+	width: 50px;
+	height: 50px;
+	margin-left: 15px;
+	margin-bottom: 1px;
+	margin-top: 1px;
+	padding: 5px;
+	border: solid 1px transparent;
+	border-radius: 3px;
+	-moz-border-radius: 3px;
+	font-size: 40px;
+	text-align: center;
+	color: transparent;
+	cursor: default;
+}
+
+#calendar:HOVER td.task-column>.new-task {
+	color: #ccc;
+}
+
+#calendar td.task-column>.new-task:HOVER {
+	border: solid 1px #ddd;
+	background: -moz-linear-gradient(top, #fff, #eee);
+	background: -webkit-gradient(linear, left top, left bottom, from(#fff), to(#eee) );
+	color: #000;
 }
 
 /*
