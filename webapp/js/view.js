@@ -324,7 +324,8 @@ UINewTaskDialog.prototype.open = function (css, date) {
 	this.element.css(css);
 	$('>.due>.month', this.element).text(date.getMonth() + 1);
 	$('>.due>.day', this.element).text(date.getDate());
-	$('>form input[name="dueTime"]', this.element).val(date.getTime());
+	// due time must be in UTC
+	$('>form input[name="dueTime"]', this.element).val(date.getTime() - date.getTimezoneOffset() * 60 * 1000);
 	var tasklistsElement = $('>form>.tasklists', this.element).empty();
 	$.each(this.uiTasks.tasklists.items, function (i, tasklist) {
 		var checked = {};
