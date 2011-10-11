@@ -3,8 +3,7 @@
 	<application>taskwalls</application>
 	<version>1</version>
 
-	<!-- By default, App Engine sends requests serially to a given web server. 
-		To allow App Engine to send multiple requests in parallel specify: <threadsafe>true</threadsafe> -->
+	<threadsafe>true</threadsafe>
 
 	<system-properties>
 		<property name="slim3.hotReloading" value="true" />
