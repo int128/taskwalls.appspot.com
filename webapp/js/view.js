@@ -159,7 +159,9 @@ UITasks.prototype.createDateRow = function (date) {
 		.append($('<td class="task-column"/>')
 				.append($('<div class="new-task">+</div>')
 						.click(function (event) {
-							context.newTaskDialog.open({left: event.pageX, top: event.pageY}, date);
+							context.newTaskDialog.open({
+								top: event.pageY
+							}, date);
 						})))
 		.droppable({
 			accept: 'div.task',
@@ -284,8 +286,7 @@ function UINewTaskDialog (uiTasks) {
 	this.uiTasks = uiTasks;
 	this.element = $('#new-task-dialog');
 	$('>form', this.element)
-		.unbind('change')
-		.change(function () {
+		.unbind('change').change(function () {
 			var data = FormUtil.nameValueToHash($(this).serializeArray());
 			if (data.title) {
 				// enable the form
@@ -315,7 +316,10 @@ function UINewTaskDialog (uiTasks) {
  * @param {Date} date due date
  */
 UINewTaskDialog.prototype.open = function (css, date) {
-	$('>.due', this.element).text(date.toLocaleDateString());
+	var context = this;
+	this.element.css(css);
+	$('>.due>.month', this.element).text(date.getMonth() + 1);
+	$('>.due>.day', this.element).text(date.getDate());
 	$('>form input[name="dueTime"]', this.element).val(date.getTime());
 	var tasklistsElement = $('>form>.tasklists', this.element).empty();
 	$.each(this.uiTasks.tasklists.items, function (i, tasklist) {
@@ -335,6 +339,15 @@ UINewTaskDialog.prototype.open = function (css, date) {
 				.text(tasklist.title)
 				.appendTo(tasklistsElement));
 	});
-	this.element.css(css).slideToggle();
+	this.element.fadeIn();
 	$('>form input[name="title"]', this.element).focus();
+	$(window).unbind('click');
+	window.setTimeout(function () {
+		$(window).bind('click', function (event) {
+			if ($(event.target).parents('#new-task-dialog').length == 0) {
+				$(context.element).hide();
+				$(window).unbind('click');
+			}
+		});
+	}, 100);
 };
