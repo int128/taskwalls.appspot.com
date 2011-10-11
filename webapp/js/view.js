@@ -221,7 +221,9 @@ UITask.prototype.refresh = function (task) {
 				context.refresh(task);
 			});
 		})
-		.draggable();
+		.draggable({
+			scroll: true
+		});
 	$('>input.status_completed', this.element)
 		.change(function () {
 			// updates task status when checkbox changed
