@@ -56,13 +56,10 @@ Tasklists.prototype.getByID = function (tasklistID) {
 };
 /**
  * @class represents tasks model
- * @param {String} tasklistID task list ID
  * @param {Array} items
- * @property {String} tasklistID task list ID
  * @property {Array} items
  */
-function Tasks (tasklistID, items) {
-	this.tasklistID = tasklistID;
+function Tasks (items) {
 	this.items = items;
 };
 /**
@@ -72,7 +69,7 @@ function Tasks (tasklistID, items) {
  */
 Tasks.get = function (tasklistID, callback) {
 	$.getJSON('tasks/list', {tasklistID: tasklistID}, function (response) {
-		var instance = new Tasks(tasklistID, response.items);
+		var instance = new Tasks(response.items);
 		if ($.isFunction(callback)) {
 			callback(instance);
 		}

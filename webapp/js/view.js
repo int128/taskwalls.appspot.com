@@ -292,8 +292,10 @@ function UINewTaskDialog (uiTasks) {
 				// enable the form
 				$('button', this).removeAttr('disabled');
 				$(this).unbind('submit').submit(function () {
+					var form = this;
 					Tasks.create($(this).serializeArray(), function (created) {
-						uiTasks.add(created);
+						uiTasks.add(new Tasks([created]));
+						form.reset();
 						$('#new-task-dialog').hide();
 					});
 					return false;
@@ -345,9 +347,15 @@ UINewTaskDialog.prototype.open = function (css, date) {
 	window.setTimeout(function () {
 		$(window).bind('click', function (event) {
 			if ($(event.target).parents('#new-task-dialog').length == 0) {
-				$(context.element).hide();
+				context.close();
 				$(window).unbind('click');
 			}
 		});
 	}, 100);
+};
+/**
+ * Close the dialog.
+ */
+UINewTaskDialog.prototype.close = function () {
+	this.element.hide();
 };
