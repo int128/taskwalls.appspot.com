@@ -102,8 +102,7 @@ UITasks.prototype.add = function (tasks) {
 	$.each(tasks.items, function (i, task) {
 		var date = new Date(task.dueTime);
 		date.setHours(0, 0, 0, 0);
-		new UITask(task, tasklists).element.insertBefore(
-			$('#t' + date.getTime() + '>td.task-column>.new-task'));
+		new UITask(task, tasklists).element.appendTo($('#t' + date.getTime() + '>td.task-column'));
 	});
 };
 /**
@@ -157,7 +156,7 @@ UITasks.prototype.createDateRow = function (date) {
 		.append($('<td class="weekday-column"/>')
 				.append($.resource('weekday' + date.getDay())))
 		.append($('<td class="task-column"/>')
-				.append($('<div class="new-task">+</div>')
+				.prepend($('<div class="new-task">+</div>')
 						.click(function (event) {
 							context.newTaskDialog.open({
 								top: event.pageY
