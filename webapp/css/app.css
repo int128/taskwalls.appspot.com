@@ -32,7 +32,7 @@ a:VISITED {
 
 #myheader {
 	position: fixed;
-	z-index: 10;
+	z-index: 50;
 	top: 0;
 	left: 0;
 	width: 100%;
@@ -423,4 +423,46 @@ td.task-column>.new-task {
 	height: 100px;
 	padding: 3px;
 	border: solid 1px #888;
+}
+
+.update-task {
+	display: none;
+	position: absolute;
+	z-index: 40;
+	padding: 10px;
+	border-radius: 5px;
+	-moz-border-radius: 5px;
+	border: solid 1px #888;
+	background: rgba(255, 255, 255, 0.8);
+	box-shadow: 0px 2px 1px 1px rgba(0, 0, 0, 0.3);
+}
+
+.update-task>.due {
+	margin-bottom: .5em;
+	font-weight: bold;
+}
+
+.update-task>form>div>input[type="text"] {
+	width: 300px;
+	margin-top: .5em;
+	margin-bottom: .5em;
+	padding: 3px;
+	border: solid 1px #888;
+}
+
+.update-task>form>div>textarea {
+	width: 300px;
+	height: 150px;
+	padding: 3px;
+	border: solid 1px #888;
+}
+
+.popup-overlay {
+	display: none;
+	position: fixed;
+	top: 0;
+	left: 0;
+	width: 100%;
+	height: 100%;
+	z-index: 500;
 }

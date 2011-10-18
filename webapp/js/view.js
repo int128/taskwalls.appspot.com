@@ -196,6 +196,7 @@ UITask.prototype.refresh = function (task) {
 	if (originalElement) {
 		$(originalElement).replaceWith(this.element);
 	}
+	this.task = task;
 	this.element.append($.resource('task-template').children())
 		.addClass('task-status-' + task.status)
 		.addClass('tasklist-' + task.tasklistID)
@@ -223,6 +224,15 @@ UITask.prototype.refresh = function (task) {
 		})
 		.draggable({
 			scroll: true
+		})
+		/**
+		 * Opens edit dialog when task clicked.
+		 * @param event
+		 */
+		.click(function (event) {
+			if ($(event.target).hasClass('task')) {
+				UIUpdateTask.open(context);
+			}
 		});
 	$('>input.status_completed', this.element)
 		.change(function () {
@@ -312,7 +322,6 @@ function UINewTaskDialog (uiTasks) {
 			}
 		})
 		.change();
-	this.element.draggable();
 };
 /**
  * Open a dialog.
@@ -344,8 +353,10 @@ UINewTaskDialog.prototype.open = function (css, date) {
 				.text(tasklist.title)
 				.appendTo(tasklistsElement));
 	});
+	// TODO: change to dialog
 	this.element.fadeIn();
 	$('>form input[name="title"]', this.element).focus();
+	// TODO: bind event to dialog background
 	$(window).unbind('click');
 	window.setTimeout(function () {
 		$(window).bind('click', function (event) {
@@ -361,4 +372,51 @@ UINewTaskDialog.prototype.open = function (css, date) {
  */
 UINewTaskDialog.prototype.close = function () {
 	this.element.hide();
+};
+/**
+ * @class updating task dialog
+ */
+function UIUpdateTask () {};
+/**
+ * Open the dialog.
+ * @param {UITask} uiTask
+ */
+UIUpdateTask.open = function (uiTask) {
+	var element = $('#update-task').clone().removeAttr('id');
+	var overlay = $('<div class="popup-overlay"/>');
+	var due = new Date(uiTask.task.dueTime);
+	$('>.due>.month', element).text(due.getMonth() + 1);
+	$('>.due>.day', element).text(due.getDate());
+	// due time must be in UTC
+	$('>form input[name="dueTime"]', element).val(due.getTime() - due.getTimezoneOffset() * 60 * 1000);
+	$('>form input[name="title"]', element).val(uiTask.task.title);
+	$('>form textarea[name="notes"]', element).val(uiTask.task.notes);
+	$('>form', this.element).change(function () {
+		var data = FormUtil.nameValueToHash($(this).serializeArray());
+		if (data.title) {
+			// enable the form
+			$('button', this).removeAttr('disabled');
+			$(this).unbind('submit').submit(function () {
+				// FIXME: change to update
+				Tasks.create($(this).serializeArray(), function (created) {
+					uiTask.refresh(created);
+					element.remove();
+					overlay.remove();
+				});
+				return false;
+			});
+		}
+		else {
+			// disable the form
+			$('button', this).attr('disabled', 'disabled');
+			$(this).unbind('submit').submit(function () {return false;});
+		}
+	}).change();
+	overlay.click(function () {
+		element.remove();
+		overlay.remove();
+	});
+	overlay.appendTo('body').show();
+	element.insertBefore(uiTask.element).show();
+	$('>form input[name="title"]', element).focus();
 };
