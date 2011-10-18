@@ -410,11 +410,12 @@ UIUpdateTask.open = function (uiTask) {
 			$(this).unbind('submit').submit(function () {return false;});
 		}
 	}).change();
-	overlay.click(function () {
+	overlay.appendTo('body').show().click(function () {
 		element.remove();
 		overlay.remove();
 	});
-	overlay.appendTo('body').show();
-	element.insertBefore(uiTask.element).show();
+	element.css('left', uiTask.element.position().left)
+		.insertBefore(uiTask.element)
+		.fadeIn();
 	$('>form input[name="title"]', element).focus();
 };
