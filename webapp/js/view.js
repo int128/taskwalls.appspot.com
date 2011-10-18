@@ -390,10 +390,10 @@ UIUpdateTask.open = function (uiTask) {
 	$('>form input[name="dueTime"]', element).val(due.getTime() - due.getTimezoneOffset() * 60 * 1000);
 	$('>form input[name="title"]', element).val(uiTask.task.title);
 	$('>form textarea[name="notes"]', element).val(uiTask.task.notes);
-	$('>form', this.element).change(function () {
+	$('>form', element).change(function () {
+		// validate the form
 		var data = FormUtil.nameValueToHash($(this).serializeArray());
 		if (data.title) {
-			// enable the form
 			$('button', this).removeAttr('disabled');
 			$(this).unbind('submit').submit(function () {
 				// FIXME: change to update
@@ -406,7 +406,6 @@ UIUpdateTask.open = function (uiTask) {
 			});
 		}
 		else {
-			// disable the form
 			$('button', this).attr('disabled', 'disabled');
 			$(this).unbind('submit').submit(function () {return false;});
 		}
