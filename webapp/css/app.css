@@ -37,8 +37,8 @@ a:VISITED {
 	left: 0;
 	width: 150px;
 	height: 100%;
-	background: rgba(255, 255, 255, 1.0);
-	box-shadow: 0 0 5px 3px rgba(0, 0, 0, 0.3);
+	background: white;
+	box-shadow: 0 0 10px 3px rgba(0, 0, 0, 0.4);
 }
 
 #content {
@@ -143,33 +143,33 @@ a:VISITED {
 #tasklist-bubble {
 	display: none;
 	position: absolute;
+	left: 150px;
 }
 
 #tasklist-bubble>.head {
 	content: '';
 	position: relative;
 	z-index: 7;
-	top: 3px;
-	left: -5px;
+	top: 10px;
+	left: 0px;
 	width: 0;
 	height: 0;
-	border-right: 12px solid transparent;
-	border-left: 12px solid transparent;
-	border-bottom: 12px solid rgba(255, 255, 255, 0.8);
+	border-top: 10px solid transparent;
+	border-bottom: 10px solid transparent;
+	border-left: 10px solid white;
 }
 
 #tasklist-bubble>.body {
 	position: relative;
 	z-index: 5;
-	top: 3px;
-	left: -100px;
+	top: -30px;
+	left: 10px;
 	width: 200px;
 	padding: 1em;
 	border-radius: 5px;
 	-moz-border-radius: 5px;
-	background: rgba(255, 255, 255, 0.8);
-	border: solid 1px #888;
-	box-shadow: 0px 2px 1px 1px rgba(0, 0, 0, 0.3);
+	background: white;
+	box-shadow: 0 0 10px 3px rgba(0, 0, 0, 0.4);
 }
 
 #tasklist-bubble>.body>.change-color {
@@ -179,8 +179,8 @@ a:VISITED {
 
 .tasklist-mark {
 	padding-right: 15px;
-	margin-left: 10px;
-	margin-right: 10px;
+	margin-left: 5px;
+	margin-right: 5px;
 	border-radius: 3px;
 	-moz-border-radius: 3px;
 	background: #ddd;

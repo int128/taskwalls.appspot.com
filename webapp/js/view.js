@@ -37,7 +37,7 @@ UITasklist.prototype.refresh = function (tasklist) {
 	});
 	this.element.mouseenter(function () {
 		$('#tasklist-bubble')
-			.css('left', $(this).position().left)
+			.css('top', $(this).position().top)
 			.show()
 			.mouseenter(function () {
 				$(this).show().mouseleave(function () {
