@@ -37,8 +37,8 @@ a:VISITED {
 	left: 0;
 	width: 150px;
 	height: 100%;
-	background: rgba(255, 255, 255, 0.9);
-	box-shadow: 0 0 3px 3px rgba(0, 0, 0, 0.3);
+	background: rgba(255, 255, 255, 1.0);
+	box-shadow: 0 0 5px 3px rgba(0, 0, 0, 0.3);
 }
 
 #content {
