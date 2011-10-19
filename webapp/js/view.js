@@ -28,7 +28,7 @@ function UITasklist (tasklist) {
  */
 UITasklist.prototype.refresh = function (tasklist) {
 	var context = this;
-	this.element = $('<span/>')
+	this.element = $('<div class="tasklist"/>')
 		.addClass('tasklistcolor-' + tasklist.colorID)
 		.text(tasklist.title)
 		.appendTo($('#tasklists'));

@@ -41,17 +41,6 @@ a:VISITED {
 	box-shadow: 0 0 3px 3px rgba(0, 0, 0, 0.3);
 }
 
-#myheader>h1 {
-	margin: .5em;
-	padding: 0;
-	font-size: 100%;
-	text-transform: uppercase;
-}
-
-#myheader>h1:FIRST-LETTER {
-	font-size: 130%;
-}
-
 #content {
 	margin-left: 150px;
 }
@@ -126,23 +115,29 @@ a:VISITED {
 /*
  * Header.
  */
+#myheader>h1 {
+	margin: 15px;
+	padding: 0;
+	font-size: 100%;
+	text-transform: uppercase;
+}
+
+#myheader>h1:FIRST-LETTER {
+	font-size: 130%;
+}
+
 .header-stack {
-	margin: .5em;
+	margin: 15px;
 }
 
-#tasklists>span {
-	display: block;
-	margin-right: 12px;
-	cursor: pointer;
-}
-
-#tasklists>span:BEFORE {
-	content: '';
-	padding-right: 12px;
-	margin-right: 3px;
+#tasklists>.tasklist {
+	padding: 5px;
+	margin-bottom: 5px;
+	border: solid 1px #ddd;
+	border-left: solid 5px #ccc;
 	border-radius: 3px;
 	-moz-border-radius: 3px;
-	background: #ddd;
+	cursor: pointer;
 }
 
 #tasklist-bubble {
@@ -243,7 +238,6 @@ tr.today>td.weekday-column,tr.today>td.date-column,tr.today>td.task-column {
 
 td.month-column {
 	width: 3em;
-	padding-left: 1em;
 	text-align: center;
 	color: transparent;
 }
@@ -368,25 +362,25 @@ td.task-column>.new-task-button {
 	background-color: #c06;
 }
 
-.task.tasklistcolor-0 {
+.task.tasklistcolor-0,#tasklists>.tasklist.tasklistcolor-0 {
 	border-left-color: #fc0;
 	background: -moz-linear-gradient(top, #fff, #ffd);
 	background: -webkit-gradient(linear, left top, left bottom, from(#fff), to(#ffd) );
 }
 
-.task.tasklistcolor-1 {
+.task.tasklistcolor-1,#tasklists>.tasklist.tasklistcolor-1 {
 	border-left-color: #9f0;
 	background: -moz-linear-gradient(top, #fff, #efe);
 	background: -webkit-gradient(linear, left top, left bottom, from(#fff), to(#efe) );
 }
 
-.task.tasklistcolor-2 {
+.task.tasklistcolor-2,#tasklists>.tasklist.tasklistcolor-2 {
 	border-left-color: #30f;
 	background: -moz-linear-gradient(top, #fff, #eef);
 	background: -webkit-gradient(linear, left top, left bottom, from(#fff), to(#eef) );
 }
 
-.task.tasklistcolor-3 {
+.task.tasklistcolor-3,#tasklists>.tasklist.tasklistcolor-3 {
 	border-left-color: #c06;
 	background: -moz-linear-gradient(top, #fff, #fee);
 	background: -webkit-gradient(linear, left top, left bottom, from(#fff), to(#fee) );
