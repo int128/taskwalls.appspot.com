@@ -361,10 +361,10 @@ UIUpdateTask.open = function (uiTask) {
 	$('>.due>.month', element).text(due.getMonth() + 1);
 	$('>.due>.day', element).text(due.getDate());
 	// due time must be in UTC
-	$('>form input[name="dueTime"]', element).val(due.getTime() - due.getTimezoneOffset() * 60 * 1000);
-	$('>form input[name="title"]', element).val(uiTask.task.title);
-	$('>form textarea[name="notes"]', element).val(uiTask.task.notes);
-	$('>form', element).change(function () {
+	$('>form.update input[name="dueTime"]', element).val(due.getTime() - due.getTimezoneOffset() * 60 * 1000);
+	$('>form.update input[name="title"]', element).val(uiTask.task.title);
+	$('>form.update textarea[name="notes"]', element).val(uiTask.task.notes);
+	$('>form.update', element).change(function () {
 		// validate the form
 		var data = FormUtil.nameValueToHash($(this).serializeArray());
 		if (data.title) {
@@ -384,6 +384,9 @@ UIUpdateTask.open = function (uiTask) {
 			$(this).unbind('submit').submit(function () {return false;});
 		}
 	}).change();
+	$('>form.delete', element).submit(function () {
+		// TODO:
+	});
 	overlay.appendTo('body').show().click(function () {
 		element.remove();
 		overlay.remove();
@@ -391,5 +394,5 @@ UIUpdateTask.open = function (uiTask) {
 	element.css('left', uiTask.element.position().left)
 		.insertBefore(uiTask.element)
 		.fadeIn();
-	$('>form input[name="title"]', element).focus();
+	$('>form.update input[name="title"]', element).focus();
 };
