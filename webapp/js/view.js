@@ -88,8 +88,6 @@ function UITasks (tasklists) {
 	// build table with today
 	$('#calendar').empty().append($('<tbody/>'));
 	this.extendMonth(this.earliest);
-	// initialize dialogs
-	this.newTaskDialog = new UINewTaskDialog(this);
 };
 /**
  * Add tasks.
@@ -102,7 +100,7 @@ UITasks.prototype.add = function (tasks) {
 	$.each(tasks.items, function (i, task) {
 		var date = new Date(task.dueTime);
 		date.setHours(0, 0, 0, 0);
-		new UITask(task, tasklists).element.appendTo($('#t' + date.getTime() + '>td.task-column'));
+		$('#t' + date.getTime() + '>td.task-column').append(new UITask(task, tasklists).element);
 	});
 };
 /**
@@ -156,11 +154,9 @@ UITasks.prototype.createDateRow = function (date) {
 		.append($('<td class="weekday-column"/>')
 				.append($.resource('weekday' + date.getDay())))
 		.append($('<td class="task-column"/>')
-				.prepend($('<div class="new-task">+</div>')
+				.prepend($('<div class="new-task-button">+</div>')
 						.click(function (event) {
-							context.newTaskDialog.open({
-								top: event.pageY
-							}, date);
+							UINewTask.open(context, date, event.pageY);
 						})))
 		.droppable({
 			accept: 'div.task',
@@ -291,51 +287,23 @@ UITask.prototype.refresh = function (task) {
 };
 /**
  * @class creating task dialog
- * @param {UITasks} uiTasks
  */
-function UINewTaskDialog (uiTasks) {
-	this.uiTasks = uiTasks;
-	this.element = $('#new-task-dialog');
-	$('>form', this.element)
-		.unbind('change').change(function () {
-			var data = FormUtil.nameValueToHash($(this).serializeArray());
-			if (data.title) {
-				// enable the form
-				$('button', this).removeAttr('disabled');
-				$(this).unbind('submit').submit(function () {
-					var form = this;
-					Tasks.create($(this).serializeArray(), function (created) {
-						uiTasks.add(new Tasks([created]));
-						form.reset();
-						$('#new-task-dialog').hide();
-					});
-					return false;
-				});
-			}
-			else {
-				// disable the form
-				$('button', this).attr('disabled', 'disabled');
-				$(this).unbind('submit').submit(function () {
-					return false;
-				});
-			}
-		})
-		.change();
-};
+function UINewTask () {};
 /**
- * Open a dialog.
- * @param css CSS properties (e.g. left, top)
+ * Open the dialog.
+ * @param {UITasks} uiTasks
  * @param {Date} date due date
+ * @param {Number} positionTop
  */
-UINewTaskDialog.prototype.open = function (css, date) {
-	var context = this;
-	this.element.css(css);
-	$('>.due>.month', this.element).text(date.getMonth() + 1);
-	$('>.due>.day', this.element).text(date.getDate());
+UINewTask.open = function (uiTasks, date, positionTop) {
+	var element = $('#new-task').clone().removeAttr('id');
+	var overlay = $('<div class="popup-overlay"/>');
+	$('>.due>.month', element).text(date.getMonth() + 1);
+	$('>.due>.day', element).text(date.getDate());
 	// due time must be in UTC
-	$('>form input[name="dueTime"]', this.element).val(date.getTime() - date.getTimezoneOffset() * 60 * 1000);
-	var tasklistsElement = $('>form>.tasklists', this.element).empty();
-	$.each(this.uiTasks.tasklists.items, function (i, tasklist) {
+	$('>form input[name="dueTime"]', element).val(date.getTime() - date.getTimezoneOffset() * 60 * 1000);
+	var tasklistsElement = $('>form>.tasklists', element).empty();
+	$.each(uiTasks.tasklists.items, function (i, tasklist) {
 		var checked = {};
 		if (i == 0) {
 			checked = {checked: 'checked'};
@@ -352,25 +320,31 @@ UINewTaskDialog.prototype.open = function (css, date) {
 				.text(tasklist.title)
 				.appendTo(tasklistsElement));
 	});
-	// TODO: change to dialog
-	this.element.fadeIn();
-	$('>form input[name="title"]', this.element).focus();
-	// TODO: bind event to dialog background
-	$(window).unbind('click');
-	window.setTimeout(function () {
-		$(window).bind('click', function (event) {
-			if ($(event.target).parents('#new-task-dialog').length == 0) {
-				context.close();
-				$(window).unbind('click');
-			}
-		});
-	}, 100);
-};
-/**
- * Close the dialog.
- */
-UINewTaskDialog.prototype.close = function () {
-	this.element.hide();
+	$('>form', element).unbind('change').change(function () {
+		// validate the form
+		var data = FormUtil.nameValueToHash($(this).serializeArray());
+		if (data.title) {
+			$('button', this).removeAttr('disabled');
+			$(this).unbind('submit').submit(function () {
+				Tasks.create($(this).serializeArray(), function (created) {
+					uiTasks.add(new Tasks([created]));
+					element.remove();
+					overlay.remove();
+				});
+				return false;
+			});
+		}
+		else {
+			$('button', this).attr('disabled', 'disabled');
+			$(this).unbind('submit').submit(function () {return false;});
+		}
+	}).change();
+	overlay.appendTo('body').show().click(function () {
+		element.remove();
+		overlay.remove();
+	});
+	element.css('top', positionTop).appendTo('body').fadeIn();
+	$('>form input[name="title"]', element).focus();
 };
 /**
  * @class updating task dialog

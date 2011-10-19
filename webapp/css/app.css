@@ -318,7 +318,7 @@ div.task.ui-draggable-dragging {
 /*
  * Helpers.
  */
-td.task-column>.new-task {
+td.task-column>.new-task-button {
 	float: right;
 	width: 40px;
 	height: 40px;
@@ -335,11 +335,11 @@ td.task-column>.new-task {
 	cursor: default;
 }
 
-#calendar:HOVER td.task-column>.new-task {
+#calendar:HOVER td.task-column>.new-task-button {
 	color: #ccc;
 }
 
-#calendar td.task-column>.new-task:HOVER {
+#calendar td.task-column>.new-task-button:HOVER {
 	border: solid 1px #ddd;
 	background: -moz-linear-gradient(top, #fff, #eee);
 	background: -webkit-gradient(linear, left top, left bottom, from(#fff), to(#eee) );
@@ -392,25 +392,25 @@ td.task-column>.new-task {
 /*
  * Dialogs.
  */
-#new-task-dialog {
+.new-task {
 	display: none;
-	z-index: 8;
+	z-index: 40;
 	position: absolute;
 	right: 40px;
-	padding: 1em;
+	padding: 10px;
 	border-radius: 5px;
 	-moz-border-radius: 5px;
 	border: solid 1px #888;
-	background: rgba(255, 255, 255, 0.8);
+	background: rgba(255, 255, 255, 0.9);
 	box-shadow: 0px 2px 1px 1px rgba(0, 0, 0, 0.3);
 }
 
-#new-task-dialog>.due {
+.new-task>.due {
 	margin-bottom: .5em;
 	font-weight: bold;
 }
 
-#new-task-dialog>form>div>input[type="text"] {
+.new-task>form>div>input[type="text"] {
 	width: 300px;
 	margin-top: .5em;
 	margin-bottom: .5em;
@@ -418,7 +418,7 @@ td.task-column>.new-task {
 	border: solid 1px #888;
 }
 
-#new-task-dialog>form>div>textarea {
+.new-task>form>div>textarea {
 	width: 300px;
 	height: 100px;
 	padding: 3px;
