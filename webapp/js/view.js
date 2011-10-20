@@ -328,23 +328,27 @@ UINewTask.open = function (uiTasks, date, positionTop) {
 	});
 	$('>form', element).unbind('change').change(function () {
 		// validate the form
-		var data = FormUtil.nameValueToHash($(this).serializeArray());
-		if (data.title) {
-			$('button', this).removeAttr('disabled');
-			$(this).unbind('submit').submit(function () {
-				Tasks.create($(this).serializeArray(), function (created) {
-					uiTasks.add(new Tasks([created]));
-					element.remove();
-					overlay.remove();
-				});
-				return false;
-			});
+		var button = $('button', this);
+		if ($('input[name="title"]', this).val()) {
+			button.removeAttr('disabled');
 		}
 		else {
-			$('button', this).attr('disabled', 'disabled');
-			$(this).unbind('submit').submit(function () {return false;});
+			button.attr('disabled', 'disabled');
 		}
-	}).change();
+	}).change().submit(function () {
+		var button = $('button', this);
+		if (button.attr('disabled') == undefined) {
+			button.attr('disabled', 'disabled');
+			Tasks.create($(this).serializeArray(), function (created) {
+				uiTasks.add(new Tasks([created]));
+				element.remove();
+				overlay.remove();
+			}, function () {
+				button.removeAttr('disabled');
+			});
+		}
+		return false;
+	});
 	overlay.appendTo('body').show().click(function () {
 		element.remove();
 		overlay.remove();
