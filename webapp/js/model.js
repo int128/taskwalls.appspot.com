@@ -140,6 +140,38 @@ Tasks.updateDueTime = function (task, success, error) {
 	});
 };
 /**
+ * Update title of task.
+ * @param task JSON task
+ * @param {Function} success
+ * @param {Function} error
+ */
+Tasks.update = function (task, success, error) {
+	$.ajax({
+		type: 'POST',
+		url: 'tasks/update',
+		data: task,
+		dataType: 'json',
+		success: success,
+		error: error
+	});
+};
+/**
+ * Delete the task.
+ * @param task JSON task
+ * @param {Function} success
+ * @param {Function} error
+ */
+Tasks.deleteOne = function (task, success, error) {
+	$.ajax({
+		type: 'POST',
+		url: 'tasks/delete',
+		data: task,
+		dataType: 'json',
+		success: success,
+		error: error
+	});
+};
+/**
  * @returns latest date time in milliseconds
  */
 Tasks.prototype.latestTime = function () {

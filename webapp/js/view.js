@@ -286,6 +286,12 @@ UITask.prototype.refresh = function (task) {
 	}
 };
 /**
+ * Remove the task.
+ */
+UITask.prototype.remove = function () {
+	this.element.remove();
+};
+/**
  * @class creating task dialog
  */
 function UINewTask () {};
@@ -360,32 +366,46 @@ UIUpdateTask.open = function (uiTask) {
 	var due = new Date(uiTask.task.dueTime);
 	$('>.due>.month', element).text(due.getMonth() + 1);
 	$('>.due>.day', element).text(due.getDate());
+	$('>form input[name="id"]', element).val(uiTask.task.id);
+	$('>form input[name="tasklistID"]', element).val(uiTask.task.tasklistID);
 	// due time must be in UTC
 	$('>form.update input[name="dueTime"]', element).val(due.getTime() - due.getTimezoneOffset() * 60 * 1000);
 	$('>form.update input[name="title"]', element).val(uiTask.task.title);
 	$('>form.update textarea[name="notes"]', element).val(uiTask.task.notes);
 	$('>form.update', element).change(function () {
 		// validate the form
-		var data = FormUtil.nameValueToHash($(this).serializeArray());
-		if (data.title) {
-			$('button', this).removeAttr('disabled');
-			$(this).unbind('submit').submit(function () {
-				// FIXME: change to update
-				Tasks.create($(this).serializeArray(), function (created) {
-					uiTask.refresh(created);
-					element.remove();
-					overlay.remove();
-				});
-				return false;
-			});
+		var button = $('button', this);
+		if ($('input[name="title"]', this).val()) {
+			button.removeAttr('disabled');
 		}
 		else {
-			$('button', this).attr('disabled', 'disabled');
-			$(this).unbind('submit').submit(function () {return false;});
+			button.attr('disabled', 'disabled');
 		}
-	}).change();
+	}).change().submit(function () {
+		var button = $('button', this);
+		if (button.attr('disabled') == undefined) {
+			button.attr('disabled', 'disabled');
+			Tasks.update($(this).serializeArray(), function (created) {
+				uiTask.refresh(created);
+				element.remove();
+				overlay.remove();
+			}, function () {
+				button.removeAttr('disabled');
+			});
+		}
+		return false;
+	});
 	$('>form.delete', element).submit(function () {
-		// TODO:
+		var button = $('button', this);
+		button.attr('disabled', 'disabled');
+		Tasks.deleteOne($(this).serializeArray(), function () {
+			uiTask.remove();
+			element.remove();
+			overlay.remove();
+		}, function () {
+			button.removeAttr('disabled');
+		});
+		return false;
 	});
 	overlay.appendTo('body').show().click(function () {
 		element.remove();
