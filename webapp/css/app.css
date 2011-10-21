@@ -30,23 +30,7 @@ a:VISITED {
 	min-height: 100%;
 }
 
-#myheader {
-	position: fixed;
-	z-index: 100;
-	top: 20px;
-	bottom: 20px;
-	left: -10px;
-	padding-left: 5px;
-	width: 150px;
-	background: white;
-	border-right: solid 1px #888;
-	box-shadow: 0 0 10px 3px rgba(0, 0, 0, 0.4);
-	border-radius: 10px;
-	-moz-border-radius: 10px;
-}
-
 #content {
-	margin-left: 150px;
 }
 
 #footer {
@@ -119,6 +103,21 @@ a:VISITED {
 /*
  * Header.
  */
+#myheader {
+	position: fixed;
+	z-index: 100;
+	top: 20px;
+	bottom: 20px;
+	left: -10px;
+	padding-left: 5px;
+	width: 150px;
+	background: white;
+	border-right: solid 1px #888;
+	box-shadow: 0 0 10px 3px rgba(0, 0, 0, 0.4);
+	border-radius: 10px;
+	-moz-border-radius: 10px;
+}
+
 #myheader>h1 {
 	margin: 15px;
 	padding: 0;
@@ -189,6 +188,7 @@ a:VISITED {
  * Tasks grid.
  */
 #calendar {
+	margin-left: 150px;
 	border-collapse: collapse;
 	table-layout: fixed;
 	width: 100%;
