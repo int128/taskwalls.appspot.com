@@ -447,12 +447,10 @@ td.task-column>.new-task-button {
 
 .update-task>.due {
 	margin-bottom: .5em;
-	font-weight: bold;
 }
 
 .update-task>form>div>input[type="text"] {
 	width: 300px;
-	margin-top: .5em;
 	margin-bottom: .5em;
 	padding: 3px;
 	border: solid 1px #888;
