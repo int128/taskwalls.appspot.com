@@ -13,6 +13,12 @@
 </head>
 <body>
 <div id="root">
+<div id="welcome-content" class="unauthorized">
+<p>Task Wallでさくさくタスク管理</p>
+<p><a class="session-login">Login with Google Account</a></p>
+<p><input id="session-login-auto" type="checkbox" /><label for="session-login-auto">次回からは自動的にログインする</label></p>
+</div>
+
 <div id="myheader" class="authorized">
 <h1>Task Wall</h1>
 <div class="header-stack"><div id="tasklists"></div>
@@ -27,17 +33,8 @@
 <div class="header-stack unauthorized"><a class="session-login">ログイン</a></div>
 <div class="header-stack authorized"><a class="session-logout">ログアウト</a></div>
 </div>
-<div id="content">
 
-<div class="unauthorized">
-<div id="login-notice">
-<p>Task Wallでさくさくタスク管理</p>
-<p><a class="session-login">Login with Google Account</a></p>
-<p><input id="session-login-auto" type="checkbox" /><label for="session-login-auto">次回からは自動的にログインする</label></p>
-</div>
-</div>
-
-<div class="authorized">
+<div id="mycontent" class="authorized">
 <table id="calendar"></table>
 </div>
 
@@ -92,7 +89,6 @@
 <div id="footer">
 <span class="development"><a href="javascript:$.post('cleancache')">Expire cache</a> |</span>
 Task Wall service &copy; hidetake.org, 2011.
-</div>
 </div>
 </body>
 </html>

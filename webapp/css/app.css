@@ -30,9 +30,6 @@ a:VISITED {
 	min-height: 100%;
 }
 
-#content {
-}
-
 #footer {
 	position: absolute;
 	bottom: 0;
@@ -93,9 +90,9 @@ a:VISITED {
 }
 
 /*
- * Login.
+ * Welcome content.
  */
-#login-notice {
+#welcome-content {
 	margin-top: 5em;
 	text-align: center;
 }
@@ -103,6 +100,10 @@ a:VISITED {
 /*
  * Header.
  */
+#mycontent {
+	margin-left: 150px;
+}
+
 #myheader {
 	position: fixed;
 	z-index: 100;
@@ -188,7 +189,6 @@ a:VISITED {
  * Tasks grid.
  */
 #calendar {
-	margin-left: 150px;
 	border-collapse: collapse;
 	table-layout: fixed;
 	width: 100%;
