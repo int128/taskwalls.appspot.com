@@ -19,6 +19,8 @@ $(function () {
 // controller
 function States () {}
 States.authorized = function () {
+	// header
+	new UIHeader();
 	// get tasklists
 	Tasklists.get(function (tasklists) {
 		var uiTasklists = new UITasklists();

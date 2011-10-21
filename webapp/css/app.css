@@ -126,7 +126,7 @@ a:VISITED {
 }
 
 .header-stack {
-	margin: 15px;
+	margin: 30px 15px;
 }
 
 #tasklists>.tasklist {
@@ -183,6 +183,18 @@ a:VISITED {
 	border-radius: 3px;
 	-moz-border-radius: 3px;
 	background: #ddd;
+}
+
+.toggle-tasks {
+	padding: 5px;
+	background: -moz-linear-gradient(top, #fff, #ddd);
+	background: -webkit-gradient(linear, left top, left bottom, from(#fff), to(#ddd) );
+	border: solid 1px #ccc;
+	border-left: solid 5px #ccc;
+	margin-bottom: 5px;
+	border-radius: 3px;
+	-moz-border-radius: 3px;
+	cursor: pointer;
 }
 
 /*
