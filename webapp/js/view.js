@@ -142,7 +142,7 @@ UITasks.prototype.extendMonth = function (time) {
  */
 UITasks.prototype.createDateRow = function (date) {
 	var context = this;
-	return $('<tr/>')
+	var row = $('<tr/>')
 		.addClass('t' + date.getTime())
 		.addClass('w' + date.getDay())
 		.addClass('d' + date.getDate())
@@ -170,6 +170,10 @@ UITasks.prototype.createDateRow = function (date) {
 				}
 			}
 		});
+	if (row.hasClass('today')) {
+		row.attr('id', 'today');
+	}
+	return row;
 };
 /**
  * @class UI element of task.
