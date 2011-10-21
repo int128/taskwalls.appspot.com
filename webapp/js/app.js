@@ -86,7 +86,7 @@ $(function () {
 			States.authorizing();
 		}
 		$.post('oauth2', {code: q[1]}, function () {
-			location.replace(location.pathname);
+			location.replace(location.pathname + '#today');
 		});
 	}
 	else if (location.search == '?error=access_denied') {
