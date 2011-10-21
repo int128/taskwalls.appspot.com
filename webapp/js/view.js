@@ -100,7 +100,7 @@ UITasks.prototype.add = function (tasks) {
 	$.each(tasks.items, function (i, task) {
 		var date = new Date(task.dueTime);
 		date.setHours(0, 0, 0, 0);
-		$('#t' + date.getTime() + '>td.task-column').append(new UITask(task, tasklists).element);
+		$('.t' + date.getTime() + '>td.task-column').append(new UITask(task, tasklists).element);
 	});
 };
 /**
@@ -143,7 +143,7 @@ UITasks.prototype.extendMonth = function (time) {
 UITasks.prototype.createDateRow = function (date) {
 	var context = this;
 	return $('<tr/>')
-		.attr('id', 't' + date.getTime())
+		.addClass('t' + date.getTime())
 		.addClass('w' + date.getDay())
 		.addClass('d' + date.getDate())
 		.addClass(DateUtil.futureOrPast(date, 'future', 'today', 'past'))
