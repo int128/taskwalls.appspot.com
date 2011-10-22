@@ -40,6 +40,7 @@ public class CreateController extends ControllerBase
 		Validators v = new Validators(request);
 		v.add("tasklistID", v.required());
 		v.add("title", v.required());
+		v.add("notes");
 		v.add("dueTime", v.required(), v.longType());
 		return v.validate();
 	}
