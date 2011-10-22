@@ -418,16 +418,16 @@ td.task-column>.new-task-button {
 	font-weight: bold;
 }
 
-.new-task>form>div>input[type="text"] {
+.new-task>form>div>input[type="text"],.update-task>form>div>input[type="text"] {
 	width: 300px;
 	margin-top: .5em;
-	margin-bottom: .5em;
 	padding: 3px;
 	border: solid 1px #888;
 }
 
-.new-task>form>div>textarea {
+.new-task>form>div>textarea,.update-task>form>div>textarea {
 	width: 300px;
+	margin-top: .5em;
 	height: 100px;
 	padding: 3px;
 	border: solid 1px #888;
@@ -443,24 +443,6 @@ td.task-column>.new-task-button {
 	border: solid 1px #888;
 	background: rgba(255, 255, 255, 1.0);
 	box-shadow: 0 0 10px 3px rgba(0, 0, 0, 0.4);
-}
-
-.update-task>.due {
-	margin-bottom: .5em;
-}
-
-.update-task>form>div>input[type="text"] {
-	width: 300px;
-	margin-bottom: .5em;
-	padding: 3px;
-	border: solid 1px #888;
-}
-
-.update-task>form>div>textarea {
-	width: 300px;
-	height: 150px;
-	padding: 3px;
-	border: solid 1px #888;
 }
 
 .popup-overlay {

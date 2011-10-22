@@ -241,7 +241,7 @@ UITask.prototype.refresh = function (task) {
 		 */
 		.click(function (event) {
 			if ($(event.target).hasClass('task')) {
-				UIUpdateTask.open(context);
+				new UIUpdateTask().open(context);
 			}
 		});
 	$('>input.status_completed', this.element)
@@ -319,8 +319,9 @@ function UINewTask () {};
 UINewTask.open = function (uiTasks, date, positionTop) {
 	var element = $('#new-task').clone().removeAttr('id');
 	var overlay = $('<div class="popup-overlay"/>');
-	$('>.due>.month', element).text(date.getMonth() + 1);
-	$('>.due>.day', element).text(date.getDate());
+	$('>form button', element).button();
+	$('>form .due>.month', element).text(date.getMonth() + 1);
+	$('>form .due>.day', element).text(date.getDate());
 	// due time must be in UTC
 	$('>form input[name="dueTime"]', element).val(date.getTime() - date.getTimezoneOffset() * 60 * 1000);
 	var tasklistsElement = $('>form>.tasklists', element).empty();
@@ -374,24 +375,33 @@ UINewTask.open = function (uiTasks, date, positionTop) {
 /**
  * @class updating task dialog
  */
-function UIUpdateTask () {};
+function UIUpdateTask () {
+	this.element = $('#update-task').clone().removeAttr('id');
+	this.overlay = $('<div class="popup-overlay"/>');
+};
 /**
  * Open the dialog.
  * @param {UITask} uiTask
  */
-UIUpdateTask.open = function (uiTask) {
-	var element = $('#update-task').clone().removeAttr('id');
-	var overlay = $('<div class="popup-overlay"/>');
-	var due = new Date(uiTask.task.dueTime);
-	$('>.due>.month', element).text(due.getMonth() + 1);
-	$('>.due>.day', element).text(due.getDate());
-	$('>form input[name="id"]', element).val(uiTask.task.id);
-	$('>form input[name="tasklistID"]', element).val(uiTask.task.tasklistID);
-	// due time must be in UTC
-	$('>form.update input[name="dueTime"]', element).val(due.getTime() - due.getTimezoneOffset() * 60 * 1000);
-	$('>form.update input[name="title"]', element).val(uiTask.task.title);
-	$('>form.update textarea[name="notes"]', element).val(uiTask.task.notes);
-	$('>form.update', element).change(function () {
+UIUpdateTask.prototype.open = function (uiTask) {
+	var context = this;
+	this.setDue(new Date(uiTask.task.dueTime));
+	$('>form button', this.element).button();
+	$('>form input[name="id"]', this.element).val(uiTask.task.id);
+	$('>form input[name="tasklistID"]', this.element).val(uiTask.task.tasklistID);
+	$('>form.update .datepicker>a', this.element).click(function () {
+		$(this).parent().empty().datepicker({
+			defaultDate: context.getDue(),
+			dateFormat: '@',
+			onSelect: function (timeInMillis) {
+				context.setDue(new Date(parseInt(timeInMillis)));
+			}
+		});
+		return false;
+	});
+	$('>form.update input[name="title"]', this.element).val(uiTask.task.title);
+	$('>form.update textarea[name="notes"]', this.element).val(uiTask.task.notes);
+	$('>form.update', this.element).change(function () {
 		// validate the form
 		var button = $('button', this);
 		if ($('input[name="title"]', this).val()) {
@@ -404,34 +414,59 @@ UIUpdateTask.open = function (uiTask) {
 		var button = $('button', this);
 		if (button.attr('disabled') == undefined) {
 			button.attr('disabled', 'disabled');
+			$('input[name="dueTime"]', this).val(context.getDueUTC());
 			Tasks.update($(this).serializeArray(), function (created) {
 				uiTask.refresh(created);
-				element.remove();
-				overlay.remove();
+				context.element.remove();
+				context.overlay.remove();
 			}, function () {
 				button.removeAttr('disabled');
 			});
 		}
 		return false;
 	});
-	$('>form.delete', element).submit(function () {
+	$('>form.delete', this.element).submit(function () {
 		var button = $('button', this);
 		button.attr('disabled', 'disabled');
 		Tasks.deleteOne($(this).serializeArray(), function () {
 			uiTask.remove();
-			element.remove();
-			overlay.remove();
+			context.element.remove();
+			context.overlay.remove();
 		}, function () {
 			button.removeAttr('disabled');
 		});
 		return false;
 	});
-	overlay.appendTo('body').show().click(function () {
-		element.remove();
-		overlay.remove();
+	this.overlay.appendTo('body').show().click(function () {
+		context.element.remove();
+		context.overlay.remove();
 	});
-	element.css('left', uiTask.element.position().left)
+	this.element.css('left', uiTask.element.position().left)
 		.insertBefore(uiTask.element)
 		.fadeIn();
-	$('>form.update input[name="title"]', element).focus();
+	$('>form.update input[name="title"]', this.element).focus();
+};
+/**
+ * Set the due date.
+ * @param {Date} due
+ */
+UIUpdateTask.prototype.setDue = function (due) {
+	this.due = due;
+	$('>form.update .due>.year', this.element).text(due.getFullYear());
+	$('>form.update .due>.month', this.element).text(due.getMonth() + 1);
+	$('>form.update .due>.day', this.element).text(due.getDate());
+};
+/**
+ * Get the due date.
+ * @returns {Date}
+ */
+UIUpdateTask.prototype.getDue = function () {
+	return this.due;
+};
+/**
+ * Get the due date in UTC.
+ * @returns {Number}
+ */
+UIUpdateTask.prototype.getDueUTC = function () {
+	return this.due.getTime() - this.due.getTimezoneOffset() * 60 * 1000;
 };

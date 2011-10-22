@@ -10,6 +10,7 @@
 <script type="text/javascript" src="/js/lib/jquery-ui-1.8.16.min.js"></script>
 <script type="text/javascript" src="/js/app.js"></script>
 <link rel="stylesheet" href="/css/app.css" />
+<link rel="stylesheet" href="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8.16/themes/base/jquery-ui.css" />
 </head>
 <body>
 <div id="root">
@@ -43,8 +44,8 @@
 </div>
 
 <div id="new-task" class="new-task">
-<div class="due"><span class="month"></span>月<span class="day"></span>日にタスクを追加</div>
 <form>
+<div class="due"><span class="month"></span>月<span class="day"></span>日にタスクを追加</div>
 <div class="tasklists"></div>
 <div><input type="text" name="title" /></div>
 <div><textarea name="notes"></textarea></div>
@@ -55,9 +56,9 @@
 </div>
 
 <div id="update-task" class="update-task">
-<div class="due"><span class="month"></span>月<span class="day"></span>日</div>
 <form class="update">
-<div class="tasklists"></div>
+<div class="due"><span class="year"></span>年<span class="month"></span>月<span class="day"></span>日</div>
+<div class="datepicker"><a href="#">タスクの期限を変更</a></div>
 <div><input type="text" name="title" /></div>
 <div><textarea name="notes"></textarea></div>
 <div><input type="hidden" name="dueTime" /></div>
