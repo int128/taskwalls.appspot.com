@@ -176,7 +176,7 @@ UITasks.prototype.createDateRow = function (date) {
 			drop: function (event, ui) {
 				$(ui.draggable).css({top: 0, left: 0});
 				// check if dropped row is different from last one
-				if ($(ui.draggable).parents('#' + this.id).size() == 0) {
+				if ($(ui.draggable).parents('.t' + date.getTime()).size() == 0) {
 					$(ui.draggable).trigger('dropped', [$('>td.task-column', this), date]);
 				}
 			}
