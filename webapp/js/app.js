@@ -64,22 +64,22 @@ $(function () {
 	/** @param {XMLHttpRequest} xhr */
 	$(document).ajaxError(function (event, xhr) {
 		if (xhr.status == 403) {
-			//location.href = $('a.session-login').attr('href');
-			location.replace($('a.session-logout').attr('href'));
+			location.replace($('a.session-login').attr('href'));
 		}
 		else {
 			$('#global-error-message').fadeIn();
 		}
 	});
-	// URIs
-	$('a.session-logout').attr('href', 'logout');
-	$('a.session-login').attr('href', 'https://accounts.google.com/o/oauth2/auth?redirect_uri='
-		+ (location.protocol + '//' + location.host + location.pathname)
-		+ '&response_type=code&scope=https://www.googleapis.com/auth/tasks&client_id=965159379100.apps.googleusercontent.com');
 	// development only
 	if ($.isDevelopment()) {
 		$('.development').hide().show();
 	}
+	// URIs
+	$('a.session-logout').attr('href', 'logout');
+	$('a.session-login').attr('href', 'https://accounts.google.com/o/oauth2/auth?redirect_uri='
+		+ (location.protocol + '//' + location.host + location.pathname)
+		+ '&response_type=code&scope=https://www.googleapis.com/auth/tasks'
+		+ '&client_id=965159379100.apps.googleusercontent.com');
 	// determine authorization state
 	var q = location.search.match(/\?code=(.*)/);
 	if (q) {
@@ -88,7 +88,7 @@ $(function () {
 			States.authorizing();
 		}
 		$.post('oauth2', {code: q[1]}, function () {
-			location.replace(location.pathname + '#today');
+			location.replace(location.pathname);
 		});
 	}
 	else if (location.search == '?error=access_denied') {

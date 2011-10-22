@@ -31,6 +31,7 @@ public class Oauth2Controller extends Controller
 
 	private static final Logger logger = Logger.getLogger(Oauth2Controller.class.getName());
 	private static final Expiration SESSION_EXPIRATION = Expiration.byDeltaSeconds(3600 * 24 * 7);
+	private static final int SESSION_COOKIE_EXPIRATION = 3600 * 24 * 7;
 
 	@Override
 	public Navigation run() throws Exception
@@ -72,7 +73,10 @@ public class Oauth2Controller extends Controller
 		String sessionKey = new String(encoded, 0, encoded.length - 1);
 		Memcache.put(sessionKey, token, SESSION_EXPIRATION);
 
-		response.addCookie(new Cookie(ControllerBase.COOKIE_KEY_SESSIONID, sessionKey));
+		// create session cookie
+		Cookie cookie = new Cookie(ControllerBase.COOKIE_KEY_SESSIONID, sessionKey);
+		cookie.setMaxAge(SESSION_COOKIE_EXPIRATION);
+		response.addCookie(cookie);
 		return null;
 	}
 
