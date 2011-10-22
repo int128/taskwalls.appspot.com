@@ -11,6 +11,8 @@ import org.slim3.memcache.Memcache;
 
 /**
  * Logout current session.
+ * This controller deletes all cookies and the session.
+ * 
  * @author hidetake.org
  */
 public class LogoutController extends Controller
@@ -24,19 +26,18 @@ public class LogoutController extends Controller
 		if (request.getCookies() != null) {
 			String sessionKey = null;
 			for (Cookie cookie : request.getCookies()) {
+				// find session key
 				if (ControllerBase.COOKIE_KEY_SESSIONID.equals(cookie.getName())) {
 					sessionKey = cookie.getValue();
-					break;
 				}
+				// delete the cookie
+				cookie.setMaxAge(0);
+				response.addCookie(cookie);
 			}
 			if (sessionKey != null) {
 				// delete the session
 				Memcache.delete(sessionKey);
 			}
-			// delete the cookie
-			Cookie sessionCookie = new Cookie(ControllerBase.COOKIE_KEY_SESSIONID, "");
-			sessionCookie.setMaxAge(0);
-			response.addCookie(sessionCookie);
 		}
 		return redirect("./");
 	}
