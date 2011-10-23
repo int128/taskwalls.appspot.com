@@ -6,6 +6,7 @@ import org.hidetake.taskwalls.util.AjaxPreconditions;
 import org.slim3.controller.Navigation;
 import org.slim3.controller.validator.Validators;
 
+import com.google.api.client.util.DateTime;
 import com.google.api.services.tasks.Tasks.TasksOperations.Patch;
 import com.google.api.services.tasks.model.Task;
 
@@ -29,6 +30,8 @@ public class UpdateController extends ControllerBase
 		task.setId(asString("id"));
 		task.setTitle(asString("title"));
 		task.setNotes(asString("notes"));
+		task.setDue(new DateTime(asLong("dueTime"), 0));
+
 		Patch patch = tasksService.tasks.patch(asString("tasklistID"), task.getId(), task);
 		Task patched = patch.execute();
 
@@ -44,6 +47,7 @@ public class UpdateController extends ControllerBase
 		v.add("id", v.required());
 		v.add("title", v.required());
 		v.add("notes");
+		v.add("dueTime", v.required(), v.longType());
 		return v.validate();
 	}
 
