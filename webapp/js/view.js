@@ -161,7 +161,7 @@ UITasks.prototype.createDateRow = function (date) {
 		.append($('<td class="date-column"/>')
 				.append($('<div/>').text(date.getDate())))
 		.append($('<td class="weekday-column"/>')
-				.append($.resource('weekday' + date.getDay())))
+				.append($.resource('key-weekday' + date.getDay())))
 		.append($('<td class="task-column"/>')
 				.prepend($('<div class="new-task-button">+</div>')
 						.click(function (event) {
@@ -200,7 +200,7 @@ function UITask (task, tasklists) {
 UITask.prototype.refresh = function (task) {
 	var context = this;
 	var originalElement = this.element;
-	this.element = $('<div class="task"/>');
+	this.element = $.resource('task-template');
 	this.task = task;
 	// append or move the element to due date row
 	var due = new Date(task.dueTime);
@@ -213,7 +213,7 @@ UITask.prototype.refresh = function (task) {
 		$('.t' + due.getTime() + '>td.task-column').append(this.element);
 	}
 	// build inner elements
-	this.element.append($.resource('task-template').children())
+	this.element
 		.addClass('task-status-' + task.status)
 		.addClass('tasklist-' + task.tasklistID)
 		.addClass('tasklistcolor-' + this.tasklists.getByID(task.tasklistID).colorID)
@@ -323,8 +323,8 @@ function UINewTask () {};
  * @param {Number} positionTop
  */
 UINewTask.open = function (uiTasks, date, positionTop) {
-	var element = $('#new-task').clone().removeAttr('id');
-	var overlay = $('<div class="popup-overlay"/>');
+	var element = $.resource('new-task-template');
+	var overlay = $.resource('popup-overlay-template');
 	$('>form button', element).button();
 	$('>form .due>.month', element).text(date.getMonth() + 1);
 	$('>form .due>.day', element).text(date.getDate());
@@ -382,8 +382,8 @@ UINewTask.open = function (uiTasks, date, positionTop) {
  * @class updating task dialog
  */
 function UIUpdateTask () {
-	this.element = $('#update-task').clone().removeAttr('id');
-	this.overlay = $('<div class="popup-overlay"/>');
+	this.element = $.resource('update-task-template');
+	this.overlay = $.resource('popup-overlay-template');
 };
 /**
  * Open the dialog.

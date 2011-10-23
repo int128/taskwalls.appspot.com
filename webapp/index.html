@@ -43,7 +43,7 @@
 <table id="calendar"></table>
 </div>
 
-<div id="new-task" class="new-task">
+<div id="new-task-template" class="new-task resource">
 <form>
 <div class="due"><span class="month"></span>月<span class="day"></span>日にタスクを追加</div>
 <div class="tasklists"></div>
@@ -55,7 +55,7 @@
 </form>
 </div>
 
-<div id="update-task" class="update-task">
+<div id="update-task-template" class="update-task resource">
 <form class="update">
 <div class="due"><span class="year"></span>年<span class="month"></span>月<span class="day"></span>日</div>
 <div class="datepicker"><a href="#">タスクの期限を変更</a></div>
@@ -73,22 +73,24 @@
 </form>
 </div>
 
-<div class="resource" id="rc-task-template">
+<div id="task-template" class="task resource">
 <input class="status_completed" type="checkbox" />
 <span class="title"></span>
 <div class="notes"></div>
 </div>
 
+<div id="popup-overlay-template" class="popup-overlay resource"></div>
+
 <div id="loading"></div>
 <div id="global-error-message">エラーです。もう一度試してみてください。</div>
 
-<div class="resource" id="rc-weekday0">日</div>
-<div class="resource" id="rc-weekday1">月</div>
-<div class="resource" id="rc-weekday2">火</div>
-<div class="resource" id="rc-weekday3">水</div>
-<div class="resource" id="rc-weekday4">木</div>
-<div class="resource" id="rc-weekday5">金</div>
-<div class="resource" id="rc-weekday6">土</div>
+<div class="resource" id="key-weekday0">日</div>
+<div class="resource" id="key-weekday1">月</div>
+<div class="resource" id="key-weekday2">火</div>
+<div class="resource" id="key-weekday3">水</div>
+<div class="resource" id="key-weekday4">木</div>
+<div class="resource" id="key-weekday5">金</div>
+<div class="resource" id="key-weekday6">土</div>
 
 </div>
 <div id="footer">

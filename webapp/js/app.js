@@ -9,7 +9,7 @@ document.write('<script type="text/javascript" src="/js/view.js"></script>');
 $(function () {
 	$.extend({
 		resource: function (key) {
-			return $('#rc-' + key).clone().removeClass('resource').removeAttr('id');
+			return $('#' + key).clone().removeClass('resource').removeAttr('id');
 		},
 		isDevelopment: function () {
 			return location.hostname == 'localhost';

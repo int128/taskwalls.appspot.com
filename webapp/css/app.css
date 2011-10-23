@@ -401,7 +401,6 @@ td.task-column>.new-task-button {
  * Dialogs.
  */
 .new-task {
-	display: none;
 	z-index: 400;
 	position: absolute;
 	right: 40px;
@@ -434,7 +433,6 @@ td.task-column>.new-task-button {
 }
 
 .update-task {
-	display: none;
 	position: absolute;
 	z-index: 400;
 	padding: 10px;
@@ -446,7 +444,6 @@ td.task-column>.new-task-button {
 }
 
 .popup-overlay {
-	display: none;
 	position: fixed;
 	top: 0;
 	left: 0;
