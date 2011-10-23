@@ -109,9 +109,7 @@ UITasks.prototype.add = function (tasks) {
 	this.extendMonth(tasks.earliestTime());
 	this.extendMonth(tasks.latestTime());
 	$.each(tasks.items, function (i, task) {
-		var date = new Date(task.dueTime);
-		date.setHours(0, 0, 0, 0);
-		$('.t' + date.getTime() + '>td.task-column').append(new UITask(task, tasklists).element);
+		new UITask(task, tasklists);
 	});
 };
 /**
@@ -196,17 +194,25 @@ function UITask (task, tasklists) {
 	this.refresh(task);
 }
 /**
- * Refresh view.
+ * Refresh the element.
  * @param task JSON task
  */
 UITask.prototype.refresh = function (task) {
 	var context = this;
 	var originalElement = this.element;
 	this.element = $('<div class="task"/>');
-	if (originalElement) {
+	this.task = task;
+	// append or move the element to due date row
+	var due = new Date(task.dueTime);
+	due.setHours(0, 0, 0, 0);
+	if ($(originalElement).parents('.t' + due.getTime()).size() > 0) {
 		$(originalElement).replaceWith(this.element);
 	}
-	this.task = task;
+	else {
+		$(originalElement).remove();
+		$('.t' + due.getTime() + '>td.task-column').append(this.element);
+	}
+	// build inner elements
 	this.element.append($.resource('task-template').children())
 		.addClass('task-status-' + task.status)
 		.addClass('tasklist-' + task.tasklistID)
