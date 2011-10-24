@@ -83,10 +83,10 @@ UITasklist.prototype.refresh = function (tasklist) {
 	});
 };
 /**
- * @class UI element of {@link Tasks}.
+ * @class UI element of the calendar.
  * @param {Tasklists} tasklists the tasklists
  */
-function UITasks (tasklists) {
+function UICalendar (tasklists) {
 	this.tasklists = tasklists;
 	/**
 	 * Latest date in the calendar.
@@ -108,7 +108,7 @@ function UITasks (tasklists) {
  * Add tasks.
  * @param {Tasks} tasks array of JSON task
  */
-UITasks.prototype.add = function (tasks) {
+UICalendar.prototype.add = function (tasks) {
 	var tasklists = this.tasklists;
 	this.extendMonth(tasks.earliestTime());
 	this.extendMonth(tasks.latestTime());
@@ -120,7 +120,7 @@ UITasks.prototype.add = function (tasks) {
  * Extend rows of the calendar.
  * @param {Number} time date to extend
  */
-UITasks.prototype.extend = function (time) {
+UICalendar.prototype.extend = function (time) {
 	var date = new Date(time);
 	date.setHours(0, 0, 0, 0);
 	if (date < this.earliest) {
@@ -140,7 +140,7 @@ UITasks.prototype.extend = function (time) {
  * Extend rows of the calendar.
  * @param {Number} time date to extend
  */
-UITasks.prototype.extendMonth = function (time) {
+UICalendar.prototype.extendMonth = function (time) {
 	var date = new Date(time);
 	date.setHours(0, 0, 0, 0);
 	date.setDate(1);
@@ -153,7 +153,7 @@ UITasks.prototype.extendMonth = function (time) {
  * @param {Date} date date (time parts must be zero)
  * @returns {jQuery}
  */
-UITasks.prototype.createDateRow = function (date) {
+UICalendar.prototype.createDateRow = function (date) {
 	var context = this;
 	var row = $('<tr/>')
 		.addClass('t' + date.getTime())
@@ -189,7 +189,7 @@ UITasks.prototype.createDateRow = function (date) {
 	return row;
 };
 /**
- * @class UI element of task.
+ * @class UI element of the task.
  * @param task JSON task
  * @param {Tasklists} tasklists the tasklists
  */
@@ -322,11 +322,11 @@ UITask.prototype.remove = function () {
 function UINewTask () {};
 /**
  * Open the dialog.
- * @param {UITasks} uiTasks
+ * @param {UICalendar} uiCalendar
  * @param {Date} date due date
  * @param {Number} positionTop
  */
-UINewTask.open = function (uiTasks, date, positionTop) {
+UINewTask.open = function (uiCalendar, date, positionTop) {
 	var element = $.resource('new-task-template');
 	var overlay = $.resource('popup-overlay-template');
 	$('>form button', element).button();
@@ -335,7 +335,7 @@ UINewTask.open = function (uiTasks, date, positionTop) {
 	// due time must be in UTC
 	$('>form input[name="dueTime"]', element).val(date.getTime() - date.getTimezoneOffset() * 60 * 1000);
 	var tasklistsElement = $('>form>.tasklists', element).empty();
-	$.each(uiTasks.tasklists.items, function (i, tasklist) {
+	$.each(uiCalendar.tasklists.items, function (i, tasklist) {
 		var checked = {};
 		if (i == 0) {
 			checked = {checked: 'checked'};
@@ -366,7 +366,7 @@ UINewTask.open = function (uiTasks, date, positionTop) {
 		if (button.attr('disabled') == undefined) {
 			button.attr('disabled', 'disabled');
 			Tasks.create($(this).serializeArray(), function (created) {
-				uiTasks.add(new Tasks([created]));
+				uiCalendar.add(new Tasks([created]));
 				element.remove();
 				overlay.remove();
 			}, function () {

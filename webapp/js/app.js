@@ -25,10 +25,10 @@ States.authorized = function () {
 	Tasklists.get(function (tasklists) {
 		var uiTasklists = new UITasklists();
 		uiTasklists.add(tasklists);
-		var uiTasks = new UITasks(tasklists);
+		var uiCalendar = new UICalendar(tasklists);
 		$.each(tasklists.items, function (i, tasklist) {
 			Tasks.get(tasklist.id, function (tasks) {
-				uiTasks.add(tasks);
+				uiCalendar.add(tasks);
 			});
 		});
 	});
