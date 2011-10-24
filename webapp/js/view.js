@@ -2,11 +2,15 @@
  * @class UI element of the header bar.
  */
 function UIHeader () {
-	$('.toggle-tasks.needsAction').click(function () {
+	$('#myheader .toggle-tasks.needsAction').click(function () {
 		$('.task-status-needsAction').fadeToggle();
 	});
-	$('.toggle-tasks.completed').click(function () {
+	$('#myheader .toggle-tasks.completed').click(function () {
 		$('.task-status-completed').fadeToggle();
+	});
+	$('#myheader .reload').click(function () {
+		// TODO:
+		return false;
 	});
 };
 /**
