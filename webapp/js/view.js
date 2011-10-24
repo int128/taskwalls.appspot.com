@@ -392,22 +392,19 @@ function UIUpdateTask () {
 UIUpdateTask.prototype.open = function (uiTask) {
 	var context = this;
 	this.setDue(new Date(uiTask.task.dueTime));
-	$('>form button', this.element).button();
-	$('>form input[name="id"]', this.element).val(uiTask.task.id);
-	$('>form input[name="tasklistID"]', this.element).val(uiTask.task.tasklistID);
-	$('>form.update .datepicker>a', this.element).click(function () {
-		$(this).parent().empty().datepicker({
-			defaultDate: context.getDue(),
-			dateFormat: '@',
-			onSelect: function (timeInMillis) {
-				context.setDue(new Date(parseInt(timeInMillis)));
-			}
-		});
-		return false;
+	$('>.forms>form button', this.element).button();
+	$('>.forms>form input[name="id"]', this.element).val(uiTask.task.id);
+	$('>.forms>form input[name="tasklistID"]', this.element).val(uiTask.task.tasklistID);
+	$('>.datepicker', this.element).datepicker({
+		defaultDate: context.getDue(),
+		dateFormat: '@',
+		onSelect: function (timeInMillis) {
+			context.setDue(new Date(parseInt(timeInMillis)));
+		}
 	});
-	$('>form.update input[name="title"]', this.element).val(uiTask.task.title);
-	$('>form.update textarea[name="notes"]', this.element).val(uiTask.task.notes);
-	$('>form.update', this.element).change(function () {
+	$('>.forms>form.update input[name="title"]', this.element).val(uiTask.task.title);
+	$('>.forms>form.update textarea[name="notes"]', this.element).val(uiTask.task.notes);
+	$('>.forms>form.update', this.element).change(function () {
 		// validate the form
 		var button = $('button', this);
 		if ($('input[name="title"]', this).val()) {
@@ -431,7 +428,7 @@ UIUpdateTask.prototype.open = function (uiTask) {
 		}
 		return false;
 	});
-	$('>form.delete', this.element).submit(function () {
+	$('>.forms>form.delete', this.element).submit(function () {
 		var button = $('button', this);
 		button.attr('disabled', 'disabled');
 		Tasks.deleteOne($(this).serializeArray(), function () {
@@ -450,7 +447,7 @@ UIUpdateTask.prototype.open = function (uiTask) {
 	this.element.css('left', uiTask.element.position().left)
 		.insertBefore(uiTask.element)
 		.fadeIn();
-	$('>form.update input[name="title"]', this.element).focus();
+	$('>.forms>form.update input[name="title"]', this.element).focus();
 };
 /**
  * Set the due date.
@@ -458,9 +455,9 @@ UIUpdateTask.prototype.open = function (uiTask) {
  */
 UIUpdateTask.prototype.setDue = function (due) {
 	this.due = due;
-	$('>form.update .due>.year', this.element).text(due.getFullYear());
-	$('>form.update .due>.month', this.element).text(due.getMonth() + 1);
-	$('>form.update .due>.day', this.element).text(due.getDate());
+	$('>.forms>form.update>.due>.year', this.element).text(due.getFullYear());
+	$('>.forms>form.update>.due>.month', this.element).text(due.getMonth() + 1);
+	$('>.forms>form.update>.due>.day', this.element).text(due.getDate());
 };
 /**
  * Get the due date.
