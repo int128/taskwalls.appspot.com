@@ -169,7 +169,7 @@ UICalendar.prototype.createDateRow = function (date) {
 		.append($('<td class="task-column"/>')
 				.prepend($('<div class="new-task-button">+</div>')
 						.click(function (event) {
-							UINewTask.open(context, date, event.pageY);
+							new UINewTask().open(context, date, event.pageY);
 						})))
 		.droppable({
 			accept: 'div.task',
@@ -319,22 +319,24 @@ UITask.prototype.remove = function () {
 /**
  * @class creating task dialog
  */
-function UINewTask () {};
+function UINewTask () {
+	this.element = $.resource('new-task-template');
+	this.overlay = $.resource('popup-overlay-template');
+};
 /**
  * Open the dialog.
  * @param {UICalendar} uiCalendar
  * @param {Date} date due date
  * @param {Number} positionTop
  */
-UINewTask.open = function (uiCalendar, date, positionTop) {
-	var element = $.resource('new-task-template');
-	var overlay = $.resource('popup-overlay-template');
-	$('>form button', element).button();
-	$('>form .due>.month', element).text(date.getMonth() + 1);
-	$('>form .due>.day', element).text(date.getDate());
+UINewTask.prototype.open = function (uiCalendar, date, positionTop) {
+	var context = this;
+	$('>form button', this.element).button();
+	$('>form .due>.month', this.element).text(date.getMonth() + 1);
+	$('>form .due>.day', this.element).text(date.getDate());
 	// due time must be in UTC
-	$('>form input[name="dueTime"]', element).val(date.getTime() - date.getTimezoneOffset() * 60 * 1000);
-	var tasklistsElement = $('>form>.tasklists', element).empty();
+	$('>form input[name="dueTime"]', this.element).val(date.getTime() - date.getTimezoneOffset() * 60 * 1000);
+	var tasklistsElement = $('>form>.tasklists', this.element).empty();
 	$.each(uiCalendar.tasklists.items, function (i, tasklist) {
 		var checked = {};
 		if (i == 0) {
@@ -352,7 +354,7 @@ UINewTask.open = function (uiCalendar, date, positionTop) {
 				.text(tasklist.title)
 				.appendTo(tasklistsElement));
 	});
-	$('>form', element).unbind('change').change(function () {
+	$('>form', this.element).unbind('change').change(function () {
 		// validate the form
 		var button = $('button', this);
 		if ($('input[name="title"]', this).val()) {
@@ -367,20 +369,20 @@ UINewTask.open = function (uiCalendar, date, positionTop) {
 			button.attr('disabled', 'disabled');
 			Tasks.create($(this).serializeArray(), function (created) {
 				uiCalendar.add(new Tasks([created]));
-				element.remove();
-				overlay.remove();
+				context.element.remove();
+				context.overlay.remove();
 			}, function () {
 				button.removeAttr('disabled');
 			});
 		}
 		return false;
 	});
-	overlay.appendTo('body').show().click(function () {
-		element.remove();
-		overlay.remove();
+	this.overlay.appendTo('body').show().click(function () {
+		context.element.remove();
+		context.overlay.remove();
 	});
-	element.css('top', positionTop).appendTo('body').fadeIn();
-	$('>form input[name="title"]', element).focus();
+	this.element.css('top', positionTop).appendTo('body').fadeIn();
+	$('>form input[name="title"]', this.element).focus();
 };
 /**
  * @class updating task dialog
