@@ -336,23 +336,14 @@ UINewTask.prototype.open = function (uiCalendar, date, positionTop) {
 	$('>form .due>.day', this.element).text(date.getDate());
 	// due time must be in UTC
 	$('>form input[name="dueTime"]', this.element).val(date.getTime() - date.getTimezoneOffset() * 60 * 1000);
-	var tasklistsElement = $('>form>.tasklists', this.element).empty();
 	$.each(uiCalendar.tasklists.items, function (i, tasklist) {
-		var checked = {};
+		var radio = {id: Math.random() + tasklist.id};
 		if (i == 0) {
-			checked = {checked: 'checked'};
+			radio.checked = 'checked';
 		}
-		var labelId = Math.random() + tasklist.id;
-		$('<div/>').appendTo(tasklistsElement)
-			.append($('<input type="radio" name="tasklistID"/>')
-				.attr(checked)
-				.attr('id', labelId)
-				.val(tasklist.id)
-				.appendTo(tasklistsElement))
-			.append($('<label/>')
-				.attr('for', labelId)
-				.text(tasklist.title)
-				.appendTo(tasklistsElement));
+		$('>form>.tasklists', context.element)
+			.append($('<input type="radio" name="tasklistID"/>').attr(radio).val(tasklist.id))
+			.append($('<label/>').attr('for', radio.id).text(tasklist.title));
 	});
 	$('>form', this.element).unbind('change').change(function () {
 		// validate the form
