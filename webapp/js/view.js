@@ -2,9 +2,9 @@
  * @class the page
  */
 function UIPage () {
-	this.header = new UIHeader();
-	this.tasklists = new UITasklists();
-	this.calendar = new UICalendar();
+	this.header = new UIHeader(this);
+	this.tasklists = new UITasklists(this);
+	this.calendar = new UICalendar(this);
 	this.refresh();
 }
 /**
@@ -13,7 +13,9 @@ function UIPage () {
 UIPage.prototype.refresh = function () {
 	var context = this;
 	Tasklists.get(function (tasklists) {
+		context.tasklists.clear();
 		context.tasklists.add(tasklists);
+		context.calendar.clear();
 		context.calendar.setTasklists(tasklists);
 		$.each(tasklists.items, function (i, tasklist) {
 			Tasks.get(tasklist.id, function (tasks) {
@@ -24,8 +26,9 @@ UIPage.prototype.refresh = function () {
 };
 /**
  * @class UI element of the header bar.
+ * @param {UIPage} page
  */
-function UIHeader () {
+function UIHeader (page) {
 	$('#myheader .toggle-tasks.needsAction').click(function () {
 		$('.task-status-needsAction').fadeToggle();
 	});
@@ -33,7 +36,7 @@ function UIHeader () {
 		$('.task-status-completed').fadeToggle();
 	});
 	$('#myheader .reload').click(function () {
-		// TODO:
+		page.refresh();
 		return false;
 	});
 };
@@ -141,6 +144,7 @@ function UICalendar () {
  * Clear tasks in the calendar.
  */
 UICalendar.prototype.clear = function () {
+	$('#calendar .task').remove();
 };
 /**
  * Add tasks.
