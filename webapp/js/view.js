@@ -1,4 +1,28 @@
 /**
+ * @class the page
+ */
+function UIPage () {
+	this.header = new UIHeader();
+	this.tasklists = new UITasklists();
+	this.calendar = new UICalendar();
+	this.refresh();
+}
+/**
+ * Refresh the page.
+ */
+UIPage.prototype.refresh = function () {
+	var context = this;
+	Tasklists.get(function (tasklists) {
+		context.tasklists.add(tasklists);
+		context.calendar.setTasklists(tasklists);
+		$.each(tasklists.items, function (i, tasklist) {
+			Tasks.get(tasklist.id, function (tasks) {
+				context.calendar.add(tasks);
+			});
+		});
+	});
+};
+/**
  * @class UI element of the header bar.
  */
 function UIHeader () {
@@ -17,8 +41,13 @@ function UIHeader () {
  * @class UI element of {@link Tasklists}.
  */
 function UITasklists () {
+	this.clear();
+};
+/**
+ * Clear tasklists.
+ */
+UITasklists.prototype.clear = function () {
 	$('#tasklists').empty();
-	$('.tasklist-bubble').hide();
 };
 /**
  * Add tasklists.
@@ -26,8 +55,7 @@ function UITasklists () {
  */
 UITasklists.prototype.add = function (tasklists) {
 	$.each(tasklists.items, function (i, tasklist) {
-		var uiTasklist = new UITasklist(tasklist);
-		$('#tasklists').append(uiTasklist.element);
+		$('#tasklists').append(new UITasklist(tasklist).getElement());
 	});
 };
 /**
@@ -38,6 +66,13 @@ function UITasklist (tasklist) {
 	this.refresh(tasklist);
 };
 /**
+ * Get the element.
+ * @returns {Element}
+ */
+UITasklist.prototype.getElement = function () {
+	return this.element;
+};
+/**
  * Refresh view of this tasklist item.
  * @param tasklist JSON tasklist
  */
@@ -46,20 +81,19 @@ UITasklist.prototype.refresh = function (tasklist) {
 	this.element = $('<div class="tasklist"/>')
 		.addClass('tasklistcolor-' + tasklist.colorID)
 		.text(tasklist.title)
-		.appendTo($('#tasklists'));
-	this.element.click(function () {
-		$('.tasklist-' + tasklist.id).fadeToggle();
-	});
-	this.element.mouseenter(function () {
-		$('#tasklist-bubble')
-			.css('top', $(this).position().top)
-			.show()
-			.mouseenter(function () {
-				$(this).show().mouseleave(function () {
-					$(this).hide();
+		.click(function () {
+			$('.tasklist-' + tasklist.id).fadeToggle();
+		})
+		.mouseenter(function () {
+			$('#tasklist-bubble')
+				.css('top', $(this).position().top)
+				.show()
+				.mouseenter(function () {
+					$(this).show().mouseleave(function () {
+						$(this).hide();
+					});
 				});
-			});
-	});
+		});
 	$('#tasklist-bubble>.body>.change-color').empty();
 	$.each(Constants.tasklistColorIDs(), function (i, colorID) {
 		$('<span class="tasklist-mark"/>')
@@ -84,10 +118,9 @@ UITasklist.prototype.refresh = function (tasklist) {
 };
 /**
  * @class UI element of the calendar.
- * @param {Tasklists} tasklists the tasklists
  */
-function UICalendar (tasklists) {
-	this.tasklists = tasklists;
+function UICalendar () {
+	this.tasklists = new Tasklists([]);
 	/**
 	 * Latest date in the calendar.
 	 * @type Date
@@ -105,6 +138,11 @@ function UICalendar (tasklists) {
 	this.extendMonth(this.earliest);
 };
 /**
+ * Clear tasks in the calendar.
+ */
+UICalendar.prototype.clear = function () {
+};
+/**
  * Add tasks.
  * @param {Tasks} tasks array of JSON task
  */
@@ -115,6 +153,13 @@ UICalendar.prototype.add = function (tasks) {
 	$.each(tasks.items, function (i, task) {
 		new UITask(task, tasklists);
 	});
+};
+/**
+ * Set tasklists.
+ * @param {Tasklists} tasklists
+ */
+UICalendar.prototype.setTasklists = function (tasklists) {
+	this.tasklists = tasklists;
 };
 /**
  * Extend rows of the calendar.
@@ -197,6 +242,13 @@ function UITask (task, tasklists) {
 	this.tasklists = tasklists;
 	this.refresh(task);
 }
+/**
+ * Get the element.
+ * @returns {Element}
+ */
+UITask.prototype.getElement = function () {
+	return this.element;
+};
 /**
  * Refresh the element.
  * @param task JSON task
@@ -441,8 +493,8 @@ UIUpdateTask.prototype.open = function (uiTask) {
 		context.element.remove();
 		context.overlay.remove();
 	});
-	this.element.css('left', uiTask.element.position().left)
-		.insertBefore(uiTask.element)
+	this.element.css('left', uiTask.getElement().position().left)
+		.insertBefore(uiTask.getElement())
 		.fadeIn();
 	$('>.forms>form.update input[name="title"]', this.element).focus();
 };

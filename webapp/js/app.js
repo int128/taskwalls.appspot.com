@@ -19,19 +19,7 @@ $(function () {
 // controller
 function States () {}
 States.authorized = function () {
-	// header
-	new UIHeader();
-	// get tasklists
-	Tasklists.get(function (tasklists) {
-		var uiTasklists = new UITasklists();
-		uiTasklists.add(tasklists);
-		var uiCalendar = new UICalendar(tasklists);
-		$.each(tasklists.items, function (i, tasklist) {
-			Tasks.get(tasklist.id, function (tasks) {
-				uiCalendar.add(tasks);
-			});
-		});
-	});
+	new UIPage();
 };
 States.authorizing = function () {
 };
