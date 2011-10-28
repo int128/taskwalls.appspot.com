@@ -392,8 +392,9 @@ UINewTask.prototype.open = function (uiCalendar, date, positionTop) {
 	$('>form .due>.day', this.element).text(date.getDate());
 	// due time must be in UTC
 	$('>form input[name="dueTime"]', this.element).val(date.getTime() - date.getTimezoneOffset() * 60 * 1000);
+	var unique = new Date().getTime();
 	$.each(uiCalendar.tasklists.items, function (i, tasklist) {
-		var radio = {id: Math.random() + tasklist.id};
+		var radio = {id: unique + tasklist.id};
 		if (i == 0) {
 			radio.checked = 'checked';
 		}
@@ -497,8 +498,9 @@ UIUpdateTask.prototype.open = function (uiTask) {
 		});
 		return false;
 	});
+	var unique = new Date().getTime();
 	$.each(uiTask.tasklists.items, function (i, tasklist) {
-		var radio = {id: Math.random() + tasklist.id};
+		var radio = {id: unique + tasklist.id};
 		if (uiTask.task.tasklistID == tasklist.id) {
 			radio.checked = 'checked';
 		}
