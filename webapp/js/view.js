@@ -81,7 +81,7 @@ UITasklist.prototype.getElement = function () {
  */
 UITasklist.prototype.refresh = function (tasklist) {
 	var context = this;
-	this.element = $('<div class="tasklist"/>')
+	this.element = $('<div class="toggle-tasks tasklist"/>')
 		.addClass('tasklistcolor-' + tasklist.colorID)
 		.text(tasklist.title)
 		.click(function () {
@@ -399,7 +399,11 @@ UINewTask.prototype.open = function (uiCalendar, date, positionTop) {
 		}
 		$('>form>.tasklists', context.element)
 			.append($('<input type="radio" name="tasklistID"/>').attr(radio).val(tasklist.id))
-			.append($('<label/>').attr('for', radio.id).text(tasklist.title));
+			.append($('<label class="tasklist"/>')
+				.attr('for', radio.id)
+				// FIXME: tasklist lifecycle?
+				.addClass('tasklistcolor-' + uiCalendar.tasklists.getByID(tasklist.id).colorID)
+				.text(tasklist.title));
 	});
 	$('>form', this.element).unbind('change').change(function () {
 		// validate the form
@@ -492,6 +496,18 @@ UIUpdateTask.prototype.open = function (uiTask) {
 			button.removeAttr('disabled');
 		});
 		return false;
+	});
+	$.each(uiTask.tasklists.items, function (i, tasklist) {
+		var radio = {id: Math.random() + tasklist.id};
+		if (uiTask.task.tasklistID == tasklist.id) {
+			radio.checked = 'checked';
+		}
+		$('>.forms>form.move>.tasklists', context.element)
+			.append($('<input type="radio" name="tasklistID"/>').attr(radio).val(tasklist.id))
+			.append($('<label class="tasklist"/>')
+				.attr('for', radio.id)
+				.addClass('tasklistcolor-' + uiTask.tasklists.getByID(tasklist.id).colorID)
+				.text(tasklist.title));
 	});
 	this.overlay.appendTo('body').show().click(function () {
 		context.element.remove();

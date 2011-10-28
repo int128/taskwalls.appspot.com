@@ -129,7 +129,7 @@ a:VISITED {
 	margin: 30px 15px;
 }
 
-#tasklists>.tasklist {
+.toggle-tasks.tasklist {
 	padding: 5px;
 	margin-bottom: 5px;
 	border: solid 1px #ddd;
@@ -185,7 +185,7 @@ a:VISITED {
 	background: #ddd;
 }
 
-.toggle-tasks {
+.toggle-tasks.status {
 	padding: 5px;
 	background: -moz-linear-gradient(top, #fff, #ddd);
 	background: -webkit-gradient(linear, left top, left bottom, from(#fff), to(#ddd) );
@@ -292,7 +292,7 @@ div.task {
 	margin-top: 1px;
 	padding: 5px;
 	border: solid 1px #ddd;
-	border-left: solid 5px #ccc;
+	border-left-width: 5px;
 	border-radius: 3px;
 	-moz-border-radius: 3px;
 }
@@ -373,25 +373,25 @@ td.task-column>.new-task-button {
 	background-color: #c06;
 }
 
-.task.tasklistcolor-0,#tasklists>.tasklist.tasklistcolor-0 {
+.task.tasklistcolor-0,.tasklist.tasklistcolor-0 {
 	border-left-color: #fc0;
 	background: -moz-linear-gradient(top, #fff, #ffd);
 	background: -webkit-gradient(linear, left top, left bottom, from(#fff), to(#ffd) );
 }
 
-.task.tasklistcolor-1,#tasklists>.tasklist.tasklistcolor-1 {
+.task.tasklistcolor-1,.tasklist.tasklistcolor-1 {
 	border-left-color: #9f0;
 	background: -moz-linear-gradient(top, #fff, #efe);
 	background: -webkit-gradient(linear, left top, left bottom, from(#fff), to(#efe) );
 }
 
-.task.tasklistcolor-2,#tasklists>.tasklist.tasklistcolor-2 {
+.task.tasklistcolor-2,.tasklist.tasklistcolor-2 {
 	border-left-color: #30f;
 	background: -moz-linear-gradient(top, #fff, #eef);
 	background: -webkit-gradient(linear, left top, left bottom, from(#fff), to(#eef) );
 }
 
-.task.tasklistcolor-3,#tasklists>.tasklist.tasklistcolor-3 {
+.task.tasklistcolor-3,.tasklist.tasklistcolor-3 {
 	border-left-color: #c06;
 	background: -moz-linear-gradient(top, #fff, #fee);
 	background: -webkit-gradient(linear, left top, left bottom, from(#fff), to(#fee) );
@@ -450,6 +450,23 @@ td.task-column>.new-task-button {
 
 .update-task>.datepicker {
 	float: left;
+}
+
+.tasklists.selection {
+	margin-top: .5em;
+	margin-bottom: .5em;
+}
+
+.tasklists.selection>.tasklist {
+	padding: 5px;
+	border-style: solid;
+	border-top-color: #ddd;
+	border-bottom-color: #ddd;
+	border-right-color: #ddd;
+	border-width: 1px;
+	border-left-width: 5px;
+	border-radius: 3px;
+	-moz-border-radius: 3px;
 }
 
 .popup-overlay {
