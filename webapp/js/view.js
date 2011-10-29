@@ -511,6 +511,12 @@ UIUpdateTask.prototype.open = function (uiTask) {
 				.addClass('tasklistcolor-' + uiTask.tasklists.getByID(tasklist.id).colorID)
 				.text(tasklist.title));
 	});
+	$('>.forms>form.move', this.element).change(function () {
+		var form = $(this);
+		$('input[name="tasklistID"]', this).each(function () {
+			form.find('label[for=' + this.id + ']').toggleClass('selected', this.checked);
+		});
+	}).change();
 	this.overlay.appendTo('body').show().click(function () {
 		context.element.remove();
 		context.overlay.remove();

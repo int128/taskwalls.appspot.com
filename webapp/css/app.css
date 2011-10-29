@@ -457,7 +457,12 @@ td.task-column>.new-task-button {
 	margin-bottom: .5em;
 }
 
+.tasklists.selection>input[type="radio"] {
+	display: none;
+}
+
 .tasklists.selection>.tasklist {
+	margin-right: 5px;
 	padding: 5px;
 	border-style: solid;
 	border-top-color: #ddd;
@@ -467,6 +472,15 @@ td.task-column>.new-task-button {
 	border-left-width: 5px;
 	border-radius: 3px;
 	-moz-border-radius: 3px;
+}
+
+.tasklists.selection>.tasklist:not(.selected) {
+	border-left-width: 1px;
+	border-left-color: #ddd;
+}
+
+.tasklists.selection>.tasklist.selected {
+	font-weight: bold;
 }
 
 .popup-overlay {
