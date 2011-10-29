@@ -392,21 +392,10 @@ UINewTask.prototype.open = function (uiCalendar, date, positionTop) {
 	$('>form .due>.day', this.element).text(date.getDate());
 	// due time must be in UTC
 	$('>form input[name="dueTime"]', this.element).val(date.getTime() - date.getTimezoneOffset() * 60 * 1000);
-	var unique = new Date().getTime();
-	$.each(uiCalendar.tasklists.items, function (i, tasklist) {
-		var radio = {id: unique + tasklist.id};
-		if (i == 0) {
-			radio.checked = 'checked';
-		}
-		$('>form>.tasklists', context.element)
-			.append($('<input type="radio" name="tasklistID"/>').attr(radio).val(tasklist.id))
-			.append($('<label class="tasklist"/>')
-				.attr('for', radio.id)
-				// FIXME: tasklist lifecycle?
-				.addClass('tasklistcolor-' + uiCalendar.tasklists.getByID(tasklist.id).colorID)
-				.text(tasklist.title));
-	});
-	$('>form', this.element).unbind('change').change(function () {
+	new UITasklistButtonSet($('>form>.tasklists', this.element))
+		.add(uiCalendar.tasklists)
+		.selectFirst();
+	$('>form', this.element).change(function () {
 		// validate the form
 		var button = $('button', this);
 		if ($('input[name="title"]', this).val()) {
@@ -577,5 +566,13 @@ UITasklistButtonSet.prototype.add = function(tasklists) {
  */
 UITasklistButtonSet.prototype.select = function (tasklistID) {
 	$(this.element).find('#' + this.uniqueID + tasklistID).click().change();
+	return this;
+};
+/**
+ * Select first item.
+ * @returns {UITasklistButtonSet}
+ */
+UITasklistButtonSet.prototype.selectFirst = function () {
+	$('input:first', this.element).click().change();
 	return this;
 };
