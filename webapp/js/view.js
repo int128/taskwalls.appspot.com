@@ -498,25 +498,13 @@ UIUpdateTask.prototype.open = function (uiTask) {
 		});
 		return false;
 	});
-	var unique = new Date().getTime();
-	$.each(uiTask.tasklists.items, function (i, tasklist) {
-		var radio = {id: unique + tasklist.id};
-		if (uiTask.task.tasklistID == tasklist.id) {
-			radio.checked = 'checked';
-		}
-		$('>.forms>form.move>.tasklists', context.element)
-			.append($('<input type="radio" name="tasklistID"/>').attr(radio).val(tasklist.id))
-			.append($('<label class="tasklist"/>')
-				.attr('for', radio.id)
-				.addClass('tasklistcolor-' + uiTask.tasklists.getByID(tasklist.id).colorID)
-				.text(tasklist.title));
+	new UITasklistButtonSet($('>.forms>form.move>.tasklists', this.element))
+		.add(uiTask.tasklists)
+		.select(uiTask.task.tasklistID);
+	$('>.forms>form.move').submit(function () {
+		// TODO: call API
+		return false;
 	});
-	$('>.forms>form.move', this.element).change(function () {
-		var form = $(this);
-		$('input[name="tasklistID"]', this).each(function () {
-			form.find('label[for=' + this.id + ']').toggleClass('selected', this.checked);
-		});
-	}).change();
 	this.overlay.appendTo('body').show().click(function () {
 		context.element.remove();
 		context.overlay.remove();
@@ -549,4 +537,45 @@ UIUpdateTask.prototype.getDue = function () {
  */
 UIUpdateTask.prototype.getDueUTC = function () {
 	return this.due.getTime() - this.due.getTimezoneOffset() * 60 * 1000;
+};
+/**
+ * @class button set of tasklists
+ * @param {Element} element
+ */
+function UITasklistButtonSet (element) {
+	this.element = element;
+	this.uniqueID = new Date().getTime();
+	$(element).empty().addClass('tasklists').change(function () {
+		$('input[name="tasklistID"]', this).each(function () {
+			$(element).find('label[for=' + this.id + ']').toggleClass('selected', this.checked);
+		});
+	}).change();
+};
+/**
+ * Add tasklists.
+ * @param {Tasklists} tasklists
+ * @return {UITasklistButtonSet}
+ */
+UITasklistButtonSet.prototype.add = function(tasklists) {
+	var context = this;
+	$.each(tasklists.items, function (i, tasklist) {
+		$(context.element)
+			.append($('<input type="radio" name="tasklistID"/>')
+				.attr('id', context.uniqueID + tasklist.id)
+				.val(tasklist.id))
+			.append($('<label class="tasklist"/>')
+				.attr('for', context.uniqueID + tasklist.id)
+				.addClass('tasklistcolor-' + tasklists.getByID(tasklist.id).colorID)
+				.text(tasklist.title));
+	});
+	return this;
+};
+/**
+ * Select the tasklist.
+ * @param {String} tasklistID
+ * @returns {UITasklistButtonSet}
+ */
+UITasklistButtonSet.prototype.select = function (tasklistID) {
+	$(this.element).find('#' + this.uniqueID + tasklistID).click().change();
+	return this;
 };
