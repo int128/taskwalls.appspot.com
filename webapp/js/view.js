@@ -442,7 +442,7 @@ UIUpdateTask.prototype.open = function (uiTask) {
 	$('>.forms>form button', this.element).button();
 	$('>.forms>form input[name="id"]', this.element).val(uiTask.task.id);
 	$('>.forms>form input[name="tasklistID"]', this.element).val(uiTask.task.tasklistID);
-	$('>.datepicker', this.element).datepicker({
+	$('.datepicker', this.element).datepicker({
 		defaultDate: context.getDue(),
 		dateFormat: '@',
 		onSelect: function (timeInMillis) {

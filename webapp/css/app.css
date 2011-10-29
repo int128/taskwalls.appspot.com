@@ -413,20 +413,20 @@ td.task-column>.new-task-button {
 }
 
 .new-task>.due {
-	margin-bottom: .5em;
+	margin-bottom: 5px;
 	font-weight: bold;
 }
 
 .new-task>form>div>input[type="text"],.update-task>.forms>form>div>input[type="text"] {
 	width: 300px;
-	margin-top: .5em;
+	margin-top: 5px;
 	padding: 3px;
 	border: solid 1px #888;
 }
 
 .new-task>form>div>textarea,.update-task>.forms>form>div>textarea {
 	width: 300px;
-	margin-top: .5em;
+	margin-top: 5px;
 	height: 100px;
 	padding: 3px;
 	border: solid 1px #888;
@@ -443,18 +443,27 @@ td.task-column>.new-task-button {
 	box-shadow: 0 0 10px 3px rgba(0, 0, 0, 0.4);
 }
 
-.update-task>.forms {
+.update-task>.forms>form.update {
 	float: left;
-	margin-right: 15px;
+	margin-bottom: 10px;
 }
 
-.update-task>.datepicker {
+.update-task>.forms>.datepicker {
 	float: left;
+	margin-left: 10px;
+	margin-bottom: 10px;
+}
+
+.update-task>.forms>form.delete,.update-task>.forms>form.move {
+	clear: both;
+	margin-top: 10px;
+	padding-top: 10px;
+	border-top: inset 1px #ccc;
 }
 
 .tasklists.selection {
-	margin-top: .5em;
-	margin-bottom: .5em;
+	margin-top: 5px;
+	margin-bottom: 5px;
 }
 
 .tasklists.selection>input[type="radio"] {
