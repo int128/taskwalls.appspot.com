@@ -42,7 +42,7 @@ Tasklists.updateOptions = function (tasklist, success, error) {
 /**
  * Get item by tasklist ID.
  * @param {String} tasklistID
- * @returns {Object} tasklist JSON
+ * @returns {Object} tasklist JSON (empty hash if not found)
  */
 Tasklists.prototype.getByID = function (tasklistID) {
 	var result = {};
