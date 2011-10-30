@@ -392,7 +392,7 @@ UINewTask.prototype.open = function (uiCalendar, date, positionTop) {
 	$('>form .due>.day', this.element).text(date.getDate());
 	// due time must be in UTC
 	$('>form input[name="dueTime"]', this.element).val(date.getTime() - date.getTimezoneOffset() * 60 * 1000);
-	new UITasklistButtonSet($('>form>.tasklists', this.element))
+	new UITasklistButtonSet($('>form>.tasklists', this.element), 'tasklistID')
 		.add(uiCalendar.tasklists)
 		.selectFirst();
 	$('>form', this.element).change(function () {
@@ -487,7 +487,7 @@ UIUpdateTask.prototype.open = function (uiTask) {
 		});
 		return false;
 	});
-	new UITasklistButtonSet($('>.forms>form.move>.tasklists', this.element))
+	new UITasklistButtonSet($('>.forms>form.move>.tasklists', this.element), 'destinationTasklistID')
 		.add(uiTask.tasklists)
 		.select(uiTask.task.tasklistID);
 	$('>.forms>form.move', this.element).submit(function () {
@@ -529,13 +529,15 @@ UIUpdateTask.prototype.getDueUTC = function () {
 };
 /**
  * @class button set of tasklists
- * @param {Element} element
+ * @param {Element} element parent element
+ * @param {String} name form parameter name
  */
-function UITasklistButtonSet (element) {
+function UITasklistButtonSet (element, name) {
 	this.element = element;
+	this.name = name;
 	this.uniqueID = new Date().getTime();
 	$(element).empty().addClass('tasklists').change(function () {
-		$('input[name="tasklistID"]', this).each(function () {
+		$('input:radio', this).each(function () {
 			$(element).find('label[for=' + this.id + ']').toggleClass('selected', this.checked);
 		});
 	}).change();
@@ -549,7 +551,8 @@ UITasklistButtonSet.prototype.add = function(tasklists) {
 	var context = this;
 	$.each(tasklists.items, function (i, tasklist) {
 		$(context.element)
-			.append($('<input type="radio" name="tasklistID"/>')
+			.append($('<input type="radio"/>')
+				.attr('name', context.name)
 				.attr('id', context.uniqueID + tasklist.id)
 				.val(tasklist.id))
 			.append($('<label class="tasklist"/>')
