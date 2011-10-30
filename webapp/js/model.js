@@ -172,6 +172,27 @@ Tasks.deleteOne = function (task, success, error) {
 	});
 };
 /**
+ * Move the task to another tasklist.
+ * @param task JSON task
+ * @param tasklist JSON tasklist
+ * @param {Function} success
+ * @param {Function} error
+ */
+Tasks.moveToTasklist = function (task, tasklist, success, error) {
+	$.ajax({
+		type: 'POST',
+		url: 'tasks/update/tasklist',
+		data: {
+			id: task.id,
+			tasklistID: task.tasklistID,
+			destinationTasklistID: tasklist.id
+		},
+		dataType: 'json',
+		success: success,
+		error: error
+	});
+};
+/**
  * @returns latest date time in milliseconds
  */
 Tasks.prototype.latestTime = function () {
