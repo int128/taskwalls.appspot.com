@@ -490,7 +490,7 @@ UIUpdateTask.prototype.open = function (uiTask) {
 	new UITasklistButtonSet($('>.forms>form.move>.tasklists', this.element))
 		.add(uiTask.tasklists)
 		.select(uiTask.task.tasklistID);
-	$('>.forms>form.move').submit(function () {
+	$('>.forms>form.move', this.element).submit(function () {
 		// TODO: call API
 		return false;
 	});
