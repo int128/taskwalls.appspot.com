@@ -465,10 +465,11 @@ UIUpdateTask.prototype.open = function (uiTask) {
 	new UITasklistButtonSet($('>.forms>form.move>.tasklists', this.element), 'destinationTasklistID')
 		.add(uiTask.tasklists)
 		.select(uiTask.task.tasklistID);
-	$('>.forms>form.move', this.element).submit(function () {
-		// TODO: call API
-		return false;
-	});
+	new TaskWallApiForm($('>.forms>form.move', this.element))
+		.success(function (moved) {
+			uiTask.refresh(moved);
+			context.close();
+		});
 	this.overlay.appendTo('body').show().click(function () {
 		context.close();
 	});
