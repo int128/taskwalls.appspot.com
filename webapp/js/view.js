@@ -395,35 +395,29 @@ UINewTask.prototype.open = function (uiCalendar, date, positionTop) {
 	new UITasklistButtonSet($('>form>.tasklists', this.element), 'tasklistID')
 		.add(uiCalendar.tasklists)
 		.selectFirst();
-	$('>form', this.element).change(function () {
-		// validate the form
-		var button = $('button', this);
-		if ($('input[name="title"]', this).val()) {
-			button.removeAttr('disabled');
-		}
-		else {
-			button.attr('disabled', 'disabled');
-		}
-	}).change().submit(function () {
-		var button = $('button', this);
-		if (button.attr('disabled') == undefined) {
-			button.attr('disabled', 'disabled');
-			Tasks.create($(this).serializeArray(), function (created) {
-				uiCalendar.add(new Tasks([created]));
-				context.element.remove();
-				context.overlay.remove();
-			}, function () {
-				button.removeAttr('disabled');
-			});
-		}
-		return false;
-	});
+	new TaskWallApiForm($('>form', this.element))
+		.validator(function (form) {
+			return $('input[name="title"]', form).val();
+		})
+		.success(function (created) {
+			uiCalendar.add(new Tasks([created]));
+			context.close();
+		})
+		.cancel(function () {
+			context.close();
+		});
 	this.overlay.appendTo('body').show().click(function () {
-		context.element.remove();
-		context.overlay.remove();
+		context.close();
 	});
 	this.element.css('top', positionTop).appendTo('body').fadeIn();
 	$('>form input[name="title"]', this.element).focus();
+};
+/**
+ * Close the dialog.
+ */
+UINewTask.prototype.close = function () {
+	this.element.remove();
+	this.overlay.remove();
 };
 /**
  * @class updating task dialog
@@ -451,42 +445,23 @@ UIUpdateTask.prototype.open = function (uiTask) {
 	});
 	$('>.forms>form.update input[name="title"]', this.element).val(uiTask.task.title);
 	$('>.forms>form.update textarea[name="notes"]', this.element).val(uiTask.task.notes);
-	$('>.forms>form.update', this.element).change(function () {
-		// validate the form
-		var button = $('button', this);
-		if ($('input[name="title"]', this).val()) {
-			button.removeAttr('disabled');
-		}
-		else {
-			button.attr('disabled', 'disabled');
-		}
-	}).change().submit(function () {
-		var button = $('button', this);
-		if (button.attr('disabled') == undefined) {
-			button.attr('disabled', 'disabled');
-			$('input[name="dueTime"]', this).val(context.getDueUTC());
-			Tasks.update($(this).serializeArray(), function (created) {
-				uiTask.refresh(created);
-				context.element.remove();
-				context.overlay.remove();
-			}, function () {
-				button.removeAttr('disabled');
-			});
-		}
-		return false;
-	});
-	$('>.forms>form.delete', this.element).submit(function () {
-		var button = $('button', this);
-		button.attr('disabled', 'disabled');
-		Tasks.deleteOne($(this).serializeArray(), function () {
-			uiTask.remove();
-			context.element.remove();
-			context.overlay.remove();
-		}, function () {
-			button.removeAttr('disabled');
+	new TaskWallApiForm($('>.forms>form.update', this.element))
+		.validator(function (form) {
+			$('input[name="dueTime"]', form).val(context.getDueUTC());
+			return $('input[name="title"]', form).val();
+		})
+		.success(function (created) {
+			uiTask.refresh(created);
+			context.close();
+		})
+		.cancel(function () {
+			context.close();
 		});
-		return false;
-	});
+	new TaskWallApiForm($('>.forms>form.delete', this.element))
+		.success(function () {
+			uiTask.remove();
+			context.close();
+		});
 	new UITasklistButtonSet($('>.forms>form.move>.tasklists', this.element), 'destinationTasklistID')
 		.add(uiTask.tasklists)
 		.select(uiTask.task.tasklistID);
@@ -495,13 +470,19 @@ UIUpdateTask.prototype.open = function (uiTask) {
 		return false;
 	});
 	this.overlay.appendTo('body').show().click(function () {
-		context.element.remove();
-		context.overlay.remove();
+		context.close();
 	});
 	this.element.css('left', uiTask.getElement().position().left)
 		.insertBefore(uiTask.getElement())
 		.fadeIn();
 	$('>.forms>form.update input[name="title"]', this.element).focus();
+};
+/**
+ * Close the dialog.
+ */
+UIUpdateTask.prototype.close = function () {
+	this.element.remove();
+	this.overlay.remove();
 };
 /**
  * Set the due date.
