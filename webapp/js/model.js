@@ -76,22 +76,6 @@ Tasks.get = function (tasklistID, callback) {
 	});
 };
 /**
- * Create a task.
- * @param task JSON task
- * @param {Function} success
- * @param {Function} error
- */
-Tasks.create = function (task, success, error) {
-	$.ajax({
-		type: 'POST',
-		url: 'tasks/create',
-		data: task,
-		dataType: 'json',
-		success: success,
-		error: error
-	});
-};
-/**
  * Update status of task.
  * @param task JSON task
  * @param {Function} success
@@ -134,59 +118,6 @@ Tasks.updateDueTime = function (task, success, error) {
 		type: 'POST',
 		url: 'tasks/update/dueTime',
 		data: task,
-		dataType: 'json',
-		success: success,
-		error: error
-	});
-};
-/**
- * Update title of task.
- * @param task JSON task
- * @param {Function} success
- * @param {Function} error
- */
-Tasks.update = function (task, success, error) {
-	$.ajax({
-		type: 'POST',
-		url: 'tasks/update',
-		data: task,
-		dataType: 'json',
-		success: success,
-		error: error
-	});
-};
-/**
- * Delete the task.
- * @param task JSON task
- * @param {Function} success
- * @param {Function} error
- */
-Tasks.deleteOne = function (task, success, error) {
-	$.ajax({
-		type: 'POST',
-		url: 'tasks/delete',
-		data: task,
-		dataType: 'json',
-		success: success,
-		error: error
-	});
-};
-/**
- * Move the task to another tasklist.
- * @param task JSON task
- * @param tasklist JSON tasklist
- * @param {Function} success
- * @param {Function} error
- */
-Tasks.moveToTasklist = function (task, tasklist, success, error) {
-	$.ajax({
-		type: 'POST',
-		url: 'tasks/update/tasklist',
-		data: {
-			id: task.id,
-			tasklistID: task.tasklistID,
-			destinationTasklistID: tasklist.id
-		},
 		dataType: 'json',
 		success: success,
 		error: error
