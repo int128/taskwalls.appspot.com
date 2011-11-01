@@ -287,8 +287,7 @@ UITask.prototype.refresh = function (task) {
 			var form = $('form', this);
 			$('input[name="id"]', form).val(task.id);
 			$('input[name="tasklistID"]', form).val(task.tasklistID);
-			// due time must be in UTC
-			$('input[name="dueTime"]', form).val(date.getTime() - date.getTimezoneOffset() * 60 * 1000);
+			$('input[name="dueTime"]', form).val(DateUtil.getUTCTime(date));
 			var oldplace = context.element.wrap('<div/>').parent();
 			new FormController(form)
 				.success(function (updated) {
@@ -407,8 +406,7 @@ UINewTask.prototype.open = function (uiCalendar, date, positionTop) {
 	$('>form button', this.element).button();
 	$('>form .due>.month', this.element).text(date.getMonth() + 1);
 	$('>form .due>.day', this.element).text(date.getDate());
-	// due time must be in UTC
-	$('>form input[name="dueTime"]', this.element).val(date.getTime() - date.getTimezoneOffset() * 60 * 1000);
+	$('>form input[name="dueTime"]', this.element).val(DateUtil.getUTCTime(date));
 	new UITasklistButtonSet($('>form>.tasklists', this.element), 'tasklistID')
 		.add(uiCalendar.tasklists)
 		.selectFirst();
@@ -464,7 +462,7 @@ UIUpdateTask.prototype.open = function (uiTask) {
 	$('>.forms>form.update textarea[name="notes"]', this.element).val(uiTask.task.notes);
 	new FormController($('>.forms>form.update', this.element))
 		.validator(function (form) {
-			$('input[name="dueTime"]', form).val(context.getDueUTC());
+			$('input[name="dueTime"]', form).val(DateUtil.getUTCTime(context.getDue()));
 			return $('input[name="title"]', form).val();
 		})
 		.success(function (created) {
@@ -518,13 +516,6 @@ UIUpdateTask.prototype.setDue = function (due) {
  */
 UIUpdateTask.prototype.getDue = function () {
 	return this.due;
-};
-/**
- * Get the due date in UTC.
- * @returns {Number}
- */
-UIUpdateTask.prototype.getDueUTC = function () {
-	return this.due.getTime() - this.due.getTimezoneOffset() * 60 * 1000;
 };
 /**
  * @class button set of tasklists

@@ -23,6 +23,13 @@ DateUtil.futureOrPast = function (date, future, today, past) {
 	return today;
 };
 /**
+ * @param {Date} date
+ * @returns {Number} time in UTC
+ */
+DateUtil.getUTCTime = function (date) {
+	return date.getTime() - date.getTimezoneOffset() * 60 * 1000;
+};
+/**
  * @class Form controller for the AJAX API.
  * @param {HTMLFormElement} form
  */
