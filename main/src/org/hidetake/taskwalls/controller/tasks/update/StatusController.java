@@ -32,7 +32,7 @@ public class StatusController extends ControllerBase
 		Task task = new Task();
 		task.setId(asString("id"));
 		Patch patch = tasksService.tasks.patch(asString("tasklistID"), task.getId(), task);
-		if (asBoolean("status_completed")) {
+		if (asBoolean("statusIsCompleted")) {
 			task.setStatus("completed");
 		}
 		else {
@@ -52,7 +52,7 @@ public class StatusController extends ControllerBase
 		Validators v = new Validators(request);
 		v.add("tasklistID", v.required());
 		v.add("id", v.required());
-		v.add("status_completed", v.required(), v.regexp("true|false"));
+		v.add("statusIsCompleted", v.required(), v.regexp("true|false"));
 		return v.validate();
 	}
 }

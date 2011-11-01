@@ -61,6 +61,14 @@
 </form>
 </div>
 
+<div id="update-task-status-template" class="update-task-status resource">
+<form action="/tasks/update/status" method="post">
+<div><input type="hidden" name="id" /></div>
+<div><input type="hidden" name="tasklistID" /></div>
+<div><input type="hidden" name="statusIsCompleted" /></div>
+</form>
+</div>
+
 <div id="new-task-template" class="new-task resource">
 <form action="/tasks/create" method="post">
 <div class="due"><span class="month"></span>月<span class="day"></span>日にタスクを追加</div>
@@ -99,7 +107,7 @@
 </div>
 
 <div id="task-template" class="task resource">
-<input class="status_completed" type="checkbox" />
+<input name="statusIsCompleted" type="checkbox" />
 <span class="title"></span>
 <div class="notes"></div>
 </div>

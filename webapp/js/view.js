@@ -314,19 +314,26 @@ UITask.prototype.refresh = function (task) {
 				new UIUpdateTask().open(context);
 			}
 		});
-	$('>input.status_completed', this.element)
+	$('>input[name="statusIsCompleted"]', this.element)
 		.change(function () {
 			// updates task status when checkbox changed
-			task.status_completed = this.checked;
-			Tasks.updateStatus(task, function (updated) {
-				context.refresh(updated);
-			}, function () {
-				context.refresh(task);
-			});
-			context.element.addClass('ajax-in-progress');
+			$(context.element).append($.resource('update-task-status-template'));
+			var form = $('form', context.element);
+			$('input[name="id"]', form).val(task.id);
+			$('input[name="tasklistID"]', form).val(task.tasklistID);
+			$('input[name="statusIsCompleted"]', form).val(this.checked);
+			new FormController(form)
+				.success(function (updated) {
+					context.refresh(updated);
+				})
+				.error(function () {
+					context.refresh(task);
+				});
+			context.enterAjaxInProgress();
+			$(form).submit();
 		});
 	if (task.status == 'completed') {
-		$('>input.status_completed', this.element).attr('checked', 'checked');
+		$('>input[name="statusIsCompleted"]', this.element).attr('checked', 'checked');
 	}
 	$('>span.title', this.element).text(task.title)
 		.click(function () {
