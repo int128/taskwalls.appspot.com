@@ -301,13 +301,6 @@ div.task.task-status-completed {
 	color: dimgray;
 }
 
-div.task>textarea.title {
-	width: 100%;
-	min-height: 3em;
-	border: none;
-	background: transparent;
-}
-
 div.task>div.notes {
 	max-height: 3em;
 	font-size: 90%;
@@ -398,8 +391,15 @@ td.task-column>.new-task-button {
 }
 
 /*
- * Dialogs.
+ * Forms.
  */
+.update-task-title textarea[name="title"] {
+	width: 100%;
+	min-height: 3em;
+	border: none;
+	background: transparent;
+}
+
 .new-task {
 	z-index: 400;
 	position: absolute;

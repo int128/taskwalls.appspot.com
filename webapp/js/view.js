@@ -328,33 +328,39 @@ UITask.prototype.refresh = function (task) {
 		.click(function () {
 			// updates task title when title clicked
 			var height = $(this).height();
-			context.element.empty();
-			$('<textarea class="title"/>')
+			context.element.empty().append($.resource('update-task-title-template'));
+			var form = $('form', context.element);
+			$('input[name="id"]', form).val(task.id);
+			$('input[name="tasklistID"]', form).val(task.tasklistID);
+			var formController = new TaskWallApiForm(form)
+				.validator(function () {
+					var value = $('textarea[name="title"]', form).val();
+					return value && value != task.title;
+				})
+				.success(function (updated) {
+					context.refresh(updated);
+				})
+				.error(function () {
+					context.refresh(task);
+				})
+				.cancel(function () {
+					context.refresh(task);
+				});
+			$('textarea[name="title"]', context.element)
 				.val(task.title)
 				.height(height)
-				.appendTo(context.element)
 				.blur(function () {
-					if ($(this).val() && $(this).val() != task.title) {
-						var original = task.title;
-						task.title = $(this).val();
-						$(this).attr('disabled', 'disabled');
-						Tasks.updateTitle(task, function (updated) {
-							context.refresh(updated);
-						}, function () {
-							task.title = original;
-							context.refresh(task);
-						});
-						context.element.addClass('ajax-in-progress');
+					if (formController.validate(form)) {
+						context.enterAjaxInProgress();
+						$(form).submit();
 					}
 					else {
-						context.refresh(task);
+						formController.cancelHandler();
 					}
 				})
 				.keydown(function (event) {
-					if (event.keyCode == 27) { // ESC
-						context.refresh(task);
-					}
-					else if (event.keyCode == 13) { // Enter
+					// cancel will be processed in the form controller
+					if (event.keyCode == 13) { // Enter
 						$(this).blur();
 						return false;
 					}
@@ -371,6 +377,12 @@ UITask.prototype.refresh = function (task) {
  */
 UITask.prototype.remove = function () {
 	this.element.remove();
+};
+/**
+ * Enter to AJAX status.
+ */
+UITask.prototype.enterAjaxInProgress = function () {
+	this.element.addClass('ajax-in-progress');
 };
 /**
  * @class creating task dialog
