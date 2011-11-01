@@ -283,20 +283,25 @@ UITask.prototype.refresh = function (task) {
 		 * @param {Date} date
 		 */
 		.bind('dropped', function (event, column, date) {
-			var originalDueTime = task.dueTime;
+			$(this).append($.resource('update-task-due-template'));
+			var form = $('form', this);
+			$('input[name="id"]', form).val(task.id);
+			$('input[name="tasklistID"]', form).val(task.tasklistID);
 			// due time must be in UTC
-			task.dueTime = date.getTime() - date.getTimezoneOffset() * 60 * 1000;
+			$('input[name="dueTime"]', form).val(date.getTime() - date.getTimezoneOffset() * 60 * 1000);
 			var oldplace = context.element.wrap('<div/>').parent();
-			context.element.addClass('ajax-in-progress').appendTo($(column));
-			Tasks.updateDueTime(task, function (updated) {
-				oldplace.remove();
-				context.refresh(updated);
-			}, function () {
-				// restore previous state
-				task.dueTime = originalDueTime;
-				context.element.appendTo(oldplace).unwrap();
-				context.refresh(task);
-			});
+			new FormController(form)
+				.success(function (updated) {
+					oldplace.remove();
+					context.refresh(updated);
+				})
+				.error(function () {
+					context.element.appendTo(oldplace).unwrap();
+					context.refresh(task);
+				});
+			context.element.appendTo($(column));
+			context.enterAjaxInProgress();
+			$(form).submit();
 		})
 		.draggable({
 			scroll: true

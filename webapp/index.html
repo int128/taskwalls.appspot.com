@@ -53,6 +53,14 @@
 </form>
 </div>
 
+<div id="update-task-due-template" class="update-task-due resource">
+<form action="/tasks/update/dueTime" method="post">
+<div><input type="hidden" name="id" /></div>
+<div><input type="hidden" name="tasklistID" /></div>
+<div><input type="hidden" name="dueTime" /></div>
+</form>
+</div>
+
 <div id="new-task-template" class="new-task resource">
 <form action="/tasks/create" method="post">
 <div class="due"><span class="month"></span>月<span class="day"></span>日にタスクを追加</div>
