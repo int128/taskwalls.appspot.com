@@ -332,7 +332,7 @@ UITask.prototype.refresh = function (task) {
 			var form = $('form', context.element);
 			$('input[name="id"]', form).val(task.id);
 			$('input[name="tasklistID"]', form).val(task.tasklistID);
-			var formController = new TaskWallApiForm(form)
+			var formController = new FormController(form)
 				.validator(function () {
 					var value = $('textarea[name="title"]', form).val();
 					return value && value != task.title;
@@ -407,7 +407,7 @@ UINewTask.prototype.open = function (uiCalendar, date, positionTop) {
 	new UITasklistButtonSet($('>form>.tasklists', this.element), 'tasklistID')
 		.add(uiCalendar.tasklists)
 		.selectFirst();
-	new TaskWallApiForm($('>form', this.element))
+	new FormController($('>form', this.element))
 		.validator(function (form) {
 			return $('input[name="title"]', form).val();
 		})
@@ -457,7 +457,7 @@ UIUpdateTask.prototype.open = function (uiTask) {
 	});
 	$('>.forms>form.update input[name="title"]', this.element).val(uiTask.task.title);
 	$('>.forms>form.update textarea[name="notes"]', this.element).val(uiTask.task.notes);
-	new TaskWallApiForm($('>.forms>form.update', this.element))
+	new FormController($('>.forms>form.update', this.element))
 		.validator(function (form) {
 			$('input[name="dueTime"]', form).val(context.getDueUTC());
 			return $('input[name="title"]', form).val();
@@ -469,7 +469,7 @@ UIUpdateTask.prototype.open = function (uiTask) {
 		.cancel(function () {
 			context.close();
 		});
-	new TaskWallApiForm($('>.forms>form.delete', this.element))
+	new FormController($('>.forms>form.delete', this.element))
 		.success(function () {
 			uiTask.remove();
 			context.close();
@@ -477,7 +477,7 @@ UIUpdateTask.prototype.open = function (uiTask) {
 	new UITasklistButtonSet($('>.forms>form.move>.tasklists', this.element), 'destinationTasklistID')
 		.add(uiTask.tasklists)
 		.select(uiTask.task.tasklistID);
-	new TaskWallApiForm($('>.forms>form.move', this.element))
+	new FormController($('>.forms>form.move', this.element))
 		.success(function (moved) {
 			uiTask.refresh(moved);
 			context.close();

@@ -23,10 +23,10 @@ DateUtil.futureOrPast = function (date, future, today, past) {
 	return today;
 };
 /**
- * @class Form for TaskWall AJAX API.
+ * @class Form controller for the AJAX API.
  * @param {HTMLFormElement} form
  */
-function TaskWallApiForm (form) {
+function FormController (form) {
 	this.form = form;
 	var context = this;
 	$(form).change(function () {
@@ -60,18 +60,18 @@ function TaskWallApiForm (form) {
 		}
 	});
 };
-TaskWallApiForm.prototype.enable = function () {
+FormController.prototype.enable = function () {
 	$('button', this.form).removeAttr('disabled');
 };
-TaskWallApiForm.prototype.disable = function () {
+FormController.prototype.disable = function () {
 	$('button', this.form).attr({disabled: 'disabled'});
 };
 /**
  * Set the validator.
  * @param {Function} validator
- * @returns {TaskWallApiForm}
+ * @returns {FormController}
  */
-TaskWallApiForm.prototype.validator = function (validator) {
+FormController.prototype.validator = function (validator) {
 	this.validate = validator;
 	return this;
 };
@@ -80,15 +80,15 @@ TaskWallApiForm.prototype.validator = function (validator) {
  * @param {HTMLFormElement} form
  * @returns {Boolean}
  */
-TaskWallApiForm.prototype.validate = function (form) {
+FormController.prototype.validate = function (form) {
 	return true;
 };
 /**
  * Set the result handler.
  * @param {Function} success
- * @returns {TaskWallApiForm}
+ * @returns {FormController}
  */
-TaskWallApiForm.prototype.success = function (success) {
+FormController.prototype.success = function (success) {
 	this.handleSuccess = success;
 	return this;
 };
@@ -96,36 +96,36 @@ TaskWallApiForm.prototype.success = function (success) {
  * Default result handler.
  * @param data
  */
-TaskWallApiForm.prototype.handleSuccess = function (data) {
+FormController.prototype.handleSuccess = function (data) {
 	return;
 };
 /**
  * Set the error handler.
  * @param {Function} error
- * @returns {TaskWallApiForm}
+ * @returns {FormController}
  */
-TaskWallApiForm.prototype.error = function (error) {
+FormController.prototype.error = function (error) {
 	this.handleError = error;
 	return this;
 };
 /**
  * Default error handler.
  */
-TaskWallApiForm.prototype.handleError = function () {
+FormController.prototype.handleError = function () {
 	return;
 };
 /**
  * Set the cancel handler.
  * @param {Function} cancel
- * @returns {TaskWallApiForm}
+ * @returns {FormController}
  */
-TaskWallApiForm.prototype.cancel = function (cancel) {
+FormController.prototype.cancel = function (cancel) {
 	this.cancelHandler = cancel;
 	return this;
 };
 /**
  * Default cancel handler.
  */
-TaskWallApiForm.prototype.cancelHandler = function () {
+FormController.prototype.cancelHandler = function () {
 	return;
 };
