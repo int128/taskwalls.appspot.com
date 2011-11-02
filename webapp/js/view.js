@@ -242,22 +242,11 @@ UICalendar.prototype.extendMonth = function (time) {
  */
 UICalendar.prototype.createDateRow = function (date) {
 	var context = this;
-	var row = $('<tr/>')
+	var row = $.resource('task-row-template')
 		.addClass('t' + date.getTime())
 		.addClass('w' + date.getDay())
 		.addClass('d' + date.getDate())
 		.addClass(DateUtil.futureOrPast(date, 'future', 'today', 'past'))
-		.append($('<td class="month-column"/>')
-				.append($('<div/>').text(date.getMonth() + 1)))
-		.append($('<td class="date-column"/>')
-				.append($('<div/>').text(date.getDate())))
-		.append($('<td class="weekday-column"/>')
-				.append($.resource('key-weekday' + date.getDay())))
-		.append($('<td class="task-column"/>')
-				.prepend($('<div class="new-task-button">+</div>')
-						.click(function (event) {
-							new UINewTask().open(context, date, event.pageY);
-						})))
 		.droppable({
 			accept: 'div.task',
 			tolerance: 'pointer',
@@ -270,6 +259,12 @@ UICalendar.prototype.createDateRow = function (date) {
 				}
 			}
 		});
+	$('.month-column>div', row).text(date.getMonth() + 1);
+	$('.date-column>div', row).text(date.getDate());
+	$('.weekday-column', row).append($.resource('key-weekday' + date.getDay()));
+	$('.new-task-button', row).click(function (event) {
+		new UINewTask().open(context, date, event.pageY);
+	});
 	if (row.hasClass('today')) {
 		row.attr('id', 'today');
 	}
