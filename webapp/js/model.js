@@ -76,54 +76,6 @@ Tasks.get = function (tasklistID, callback) {
 	});
 };
 /**
- * Update status of task.
- * @param task JSON task
- * @param {Function} success
- * @param {Function} error
- */
-Tasks.updateStatus = function (task, success, error) {
-	$.ajax({
-		type: 'POST',
-		url: 'tasks/update/status',
-		data: task,
-		dataType: 'json',
-		success: success,
-		error: error
-	});
-};
-/**
- * Update title of task.
- * @param task JSON task
- * @param {Function} success
- * @param {Function} error
- */
-Tasks.updateTitle = function (task, success, error) {
-	$.ajax({
-		type: 'POST',
-		url: 'tasks/update/title',
-		data: task,
-		dataType: 'json',
-		success: success,
-		error: error
-	});
-};
-/**
- * Update title of task.
- * @param task JSON task
- * @param {Function} success
- * @param {Function} error
- */
-Tasks.updateDueTime = function (task, success, error) {
-	$.ajax({
-		type: 'POST',
-		url: 'tasks/update/dueTime',
-		data: task,
-		dataType: 'json',
-		success: success,
-		error: error
-	});
-};
-/**
  * @returns latest date time in milliseconds
  */
 Tasks.prototype.latestTime = function () {
