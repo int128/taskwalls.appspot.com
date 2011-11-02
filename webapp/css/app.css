@@ -150,19 +150,19 @@ a:VISITED {
 	position: relative;
 	z-index: 7;
 	top: 10px;
-	left: 0px;
+	left: 10px;
 	width: 0;
 	height: 0;
 	border-top: 10px solid transparent;
 	border-bottom: 10px solid transparent;
-	border-left: 10px solid white;
+	border-right: 10px solid white;
 }
 
 #tasklist-bubble>.body {
 	position: relative;
 	z-index: 5;
 	top: -30px;
-	left: 10px;
+	left: 20px;
 	width: 200px;
 	padding: 1em;
 	border-radius: 5px;
