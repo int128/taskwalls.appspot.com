@@ -323,11 +323,9 @@ UITask.prototype.refresh = function (task) {
 		.bind('dropped', function (event, column, date) {
 			$(this).append($.resource('update-task-due-template'));
 			var form = $('form', this);
-			$('input[name="id"]', form).val(task.id);
-			$('input[name="tasklistID"]', form).val(task.tasklistID);
-			$('input[name="dueTime"]', form).val(DateUtil.getUTCTime(date));
-			var oldplace = context.element.wrap('<div/>').parent();
+			var oldplace = $(this).wrap('<div/>').parent();
 			new FormController(form)
+				.copyProperties(task)
 				.success(function (updated) {
 					oldplace.remove();
 					context.refresh(updated);
@@ -336,7 +334,8 @@ UITask.prototype.refresh = function (task) {
 					context.element.appendTo(oldplace).unwrap();
 					context.refresh(task);
 				});
-			context.element.appendTo($(column));
+			$('input[name="dueTime"]', form).val(DateUtil.getUTCTime(date));
+			$(this).appendTo($(column));
 			context.enterAjaxInProgress();
 			$(form).submit();
 		})
@@ -357,16 +356,15 @@ UITask.prototype.refresh = function (task) {
 			// updates task status when checkbox changed
 			$(context.element).append($.resource('update-task-status-template'));
 			var form = $('form', context.element);
-			$('input[name="id"]', form).val(task.id);
-			$('input[name="tasklistID"]', form).val(task.tasklistID);
-			$('input[name="statusIsCompleted"]', form).val(this.checked);
 			new FormController(form)
+				.copyProperties(task)
 				.success(function (updated) {
 					context.refresh(updated);
 				})
 				.error(function () {
 					context.refresh(task);
 				});
+			$('input[name="statusIsCompleted"]', form).val(this.checked);
 			context.enterAjaxInProgress();
 			$(form).submit();
 		});
@@ -379,9 +377,8 @@ UITask.prototype.refresh = function (task) {
 			var height = $(this).height();
 			context.element.empty().append($.resource('update-task-title-template'));
 			var form = $('form', context.element);
-			$('input[name="id"]', form).val(task.id);
-			$('input[name="tasklistID"]', form).val(task.tasklistID);
 			var formController = new FormController(form)
+				.copyProperties(task)
 				.validator(function () {
 					var value = $('textarea[name="title"]', form).val();
 					return value && value != task.title;
@@ -396,7 +393,6 @@ UITask.prototype.refresh = function (task) {
 					context.refresh(task);
 				});
 			$('textarea[name="title"]', context.element)
-				.val(task.title)
 				.height(height)
 				.blur(function () {
 					if (formController.validate(form)) {
@@ -494,8 +490,6 @@ UIUpdateTask.prototype.open = function (uiTask) {
 	var context = this;
 	this.setDue(new Date(uiTask.task.dueTime));
 	$('>.forms>form button', this.element).button();
-	$('>.forms>form input[name="id"]', this.element).val(uiTask.task.id);
-	$('>.forms>form input[name="tasklistID"]', this.element).val(uiTask.task.tasklistID);
 	$('.datepicker', this.element).datepicker({
 		defaultDate: context.getDue(),
 		dateFormat: '@',
@@ -503,9 +497,8 @@ UIUpdateTask.prototype.open = function (uiTask) {
 			context.setDue(new Date(parseInt(timeInMillis)));
 		}
 	});
-	$('>.forms>form.update input[name="title"]', this.element).val(uiTask.task.title);
-	$('>.forms>form.update textarea[name="notes"]', this.element).val(uiTask.task.notes);
 	new FormController($('>.forms>form.update', this.element))
+		.copyProperties(uiTask.task)
 		.validator(function (form) {
 			$('input[name="dueTime"]', form).val(DateUtil.getUTCTime(context.getDue()));
 			return $('input[name="title"]', form).val();
@@ -518,6 +511,7 @@ UIUpdateTask.prototype.open = function (uiTask) {
 			context.close();
 		});
 	new FormController($('>.forms>form.delete', this.element))
+		.copyProperties(uiTask.task)
 		.success(function () {
 			uiTask.remove();
 			context.close();
@@ -526,6 +520,7 @@ UIUpdateTask.prototype.open = function (uiTask) {
 		.add(uiTask.tasklists)
 		.select(uiTask.task.tasklistID);
 	new FormController($('>.forms>form.move', this.element))
+		.copyProperties(uiTask.task)
 		.success(function (moved) {
 			uiTask.refresh(moved);
 			context.close();

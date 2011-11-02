@@ -82,6 +82,19 @@ FormController.prototype.disable = function () {
 	return this;
 };
 /**
+ * Copy properties to the form.
+ * @param properties
+ * @returns {FormController}
+ */
+FormController.prototype.copyProperties = function (properties) {
+	$(':input', this.form).each(function () {
+		if (properties[this.name]) {
+			$(this).val(properties[this.name]);
+		}
+	});
+	return this;
+};
+/**
  * Set the validator.
  * @param {Function} validator
  * @returns {FormController}
