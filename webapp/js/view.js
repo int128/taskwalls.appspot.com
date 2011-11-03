@@ -123,7 +123,14 @@ UITasklist.prototype.refresh = function (tasklist) {
 		.addClass('tasklistcolor-' + tasklist.colorID)
 		.text(tasklist.title)
 		.click(function () {
-			$('.tasklist-' + tasklist.id).fadeToggle();
+			// toggle tasks of the tasklist
+			$(this).toggleClass('hidden');
+			if ($(this).hasClass('hidden')) {
+				$('.tasklist-' + tasklist.id).fadeOut();
+			}
+			else {
+				$('.tasklist-' + tasklist.id).fadeIn();
+			}
 		})
 		.mouseenter(function () {
 			$('#tasklist-bubble')

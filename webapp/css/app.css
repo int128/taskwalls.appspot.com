@@ -139,6 +139,11 @@ a:VISITED {
 	cursor: pointer;
 }
 
+.toggle-tasks.tasklist.hidden {
+	border-left-width: 1px;
+	padding-left: 9px;
+}
+
 #tasklist-bubble {
 	display: none;
 	position: absolute;
