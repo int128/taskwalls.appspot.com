@@ -52,6 +52,7 @@ $(function () {
 	/** @param {XMLHttpRequest} xhr */
 	$(document).ajaxError(function (event, xhr) {
 		if (xhr.status == 403) {
+			$('#global-error-message').remove();
 			location.replace($('a.session-login').attr('href'));
 		}
 		else {
