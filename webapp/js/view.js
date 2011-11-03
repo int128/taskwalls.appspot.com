@@ -119,7 +119,7 @@ UITasklist.prototype.getElement = function () {
  */
 UITasklist.prototype.refresh = function (tasklist) {
 	var context = this;
-	this.element = $('<div class="toggle-tasks tasklist"/>')
+	this.element = $('<div class="toggle-tasks-tasklist"/>')
 		.addClass('tasklistcolor-' + tasklist.colorID)
 		.text(tasklist.title)
 		.click(function () {
@@ -145,8 +145,8 @@ UITasklist.prototype.refresh = function (tasklist) {
 	$('#tasklist-bubble>.body>.change-color').empty();
 	$.each(Constants.tasklistColorIDs(), function (i, colorID) {
 		$('<span class="tasklist-mark"/>')
-			.appendTo($('#tasklist-bubble>.body>.change-color'))
 			.addClass('tasklistcolor-' + colorID)
+			.appendTo($('#tasklist-bubble>.body>.change-color'))
 			.click(function () {
 				var original = tasklist.colorID;
 				tasklist.colorID = colorID;

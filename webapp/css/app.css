@@ -129,7 +129,7 @@ a:VISITED {
 	margin: 30px 15px;
 }
 
-.toggle-tasks.tasklist {
+.toggle-tasks-tasklist {
 	padding: 5px;
 	margin-bottom: 5px;
 	border: solid 1px #ddd;
@@ -139,12 +139,12 @@ a:VISITED {
 	cursor: pointer;
 }
 
-.toggle-tasks.tasklist.hidden {
+.toggle-tasks-tasklist.hidden {
 	border-left-width: 1px;
 	padding-left: 9px;
 }
 
-.toggle-tasks.status {
+.toggle-tasks-status {
 	padding: 5px;
 	background: -moz-linear-gradient(top, #fff, #ddd);
 	background: -webkit-gradient(linear, left top, left bottom, from(#fff), to(#ddd) );
@@ -194,12 +194,12 @@ a:VISITED {
 }
 
 .tasklist-mark {
-	padding-right: 15px;
-	margin-left: 5px;
-	margin-right: 5px;
+	margin-right: 10px;
+	height: 15px;
+	border-left: solid 14px #ddd;
 	border-radius: 3px;
 	-moz-border-radius: 3px;
-	background: #ddd;
+	cursor: pointer;
 }
 
 /*
@@ -287,7 +287,7 @@ td.task-column {
 /*
  * A task.
  */
-div.task {
+.task {
 	float: left;
 	overflow: hidden;
 	width: 200px;
@@ -302,21 +302,21 @@ div.task {
 	-moz-border-radius: 3px;
 }
 
-div.task.task-status-completed {
+.task.task-status-completed {
 	color: dimgray;
 }
 
-div.task>div.notes {
+.task>.notes {
 	max-height: 3em;
 	font-size: 90%;
 	color: dimgray;
 }
 
-div.task.ajax-in-progress {
+.task.ajax-in-progress {
 	opacity: 0.5;
 }
 
-div.task.ui-draggable-dragging {
+.task.ui-draggable-dragging {
 	z-index: 10;
 	box-shadow: 0px 3px 10px 3px rgba(0, 0, 0, 0.4);
 }
@@ -355,41 +355,25 @@ td.task-column>.new-task-button {
 /*
  * Colors.
  */
-#tasklists>span.tasklistcolor-0:BEFORE,span.tasklistcolor-0.tasklist-mark {
-	background-color: #fc0;
-}
-
-#tasklists>span.tasklistcolor-1:BEFORE,span.tasklistcolor-1.tasklist-mark {
-	background-color: #9f0;
-}
-
-#tasklists>span.tasklistcolor-2:BEFORE,span.tasklistcolor-2.tasklist-mark {
-	background-color: #30f;
-}
-
-#tasklists>span.tasklistcolor-3:BEFORE,span.tasklistcolor-3.tasklist-mark {
-	background-color: #c06;
-}
-
-.task.tasklistcolor-0,.tasklist.tasklistcolor-0 {
+.tasklistcolor-0 {
 	border-left-color: #fc0;
 	background: -moz-linear-gradient(top, #fff, #ffd);
 	background: -webkit-gradient(linear, left top, left bottom, from(#fff), to(#ffd) );
 }
 
-.task.tasklistcolor-1,.tasklist.tasklistcolor-1 {
+.tasklistcolor-1 {
 	border-left-color: #9f0;
 	background: -moz-linear-gradient(top, #fff, #efe);
 	background: -webkit-gradient(linear, left top, left bottom, from(#fff), to(#efe) );
 }
 
-.task.tasklistcolor-2,.tasklist.tasklistcolor-2 {
+.tasklistcolor-2 {
 	border-left-color: #30f;
 	background: -moz-linear-gradient(top, #fff, #eef);
 	background: -webkit-gradient(linear, left top, left bottom, from(#fff), to(#eef) );
 }
 
-.task.tasklistcolor-3,.tasklist.tasklistcolor-3 {
+.tasklistcolor-3 {
 	border-left-color: #c06;
 	background: -moz-linear-gradient(top, #fff, #fee);
 	background: -webkit-gradient(linear, left top, left bottom, from(#fff), to(#fee) );
