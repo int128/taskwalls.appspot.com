@@ -10,7 +10,7 @@ function Tasklists (items) {
  * @param {Function} callback async callback function
  */
 Tasklists.get = function (callback) {
-	$.getJSON('tasklists/list', null, function (response) {
+	$.getJSON('/tasklists/list', null, function (response) {
 		var instance = new Tasklists(response.items);
 		$.each(instance.items, function (i, tasklist) {
 			if (tasklist.colorID == undefined) {
@@ -32,7 +32,7 @@ Tasklists.get = function (callback) {
 Tasklists.updateOptions = function (tasklist, success, error) {
 	$.ajax({
 		type: 'POST',
-		url: 'tasklists/options/update',
+		url: '/tasklists/options/update',
 		data: tasklist,
 		dataType: 'json',
 		success: success,
@@ -68,7 +68,7 @@ function Tasks (items) {
  * @param {Function} callback async callback function
  */
 Tasks.get = function (tasklistID, callback) {
-	$.getJSON('tasks/list', {tasklistID: tasklistID}, function (response) {
+	$.getJSON('/tasks/list', {tasklistID: tasklistID}, function (response) {
 		var instance = new Tasks(response.items);
 		if ($.isFunction(callback)) {
 			callback(instance);
