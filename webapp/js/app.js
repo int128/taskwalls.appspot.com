@@ -2,6 +2,9 @@
  * app.js
  * (c) hidetake.org, 2011.
  */
+// libs
+document.write('<script type="text/javascript" src="/js/lib/jquery.cookie.js"></script>');
+// modules
 document.write('<script type="text/javascript" src="/js/util.js"></script>');
 document.write('<script type="text/javascript" src="/js/model.js"></script>');
 document.write('<script type="text/javascript" src="/js/view.js"></script>');
@@ -70,21 +73,28 @@ $(function () {
 		+ '&response_type=code&scope=https://www.googleapis.com/auth/tasks'
 		+ '&client_id=965159379100.apps.googleusercontent.com');
 	// determine authorization state
-	var q = location.search.match(/\?code=(.*)/);
-	if (q) {
+	var authorizationCodeMatch = location.search.match(/\?code=(.*)/);
+	if (authorizationCodeMatch) {
 		// step2: received authorization code
 		if ($.isFunction(States.authorizing)) {
 			States.authorizing();
 		}
-		$.post('oauth2', {code: q[1]}, function () {
+		$.post('oauth2', {code: authorizationCodeMatch[1]}, function () {
 			location.replace(location.pathname);
 		});
 	}
 	else if (location.search == '?error=access_denied') {
 		location.replace(location.pathname);
 	}
-	else if (document.cookie.match(/^s=|; s=/)) {
+	else if ($.cookie('s')) {
 		// step3: authorized
+		/**
+		 * Add token to request header.
+		 * @param {XMLHttpRequest} xhr
+		 */
+		$(document).ajaxSend(function (event, xhr) {
+			xhr.setRequestHeader('X-TaskWall-Session', $.cookie('s'));
+		});
 		if ($.isFunction(States.authorized)) {
 			States.authorized();
 		}

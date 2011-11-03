@@ -18,7 +18,7 @@ public class LogoutControllerTest extends ControllerTestCase
 	{
 		CachedToken token = new CachedToken("hogeAccess", "hogeRefresh");
 		Memcache.put("hogeSessionKey", token);
-		tester.request.addCookie(new Cookie(ControllerBase.COOKIE_KEY_SESSIONID, "hogeSessionKey"));
+		tester.request.addCookie(new Cookie(Oauth2Controller.COOKIE_SESSIONID, "hogeSessionKey"));
 		tester.start("/logout");
 		LogoutController controller = tester.getController();
 		assertThat(controller, is(notNullValue()));

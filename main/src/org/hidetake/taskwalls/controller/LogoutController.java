@@ -27,7 +27,7 @@ public class LogoutController extends Controller
 			String sessionKey = null;
 			for (Cookie cookie : request.getCookies()) {
 				// find session key
-				if (ControllerBase.COOKIE_KEY_SESSIONID.equals(cookie.getName())) {
+				if (Oauth2Controller.COOKIE_SESSIONID.equals(cookie.getName())) {
 					sessionKey = cookie.getValue();
 				}
 				// delete the cookie

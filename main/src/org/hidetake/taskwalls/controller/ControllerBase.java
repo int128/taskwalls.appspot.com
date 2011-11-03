@@ -3,8 +3,6 @@ package org.hidetake.taskwalls.controller;
 import java.io.IOException;
 import java.util.logging.Logger;
 
-import javax.servlet.http.Cookie;
-
 import org.hidetake.taskwalls.service.oauth2.CachedToken;
 import org.hidetake.taskwalls.service.oauth2.JacksonFactoryLocator;
 import org.hidetake.taskwalls.service.oauth2.NetHttpTransportLocator;
@@ -27,7 +25,7 @@ import com.google.api.services.tasks.Tasks;
 public abstract class ControllerBase extends Controller
 {
 
-	protected static final String COOKIE_KEY_SESSIONID = "s";
+	private static final String HEADER_SESSIONID = "X-TaskWall-Session";
 	private static final Logger logger = Logger.getLogger(ControllerBase.class.getName());
 
 	/**
@@ -43,16 +41,7 @@ public abstract class ControllerBase extends Controller
 	@Override
 	protected Navigation setUp()
 	{
-		if (request.getCookies() == null) {
-			return forward("/errors/noSession");
-		}
-		sessionKey = null;
-		for (Cookie cookie : request.getCookies()) {
-			if (COOKIE_KEY_SESSIONID.equals(cookie.getName())) {
-				sessionKey = cookie.getValue();
-				break;
-			}
-		}
+		sessionKey = request.getHeader(HEADER_SESSIONID);
 		if (sessionKey == null) {
 			return forward("/errors/noSession");
 		}

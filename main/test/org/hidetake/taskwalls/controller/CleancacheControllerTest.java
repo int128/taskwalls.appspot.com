@@ -17,7 +17,7 @@ public class CleancacheControllerTest extends ControllerTestCase
 	@Test
 	public void run() throws Exception
 	{
-		tester.request.addCookie(new Cookie(ControllerBase.COOKIE_KEY_SESSIONID, "hogeSessionKey"));
+		tester.request.addCookie(new Cookie(Oauth2Controller.COOKIE_SESSIONID, "hogeSessionKey"));
 
 		CachedToken token = new CachedToken("hogeAccess", "hogeRefresh");
 
