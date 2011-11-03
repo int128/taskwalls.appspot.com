@@ -112,7 +112,7 @@ $(function () {
  * @class constants
  */
 var Constants = {
-	tasklistColors: 4,
+	tasklistColors: 24,
 	/**
 	 * Generates array of color IDs.
 	 * @returns {Array} array of number

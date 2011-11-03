@@ -22,27 +22,27 @@
 
 <div id="myheader" class="authorized">
 <h1>Task Wall</h1>
-<div class="header-stack"><div id="tasklists"></div>
-<div id="tasklist-bubble">
-<div class="head"></div>
-<div class="body">
-<div>タスクリスト</div>
-<div class="change-color"></div>
-</div>
-</div>
-</div>
-<div class="header-stack authorized">
+<div class="header-stack"><div id="tasklists"></div></div>
+<div class="header-stack">
 <div class="toggle-tasks toggle-tasks-status needsAction">未完了のタスク</div>
 <div class="toggle-tasks toggle-tasks-status completed">完了したタスク</div>
 </div>
-<div class="header-stack authorized"><a href="#" class="reload">更新</a></div>
-<div class="header-stack unauthorized"><a class="session-login">ログイン</a></div>
-<div class="header-stack authorized"><a class="session-logout">ログアウト</a></div>
+<div class="header-stack"><a href="#" class="reload">更新</a></div>
+<div class="header-stack"><a class="session-logout">ログアウト</a></div>
 <div class="header-stack development"><a href="javascript:$.post('cleancache')">キャッシュ削除</a></div>
 </div>
 
 <div id="mycontent" class="authorized">
 <table id="calendar"></table>
+</div>
+
+<div id="update-tasklist-template" class="update-tasklist resource">
+<div class="head"></div>
+<div class="body">
+<div>タスクリストの色を変更</div>
+<div class="change-color"></div>
+<div style="clear: both;"></div>
+</div>
 </div>
 
 <div id="update-task-title-template" class="update-task-title resource">
@@ -124,6 +124,7 @@
 </div>
 
 <div id="popup-overlay-template" class="popup-overlay resource"></div>
+<div id="transparent-overlay-template" class="transparent-overlay resource"></div>
 
 <div id="loading"></div>
 <div id="global-error-message">エラーです。もう一度試してみてください。</div>

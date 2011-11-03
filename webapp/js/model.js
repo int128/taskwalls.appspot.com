@@ -15,7 +15,8 @@ Tasklists.get = function (callback) {
 		$.each(instance.items, function (i, tasklist) {
 			if (tasklist.colorID == undefined) {
 				// auto generate
-				tasklist.colorID = i % Constants.tasklistColors;
+				var pattern = [3, 11, 9, 15];
+				tasklist.colorID = pattern[i % pattern.length];
 			}
 		});
 		if ($.isFunction(callback)) {

@@ -114,55 +114,68 @@ UITasklist.prototype.getElement = function () {
 	return this.element;
 };
 /**
+ * @returns JSON tasklist
+ */
+UITasklist.prototype.getTasklist = function () {
+	return this.tasklist;
+};
+/**
  * Refresh view of this tasklist item.
  * @param tasklist JSON tasklist
  */
 UITasklist.prototype.refresh = function (tasklist) {
 	var context = this;
+	this.tasklist = tasklist;
 	this.element = $('<div class="toggle-tasks-tasklist"/>')
 		.addClass('tasklistcolor-' + tasklist.colorID)
 		.text(tasklist.title)
 		.click(function () {
-			// toggle tasks of the tasklist
-			$(this).toggleClass('hidden');
-			if ($(this).hasClass('hidden')) {
-				$('.tasklist-' + tasklist.id).fadeOut();
-			}
-			else {
-				$('.tasklist-' + tasklist.id).fadeIn();
-			}
-		})
-		.mouseenter(function () {
-			$('#tasklist-bubble')
-				.css('top', $(this).position().top)
-				.show()
-				.mouseenter(function () {
-					$(this).show().mouseleave(function () {
-						$(this).hide();
-					});
-				});
+			new UIUpdateTasklist().open(context);
 		});
-	$('#tasklist-bubble>.body>.change-color').empty();
+};
+/**
+ * @class updating the tasklist
+ */
+function UIUpdateTasklist () {
+	this.element = $.resource('update-tasklist-template');
+	this.overlay = $.resource('transparent-overlay-template');
+}
+/**
+ * Open the dialog.
+ * @param {UITasklist} uiTasklist
+ */
+UIUpdateTasklist.prototype.open = function (uiTasklist) {
+	var context = this;
 	$.each(Constants.tasklistColorIDs(), function (i, colorID) {
-		$('<span class="tasklist-mark"/>')
+		$('.body>.change-color', context.element).append($('<div class="tasklist-mark"/>')
 			.addClass('tasklistcolor-' + colorID)
-			.appendTo($('#tasklist-bubble>.body>.change-color'))
 			.click(function () {
-				var original = tasklist.colorID;
-				tasklist.colorID = colorID;
-				Tasklists.updateOptions(tasklist, function () {
-					$('.tasklist-' + tasklist.id)
+				// FIXME: dirty
+				var original = uiTasklist.getTasklist().colorID;
+				uiTasklist.getTasklist().colorID = colorID;
+				Tasklists.updateOptions(uiTasklist.getTasklist(), function () {
+					$('.tasklist-' + uiTasklist.getTasklist().id)
 						.removeClass('tasklistcolor-' + original)
 						.addClass('tasklistcolor-' + colorID);
 					context.element
 						.removeClass('tasklistcolor-' + original)
 						.addClass('tasklistcolor-' + colorID);
 				}, function () {
-					// revert
-					tasklist.colorID = original;
+					uiTasklist.getTasklist().colorID = original;
 				});
-			});
+			}));
 	});
+	this.overlay.appendTo('body').show().click(function () {
+		context.close();
+	});
+	this.element.insertBefore(uiTasklist.getElement()).fadeIn();
+};
+/**
+ * Close the dialog.
+ */
+UIUpdateTasklist.prototype.close = function () {
+	this.element.remove();
+	this.overlay.remove();
 };
 /**
  * @class UI element of the calendar.
@@ -579,7 +592,7 @@ function UITasklistButtonSet (element, name) {
  * @param {Tasklists} tasklists
  * @return {UITasklistButtonSet}
  */
-UITasklistButtonSet.prototype.add = function(tasklists) {
+UITasklistButtonSet.prototype.add = function (tasklists) {
 	var context = this;
 	$.each(tasklists.items, function (i, tasklist) {
 		$(context.element)
