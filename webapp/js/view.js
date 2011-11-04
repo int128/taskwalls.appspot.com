@@ -234,12 +234,18 @@ UICalendar.prototype.clear = function () {
  * @param {Tasks} tasks array of JSON task
  */
 UICalendar.prototype.add = function (tasks) {
-	var tasklists = this.tasklists;
+	var context = this;
 	this.extendMonth(tasks.earliestTime());
 	this.extendMonth(tasks.latestTime());
 	$.each(tasks.items, function (i, task) {
-		new UITask(task, tasklists);
+		new UITask(task, context);
 	});
+};
+/**
+ * @returns {Tasklists}
+ */
+UICalendar.prototype.getTasklists = function () {
+	return this.tasklists;
 };
 /**
  * Set tasklists.
@@ -318,10 +324,10 @@ UICalendar.prototype.createDateRow = function (date) {
 /**
  * @class UI element of the task.
  * @param task JSON task
- * @param {Tasklists} tasklists the tasklists
+ * @param {UICalendar} uiCalendar
  */
-function UITask (task, tasklists) {
-	this.tasklists = tasklists;
+function UITask (task, uiCalendar) {
+	this.uiCalendar = uiCalendar;
 	this.refresh(task);
 }
 /**
@@ -354,7 +360,7 @@ UITask.prototype.refresh = function (task) {
 	this.element
 		.addClass('task-status-' + task.status)
 		.addClass('tasklist-' + task.tasklistID)
-		.addClass('tasklistcolor-' + this.tasklists.getByID(task.tasklistID).colorID)
+		.addClass('tasklistcolor-' + this.uiCalendar.getTasklists().getByID(task.tasklistID).colorID)
 		/**
 		 * Updates task due time when dropped on another row.
 		 * @param {Element} column column dropped on
