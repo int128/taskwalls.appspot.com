@@ -112,7 +112,7 @@ a:VISITED {
 	padding-left: 5px;
 	width: 120px;
 	background: white;
-	border-right: solid 1px #888;
+	border-right: solid 1px #ccc;
 	box-shadow: 0 0 10px 3px rgba(0, 0, 0, 0.4);
 	border-radius: 10px;
 	-moz-border-radius: 10px;
@@ -147,10 +147,16 @@ a:VISITED {
 	padding: 5px;
 	margin-bottom: 5px;
 	border: solid 1px #ddd;
-	border-left: solid 5px #ccc;
+	border-left: solid 5px #ddd;
 	border-radius: 3px;
 	-moz-border-radius: 3px;
 	cursor: pointer;
+}
+
+.toggle-tasks-tasklist:HOVER {
+	border-top-color: #888;
+	border-bottom-color: #888;
+	border-right-color: #888;
 }
 
 .toggle-tasks-tasklist.hidden {
@@ -205,10 +211,15 @@ a:VISITED {
 	margin-right: 10px;
 	margin-top: 10px;
 	height: 20px;
+	opacity: 0.8;
 	border-left: solid 19px #ddd;
 	border-radius: 5px;
 	-moz-border-radius: 5px;
 	cursor: pointer;
+}
+
+.tasklist-mark:HOVER {
+	opacity: 1.0;
 }
 
 /*
@@ -309,6 +320,12 @@ td.task-column {
 	border-left-width: 5px;
 	border-radius: 3px;
 	-moz-border-radius: 3px;
+}
+
+.task:HOVER {
+	border-top-color: #888;
+	border-bottom-color: #888;
+	border-right-color: #888;
 }
 
 .task.task-status-completed {
