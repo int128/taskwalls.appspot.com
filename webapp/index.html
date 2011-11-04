@@ -39,9 +39,16 @@
 <div id="update-tasklist-template" class="update-tasklist resource">
 <div class="head"></div>
 <div class="body">
-<div>タスクリストの色を変更</div>
+<form class="main" action="/tasklists/update/main" method="post">
+<div><input type="hidden" name="id" /></div>
+<div><input type="text" name="title" /></div>
+</form>
+<form class="options" action="/tasklists/update/options" method="post">
+<div><input type="hidden" name="id" /></div>
+<div><input type="hidden" name="colorID" /></div>
 <div class="change-color"></div>
 <div style="clear: both;"></div>
+</form>
 </div>
 </div>
 

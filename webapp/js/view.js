@@ -134,6 +134,19 @@ UITasklist.prototype.refresh = function (tasklist) {
 		});
 };
 /**
+ * Change color of the tasklist.
+ * @param {Number} colorID
+ */
+UITasklist.prototype.changeColor = function (colorID) {
+	$('.tasklist-' + this.tasklist.id)
+		.removeClass('tasklistcolor-' + this.tasklist.colorID)
+		.addClass('tasklistcolor-' + colorID);
+	context.element
+		.removeClass('tasklistcolor-' + this.tasklist.colorID)
+		.addClass('tasklistcolor-' + colorID);
+	this.tasklist.colorID = colorID;
+};
+/**
  * @class updating the tasklist
  */
 function UIUpdateTasklist () {
@@ -146,24 +159,29 @@ function UIUpdateTasklist () {
  */
 UIUpdateTasklist.prototype.open = function (uiTasklist) {
 	var context = this;
+	new FormController($('form.main', this.element))
+		.copyProperties(uiTasklist.getTasklist())
+		.cancel(function () {
+			context.close();
+		});
+	new FormController($('form.options', this.element))
+		.copyProperties(uiTasklist.getTasklist())
+		.success(function () {
+			var updated = $('input[name="colorID"]', this).val();
+			uiTasklist.changeColor(updated);
+		})
+		.cancel(function () {
+			context.close();
+		});
 	$.each(Constants.tasklistColorIDs(), function (i, colorID) {
-		$('.body>.change-color', context.element).append($('<div class="tasklist-mark"/>')
+		$('<div class="tasklist-mark"/>')
 			.addClass('tasklistcolor-' + colorID)
-			.click(function () {
-				// FIXME: dirty
-				var original = uiTasklist.getTasklist().colorID;
-				uiTasklist.getTasklist().colorID = colorID;
-				Tasklists.updateOptions(uiTasklist.getTasklist(), function () {
-					$('.tasklist-' + uiTasklist.getTasklist().id)
-						.removeClass('tasklistcolor-' + original)
-						.addClass('tasklistcolor-' + colorID);
-					context.element
-						.removeClass('tasklistcolor-' + original)
-						.addClass('tasklistcolor-' + colorID);
-				}, function () {
-					uiTasklist.getTasklist().colorID = original;
-				});
-			}));
+			.data('colorID', colorID)
+			.appendTo($('.change-color', context.element));
+	});
+	$('.tasklist-mark', this.element).click(function () {
+		$('form.options input[name="colorID"]', context.element).val($(this).data('colorID'));
+		$(this).submit();
 	});
 	this.overlay.appendTo('body').show().click(function () {
 		context.close();
