@@ -37,7 +37,6 @@ UIPage.prototype.refresh = function () {
 		loadedTasklists = tasklists;
 		context.calendar.setTasklists(tasklists);
 		context.tasklists.clear();
-		context.tasklists.add(tasklists);
 		context.loadOtherTasks(loadedTasklists, defaultTasklistID);
 	});
 };
@@ -51,10 +50,12 @@ UIPage.prototype.loadOtherTasks = function (tasklists, defaultTasklistID) {
 	if (defaultTasklistID && tasklists) {
 		$.each(tasklists.items, function (i, tasklist) {
 			if (tasklist.id == defaultTasklistID) {
+				context.tasklists.add(new UITasklist(tasklist, true));
 				$('.tasklist-' + tasklist.id)
 					.addClass('tasklistcolor-' + tasklists.getByID(tasklist.id).colorID);
 			}
 			else {
+				context.tasklists.add(new UITasklist(tasklist, false));
 				Tasks.get(tasklist.id, function (tasks) {
 					context.calendar.add(tasks);
 				});
@@ -91,19 +92,19 @@ UITasklists.prototype.clear = function () {
 	$('#tasklists').empty();
 };
 /**
- * Add tasklists.
- * @param {Tasklists} tasklists
+ * Add a tasklist.
+ * @param {UITasklist} uiTasklist
  */
-UITasklists.prototype.add = function (tasklists) {
-	$.each(tasklists.items, function (i, tasklist) {
-		$('#tasklists').append(new UITasklist(tasklist).getElement());
-	});
+UITasklists.prototype.add = function (uiTasklist) {
+	$('#tasklists').append(uiTasklist.getElement());
 };
 /**
  * UI element of the tasklist.
  * @param tasklist JSON tasklist
+ * @param {Boolean} defaultTasklist true if the tasklist is default one
  */
-function UITasklist (tasklist) {
+function UITasklist (tasklist, defaultTasklist) {
+	this.defaultTasklist = defaultTasklist;
 	this.refresh(tasklist);
 };
 /**
@@ -118,6 +119,12 @@ UITasklist.prototype.getElement = function () {
  */
 UITasklist.prototype.getTasklist = function () {
 	return this.tasklist;
+};
+/**
+ * @returns {Boolean} true if the tasklist is default one
+ */
+UITasklist.prototype.isDefault = function () {
+	return this.defaultTasklist;
 };
 /**
  * Refresh view of this tasklist item.
@@ -159,6 +166,7 @@ function UIUpdateTasklist () {
  */
 UIUpdateTasklist.prototype.open = function (uiTasklist) {
 	var context = this;
+	$('.default', this.element).toggle(uiTasklist.isDefault());
 	new FormController($('form.tasklist', this.element))
 		.copyProperties(uiTasklist.getTasklist())
 		.cancel(function () {
