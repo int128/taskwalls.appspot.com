@@ -159,7 +159,7 @@ function UIUpdateTasklist () {
  */
 UIUpdateTasklist.prototype.open = function (uiTasklist) {
 	var context = this;
-	new FormController($('form.main', this.element))
+	new FormController($('form.tasklist', this.element))
 		.copyProperties(uiTasklist.getTasklist())
 		.cancel(function () {
 			context.close();
