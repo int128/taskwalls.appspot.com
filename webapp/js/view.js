@@ -141,7 +141,7 @@ UITasklist.prototype.changeColor = function (colorID) {
 	$('.tasklist-' + this.tasklist.id)
 		.removeClass('tasklistcolor-' + this.tasklist.colorID)
 		.addClass('tasklistcolor-' + colorID);
-	context.element
+	this.element
 		.removeClass('tasklistcolor-' + this.tasklist.colorID)
 		.addClass('tasklistcolor-' + colorID);
 	this.tasklist.colorID = colorID;
@@ -167,8 +167,7 @@ UIUpdateTasklist.prototype.open = function (uiTasklist) {
 	new FormController($('form.options', this.element))
 		.copyProperties(uiTasklist.getTasklist())
 		.success(function () {
-			var updated = $('input[name="colorID"]', this).val();
-			uiTasklist.changeColor(updated);
+			uiTasklist.changeColor($('form.options input[name="colorID"]', context.element).val());
 		})
 		.cancel(function () {
 			context.close();
