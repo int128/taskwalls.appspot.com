@@ -336,6 +336,7 @@ UICalendar.prototype.createDateRow = function (date) {
  * @param {UICalendar} uiCalendar
  */
 function UITask (task, uiCalendar) {
+	this.task = {};
 	this.uiCalendar = uiCalendar;
 	this.refresh(task);
 }
@@ -345,6 +346,12 @@ function UITask (task, uiCalendar) {
  */
 UITask.prototype.getElement = function () {
 	return this.element;
+};
+/**
+ * Get the task.
+ */
+UITask.prototype.getTask = function () {
+	return this.task;
 };
 /**
  * Refresh the element.
@@ -403,7 +410,7 @@ UITask.prototype.refresh = function (task) {
 		 */
 		.click(function (event) {
 			if ($(event.target).hasClass('task')) {
-				new UIUpdateTask().open(context);
+				new UIUpdateTask().open(context, context.uiCalendar);
 			}
 		});
 	$('>input[name="statusIsCompleted"]', this.element)
@@ -540,10 +547,11 @@ function UIUpdateTask () {
 /**
  * Open the dialog.
  * @param {UITask} uiTask
+ * @param {UICalendar} uiCalendar
  */
-UIUpdateTask.prototype.open = function (uiTask) {
+UIUpdateTask.prototype.open = function (uiTask, uiCalendar) {
 	var context = this;
-	this.setDue(new Date(uiTask.task.dueTime));
+	this.setDue(new Date(uiTask.getTask().dueTime));
 	$('>.forms>form button', this.element).button();
 	$('.datepicker', this.element).datepicker({
 		defaultDate: context.getDue(),
@@ -553,7 +561,7 @@ UIUpdateTask.prototype.open = function (uiTask) {
 		}
 	});
 	new FormController($('>.forms>form.update', this.element))
-		.copyProperties(uiTask.task)
+		.copyProperties(uiTask.getTask())
 		.validator(function (form) {
 			$('input[name="dueTime"]', form).val(DateUtil.getUTCTime(context.getDue()));
 			return $('input[name="title"]', form).val();
@@ -566,16 +574,16 @@ UIUpdateTask.prototype.open = function (uiTask) {
 			context.close();
 		});
 	new FormController($('>.forms>form.delete', this.element))
-		.copyProperties(uiTask.task)
+		.copyProperties(uiTask.getTask())
 		.success(function () {
 			uiTask.remove();
 			context.close();
 		});
 	new UITasklistButtonSet($('>.forms>form.move>.tasklists', this.element), 'destinationTasklistID')
-		.add(uiTask.tasklists)
-		.select(uiTask.task.tasklistID);
+		.add(uiCalendar.getTasklists())
+		.select(uiTask.getTask().tasklistID);
 	new FormController($('>.forms>form.move', this.element))
-		.copyProperties(uiTask.task)
+		.copyProperties(uiTask.getTask())
 		.success(function (moved) {
 			uiTask.refresh(moved);
 			context.close();
