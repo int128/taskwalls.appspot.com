@@ -189,7 +189,7 @@ a:VISITED {
 }
 
 .update-tasklist input[type="text"] {
-	width: 170px;
+	width: 180px;
 	margin-top: 5px;
 	padding: 3px;
 	border: solid 1px #888;
@@ -197,7 +197,7 @@ a:VISITED {
 
 .update-tasklist .change-color {
 	width: 180px;
-	margin-right: -10px;
+	margin-left: 10px;
 }
 
 .tasklist-mark {
