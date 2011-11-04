@@ -180,6 +180,11 @@ UIUpdateTasklist.prototype.open = function (uiTasklist) {
 		.cancel(function () {
 			context.close();
 		});
+	new FormController($('form.delete', this.element))
+		.copyProperties(uiTasklist.getTasklist())
+		.cancel(function () {
+			context.close();
+		});
 	$.each(Constants.tasklistColorIDs(), function (i, colorID) {
 		$('<div class="tasklist-mark"/>')
 			.addClass('tasklistcolor-' + colorID)
@@ -189,6 +194,10 @@ UIUpdateTasklist.prototype.open = function (uiTasklist) {
 	$('.tasklist-mark', this.element).click(function () {
 		$('form.options input[name="colorID"]', context.element).val($(this).data('colorID'));
 		$(this).submit();
+	});
+	$('form.delete a', this.element).click(function () {
+		$(this).replaceWith($('<button/>').text($(this).text()).button());
+		return false;
 	});
 	this.overlay.appendTo('body').show().click(function () {
 		context.close();
