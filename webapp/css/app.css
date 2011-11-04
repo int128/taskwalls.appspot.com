@@ -25,6 +25,17 @@ a:VISITED {
 	color: dimgray;
 }
 
+input[type="text"],textarea {
+	padding: 3px;
+	border: solid 1px #ccc;
+	border-radius: 3px;
+	-moz-border-radius: 3px;
+}
+
+input[type="text"]:HOVER,textarea:HOVER {
+	border: solid 1px #888;
+}
+
 #root {
 	position: relative;
 	min-height: 100%;
@@ -197,8 +208,6 @@ a:VISITED {
 .update-tasklist input[type="text"] {
 	width: 180px;
 	margin-top: 5px;
-	padding: 3px;
-	border: solid 1px #888;
 }
 
 .update-tasklist .change-color {
@@ -383,6 +392,7 @@ td.task-column>.new-task-button {
  */
 .update-task-title textarea[name="title"] {
 	width: 100%;
+	padding: 0;
 	min-height: 3em;
 	border: none;
 	background: transparent;
@@ -408,16 +418,12 @@ td.task-column>.new-task-button {
 .new-task>form>div>input[type="text"],.update-task>.forms>form>div>input[type="text"] {
 	width: 300px;
 	margin-top: 5px;
-	padding: 3px;
-	border: solid 1px #888;
 }
 
 .new-task>form>div>textarea,.update-task>.forms>form>div>textarea {
 	width: 300px;
 	margin-top: 5px;
 	height: 100px;
-	padding: 3px;
-	border: solid 1px #888;
 }
 
 .update-task {
