@@ -27,18 +27,29 @@ public class TasklistOptions implements Serializable
 	private int colorID;
 
 	/**
+	 * Merge {@link TasklistOptions} to given {@link TaskList}.
+	 * @param taskList
+	 * @return
+	 */
+	public static TaskList mergeTo(TaskList taskList)
+	{
+		TasklistOptionsMeta m = TasklistOptionsMeta.get();
+		TasklistOptions tasklistOptions = TasklistOptionsService.get(taskList.getId());
+		if (tasklistOptions != null) {
+			taskList.put(m.colorID.getName(), tasklistOptions.getColorID());
+		}
+		return taskList;
+	}
+
+	/**
 	 * Merge {@link TasklistOptions} to given {@link TaskLists}.
 	 * @param taskLists
 	 * @return
 	 */
 	public static TaskLists mergeTo(TaskLists taskLists)
 	{
-		TasklistOptionsMeta m = TasklistOptionsMeta.get();
 		for (TaskList taskList : taskLists.getItems()) {
-			TasklistOptions tasklistOptions = TasklistOptionsService.get(taskList.getId());
-			if (tasklistOptions != null) {
-				taskList.put(m.colorID.getName(), tasklistOptions.getColorID());
-			}
+			mergeTo(taskList);
 		}
 		return taskLists;
 	}

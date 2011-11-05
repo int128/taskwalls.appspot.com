@@ -132,6 +132,7 @@ UITasklist.prototype.isDefault = function () {
  */
 UITasklist.prototype.refresh = function (tasklist) {
 	var context = this;
+	var originalElement = this.element;
 	this.tasklist = tasklist;
 	this.element = $('<div class="toggle-tasks-tasklist"/>')
 		.addClass('tasklistcolor-' + tasklist.colorID)
@@ -139,6 +140,9 @@ UITasklist.prototype.refresh = function (tasklist) {
 		.click(function () {
 			new UIUpdateTasklist().open(context);
 		});
+	if (originalElement) {
+		originalElement.replaceWith(this.element);
+	}
 };
 /**
  * Change color of the tasklist.
@@ -169,9 +173,19 @@ UIUpdateTasklist.prototype.open = function (uiTasklist) {
 	$('.default', this.element).toggle(uiTasklist.isDefault());
 	new FormController($('form.tasklist', this.element))
 		.copyProperties(uiTasklist.getTasklist())
+		.validator(function (form) {
+			var title = $('input[name="title"]', form).val();
+			return title && title != uiTasklist.getTasklist().title;
+		})
+		.success(function (updated) {
+			uiTasklist.refresh(updated);
+		})
 		.cancel(function () {
 			context.close();
 		});
+	$('form.tasklist input[name="title"]', this.element).blur(function () {
+		$(this).submit();
+	});
 	new FormController($('form.options', this.element))
 		.copyProperties(uiTasklist.getTasklist())
 		.success(function () {
