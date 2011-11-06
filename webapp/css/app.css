@@ -146,7 +146,7 @@ input[type="text"]:HOVER,textarea:HOVER {
 /*
  * Tasklists.
  */
-.toggle-tasks-tasklist {
+.tasklist-legend {
 	padding: 5px;
 	margin-bottom: 5px;
 	border: solid 1px #ddd;
@@ -156,13 +156,13 @@ input[type="text"]:HOVER,textarea:HOVER {
 	cursor: pointer;
 }
 
-.toggle-tasks-tasklist:HOVER {
+.tasklist-legend:HOVER {
 	border-top-color: #888;
 	border-bottom-color: #888;
 	border-right-color: #888;
 }
 
-.toggle-tasks-tasklist.hidden {
+.tasklist-legend.hidden {
 	border-left-width: 1px;
 	padding-left: 9px;
 }

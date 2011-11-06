@@ -139,12 +139,12 @@ UITasklist.prototype.refresh = function (tasklist) {
 	var context = this;
 	var originalElement = this.element;
 	this.tasklist = tasklist;
-	this.element = $('<div class="toggle-tasks-tasklist"/>')
+	this.element = $.resource('tasklist-legend-template')
 		.addClass('tasklistcolor-' + tasklist.colorID)
-		.text(tasklist.title)
 		.click(function () {
 			new UIUpdateTasklist().open(context);
 		});
+	$('.title', this.element).text(tasklist.title);
 	if (originalElement) {
 		originalElement.replaceWith(this.element);
 	}
