@@ -43,13 +43,10 @@ input[type="text"]:HOVER,textarea:HOVER {
 
 #footer {
 	position: absolute;
-	bottom: 0;
+	bottom: 10px;
 	width: 100%;
-	padding-top: 1em;
-	padding-bottom: 1em;
-	color: dimgray;
+	color: #888;
 	text-align: center;
-	background-color: rgba(255, 255, 255, 0.8);
 }
 
 .authorized,.unauthorized {
