@@ -163,6 +163,18 @@ UITasklist.prototype.changeColor = function (colorID) {
 	this.tasklist.colorID = colorID;
 };
 /**
+ * Toggle tasks of the tasklist.
+ */
+UITasklist.prototype.toggle = function () {
+	this.element.toggleClass('hidden');
+	if (this.element.hasClass('hidden')) {
+		$('.tasklist-' + this.tasklist.id).fadeOut();
+	}
+	else {
+		$('.tasklist-' + this.tasklist.id).fadeIn();
+	}
+};
+/**
  * Remove the tasklist and its tasks.
  */
 UITasklist.prototype.remove = function () {
@@ -268,6 +280,10 @@ UIUpdateTasklist.prototype.open = function (uiTasklist) {
 	$('a[href="#delete"]', this.element).click(function () {
 		$(this).hide();
 		$('.confirm', this.element).show();
+		return false;
+	});
+	$('a[href="#toggle"]', this.element).click(function () {
+		uiTasklist.toggle();
 		return false;
 	});
 	this.overlay.appendTo('body').show().click(function () {
