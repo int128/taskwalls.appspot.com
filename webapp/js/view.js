@@ -68,14 +68,19 @@ UIPage.prototype.loadOtherTasks = function (tasklists, defaultTasklistID) {
  * @param {UIPage} page
  */
 function UIHeader (page) {
-	$('#myheader .toggle-tasks.needsAction').click(function () {
+	this.element = $('#myheader');
+	$('.toggle-tasks.needsAction', this.element).click(function () {
 		$('.task-status-needsAction').fadeToggle();
 	});
-	$('#myheader .toggle-tasks.completed').click(function () {
+	$('.toggle-tasks.completed', this.element).click(function () {
 		$('.task-status-completed').fadeToggle();
 	});
-	$('#myheader .reload').click(function () {
+	$('a[href="#reload"]', this.element).click(function () {
 		page.refresh();
+		return false;
+	});
+	$('a[href="#create-tasklist"]', this.element).click(function () {
+		new UINewTasklist().open(page.tasklists);
 		return false;
 	});
 };
@@ -158,6 +163,51 @@ UITasklist.prototype.changeColor = function (colorID) {
 	this.tasklist.colorID = colorID;
 };
 /**
+ * Remove the tasklist and its tasks.
+ */
+UITasklist.prototype.remove = function () {
+	$('.tasklist-' + this.tasklist.id).remove();
+	this.element.remove();
+};
+/**
+ * @class creating a tasklist dialog
+ */
+function UINewTasklist () {
+	this.element = $.resource('create-tasklist-template');
+	this.overlay = $.resource('popup-overlay-template');
+};
+/**
+ * Open the dialog.
+ * @param {UITasklists} uiTasklists
+ */
+UINewTasklist.prototype.open = function (uiTasklists) {
+	var context = this;
+	$('>form button', this.element).button();
+	new FormController($('>form', this.element))
+		.validator(function (form) {
+			return $('input[name="title"]', form).val();
+		})
+		.success(function (created) {
+			uiTasklists.add(created);
+			context.close();
+		})
+		.cancel(function () {
+			context.close();
+		});
+	this.element.appendTo('body').show();
+	this.overlay.appendTo('body').show().click(function () {
+		context.close();
+	});
+	$('>form input[name="title"]', this.element).focus();
+};
+/**
+ * Close the dialog.
+ */
+UINewTasklist.prototype.close = function () {
+	this.element.remove();
+	this.overlay.remove();
+};
+/**
  * @class updating the tasklist
  */
 function UIUpdateTasklist () {
@@ -170,6 +220,8 @@ function UIUpdateTasklist () {
  */
 UIUpdateTasklist.prototype.open = function (uiTasklist) {
 	var context = this;
+	$('.confirm', this.element).hide();
+	$('.confirm button', this.element).button();
 	$('.default', this.element).toggle(uiTasklist.isDefault());
 	new FormController($('form.tasklist', this.element))
 		.copyProperties(uiTasklist.getTasklist())
@@ -196,6 +248,10 @@ UIUpdateTasklist.prototype.open = function (uiTasklist) {
 		});
 	new FormController($('form.delete', this.element))
 		.copyProperties(uiTasklist.getTasklist())
+		.success(function () {
+			uiTasklist.remove();
+			context.close();
+		})
 		.cancel(function () {
 			context.close();
 		});
@@ -209,8 +265,9 @@ UIUpdateTasklist.prototype.open = function (uiTasklist) {
 		$('form.options input[name="colorID"]', context.element).val($(this).data('colorID'));
 		$(this).submit();
 	});
-	$('form.delete a', this.element).click(function () {
-		$(this).replaceWith($('<button/>').text($(this).text()).button());
+	$('a[href="#delete"]', this.element).click(function () {
+		$(this).hide();
+		$('.confirm', this.element).show();
 		return false;
 	});
 	this.overlay.appendTo('body').show().click(function () {

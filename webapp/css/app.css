@@ -175,6 +175,26 @@ input[type="text"]:HOVER,textarea:HOVER {
 	padding-left: 9px;
 }
 
+.create-tasklist {
+	z-index: 400;
+	position: fixed;
+	top: 30%;
+	left: 50%;
+	margin-left: -160px;
+	padding: 10px;
+	border-radius: 5px;
+	-moz-border-radius: 5px;
+	border: solid 1px #888;
+	background: rgba(255, 255, 255, 1.0);
+	box-shadow: 0 0 10px 3px rgba(0, 0, 0, 0.4);
+}
+
+.create-tasklist input[type="text"] {
+	width: 300px;
+	margin-top: 5px;
+	margin-bottom: 5px;
+}
+
 .update-tasklist {
 	position: absolute;
 	left: 120px;
