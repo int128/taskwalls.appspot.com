@@ -285,6 +285,10 @@ tr.w0>td.weekday-column,tr.w0>td.date-column {
 	color: red;
 }
 
+tr.w6>td.weekday-column,tr.w6>td.date-column {
+	color: #11d;
+}
+
 tr.w1>td.weekday-column,tr.w1>td.date-column,tr.w1>td.task-column {
 	border-top: solid 1px #888;
 }
