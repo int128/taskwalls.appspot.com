@@ -71,14 +71,14 @@ function FormController (form) {
  * Enable buttons in the form.
  */
 FormController.prototype.enable = function () {
-	$(':input', this.form).removeAttr('disabled');
+	$(':submit', this.form).removeAttr('disabled');
 	return this;
 };
 /**
  * Disable buttons in the form.
  */
 FormController.prototype.disable = function () {
-	$(':input', this.form).attr({disabled: 'disabled'});
+	$(':submit', this.form).attr({disabled: 'disabled'});
 	return this;
 };
 /**
