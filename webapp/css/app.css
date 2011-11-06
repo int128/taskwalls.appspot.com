@@ -7,10 +7,6 @@
 	font-family: 'trebuchet ms', sans-serif;
 }
 
-html,body {
-	height: 100%;
-}
-
 body {
 	margin: 0;
 	padding: 0;
@@ -37,8 +33,6 @@ input[type="text"]:HOVER,textarea:HOVER {
 }
 
 #root {
-	position: relative;
-	min-height: 100%;
 }
 
 #footer {
