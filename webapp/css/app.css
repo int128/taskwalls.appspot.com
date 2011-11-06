@@ -144,7 +144,7 @@ input[type="text"]:HOVER,textarea:HOVER {
 }
 
 /*
- * A tasklist.
+ * Tasklists.
  */
 .toggle-tasks-tasklist {
 	padding: 5px;
@@ -167,6 +167,9 @@ input[type="text"]:HOVER,textarea:HOVER {
 	padding-left: 9px;
 }
 
+/*
+ * Tasklist manipulation forms.
+ */
 .create-tasklist {
 	z-index: 400;
 	position: fixed;
@@ -248,7 +251,7 @@ input[type="text"]:HOVER,textarea:HOVER {
 }
 
 /*
- * Tasks grid.
+ * Calendar.
  */
 #calendar {
 	border-collapse: collapse;
@@ -334,7 +337,7 @@ td.task-column {
 }
 
 /*
- * A task.
+ * Tasks.
  */
 .task {
 	float: left;
@@ -377,9 +380,6 @@ td.task-column {
 	box-shadow: 0px 3px 10px 3px rgba(0, 0, 0, 0.4);
 }
 
-/*
- * Helpers.
- */
 td.task-column>.new-task-button {
 	float: right;
 	width: 40px;
@@ -409,7 +409,7 @@ td.task-column>.new-task-button {
 }
 
 /*
- * Forms.
+ * Task manipulation forms.
  */
 .update-task-title textarea[name="title"] {
 	width: 100%;
@@ -507,6 +507,9 @@ td.task-column>.new-task-button {
 	font-weight: bold;
 }
 
+/*
+ * Helpers.
+ */
 .popup-overlay {
 	position: fixed;
 	top: 0;
