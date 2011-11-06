@@ -167,6 +167,20 @@ input[type="text"]:HOVER,textarea:HOVER {
 	padding-left: 9px;
 }
 
+.tasklist-legend>.toggle {
+	float: left;
+	margin-right: 3px;
+	width: 15px;
+	height: 15px;
+	border: solid 1px #888;
+	border-radius: 3px;
+	-moz-border-radius: 3px;
+}
+
+.tasklist-legend>.toggle:HOVER {
+	background: #ccc;
+}
+
 /*
  * Tasklist manipulation forms.
  */

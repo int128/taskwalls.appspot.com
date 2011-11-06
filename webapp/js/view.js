@@ -145,6 +145,11 @@ UITasklist.prototype.refresh = function (tasklist) {
 			new UIUpdateTasklist().open(context);
 		});
 	$('.title', this.element).text(tasklist.title);
+	$('.toggle', this.element).click(function () {
+		context.toggle();
+		return false;
+	});
+	// replace if already exists
 	if (originalElement) {
 		originalElement.replaceWith(this.element);
 	}
