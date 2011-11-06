@@ -537,27 +537,51 @@ td.task-column>.new-task-button {
 .tasklistcolor-22 { border-left-color: #d7e; }
 .tasklistcolor-23 { border-left-color: #a8e; }
 
-.tasklistcolor-0  { background: -webkit-gradient(linear, left top, left bottom, from(#fff), to(#fee) ); }
-.tasklistcolor-1  { background: -webkit-gradient(linear, left top, left bottom, from(#fff), to(#fee) ); }
-.tasklistcolor-2  { background: -webkit-gradient(linear, left top, left bottom, from(#fff), to(#fdd) ); }
-.tasklistcolor-3  { background: -webkit-gradient(linear, left top, left bottom, from(#fff), to(#fdd) ); }
-.tasklistcolor-4  { background: -webkit-gradient(linear, left top, left bottom, from(#fff), to(#fee) ); }
-.tasklistcolor-5  { background: -webkit-gradient(linear, left top, left bottom, from(#fff), to(#ffd) ); }
-.tasklistcolor-6  { background: -webkit-gradient(linear, left top, left bottom, from(#fff), to(#dfd) ); }
-.tasklistcolor-7  { background: -webkit-gradient(linear, left top, left bottom, from(#fff), to(#ded) ); }
-.tasklistcolor-8  { background: -webkit-gradient(linear, left top, left bottom, from(#fff), to(#efe) ); }
-.tasklistcolor-9  { background: -webkit-gradient(linear, left top, left bottom, from(#fff), to(#efe) ); }
-.tasklistcolor-10 { background: -webkit-gradient(linear, left top, left bottom, from(#fff), to(#ffd) ); }
-.tasklistcolor-11 { background: -webkit-gradient(linear, left top, left bottom, from(#fff), to(#ffd) ); }
-.tasklistcolor-12 { background: -webkit-gradient(linear, left top, left bottom, from(#fff), to(#eff) ); }
-.tasklistcolor-13 { background: -webkit-gradient(linear, left top, left bottom, from(#fff), to(#eff) ); }
-.tasklistcolor-14 { background: -webkit-gradient(linear, left top, left bottom, from(#fff), to(#eff) ); }
-.tasklistcolor-15 { background: -webkit-gradient(linear, left top, left bottom, from(#fff), to(#def) ); }
-.tasklistcolor-16 { background: -webkit-gradient(linear, left top, left bottom, from(#fff), to(#eef) ); }
-.tasklistcolor-17 { background: -webkit-gradient(linear, left top, left bottom, from(#fff), to(#eef) ); }
-.tasklistcolor-18 { background: -webkit-gradient(linear, left top, left bottom, from(#fff), to(#eee) ); }
-.tasklistcolor-19 { background: -webkit-gradient(linear, left top, left bottom, from(#fff), to(#ffe) ); }
-.tasklistcolor-20 { background: -webkit-gradient(linear, left top, left bottom, from(#fff), to(#fee) ); }
-.tasklistcolor-21 { background: -webkit-gradient(linear, left top, left bottom, from(#fff), to(#fee) ); }
-.tasklistcolor-22 { background: -webkit-gradient(linear, left top, left bottom, from(#fff), to(#fdf) ); }
-.tasklistcolor-23 { background: -webkit-gradient(linear, left top, left bottom, from(#fff), to(#edf) ); }
+.tasklistcolor-0 { background: -webkit-gradient(linear, left top, left bottom, from(#fff), to(#fbf7f6) ); }
+.tasklistcolor-0 { background: -moz-linear-gradient(top, #fff, #fbf7f6); }
+.tasklistcolor-1 { background: -webkit-gradient(linear, left top, left bottom, from(#fff), to(#fdf7f6) ); }
+.tasklistcolor-1 { background: -moz-linear-gradient(top, #fff, #fdf7f6); }
+.tasklistcolor-2 { background: -webkit-gradient(linear, left top, left bottom, from(#fff), to(#fff4f2) ); }
+.tasklistcolor-2 { background: -moz-linear-gradient(top, #fff, #fff4f2); }
+.tasklistcolor-3 { background: -webkit-gradient(linear, left top, left bottom, from(#fff), to(#fff5f4) ); }
+.tasklistcolor-3 { background: -moz-linear-gradient(top, #fff, #fff5f4); }
+.tasklistcolor-4 { background: -webkit-gradient(linear, left top, left bottom, from(#fff), to(#fff7f3) ); }
+.tasklistcolor-4 { background: -moz-linear-gradient(top, #fff, #fff7f3); }
+.tasklistcolor-5 { background: -webkit-gradient(linear, left top, left bottom, from(#fff), to(#fffbf4) ); }
+.tasklistcolor-5 { background: -moz-linear-gradient(top, #fff, #fffbf4); }
+.tasklistcolor-6 { background: -webkit-gradient(linear, left top, left bottom, from(#fff), to(#f4fdf9) ); }
+.tasklistcolor-6 { background: -moz-linear-gradient(top, #fff, #f4fdf9); }
+.tasklistcolor-7 { background: -webkit-gradient(linear, left top, left bottom, from(#fff), to(#f1faf6) ); }
+.tasklistcolor-7 { background: -moz-linear-gradient(top, #fff, #f1faf6); }
+.tasklistcolor-8 { background: -webkit-gradient(linear, left top, left bottom, from(#fff), to(#f8fdf4) ); }
+.tasklistcolor-8 { background: -moz-linear-gradient(top, #fff, #f8fdf4); }
+.tasklistcolor-9 { background: -webkit-gradient(linear, left top, left bottom, from(#fff), to(#fbfef7) ); }
+.tasklistcolor-9 { background: -moz-linear-gradient(top, #fff, #fbfef7); }
+.tasklistcolor-10 { background: -webkit-gradient(linear, left top, left bottom, from(#fff), to(#fffef8) ); }
+.tasklistcolor-10 { background: -moz-linear-gradient(top, #fff, #fffef8); }
+.tasklistcolor-11 { background: -webkit-gradient(linear, left top, left bottom, from(#fff), to(#fffdf6) ); }
+.tasklistcolor-11 { background: -moz-linear-gradient(top, #fff, #fffdf6); }
+.tasklistcolor-12 { background: -webkit-gradient(linear, left top, left bottom, from(#fff), to(#f9fefc) ); }
+.tasklistcolor-12 { background: -moz-linear-gradient(top, #fff, #f9fefc); }
+.tasklistcolor-13 { background: -webkit-gradient(linear, left top, left bottom, from(#fff), to(#fafefe) ); }
+.tasklistcolor-13 { background: -moz-linear-gradient(top, #fff, #fafefe); }
+.tasklistcolor-14 { background: -webkit-gradient(linear, left top, left bottom, from(#fff), to(#fafcfe) ); }
+.tasklistcolor-14 { background: -moz-linear-gradient(top, #fff, #fafcfe); }
+.tasklistcolor-15 { background: -webkit-gradient(linear, left top, left bottom, from(#fff), to(#f5f8fe) ); }
+.tasklistcolor-15 { background: -moz-linear-gradient(top, #fff, #f5f8fe); }
+.tasklistcolor-16 { background: -webkit-gradient(linear, left top, left bottom, from(#fff), to(#fafaff) ); }
+.tasklistcolor-16 { background: -moz-linear-gradient(top, #fff, #fafaff); }
+.tasklistcolor-17 { background: -webkit-gradient(linear, left top, left bottom, from(#fff), to(#fcfaff) ); }
+.tasklistcolor-17 { background: -moz-linear-gradient(top, #fff, #fcfaff); }
+.tasklistcolor-18 { background: -webkit-gradient(linear, left top, left bottom, from(#fff), to(#fcfcfc) ); }
+.tasklistcolor-18 { background: -moz-linear-gradient(top, #fff, #fcfcfc); }
+.tasklistcolor-19 { background: -webkit-gradient(linear, left top, left bottom, from(#fff), to(#fdfcfc) ); }
+.tasklistcolor-19 { background: -moz-linear-gradient(top, #fff, #fdfcfc); }
+.tasklistcolor-20 { background: -webkit-gradient(linear, left top, left bottom, from(#fff), to(#fdfafb) ); }
+.tasklistcolor-20 { background: -moz-linear-gradient(top, #fff, #fdfafb); }
+.tasklistcolor-21 { background: -webkit-gradient(linear, left top, left bottom, from(#fff), to(#fff9fb) ); }
+.tasklistcolor-21 { background: -moz-linear-gradient(top, #fff, #fff9fb); }
+.tasklistcolor-22 { background: -webkit-gradient(linear, left top, left bottom, from(#fff), to(#fdf7fe) ); }
+.tasklistcolor-22 { background: -moz-linear-gradient(top, #fff, #fdf7fe); }
+.tasklistcolor-23 { background: -webkit-gradient(linear, left top, left bottom, from(#fff), to(#faf8fe) ); }
+.tasklistcolor-23 { background: -moz-linear-gradient(top, #fff, #faf8fe); }
