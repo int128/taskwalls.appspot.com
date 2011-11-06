@@ -19,7 +19,6 @@ import com.google.api.client.auth.oauth2.draft10.AccessTokenRequest.Authorizatio
 import com.google.api.client.auth.oauth2.draft10.AccessTokenResponse;
 import com.google.api.client.googleapis.auth.oauth2.draft10.GoogleAccessTokenRequest.GoogleAuthorizationCodeGrant;
 import com.google.api.client.http.HttpResponseException;
-import com.google.api.client.util.Base64;
 import com.google.appengine.api.memcache.Expiration;
 
 /**
@@ -70,8 +69,11 @@ public class Oauth2Controller extends Controller
 		digest.update(authorizationCode.getBytes());
 		digest.update(token.getAccessToken().getBytes());
 		digest.update(token.getRefreshToken().getBytes());
-		byte[] encoded = Base64.encode(digest.digest());
-		String sessionKey = new String(encoded, 0, encoded.length - 1);
+		StringBuilder sessionKeyBuilder = new StringBuilder();
+		for (byte b : digest.digest()) {
+			sessionKeyBuilder.append(Integer.toHexString(b & 0xff));
+		}
+		String sessionKey = sessionKeyBuilder.toString();
 		Memcache.put(sessionKey, token, SESSION_EXPIRATION);
 
 		// create session cookie
