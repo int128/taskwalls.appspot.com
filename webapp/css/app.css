@@ -133,6 +133,7 @@ input[type="text"]:HOVER,textarea:HOVER {
 	margin: 15px;
 	padding: 0;
 	font-size: 120%;
+	text-align: center;
 }
 
 .header-stack {
