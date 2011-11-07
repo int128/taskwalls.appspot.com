@@ -290,8 +290,13 @@ tr.d1>td.month-column {
 }
 
 tr.d1>td.month-column>div {
+	position: absolute;
 	font-size: 200%;
 	text-shadow: #888 1px 1px 1px;
+	padding: 7px;
+	border-radius: 20px;
+	-moz-border-radius: 20px;
+	background: rgba(0, 0, 0, 0.2);
 }
 
 tr.d1>td {
@@ -319,22 +324,22 @@ tr.today>td.weekday-column,tr.today>td.date-column,tr.today>td.task-column {
 }
 
 td.month-column {
-	width: 3em;
+	width: 20px;
 	text-align: center;
 	color: transparent;
 }
 
 td.weekday-column {
-	width: 3em;
-	padding-right: 1em;
+	width: 40px;
+	padding-right: 5px;
 	text-align: center;
 	color: dimgray;
 	text-shadow: #ccc 1px 1px 1px;
 }
 
 td.date-column {
-	width: 3em;
-	padding-left: 1em;
+	width: 40px;
+	padding-left: 20px;
 	text-align: center;
 	font-size: 130%;
 	text-shadow: #ccc 1px 1px 1px;
