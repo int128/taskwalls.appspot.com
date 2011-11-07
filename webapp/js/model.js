@@ -26,22 +26,6 @@ Tasklists.get = function (callback) {
 	});
 };
 /**
- * Update the tasklist options.
- * @param {Object} tasklist tasklist JSON
- * @param {Function} success
- * @param {Function} error
- */
-Tasklists.updateOptions = function (tasklist, success, error) {
-	$.ajax({
-		type: 'POST',
-		url: '/tasklists/options/update',
-		data: tasklist,
-		dataType: 'json',
-		success: success,
-		error: error
-	});
-};
-/**
  * Get item by tasklist ID.
  * @param {String} tasklistID
  * @returns {Object} tasklist JSON (empty hash if not found)
