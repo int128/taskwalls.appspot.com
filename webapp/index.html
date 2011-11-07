@@ -16,8 +16,13 @@
 <div id="root">
 <div>
 <div id="welcome-content" class="unauthorized">
-<p>Task Wallでさくさくタスク管理</p>
-<p><a class="session-login">Login with Google Account</a></p>
+<h1>Task Wall</h1>
+<div style="text-align: center; font-weight: bold; margin-top: -1em; color: #888;">BETA</div>
+<p>Task WallはGoogle Tasksと連携するタスク管理サービスです。</p>
+<p><a class="session-login">Googleアカウントでログイン</a></p>
+<div class="footer">
+Task Wall service &copy; hidetake.org, 2011.
+</div>
 </div>
 
 <div id="myheader" class="authorized">
@@ -35,7 +40,7 @@
 <div id="tasklists"></div>
 <div><a href="#create-tasklist">新しいタスクリスト</a></div>
 </div>
-<div id="footer">
+<div class="footer">
 <div class="development"><a href="javascript:$.post('cleancache')">Expire cache</a></div>
 Task Wall service<br/>
 &copy; hidetake.org, 2011.

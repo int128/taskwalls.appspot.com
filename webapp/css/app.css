@@ -35,14 +35,6 @@ input[type="text"]:HOVER,textarea:HOVER {
 #root {
 }
 
-#footer {
-	position: absolute;
-	bottom: 10px;
-	width: 100%;
-	color: #888;
-	text-align: center;
-}
-
 .authorized,.unauthorized {
 	display: none;
 }
@@ -99,6 +91,14 @@ input[type="text"]:HOVER,textarea:HOVER {
 	text-align: center;
 }
 
+#welcome-content .footer {
+	position: absolute;
+	bottom: 10px;
+	width: 100%;
+	color: #888;
+	text-align: center;
+}
+
 /*
  * Header.
  */
@@ -130,6 +130,14 @@ input[type="text"]:HOVER,textarea:HOVER {
 
 .header-stack {
 	margin: 15px 15px;
+}
+
+#myheader .footer {
+	position: absolute;
+	bottom: 10px;
+	width: 100%;
+	color: #888;
+	text-align: center;
 }
 
 /*

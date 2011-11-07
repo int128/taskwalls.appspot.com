@@ -22,11 +22,14 @@ $(function () {
 // controller
 function States () {}
 States.authorized = function () {
+	// user page
 	new UIPage();
 };
 States.authorizing = function () {
 };
 States.unauthorized = function () {
+	// welcome page
+	$('a.session-login').button();
 	// wake up an instance in background
 	new Image().src = 'wake';
 };
@@ -82,11 +85,13 @@ $(function () {
 		$.post('oauth2', {code: authorizationCodeMatch[1]}, function () {
 			location.replace(location.pathname);
 		});
+		return;
 	}
-	else if (location.search == '?error=access_denied') {
+	if (location.search == '?error=access_denied') {
 		location.replace(location.pathname);
+		return;
 	}
-	else if ($.cookie('s')) {
+	if ($.cookie('s')) {
 		// step3: authorized
 		/**
 		 * Add token to request header.
@@ -99,6 +104,7 @@ $(function () {
 			States.authorized();
 		}
 		$('.authorized').hide().show();
+		return;
 	}
 	else {
 		// step1: unauthorized
@@ -106,6 +112,7 @@ $(function () {
 			States.unauthorized();
 		}
 		$('.unauthorized').hide().show();
+		return;
 	}
 });
 /**
