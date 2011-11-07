@@ -71,9 +71,11 @@ function UIHeader (page) {
 	this.element = $('#myheader');
 	$('.toggle-tasks.needsAction', this.element).click(function () {
 		$('.task-status-needsAction').fadeToggle();
+		return false;
 	});
 	$('.toggle-tasks.completed', this.element).click(function () {
 		$('.task-status-completed').fadeToggle();
+		return false;
 	});
 	$('a[href="#reload"]', this.element).click(function () {
 		page.refresh();

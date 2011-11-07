@@ -132,18 +132,6 @@ input[type="text"]:HOVER,textarea:HOVER {
 	margin: 15px 15px;
 }
 
-.toggle-tasks-status {
-	padding: 5px;
-	background: -moz-linear-gradient(top, #fff, #ddd);
-	background: -webkit-gradient(linear, left top, left bottom, from(#fff), to(#ddd) );
-	border: solid 1px #ccc;
-	border-left: solid 5px #ccc;
-	margin-bottom: 5px;
-	border-radius: 3px;
-	-moz-border-radius: 3px;
-	cursor: pointer;
-}
-
 /*
  * Tasklists.
  */
