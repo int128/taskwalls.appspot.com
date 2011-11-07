@@ -239,9 +239,11 @@ function UIUpdateTasklist () {
  */
 UIUpdateTasklist.prototype.open = function (uiTasklist) {
 	var context = this;
-	$('.confirm', this.element).hide();
-	$('.confirm button', this.element).button();
-	$('.default', this.element).toggle(uiTasklist.isDefault());
+	$('form button', this.element).button();
+	// update the tasklist
+	$('form.tasklist input[name="title"]', this.element).blur(function () {
+		$(this).submit();
+	});
 	new FormController($('form.tasklist', this.element))
 		.copyProperties(uiTasklist.getTasklist())
 		.validator(function (form) {
@@ -254,22 +256,27 @@ UIUpdateTasklist.prototype.open = function (uiTasklist) {
 		.cancel(function () {
 			context.close();
 		});
-	$('form.tasklist input[name="title"]', this.element).blur(function () {
-		$(this).submit();
+	// delete the tasklist
+	$('.confirm', this.element).hide();
+	$('a[href="#delete"]', this.element).click(function () {
+		$(this).hide();
+		$('.confirm', this.element).show();
+		return false;
 	});
-	new FormController($('form.options', this.element))
-		.copyProperties(uiTasklist.getTasklist())
-		.success(function () {
-			uiTasklist.changeColor($('form.options input[name="colorID"]', context.element).val());
-		})
-		.cancel(function () {
-			context.close();
-		});
 	new FormController($('form.delete', this.element))
 		.copyProperties(uiTasklist.getTasklist())
 		.success(function () {
 			uiTasklist.remove();
 			context.close();
+		})
+		.cancel(function () {
+			context.close();
+		});
+	// update options of the tasklist
+	new FormController($('form.options', this.element))
+		.copyProperties(uiTasklist.getTasklist())
+		.success(function () {
+			uiTasklist.changeColor($('form.options input[name="colorID"]', context.element).val());
 		})
 		.cancel(function () {
 			context.close();
@@ -284,11 +291,8 @@ UIUpdateTasklist.prototype.open = function (uiTasklist) {
 		$('form.options input[name="colorID"]', context.element).val($(this).data('colorID'));
 		$(this).submit();
 	});
-	$('a[href="#delete"]', this.element).click(function () {
-		$(this).hide();
-		$('.confirm', this.element).show();
-		return false;
-	});
+	// etc
+	$('.default', this.element).toggle(uiTasklist.isDefault());
 	$('a[href="#toggle"]', this.element).click(function () {
 		uiTasklist.toggle();
 		return false;
