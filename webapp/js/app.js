@@ -82,7 +82,7 @@ $(function () {
 		if ($.isFunction(States.authorizing)) {
 			States.authorizing();
 		}
-		$.post('oauth2', {code: authorizationCodeMatch[1]}, function () {
+		$.post('/oauth2', {code: authorizationCodeMatch[1]}, function () {
 			location.replace(location.pathname);
 		});
 		return;
