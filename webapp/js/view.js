@@ -647,6 +647,7 @@ UIUpdateTask.prototype.open = function (uiTask, uiCalendar) {
 	var context = this;
 	this.setDue(new Date(uiTask.getTask().dueTime));
 	$('>.forms>form button', this.element).button();
+	// update the task
 	$('.datepicker', this.element).datepicker({
 		defaultDate: context.getDue(),
 		dateFormat: '@',
@@ -667,12 +668,20 @@ UIUpdateTask.prototype.open = function (uiTask, uiCalendar) {
 		.cancel(function () {
 			context.close();
 		});
+	// delete the task
 	new FormController($('>.forms>form.delete', this.element))
 		.copyProperties(uiTask.getTask())
 		.success(function () {
 			uiTask.remove();
 			context.close();
 		});
+	$('.confirm', this.element).hide();
+	$('a[href="#delete"]', this.element).click(function () {
+		$(this).hide();
+		$('.confirm', this.element).show();
+		return false;
+	});
+	// move the task to some tasklist
 	new UITasklistButtonSet($('>.forms>form.move>.tasklists', this.element), 'destinationTasklistID')
 		.add(uiCalendar.getTasklists())
 		.select(uiTask.getTask().tasklistID);
