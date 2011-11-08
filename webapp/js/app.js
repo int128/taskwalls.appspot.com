@@ -7,7 +7,9 @@ document.write('<script type="text/javascript" src="/js/lib/jquery.cookie.js"></
 // modules
 document.write('<script type="text/javascript" src="/js/util.js"></script>');
 document.write('<script type="text/javascript" src="/js/model.js"></script>');
-document.write('<script type="text/javascript" src="/js/view.js"></script>');
+document.write('<script type="text/javascript" src="/js/view.page.js"></script>');
+document.write('<script type="text/javascript" src="/js/view.calendar.js"></script>');
+document.write('<script type="text/javascript" src="/js/view.header.js"></script>');
 // extensions
 $(function () {
 	$.extend({
