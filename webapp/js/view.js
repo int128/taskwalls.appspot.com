@@ -207,7 +207,7 @@ UINewTasklist.prototype.open = function (uiTasklists) {
 			return $('input[name="title"]', form).val();
 		})
 		.success(function (created) {
-			uiTasklists.add(created);
+			uiTasklists.add(new UITasklist(created, false));
 			context.close();
 		})
 		.cancel(function () {
