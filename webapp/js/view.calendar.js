@@ -21,8 +21,6 @@ function UICalendar () {
 		tolerance: 'pointer',
 		hoverClass: 'hover',
 		drop: function (event, ui) {
-			console.info(this);
-			return;
 			$(ui.draggable).css({top: 0, left: 0});
 			// check if dropped row is different from last one
 			if ($(ui.draggable).parents('.t0').size() == 0) {
@@ -114,8 +112,6 @@ UICalendar.prototype.createDateRow = function (date) {
 			tolerance: 'pointer',
 			hoverClass: 'hover',
 			drop: function (event, ui) {
-				console.info(this);
-				return;
 				$(ui.draggable).css({top: 0, left: 0});
 				// check if dropped row is different from last one
 				if ($(ui.draggable).parents('.t' + date.getTime()).size() == 0) {
