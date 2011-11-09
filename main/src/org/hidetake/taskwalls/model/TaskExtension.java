@@ -38,8 +38,10 @@ public class TaskExtension
 	 */
 	public static Tasks extend(Tasks tasks)
 	{
-		for (Task task : tasks.getItems()) {
-			extend(task);
+		if (tasks.getItems() != null) {
+			for (Task task : tasks.getItems()) {
+				extend(task);
+			}
 		}
 		return tasks;
 	}
