@@ -26,17 +26,17 @@ Task Wall service &copy; hidetake.org, 2011.
 </div>
 
 <div id="myheader" class="authorized">
-<h1>Task Wall</h1>
+<h1 class="stack">Task Wall</h1>
 <div style="text-align: center; font-weight: bold; margin-top: -1em; color: #888;">BETA</div>
-<div class="header-stack">
+<div class="stack">
 <div><a href="#reload">更新</a></div>
 <div><a class="session-logout">ログアウト</a></div>
 </div>
-<div class="header-stack">
+<div class="stack">
 <div><a href="#" class="toggle-tasks needsAction">未完了のタスク</a></div>
 <div><a href="#" class="toggle-tasks completed">完了のタスク</a></div>
 </div>
-<div class="header-stack">
+<div class="stack">
 <div id="tasklists"></div>
 <div><a href="#create-tasklist">新しいタスクリスト</a></div>
 </div>
@@ -49,6 +49,12 @@ Task Wall service<br/>
 
 <div id="mycontent" class="authorized">
 <table id="calendar"></table>
+<div id="planning-tasks">
+<h2 class="stack">計画中のタスク</h2>
+<div class="t0">
+<div class="task-column"></div>
+</div>
+</div>
 </div>
 
 <div id="create-tasklist-template" class="create-tasklist resource">

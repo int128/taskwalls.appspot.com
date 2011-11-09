@@ -15,6 +15,21 @@ function UICalendar () {
 	 */
 	this.earliest = new Date();
 	this.earliest.setHours(24, 0, 0, 0);
+	// build place for planning tasks
+	$('#planning-tasks').droppable({
+		accept: 'div.task',
+		tolerance: 'pointer',
+		hoverClass: 'hover',
+		drop: function (event, ui) {
+			console.info(this);
+			return;
+			$(ui.draggable).css({top: 0, left: 0});
+			// check if dropped row is different from last one
+			if ($(ui.draggable).parents('.t0').size() == 0) {
+				$(ui.draggable).trigger('dropped', [this, null]);
+			}
+		}
+	});
 	// build table with today
 	$('#calendar').empty().append($('<tbody/>'));
 	this.extendMonth(this.earliest);
@@ -99,6 +114,8 @@ UICalendar.prototype.createDateRow = function (date) {
 			tolerance: 'pointer',
 			hoverClass: 'hover',
 			drop: function (event, ui) {
+				console.info(this);
+				return;
 				$(ui.draggable).css({top: 0, left: 0});
 				// check if dropped row is different from last one
 				if ($(ui.draggable).parents('.t' + date.getTime()).size() == 0) {
@@ -150,14 +167,18 @@ UITask.prototype.refresh = function (task) {
 	this.element = $.resource('task-template');
 	this.task = task;
 	// append or move the element to due date row
-	var due = new Date(task.dueTime);
-	due.setHours(0, 0, 0, 0);
-	if ($(originalElement).parents('.t' + due.getTime()).size() > 0) {
+	var rowTime = 0;
+	if (task.dueTime) {
+		var due = new Date(task.dueTime);
+		due.setHours(0, 0, 0, 0);
+		rowTime = due.getTime();
+	}
+	if ($(originalElement).parents('.t' + rowTime).size() > 0) {
 		$(originalElement).replaceWith(this.element);
 	}
 	else {
 		$(originalElement).remove();
-		$('.t' + due.getTime() + '>td.task-column').append(this.element);
+		$('.t' + rowTime + '>.task-column').append(this.element);
 	}
 	// build inner elements
 	this.element
