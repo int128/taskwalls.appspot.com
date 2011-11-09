@@ -144,6 +144,7 @@ input[type="text"]:HOVER,textarea:HOVER {
  * Tasklists.
  */
 .tasklist-legend {
+	z-index: 500;
 	padding: 5px;
 	margin-bottom: 5px;
 	border: solid 1px #ddd;
@@ -202,7 +203,7 @@ input[type="text"]:HOVER,textarea:HOVER {
 }
 
 .update-tasklist {
-	position: absolute;
+	position: fixed;
 	left: 120px;
 }
 
@@ -210,23 +211,23 @@ input[type="text"]:HOVER,textarea:HOVER {
 	content: '';
 	position: relative;
 	z-index: 401;
-	top: 10px;
-	left: 10px;
+	top: 25px;
+	left: 5px;
 	width: 0;
 	height: 0;
-	border-top: 10px solid transparent;
-	border-bottom: 10px solid transparent;
-	border-right: 10px solid white;
+	border-top: 15px solid transparent;
+	border-bottom: 15px solid transparent;
+	border-right: 15px solid white;
 }
 
 .update-tasklist>.body {
 	position: relative;
 	z-index: 400;
-	top: -30px;
+	top: -100px;
 	left: 20px;
 	padding: 10px;
-	border-radius: 5px;
-	-moz-border-radius: 5px;
+	border-radius: 10px;
+	-moz-border-radius: 10px;
 	background: white;
 	box-shadow: 0 0 10px 3px rgba(0, 0, 0, 0.4);
 }

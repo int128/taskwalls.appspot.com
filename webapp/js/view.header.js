@@ -235,7 +235,9 @@ UIUpdateTasklist.prototype.open = function (uiTasklist) {
 	this.overlay.appendTo('body').show().click(function () {
 		context.close();
 	});
-	this.element.insertBefore(uiTasklist.getElement()).fadeIn();
+	this.element.css({
+		top: $(uiTasklist.getElement()).position().top
+	}).appendTo('body');
 };
 /**
  * Close the dialog.
