@@ -466,6 +466,11 @@ td.task-column {
 	box-shadow: 0px 3px 10px 3px rgba(0, 0, 0, 0.4);
 }
 
+#planning-tasks .task {
+	height: 1.5em;
+	min-height: 1.5em;
+}
+
 /*
  * Task manipulation forms.
  */
