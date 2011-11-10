@@ -506,8 +506,9 @@ td.task-column {
 }
 
 .update-task {
-	position: absolute;
 	z-index: 400;
+	position: absolute;
+	right: 40px;
 	padding: 10px;
 	border-radius: 5px;
 	-moz-border-radius: 5px;

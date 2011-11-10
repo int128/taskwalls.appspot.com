@@ -404,7 +404,7 @@ UIUpdateTask.prototype.open = function (uiTask, uiCalendar) {
 	this.overlay.appendTo('body').show().click(function () {
 		context.close();
 	});
-	this.element.css('left', uiTask.getElement().position().left)
+	this.element
 		.insertBefore(uiTask.getElement())
 		.fadeIn();
 	$('>.forms>form.update input[name="title"]', this.element).focus();
