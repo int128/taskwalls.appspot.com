@@ -355,9 +355,15 @@ function UIUpdateTask () {
  */
 UIUpdateTask.prototype.open = function (uiTask, uiCalendar) {
 	var context = this;
-	this.setDue(new Date(uiTask.getTask().dueTime));
+	if (uiTask.getTask().dueTime) {
+		this.setDue(new Date(uiTask.getTask().dueTime));
+	}
+	else {
+		this.setDue(null);
+	}
 	$('>.forms>form button', this.element).button();
 	// update the task
+	// FIXME: only not "due-none" tasks
 	$('.datepicker', this.element).datepicker({
 		defaultDate: context.getDue(),
 		dateFormat: '@',
@@ -368,7 +374,12 @@ UIUpdateTask.prototype.open = function (uiTask, uiCalendar) {
 	new FormController($('>.forms>form.update', this.element))
 		.copyProperties(uiTask.getTask())
 		.validator(function (form) {
-			$('input[name="dueTime"]', form).val(DateUtil.getUTCTime(context.getDue()));
+			if (context.getDue()) {
+				$('input[name="dueTime"]', form).val(DateUtil.getUTCTime(context.getDue()));
+			}
+			else {
+				$('input[name="dueTime"]', form).val(null);
+			}
 			return $('input[name="title"]', form).val();
 		})
 		.success(function (created) {
@@ -422,9 +433,17 @@ UIUpdateTask.prototype.close = function () {
  */
 UIUpdateTask.prototype.setDue = function (due) {
 	this.due = due;
-	$('>.forms>form.update>.due>.year', this.element).text(due.getFullYear());
-	$('>.forms>form.update>.due>.month', this.element).text(due.getMonth() + 1);
-	$('>.forms>form.update>.due>.day', this.element).text(due.getDate());
+	if (due) {
+		$('>.forms>form.update>.due>.year', this.element).text(due.getFullYear());
+		$('>.forms>form.update>.due>.month', this.element).text(due.getMonth() + 1);
+		$('>.forms>form.update>.due>.day', this.element).text(due.getDate());
+		$('>.forms>form.update>.due', this.element).show();
+		$('>.forms>form.update>.due-none', this.element).hide();
+	}
+	else {
+		$('>.forms>form.update>.due', this.element).hide();
+		$('>.forms>form.update>.due-none', this.element).show();
+	}
 };
 /**
  * Get the due date.
