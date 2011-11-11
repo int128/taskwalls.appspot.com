@@ -315,6 +315,9 @@ UINewTask.prototype.open = function (uiCalendar, date, positionTop) {
 	$('>form .due>.day', this.element).text(date.getDate());
 	$('>form input[name="dueTime"]', this.element).val(DateUtil.getUTCTime(date));
 	new UITasklistButtonSet($('>form>.tasklists', this.element), 'tasklistID')
+		.onSelect(function () {
+			$('>form input[name="title"]', context.element).focus();
+		})
 		.add(uiCalendar.tasklists)
 		.selectFirst();
 	new FormController($('>form', this.element))
@@ -404,6 +407,9 @@ UIUpdateTask.prototype.open = function (uiTask, uiCalendar) {
 	});
 	// move the task to some tasklist
 	new UITasklistButtonSet($('>.forms>form.move>.tasklists', this.element), 'destinationTasklistID')
+		.onSelect(function () {
+			$('>.forms>form.update input[name="title"]', context.element).focus();
+		})
 		.add(uiCalendar.getTasklists())
 		.select(uiTask.getTask().tasklistID);
 	new FormController($('>.forms>form.move', this.element))
@@ -502,5 +508,14 @@ UITasklistButtonSet.prototype.select = function (tasklistID) {
  */
 UITasklistButtonSet.prototype.selectFirst = function () {
 	$('input:first', this.element).click().change();
+	return this;
+};
+/**
+ * Set the handler for selected event.
+ * @param {Function} handler
+ * @returns {UITasklistButtonSet}
+ */
+UITasklistButtonSet.prototype.onSelect = function (handler) {
+	$(this.element).change(handler);
 	return this;
 };
