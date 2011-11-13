@@ -21,20 +21,106 @@ $(function () {
 		}
 	});
 });
-// controller
-function States () {}
-States.authorized = function () {
-	// user page
+// session
+/**
+ * @class OAuth 2.0 session controller.
+ */
+function OAuth2Session () {
+	this.clientId = '965159379100.apps.googleusercontent.com';
+};
+/**
+ * Get the access token in current session.
+ * @returns {String} access token
+ */
+OAuth2Session.getAccessToken = function () {
+	return localStorage.getItem('accessToken');
+};
+/**
+ * Handle current request.
+ */
+OAuth2Session.prototype.handle = function () {
+	var context = this;
+	// determine authorization state
+	var accessTokenMatch = location.hash.match(/access_token=([^&=]+)/);
+	if (accessTokenMatch) {
+		// step2: received access token
+		this.onAuthorizing();
+		// validate the token
+		var accessToken = accessTokenMatch[1];
+		$.ajax({
+			url: 'https://www.googleapis.com/oauth2/v1/tokeninfo',
+			data: {
+				access_token: accessToken
+			},
+			dataType: 'jsonp',
+			success: function (tokeninfo) {
+				if (context.clientId == tokeninfo.audience) {
+					localStorage.setItem('accessToken', accessToken);
+					location.replace(location.pathname);
+				}
+				else {
+					// validation error
+					location.replace(location.pathname);
+				}
+			}
+		});
+		return;
+	}
+	var authorizationErrorMatch = location.hash.match(/error=/);
+	if (authorizationErrorMatch) {
+		// step2-1: authorization error
+		location.replace(location.pathname);
+		return;
+	}
+	if (OAuth2Session.getAccessToken()) {
+		// step3: authorized
+		this.onAuthorized();
+		return;
+	}
+	else {
+		// step1: unauthorized
+		this.onUnauthorized();
+		return;
+	}
+};
+/**
+ * Get the login URL.
+ * @returns {String} URL
+ */
+OAuth2Session.prototype.getLoginURL = function () {
+	return 'https://accounts.google.com/o/oauth2/auth'
+		+ '?redirect_uri=' + (location.protocol + '//' + location.host + location.pathname)
+		+ '&response_type=token'
+		+ '&scope=https://www.googleapis.com/auth/tasks'
+		+ '&client_id=' + this.clientId;
+};
+/**
+ * Log out the session.
+ */
+OAuth2Session.prototype.logout = function () {
+	localStorage.removeItem('accessToken');
+	location.replace(location.pathname);
+};
+/**
+ * Authorization in progress.
+ */
+OAuth2Session.prototype.onAuthorizing = function () {
+};
+/**
+ * On authorized.
+ */
+OAuth2Session.prototype.onAuthorized = function () {
 	new UIPage();
+	$('.authorized').hide().show();
 };
-States.authorizing = function () {
-};
-States.unauthorized = function () {
-	// welcome page
+/**
+ * Unauthorized.
+ */
+OAuth2Session.prototype.onUnauthorized = function () {
 	$('a.session-login').button();
-	// wake up an instance in background
-	new Image().src = 'wake';
+	$('.unauthorized').hide().show();
 };
+// controller
 $(function () {
 	// global error handler
 	var _window_onerror_handling = false;
@@ -71,51 +157,19 @@ $(function () {
 	if ($.isDevelopment()) {
 		$('.development').hide().show();
 	}
-	// URIs
-	$('a.session-logout').attr('href', 'logout');
-	$('a.session-login').attr('href', 'https://accounts.google.com/o/oauth2/auth?redirect_uri='
-		+ (location.protocol + '//' + location.host + location.pathname)
-		+ '&response_type=code&scope=https://www.googleapis.com/auth/tasks'
-		+ '&client_id=965159379100.apps.googleusercontent.com');
-	// determine authorization state
-	var authorizationCodeMatch = location.search.match(/\?code=(.*)/);
-	if (authorizationCodeMatch) {
-		// step2: received authorization code
-		if ($.isFunction(States.authorizing)) {
-			States.authorizing();
-		}
-		$.post('/oauth2', {code: authorizationCodeMatch[1]}, function () {
-			location.replace(location.pathname);
-		});
+	// check capability
+	if (localStorage == undefined) {
+		// TODO: sorry page
 		return;
 	}
-	if (location.search == '?error=access_denied') {
-		location.replace(location.pathname);
-		return;
-	}
-	if ($.cookie('s')) {
-		// step3: authorized
-		/**
-		 * Add token to request header.
-		 * @param {XMLHttpRequest} xhr
-		 */
-		$(document).ajaxSend(function (event, xhr) {
-			xhr.setRequestHeader('X-TaskWall-Session', $.cookie('s'));
-		});
-		if ($.isFunction(States.authorized)) {
-			States.authorized();
-		}
-		$('.authorized').hide().show();
-		return;
-	}
-	else {
-		// step1: unauthorized
-		if ($.isFunction(States.unauthorized)) {
-			States.unauthorized();
-		}
-		$('.unauthorized').hide().show();
-		return;
-	}
+	// OAuth session
+	var session = new OAuth2Session();
+	session.handle();
+	$('a.session-login').attr('href', session.getLoginURL());
+	$('a.session-logout').click(function () {
+		session.logout();
+		return false;
+	});
 });
 /**
  * @class constants
