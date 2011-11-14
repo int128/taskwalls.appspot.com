@@ -13,20 +13,25 @@ Tasklists.get = function (callback) {
 	$.ajax({
 		url: 'https://www.googleapis.com/tasks/v1/users/@me/lists',
 		data: {
-			access_token: OAuth2Session.getAccessToken()
+			access_token: currentOAuth2Session.getAccessToken()
 		},
 		dataType: 'jsonp',
 		success: function (response) {
-			var instance = new Tasklists(response.items);
-			$.each(instance.items, function (i, tasklist) {
-				if (tasklist.colorID == undefined) {
-					// auto generate
-					var factor = Math.abs(new String(tasklist.id).hashCode());
-					tasklist.colorID = factor % Constants.tasklistColors;
+			if ($.isArray(response.items)) {
+				var instance = new Tasklists(response.items);
+				$.each(instance.items, function (i, tasklist) {
+					if (tasklist.colorID == undefined) {
+						// auto generate
+						var factor = Math.abs(new String(tasklist.id).hashCode());
+						tasklist.colorID = factor % Constants.tasklistColors;
+					}
+				});
+				if ($.isFunction(callback)) {
+					callback(instance);
 				}
-			});
-			if ($.isFunction(callback)) {
-				callback(instance);
+			}
+			else {
+				currentOAuth2Session.authorize();
 			}
 		}
 	});
@@ -63,19 +68,24 @@ Tasks.get = function (tasklistID, callback) {
 	$.ajax({
 		url: 'https://www.googleapis.com/tasks/v1/lists/' + tasklistID + '/tasks',
 		data: {
-			access_token: OAuth2Session.getAccessToken()
+			access_token: currentOAuth2Session.getAccessToken()
 		},
 		dataType: 'jsonp',
 		success: function (response) {
-			// TODO: due is date
-			$.each(response.items, function () {
-				this.dueTime = new Date(this.due).getTime();
-				var uriParts = new String(this.selfLink).split('/');
-				this.tasklistID = uriParts[uriParts.length - 3];
-			});
-			var instance = new Tasks(response.items);
-			if ($.isFunction(callback)) {
-				callback(instance);
+			if ($.isArray(response.items)) {
+				// TODO: due is date
+				$.each(response.items, function () {
+					this.dueTime = new Date(this.due).getTime();
+					var uriParts = new String(this.selfLink).split('/');
+					this.tasklistID = uriParts[uriParts.length - 3];
+				});
+				var instance = new Tasks(response.items);
+				if ($.isFunction(callback)) {
+					callback(instance);
+				}
+			}
+			else {
+				currentOAuth2Session.authorize();
 			}
 		}
 	});

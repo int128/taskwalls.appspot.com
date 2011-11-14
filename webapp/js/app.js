@@ -32,7 +32,7 @@ function OAuth2Session () {
  * Get the access token in current session.
  * @returns {String} access token
  */
-OAuth2Session.getAccessToken = function () {
+OAuth2Session.prototype.getAccessToken = function () {
 	return localStorage.getItem('accessToken');
 };
 /**
@@ -72,7 +72,7 @@ OAuth2Session.prototype.handle = function () {
 		location.replace(location.pathname);
 		return;
 	}
-	if (OAuth2Session.getAccessToken()) {
+	if (this.getAccessToken()) {
 		// step3: authorized
 		this.onAuthorized();
 		return;
@@ -95,6 +95,14 @@ OAuth2Session.prototype.getLoginURL = function () {
 		+ '&client_id=' + this.clientId;
 };
 /**
+ * Authorize.
+ */
+OAuth2Session.prototype.authorize = function () {
+	$('#global-error-message').hide();
+	localStorage.removeItem('accessToken');
+	location.replace(this.getLoginURL());
+};
+/**
  * Log out the session.
  */
 OAuth2Session.prototype.logout = function () {
@@ -102,24 +110,27 @@ OAuth2Session.prototype.logout = function () {
 	location.replace(location.pathname);
 };
 /**
- * Authorization in progress.
+ * Event handler for authorization in progress.
  */
-OAuth2Session.prototype.onAuthorizing = function () {
-};
+OAuth2Session.prototype.onAuthorizing = function () {};
 /**
- * On authorized.
+ * Event handler on authorized.
  */
 OAuth2Session.prototype.onAuthorized = function () {
 	new UIPage();
 	$('.authorized').hide().show();
 };
 /**
- * Unauthorized.
+ * Event handler for unauthorized.
  */
 OAuth2Session.prototype.onUnauthorized = function () {
 	$('a.session-login').button();
 	$('.unauthorized').hide().show();
 };
+/**
+ * Current session.
+ */
+var currentOAuth2Session = new OAuth2Session();
 // controller
 $(function () {
 	// global error handler
@@ -143,16 +154,6 @@ $(function () {
 	$(document).ajaxStop(function (event, xhr) {
 		$('#loading').fadeOut();
 	});
-	/** @param {XMLHttpRequest} xhr */
-	$(document).ajaxError(function (event, xhr) {
-		if (xhr.status == 403) {
-			$('#global-error-message').remove();
-			location.replace($('a.session-login').attr('href'));
-		}
-		else {
-			$('#global-error-message').fadeIn();
-		}
-	});
 	// development only
 	if ($.isDevelopment()) {
 		$('.development').hide().show();
@@ -163,11 +164,10 @@ $(function () {
 		return;
 	}
 	// OAuth session
-	var session = new OAuth2Session();
-	session.handle();
-	$('a.session-login').attr('href', session.getLoginURL());
+	currentOAuth2Session.handle();
+	$('a.session-login').attr('href', currentOAuth2Session.getLoginURL());
 	$('a.session-logout').click(function () {
-		session.logout();
+		currentOAuth2Session.logout();
 		return false;
 	});
 });
