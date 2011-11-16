@@ -3,13 +3,11 @@ package org.hidetake.taskwalls.controller;
 import java.io.IOException;
 import java.util.logging.Logger;
 
-import org.hidetake.taskwalls.service.oauth2.CachedToken;
 import org.hidetake.taskwalls.service.oauth2.JacksonFactoryLocator;
 import org.hidetake.taskwalls.service.oauth2.NetHttpTransportLocator;
 import org.hidetake.taskwalls.util.GenericJsonWrapper;
 import org.slim3.controller.Controller;
 import org.slim3.controller.Navigation;
-import org.slim3.memcache.Memcache;
 
 import com.google.api.client.googleapis.auth.oauth2.draft10.GoogleAccessProtectedResource;
 import com.google.api.client.http.HttpResponseException;
@@ -25,7 +23,7 @@ import com.google.api.services.tasks.Tasks;
 public abstract class ControllerBase extends Controller
 {
 
-	private static final String HEADER_SESSIONID = "X-TaskWall-Session";
+	private static final String HEADER_SESSIONID = "X-TaskWall-Token";
 	private static final Logger logger = Logger.getLogger(ControllerBase.class.getName());
 
 	/**
@@ -41,24 +39,23 @@ public abstract class ControllerBase extends Controller
 	@Override
 	protected Navigation setUp()
 	{
+		// TODO: fix name
 		sessionKey = request.getHeader(HEADER_SESSIONID);
 		if (sessionKey == null) {
 			return forward("/errors/noSession");
 		}
 
-		CachedToken token = Memcache.get(sessionKey);
-		if (token == null) {
-			return forward("/errors/noSession");
-		}
 		HttpTransport httpTransport = NetHttpTransportLocator.get();
 		JacksonFactory jsonFactory = JacksonFactoryLocator.get();
+
+		// TODO: validate the token
 		GoogleAccessProtectedResource resource = new GoogleAccessProtectedResource(
-				token.getAccessToken(),
+				sessionKey,
 				httpTransport,
 				jsonFactory,
 				Constants.clientCredential.getClientId(),
 				Constants.clientCredential.getClientSecret(),
-				token.getRefreshToken());
+				sessionKey);
 		tasksService = new Tasks(httpTransport, resource, jsonFactory);
 		return null;
 	}

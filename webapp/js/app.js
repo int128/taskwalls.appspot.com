@@ -45,23 +45,15 @@ OAuth2Session.prototype.handle = function () {
 	if (accessTokenMatch) {
 		// step2: received access token
 		this.onAuthorizing();
-		// validate the token
 		var accessToken = accessTokenMatch[1];
-		$.ajax({
-			url: 'https://www.googleapis.com/oauth2/v1/tokeninfo',
-			data: {
-				access_token: accessToken
-			},
-			dataType: 'jsonp',
-			success: function (tokeninfo) {
-				if (context.clientId == tokeninfo.audience) {
-					localStorage.setItem('accessToken', accessToken);
-					location.replace(location.pathname);
-				}
-				else {
-					// validation error
-					location.replace(location.pathname);
-				}
+		this.validateToken(accessToken, function (valid) {
+			if (valid) {
+				// proceed to step3
+				localStorage.setItem('accessToken', accessToken);
+				location.replace(location.pathname);
+			}
+			else {
+				location.replace(location.pathname);
 			}
 		});
 		return;
@@ -74,7 +66,14 @@ OAuth2Session.prototype.handle = function () {
 	}
 	if (this.getAccessToken()) {
 		// step3: authorized
-		this.onAuthorized();
+		this.validateToken(this.getAccessToken(), function (valid) {
+			if (valid) {
+				context.onAuthorized();
+			}
+			else {
+				context.authorize();
+			}
+		});
 		return;
 	}
 	else {
@@ -103,6 +102,33 @@ OAuth2Session.prototype.authorize = function () {
 	location.replace(this.getLoginURL());
 };
 /**
+ * Validate the token.
+ * @param {String} accessToken access token
+ * @param {Function} callback function (valid, tokeninfo)
+ * @returns {XMLHttpRequest}
+ */
+OAuth2Session.prototype.validateToken = function (accessToken, callback) {
+	var context = this;
+	return $.ajax({
+		url: 'https://www.googleapis.com/oauth2/v1/tokeninfo',
+		data: {
+			access_token: accessToken
+		},
+		dataType: 'jsonp',
+		success: function (tokeninfo) {
+			if (context.clientId == tokeninfo.audience) {
+				callback(true, tokeninfo);
+			}
+			else {
+				callback(false, tokeninfo);
+			}
+		},
+		error: function () {
+			callback(false, null);
+		}
+	});
+};
+/**
  * Log out the session.
  */
 OAuth2Session.prototype.logout = function () {
@@ -117,6 +143,14 @@ OAuth2Session.prototype.onAuthorizing = function () {};
  * Event handler on authorized.
  */
 OAuth2Session.prototype.onAuthorized = function () {
+	var context = this;
+	/**
+	 * Add token to request header (same domain only).
+	 * @param {XMLHttpRequest} xhr
+	 */
+	$(document).ajaxSend(function (event, xhr) {
+		xhr.setRequestHeader('X-TaskWall-Token', context.getAccessToken());
+	});
 	new UIPage();
 	$('.authorized').hide().show();
 };
