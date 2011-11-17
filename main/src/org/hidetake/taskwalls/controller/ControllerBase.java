@@ -10,10 +10,15 @@ import org.slim3.controller.Controller;
 import org.slim3.controller.Navigation;
 
 import com.google.api.client.googleapis.auth.oauth2.draft10.GoogleAccessProtectedResource;
+import com.google.api.client.http.GenericUrl;
+import com.google.api.client.http.HttpRequest;
+import com.google.api.client.http.HttpResponse;
 import com.google.api.client.http.HttpResponseException;
 import com.google.api.client.http.HttpTransport;
+import com.google.api.client.http.json.JsonHttpParser;
 import com.google.api.client.json.GenericJson;
 import com.google.api.client.json.jackson.JacksonFactory;
+import com.google.api.client.util.GenericData;
 import com.google.api.services.tasks.Tasks;
 
 /**
@@ -48,7 +53,26 @@ public abstract class ControllerBase extends Controller
 		HttpTransport httpTransport = NetHttpTransportLocator.get();
 		JacksonFactory jsonFactory = JacksonFactoryLocator.get();
 
-		// TODO: validate the token
+		// validate the token
+		try {
+			GenericUrl validationUrl = new GenericUrl(
+					"https://www.googleapis.com/oauth2/v1/tokeninfo");
+			validationUrl.put("access_token", sessionKey);
+			HttpRequest validationRequest = httpTransport.createRequestFactory()
+					.buildGetRequest(validationUrl);
+			validationRequest.addParser(new JsonHttpParser(jsonFactory));
+			HttpResponse validationResponse = validationRequest.execute();
+			GenericData data = validationResponse.parseAs(GenericData.class);
+			String audience = (String) data.get("audience");
+			if (!Constants.clientCredential.getClientId().equals(audience)) {
+				logger.warning("Invalid token: " + data.get("error"));
+				return forward("/errors/noSession");
+			}
+		}
+		catch (IOException e) {
+			throw new RuntimeException(e);
+		}
+
 		GoogleAccessProtectedResource resource = new GoogleAccessProtectedResource(
 				sessionKey,
 				httpTransport,
