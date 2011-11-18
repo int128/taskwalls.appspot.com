@@ -18,16 +18,8 @@ Tasklists.get = function (callback) {
 		dataType: 'jsonp',
 		success: function (response) {
 			if ($.isArray(response.items)) {
-				var instance = new Tasklists(response.items);
-				$.each(instance.items, function (i, tasklist) {
-					if (tasklist.colorID == undefined) {
-						// auto generate
-						var factor = Math.abs(new String(tasklist.id).hashCode());
-						tasklist.colorID = factor % Constants.tasklistColors;
-					}
-				});
 				if ($.isFunction(callback)) {
-					callback(instance);
+					callback(Tasklists.createFromJson(response.items));
 				}
 			}
 			else {
@@ -35,6 +27,21 @@ Tasklists.get = function (callback) {
 			}
 		}
 	});
+};
+/**
+ * Create an instance from JSON.
+ * @param {Array} items JSON array
+ * @returns {Tasklists}
+ */
+Tasklists.createFromJson = function (items) {
+	$.each(items, function (i, tasklist) {
+		// auto generate color ID
+		if (tasklist.colorID == undefined) {
+			var factor = Math.abs(new String(tasklist.id).hashCode());
+			tasklist.colorID = factor % Constants.tasklistColors;
+		}
+	});
+	return new Tasklists(items);
 };
 /**
  * Get item by tasklist ID.
@@ -73,22 +80,8 @@ Tasks.get = function (tasklistID, callback) {
 		dataType: 'jsonp',
 		success: function (response) {
 			if ($.isArray(response.items)) {
-				$.each(response.items, function () {
-					// due
-					if (this.due) {
-						this.dueDate = new Date(this.due);
-						this.dueDate.setHours(0, 0, 0, 0);
-					}
-					else {
-						this.dueDate = null;
-					}
-					// tasklist ID
-					var uriParts = new String(this.selfLink).split('/');
-					this.tasklistID = uriParts[uriParts.length - 3];
-				});
-				var instance = new Tasks(response.items);
 				if ($.isFunction(callback)) {
-					callback(instance);
+					callback(Tasks.createFromJson(response.items));
 				}
 			}
 			else {
@@ -96,6 +89,27 @@ Tasks.get = function (tasklistID, callback) {
 			}
 		}
 	});
+};
+/**
+ * Create an instance from JSON.
+ * @param {Array} items JSON array
+ * @returns {Tasks}
+ */
+Tasks.createFromJson = function (items) {
+	$.each(items, function () {
+		// due
+		if (this.due) {
+			this.dueDate = new Date(this.due);
+			this.dueDate.setHours(0, 0, 0, 0);
+		}
+		else {
+			this.dueDate = null;
+		}
+		// tasklist ID
+		var uriParts = new String(this.selfLink).split('/');
+		this.tasklistID = uriParts[uriParts.length - 3];
+	});
+	return new Tasks(items);
 };
 /**
  * @returns latest date time in milliseconds
