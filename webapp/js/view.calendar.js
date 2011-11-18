@@ -164,10 +164,8 @@ UITask.prototype.refresh = function (task) {
 	this.task = task;
 	// append or move the element to due date row
 	var rowTime = 0;
-	if (task.dueTime) {
-		var due = new Date(task.dueTime);
-		due.setHours(0, 0, 0, 0);
-		rowTime = due.getTime();
+	if (task.dueDate) {
+		rowTime = task.dueDate.getTime();
 	}
 	if ($(originalElement).parents('.t' + rowTime).size() > 0) {
 		$(originalElement).replaceWith(this.element);
@@ -358,12 +356,7 @@ function UIUpdateTask () {
  */
 UIUpdateTask.prototype.open = function (uiTask, uiCalendar) {
 	var context = this;
-	if (uiTask.getTask().dueTime) {
-		this.setDue(new Date(uiTask.getTask().dueTime));
-	}
-	else {
-		this.setDue(null);
-	}
+	this.setDue(uiTask.getTask().dueDate);
 	$('>.forms>form button', this.element).button();
 	// update the task
 	// FIXME: only not "due-none" tasks

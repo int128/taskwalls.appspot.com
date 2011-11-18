@@ -73,9 +73,16 @@ Tasks.get = function (tasklistID, callback) {
 		dataType: 'jsonp',
 		success: function (response) {
 			if ($.isArray(response.items)) {
-				// TODO: due is date
 				$.each(response.items, function () {
-					this.dueTime = new Date(this.due).getTime();
+					// due
+					if (this.due) {
+						this.dueDate = new Date(this.due);
+						this.dueDate.setHours(0, 0, 0, 0);
+					}
+					else {
+						this.dueDate = null;
+					}
+					// tasklist ID
 					var uriParts = new String(this.selfLink).split('/');
 					this.tasklistID = uriParts[uriParts.length - 3];
 				});
@@ -98,7 +105,9 @@ Tasks.prototype.latestTime = function () {
 		return new Date().getTime();
 	}
 	return Math.max.apply(null, $.map(this.items, function (task) {
-		return task.dueTime;
+		if (task.dueDate) {
+			return task.dueDate.getTime();
+		}
 	}));
 };
 /**
@@ -109,7 +118,9 @@ Tasks.prototype.earliestTime = function () {
 		return new Date().getTime();
 	}
 	return Math.min.apply(null, $.map(this.items, function (task) {
-		return task.dueTime;
+		if (task.dueDate) {
+			return task.dueDate.getTime();
+		}
 	}));
 };
 /**
