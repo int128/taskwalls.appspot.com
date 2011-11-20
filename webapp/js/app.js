@@ -29,51 +29,27 @@ function OAuth2Session () {
 	this.clientId = '965159379100.apps.googleusercontent.com';
 };
 /**
- * Get the access token in current session.
- * @returns {String} access token
- */
-OAuth2Session.prototype.getAccessToken = function () {
-	return localStorage.getItem('accessToken');
-};
-/**
  * Handle current request.
  */
 OAuth2Session.prototype.handle = function () {
-	var context = this;
-	// determine authorization state
-	var accessTokenMatch = location.hash.match(/access_token=([^&=]+)/);
-	if (accessTokenMatch) {
-		// step2: received access token
+	var authorizationCodeMatch = location.search.match(/\?code=(.*)/);
+	if (authorizationCodeMatch) {
+		// step2: received authorization code
 		this.onAuthorizing();
-		var accessToken = accessTokenMatch[1];
-		this.validateToken(accessToken, function (valid) {
-			if (valid) {
-				// proceed to step3
-				localStorage.setItem('accessToken', accessToken);
-				location.replace(location.pathname);
-			}
-			else {
-				location.replace(location.pathname);
-			}
+		$.post('/oauth2', {code: authorizationCodeMatch[1]}, function () {
+			location.replace(location.pathname);
 		});
 		return;
 	}
-	var authorizationErrorMatch = location.hash.match(/error=/);
+	var authorizationErrorMatch = location.search.match(/\?error=/);
 	if (authorizationErrorMatch) {
 		// step2-1: authorization error
 		location.replace(location.pathname);
 		return;
 	}
-	if (this.getAccessToken()) {
+	if ($.cookie('s')) {
 		// step3: authorized
-		this.validateToken(this.getAccessToken(), function (valid) {
-			if (valid) {
-				context.onAuthorized();
-			}
-			else {
-				context.authorize();
-			}
-		});
+		this.onAuthorized();
 		return;
 	}
 	else {
@@ -89,7 +65,7 @@ OAuth2Session.prototype.handle = function () {
 OAuth2Session.prototype.getLoginURL = function () {
 	return 'https://accounts.google.com/o/oauth2/auth'
 		+ '?redirect_uri=' + (location.protocol + '//' + location.host + location.pathname)
-		+ '&response_type=token'
+		+ '&response_type=code'
 		+ '&scope=https://www.googleapis.com/auth/tasks'
 		+ '&client_id=' + this.clientId;
 };
@@ -100,33 +76,6 @@ OAuth2Session.prototype.authorize = function () {
 	$('#global-error-message').hide();
 	localStorage.removeItem('accessToken');
 	location.replace(this.getLoginURL());
-};
-/**
- * Validate the token.
- * @param {String} accessToken access token
- * @param {Function} callback function (valid, tokeninfo)
- * @returns {XMLHttpRequest}
- */
-OAuth2Session.prototype.validateToken = function (accessToken, callback) {
-	var context = this;
-	return $.ajax({
-		url: 'https://www.googleapis.com/oauth2/v1/tokeninfo',
-		data: {
-			access_token: accessToken
-		},
-		dataType: 'jsonp',
-		success: function (tokeninfo) {
-			if (context.clientId == tokeninfo.audience) {
-				callback(true, tokeninfo);
-			}
-			else {
-				callback(false, tokeninfo);
-			}
-		},
-		error: function () {
-			callback(false, null);
-		}
-	});
 };
 /**
  * Log out the session.
@@ -143,14 +92,14 @@ OAuth2Session.prototype.onAuthorizing = function () {};
  * Event handler on authorized.
  */
 OAuth2Session.prototype.onAuthorized = function () {
-	var context = this;
 	/**
-	 * Add token to request header (same domain only).
+	 * Add token to request header.
 	 * @param {XMLHttpRequest} xhr
 	 */
 	$(document).ajaxSend(function (event, xhr) {
-		xhr.setRequestHeader('X-TaskWall-Token', context.getAccessToken());
+		xhr.setRequestHeader('X-TaskWall-Session', $.cookie('s'));
 	});
+	// initilize page
 	new UIPage();
 	$('.authorized').hide().show();
 };

@@ -11,11 +11,8 @@ function Tasklists (items) {
  */
 Tasklists.get = function (callback) {
 	$.ajax({
-		url: 'https://www.googleapis.com/tasks/v1/users/@me/lists',
-		data: {
-			access_token: currentOAuth2Session.getAccessToken()
-		},
-		dataType: 'jsonp',
+		url: '/tasklists/list',
+		dataType: 'json',
 		success: function (response) {
 			if ($.isArray(response.items)) {
 				if ($.isFunction(callback)) {
@@ -73,11 +70,11 @@ function Tasks (items) {
  */
 Tasks.get = function (tasklistID, callback) {
 	$.ajax({
-		url: 'https://www.googleapis.com/tasks/v1/lists/' + tasklistID + '/tasks',
+		url: '/tasks/list',
 		data: {
-			access_token: currentOAuth2Session.getAccessToken()
+			tasklistID: tasklistID
 		},
-		dataType: 'jsonp',
+		dataType: 'json',
 		success: function (response) {
 			if ($.isArray(response.items)) {
 				if ($.isFunction(callback)) {
