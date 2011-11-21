@@ -1,5 +1,7 @@
 package org.hidetake.taskwalls.controller;
 
+import java.util.Date;
+
 import javax.servlet.http.Cookie;
 
 import org.hidetake.taskwalls.service.oauth2.CachedToken;
@@ -19,7 +21,8 @@ public class CleancacheControllerTest extends ControllerTestCase
 	{
 		tester.request.addCookie(new Cookie(Oauth2Controller.COOKIE_SESSIONID, "hogeSessionKey"));
 
-		CachedToken token = new CachedToken("hogeAccess", "hogeRefresh");
+		Date expire = new Date(System.currentTimeMillis() + 3600 * 1000L);
+		CachedToken token = new CachedToken("hogeAccess", "hogeRefresh", expire);
 
 		Memcache.put("hogeKey", "hogeValue");
 		Memcache.put("hogeSessionKey", token);

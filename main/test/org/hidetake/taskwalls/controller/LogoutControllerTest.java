@@ -1,5 +1,7 @@
 package org.hidetake.taskwalls.controller;
 
+import java.util.Date;
+
 import javax.servlet.http.Cookie;
 
 import org.slim3.memcache.Memcache;
@@ -16,7 +18,8 @@ public class LogoutControllerTest extends ControllerTestCase
 	@Test
 	public void run() throws Exception
 	{
-		CachedToken token = new CachedToken("hogeAccess", "hogeRefresh");
+		Date expire = new Date(System.currentTimeMillis() + 3600 * 1000L);
+		CachedToken token = new CachedToken("hogeAccess", "hogeRefresh", expire);
 		Memcache.put("hogeSessionKey", token);
 		tester.request.addCookie(new Cookie(Oauth2Controller.COOKIE_SESSIONID, "hogeSessionKey"));
 		tester.start("/logout");
