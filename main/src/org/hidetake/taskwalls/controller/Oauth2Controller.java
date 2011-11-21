@@ -30,6 +30,7 @@ public class Oauth2Controller extends Controller
 {
 
 	private static final Logger logger = Logger.getLogger(Oauth2Controller.class.getName());
+	// TODO: move to constants class
 	protected static final String COOKIE_SESSIONID = "s";
 
 	@Override
