@@ -2,6 +2,7 @@ package org.hidetake.taskwalls.controller;
 
 import java.io.IOException;
 import java.security.MessageDigest;
+import java.util.Date;
 import java.util.UUID;
 import java.util.logging.Logger;
 
@@ -29,8 +30,6 @@ public class Oauth2Controller extends Controller
 {
 
 	private static final Logger logger = Logger.getLogger(Oauth2Controller.class.getName());
-	private static final Expiration SESSION_EXPIRATION = Expiration.byDeltaSeconds(3600 * 24 * 7);
-	private static final int SESSION_COOKIE_EXPIRATION = 3600 * 24 * 7;
 	protected static final String COOKIE_SESSIONID = "s";
 
 	@Override
@@ -58,7 +57,11 @@ public class Oauth2Controller extends Controller
 				authorizationCode,
 				redirectURI);
 		AccessTokenResponse tokenResponse = execute(grant);
-		CachedToken token = new CachedToken(tokenResponse.accessToken, tokenResponse.refreshToken);
+		Date expire = new Date(System.currentTimeMillis() + tokenResponse.expiresIn * 1000L);
+		CachedToken token = new CachedToken(
+				tokenResponse.accessToken,
+				tokenResponse.refreshToken,
+				expire);
 
 		// create session
 		MessageDigest digest = MessageDigest.getInstance("SHA-256");
@@ -74,11 +77,11 @@ public class Oauth2Controller extends Controller
 			sessionKeyBuilder.append(Integer.toHexString(b & 0xff));
 		}
 		String sessionKey = sessionKeyBuilder.toString();
-		Memcache.put(sessionKey, token, SESSION_EXPIRATION);
+		Memcache.put(sessionKey, token, Expiration.byDeltaSeconds(Constants.sessionExpiration));
 
 		// create session cookie
 		Cookie cookie = new Cookie(Oauth2Controller.COOKIE_SESSIONID, sessionKey);
-		cookie.setMaxAge(SESSION_COOKIE_EXPIRATION);
+		cookie.setMaxAge(Constants.sessionExpiration);
 		response.addCookie(cookie);
 		return null;
 	}
