@@ -75,15 +75,7 @@ OAuth2Session.prototype.getLoginURL = function () {
  */
 OAuth2Session.prototype.authorize = function () {
 	$('#global-error-message').hide();
-	localStorage.removeItem('accessToken');
 	location.replace(this.getLoginURL());
-};
-/**
- * Log out the session.
- */
-OAuth2Session.prototype.logout = function () {
-	localStorage.removeItem('accessToken');
-	location.replace(location.pathname);
 };
 /**
  * Event handler for authorization in progress.
@@ -142,18 +134,10 @@ $(function () {
 	if ($.isDevelopment()) {
 		$('.development').hide().show();
 	}
-	// check capability
-	if (localStorage == undefined) {
-		// TODO: sorry page
-		return;
-	}
 	// OAuth session
 	currentOAuth2Session.handle();
 	$('a.session-login').attr('href', currentOAuth2Session.getLoginURL());
-	$('a.session-logout').click(function () {
-		currentOAuth2Session.logout();
-		return false;
-	});
+	$('a.session-logout').attr('href', '/logout');
 });
 /**
  * @class constants

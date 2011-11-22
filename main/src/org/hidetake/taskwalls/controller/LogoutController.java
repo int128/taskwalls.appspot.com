@@ -39,7 +39,7 @@ public class LogoutController extends Controller
 				Memcache.delete(sessionKey);
 			}
 		}
-		return redirect("./");
+		return redirect("/");
 	}
 
 	@Override
@@ -47,7 +47,7 @@ public class LogoutController extends Controller
 	{
 		// redirect anyway
 		logger.severe(StackTraceUtil.format(error));
-		return redirect("./");
+		return redirect("/");
 	}
 
 }
