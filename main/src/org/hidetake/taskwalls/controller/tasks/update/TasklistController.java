@@ -1,7 +1,6 @@
 package org.hidetake.taskwalls.controller.tasks.update;
 
 import org.hidetake.taskwalls.controller.ControllerBase;
-import org.hidetake.taskwalls.model.TaskExtension;
 import org.hidetake.taskwalls.util.AjaxPreconditions;
 import org.slim3.controller.Navigation;
 import org.slim3.controller.validator.Validators;
@@ -43,9 +42,6 @@ public class TasklistController extends ControllerBase
 		// TODO: transaction
 		Task moved = tasksService.tasks.insert(asString("destinationTasklistID"), task).execute();
 		tasksService.tasks.delete(asString("tasklistID"), asString("id")).execute();
-
-		TaskExtension.extend(moved);
-
 		return jsonResponse(moved);
 	}
 

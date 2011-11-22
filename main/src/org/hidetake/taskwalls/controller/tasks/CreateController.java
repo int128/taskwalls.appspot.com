@@ -1,7 +1,6 @@
 package org.hidetake.taskwalls.controller.tasks;
 
 import org.hidetake.taskwalls.controller.ControllerBase;
-import org.hidetake.taskwalls.model.TaskExtension;
 import org.hidetake.taskwalls.util.AjaxPreconditions;
 import org.slim3.controller.Navigation;
 import org.slim3.controller.validator.Validators;
@@ -31,7 +30,6 @@ public class CreateController extends ControllerBase
 		task.setDue(new DateTime(asLong("dueTime"), 0));
 
 		Task created = tasksService.tasks.insert(asString("tasklistID"), task).execute();
-		TaskExtension.extend(created);
 		return jsonResponse(created);
 	}
 

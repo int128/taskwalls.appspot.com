@@ -1,7 +1,6 @@
 package org.hidetake.taskwalls.controller.tasks;
 
 import org.hidetake.taskwalls.controller.ControllerBase;
-import org.hidetake.taskwalls.model.TaskExtension;
 import org.hidetake.taskwalls.util.AjaxPreconditions;
 import org.slim3.controller.Navigation;
 import org.slim3.controller.validator.Validators;
@@ -34,9 +33,6 @@ public class UpdateController extends ControllerBase
 
 		Patch patch = tasksService.tasks.patch(asString("tasklistID"), task.getId(), task);
 		Task patched = patch.execute();
-
-		TaskExtension.extend(patched);
-
 		return jsonResponse(patched);
 	}
 
