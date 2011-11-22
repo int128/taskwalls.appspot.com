@@ -142,6 +142,7 @@ UINewTasklist.prototype.open = function (uiTasklists) {
 			return $('input[name="title"]', form).val();
 		})
 		.success(function (created) {
+			// TODO: model extension
 			uiTasklists.add(new UITasklist(created, false));
 			context.close();
 		})
@@ -186,6 +187,7 @@ UIUpdateTasklist.prototype.open = function (uiTasklist) {
 			return title && title != uiTasklist.getTasklist().title;
 		})
 		.success(function (updated) {
+			// TODO: model extension
 			uiTasklist.refresh(updated);
 		})
 		.cancel(function () {

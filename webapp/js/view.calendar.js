@@ -191,6 +191,7 @@ UITask.prototype.refresh = function (task) {
 			new FormController(form)
 				.copyProperties(task)
 				.success(function (updated) {
+					// TODO: model extension
 					oldplace.remove();
 					context.refresh(updated);
 				})
@@ -223,6 +224,7 @@ UITask.prototype.refresh = function (task) {
 			new FormController(form)
 				.copyProperties(task)
 				.success(function (updated) {
+					// TODO: model extension
 					context.refresh(updated);
 				})
 				.error(function () {
@@ -248,6 +250,7 @@ UITask.prototype.refresh = function (task) {
 					return value && value != task.title;
 				})
 				.success(function (updated) {
+					// TODO: model extension
 					context.refresh(updated);
 				})
 				.error(function () {
@@ -382,6 +385,7 @@ UIUpdateTask.prototype.open = function (uiTask, uiCalendar) {
 			return $('input[name="title"]', form).val();
 		})
 		.success(function (created) {
+			// TODO: model extension
 			uiTask.refresh(created);
 			context.close();
 		})
@@ -411,6 +415,7 @@ UIUpdateTask.prototype.open = function (uiTask, uiCalendar) {
 	new FormController($('>.forms>form.move', this.element))
 		.copyProperties(uiTask.getTask())
 		.success(function (moved) {
+			// TODO: model extension
 			uiTask.refresh(moved);
 			context.close();
 		});
