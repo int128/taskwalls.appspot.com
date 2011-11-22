@@ -332,7 +332,10 @@ UINewTask.prototype.open = function (uiCalendar, date, positionTop) {
 	this.overlay.appendTo('body').show().click(function () {
 		context.close();
 	});
-	this.element.css('top', positionTop).appendTo('body').fadeIn();
+	this.element
+		.css('top', positionTop)
+		.appendTo('body')
+		.show();
 	$('>form input[name="title"]', this.element).focus();
 };
 /**
@@ -416,7 +419,7 @@ UIUpdateTask.prototype.open = function (uiTask, uiCalendar) {
 	});
 	this.element
 		.insertBefore(uiTask.getElement())
-		.fadeIn();
+		.show();
 	$('>.forms>form.update input[name="title"]', this.element).focus();
 };
 /**
