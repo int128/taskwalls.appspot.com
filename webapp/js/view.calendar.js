@@ -323,7 +323,7 @@ UINewTask.prototype.open = function (uiCalendar, date, positionTop) {
 			return $('input[name="title"]', form).val();
 		})
 		.success(function (created) {
-			uiCalendar.add(new Tasks([created]));
+			uiCalendar.add(Tasks.createFromJson([created]));
 			context.close();
 		})
 		.cancel(function () {
