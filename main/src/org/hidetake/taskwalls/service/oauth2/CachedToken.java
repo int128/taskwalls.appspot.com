@@ -25,6 +25,15 @@ public class CachedToken implements Serializable
 	 */
 	public CachedToken(String accessToken, String refreshToken, Date expire)
 	{
+		if (accessToken == null) {
+			throw new NullPointerException("accessToken is null");
+		}
+		if (refreshToken == null) {
+			throw new NullPointerException("refreshToken is null");
+		}
+		if (expire == null) {
+			throw new NullPointerException("expire is null");
+		}
 		this.accessToken = accessToken;
 		this.refreshToken = refreshToken;
 		this.expire = expire;

@@ -82,7 +82,7 @@ public abstract class ControllerBase extends Controller
 				Date expire = new Date(System.currentTimeMillis() + tokenResponse.expiresIn * 1000L);
 				CachedToken refreshedToken = new CachedToken(
 						tokenResponse.accessToken,
-						tokenResponse.refreshToken,
+						token.getRefreshToken(),
 						expire);
 				Memcache.put(sessionKey, refreshedToken,
 						Expiration.byDeltaSeconds(Constants.sessionExpiration));
