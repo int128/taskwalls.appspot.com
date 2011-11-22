@@ -40,7 +40,7 @@ UICalendar.prototype.clear = function () {
 };
 /**
  * Add tasks.
- * @param {Tasks} tasks array of JSON task
+ * @param {Tasks} tasks tasks
  */
 UICalendar.prototype.add = function (tasks) {
 	var context = this;
@@ -51,13 +51,14 @@ UICalendar.prototype.add = function (tasks) {
 	});
 };
 /**
+ * Get the tasklists.
  * @returns {Tasklists}
  */
 UICalendar.prototype.getTasklists = function () {
 	return this.tasklists;
 };
 /**
- * Set tasklists.
+ * Set a tasklists.
  * @param {Tasklists} tasklists
  */
 UICalendar.prototype.setTasklists = function (tasklists) {
@@ -132,11 +133,11 @@ UICalendar.prototype.createDateRow = function (date) {
 };
 /**
  * @class UI element of the task.
- * @param task JSON task
+ * @param {Task} task JSON task
  * @param {UICalendar} uiCalendar
  */
 function UITask (task, uiCalendar) {
-	this.task = {};
+	this.task = task;
 	this.uiCalendar = uiCalendar;
 	this.refresh(task);
 }
@@ -155,7 +156,7 @@ UITask.prototype.getTask = function () {
 };
 /**
  * Refresh the element.
- * @param task JSON task
+ * @param {Task} task the task
  */
 UITask.prototype.refresh = function (task) {
 	var context = this;
@@ -191,9 +192,8 @@ UITask.prototype.refresh = function (task) {
 			new FormController(form)
 				.copyProperties(task)
 				.success(function (updated) {
-					// TODO: model extension
 					oldplace.remove();
-					context.refresh(updated);
+					context.refresh(new Task(updated));
 				})
 				.error(function () {
 					context.element.appendTo(oldplace).unwrap();
@@ -224,8 +224,7 @@ UITask.prototype.refresh = function (task) {
 			new FormController(form)
 				.copyProperties(task)
 				.success(function (updated) {
-					// TODO: model extension
-					context.refresh(updated);
+					context.refresh(new Task(updated));
 				})
 				.error(function () {
 					context.refresh(task);
@@ -250,8 +249,7 @@ UITask.prototype.refresh = function (task) {
 					return value && value != task.title;
 				})
 				.success(function (updated) {
-					// TODO: model extension
-					context.refresh(updated);
+					context.refresh(new Task(updated));
 				})
 				.error(function () {
 					context.refresh(task);
@@ -326,7 +324,7 @@ UINewTask.prototype.open = function (uiCalendar, date, positionTop) {
 			return $('input[name="title"]', form).val();
 		})
 		.success(function (created) {
-			uiCalendar.add(Tasks.createFromJson([created]));
+			uiCalendar.add(new Tasks([new Task(created)]));
 			context.close();
 		})
 		.cancel(function () {
@@ -385,8 +383,7 @@ UIUpdateTask.prototype.open = function (uiTask, uiCalendar) {
 			return $('input[name="title"]', form).val();
 		})
 		.success(function (created) {
-			// TODO: model extension
-			uiTask.refresh(created);
+			uiTask.refresh(new Task(created));
 			context.close();
 		})
 		.cancel(function () {
@@ -415,8 +412,7 @@ UIUpdateTask.prototype.open = function (uiTask, uiCalendar) {
 	new FormController($('>.forms>form.move', this.element))
 		.copyProperties(uiTask.getTask())
 		.success(function (moved) {
-			// TODO: model extension
-			uiTask.refresh(moved);
+			uiTask.refresh(new Task(moved));
 			context.close();
 		});
 	this.overlay.appendTo('body').show().click(function () {

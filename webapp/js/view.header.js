@@ -42,7 +42,7 @@ UITasklists.prototype.add = function (uiTasklist) {
 };
 /**
  * UI element of the tasklist.
- * @param tasklist JSON tasklist
+ * @param {Tasklist} tasklist the tasklist
  * @param {Boolean} defaultTasklist true if the tasklist is default one
  */
 function UITasklist (tasklist, defaultTasklist) {
@@ -57,7 +57,7 @@ UITasklist.prototype.getElement = function () {
 	return this.element;
 };
 /**
- * @returns JSON tasklist
+ * @returns {Tasklist} the tasklist
  */
 UITasklist.prototype.getTasklist = function () {
 	return this.tasklist;
@@ -70,7 +70,7 @@ UITasklist.prototype.isDefault = function () {
 };
 /**
  * Refresh view of this tasklist item.
- * @param tasklist JSON tasklist
+ * @param {Tasklist} tasklist the tasklist
  */
 UITasklist.prototype.refresh = function (tasklist) {
 	var context = this;
@@ -142,8 +142,7 @@ UINewTasklist.prototype.open = function (uiTasklists) {
 			return $('input[name="title"]', form).val();
 		})
 		.success(function (created) {
-			// TODO: model extension
-			uiTasklists.add(new UITasklist(created, false));
+			uiTasklists.add(new UITasklist(new Tasklist(created), false));
 			context.close();
 		})
 		.cancel(function () {
@@ -187,8 +186,7 @@ UIUpdateTasklist.prototype.open = function (uiTasklist) {
 			return title && title != uiTasklist.getTasklist().title;
 		})
 		.success(function (updated) {
-			// TODO: model extension
-			uiTasklist.refresh(updated);
+			uiTasklist.refresh(new Tasklist(updated));
 		})
 		.cancel(function () {
 			context.close();

@@ -1,6 +1,6 @@
 /**
  * @class represents tasklists model
- * @param {Array} items array of tasklist
+ * @param {Array} items array of {@link Tasklist}
  */
 function Tasklists (items) {
 	this.items = items;
@@ -27,18 +27,13 @@ Tasklists.get = function (callback) {
 };
 /**
  * Create an instance from JSON.
- * @param {Array} items JSON array
+ * @param {Array} items array of JSON tasklist
  * @returns {Tasklists}
  */
 Tasklists.createFromJson = function (items) {
-	$.each(items, function (i, tasklist) {
-		// auto generate color ID
-		if (tasklist.colorID == undefined) {
-			var factor = Math.abs(new String(tasklist.id).hashCode());
-			tasklist.colorID = factor % Constants.tasklistColors;
-		}
-	});
-	return new Tasklists(items);
+	return new Tasklists($.map(items, function (item) {
+		return new Tasklist(item);
+	}));
 };
 /**
  * Get item by tasklist ID.
@@ -56,9 +51,23 @@ Tasklists.prototype.getByID = function (tasklistID) {
 	return result;
 };
 /**
+ * Constructor.
+ * @param {Object} json natural JSON
+ */
+function Tasklist (json) {
+	for (var key in json) {
+		this[key] = json[key];
+	}
+	// auto generate color ID
+	if (this.colorID == undefined) {
+		var factor = Math.abs(new String(this.id).hashCode());
+		this.colorID = factor % Constants.tasklistColors;
+	}
+}
+/**
+ * Constructor.
  * @class represents tasks model
- * @param {Array} items
- * @property {Array} items
+ * @param {Array} items array of {@link Task}
  */
 function Tasks (items) {
 	this.items = items;
@@ -89,24 +98,13 @@ Tasks.get = function (tasklistID, callback) {
 };
 /**
  * Create an instance from JSON.
- * @param {Array} items JSON array
+ * @param {Array} items array of JSON task
  * @returns {Tasks}
  */
 Tasks.createFromJson = function (items) {
-	$.each(items, function () {
-		// due
-		if (this.due) {
-			this.dueDate = new Date(this.due);
-			this.dueDate.setHours(0, 0, 0, 0);
-		}
-		else {
-			this.dueDate = null;
-		}
-		// tasklist ID
-		var uriParts = new String(this.selfLink).split('/');
-		this.tasklistID = uriParts[uriParts.length - 3];
-	});
-	return new Tasks(items);
+	return new Tasks($.map(items, function (item) {
+		return new Task(item);
+	}));
 };
 /**
  * @returns latest date time in milliseconds
@@ -150,4 +148,25 @@ Tasks.prototype.days = function (marginDays) {
 		result.push(new Date(time));
 	}
 	return result;
+};
+/**
+ * Constructor.
+ * @param {Object} json natural JSON
+ * @returns {Task} instance
+ */
+function Task (json) {
+	for (var key in json) {
+		this[key] = json[key];
+	}
+	// due
+	if (this.due) {
+		this.dueDate = new Date(this.due);
+		this.dueDate.setHours(0, 0, 0, 0);
+	}
+	else {
+		this.dueDate = null;
+	}
+	// tasklist ID
+	var uriParts = new String(this.selfLink).split('/');
+	this.tasklistID = uriParts[uriParts.length - 3];
 };
