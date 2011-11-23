@@ -248,3 +248,18 @@ OAuth2Session.prototype.onAuthorized = function () {};
  * Event handler for unauthorized.
  */
 OAuth2Session.prototype.onUnauthorized = function () {};
+/**
+ * @class null implementation of localStorage
+ * @returns {NullLocalStorage}
+ */
+function NullLocalStorage () {
+	this.length = 0;
+}
+NullLocalStorage.prototype.key = function () {};
+NullLocalStorage.prototype.getItem = function () {};
+NullLocalStorage.prototype.setItem = function () {};
+NullLocalStorage.prototype.removeItem = function () {};
+NullLocalStorage.prototype.clear = function () {};
+if (typeof localStorage == undefined) {
+	localStorage = new NullLocalStorage();
+}

@@ -55,6 +55,10 @@ $(function () {
 		$('a.session-logout').attr('href', '/logout');
 		$('.authorized').hide().show();
 	};
+	currentOAuth2Session.onAuthorizing = function () {
+		// clean up cache
+		localStorage.clear();
+	};
 	currentOAuth2Session.onUnauthorized = function () {
 		$('a.session-login').attr('href', currentOAuth2Session.getLoginURL()).button();
 		$('.unauthorized').hide().show();
@@ -62,7 +66,7 @@ $(function () {
 	currentOAuth2Session.handle();
 });
 /**
- * Current session.
+ * Current {@link OAuth2Session}.
  */
 var currentOAuth2Session;
 /**

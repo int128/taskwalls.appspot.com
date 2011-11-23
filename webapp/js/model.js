@@ -10,17 +10,40 @@ function Tasklists (items) {
  * @param {Function} callback async callback function
  */
 Tasklists.get = function (callback) {
+	if (!$.isFunction(callback)) {
+		throw new Error('callback is not function');
+	}
 	$.ajax({
 		url: '/tasklists/list',
 		dataType: 'json',
-		success: function (response) {
+		/**
+		 * Handler.
+		 * @param response
+		 * @param {String} status
+		 * @param {XMLHttpRequest} xhr
+		 */
+		success: function (response, status, xhr) {
 			if ($.isArray(response.items)) {
-				if ($.isFunction(callback)) {
-					callback(Tasklists.createFromJson(response.items));
-				}
+				localStorage.setItem('Tasklists.get', xhr.responseText);
+				callback(Tasklists.createFromJson(response.items));
 			}
 			else {
-				currentOAuth2Session.authorize();
+				throw new Error('invalid JSON response of tasklists');
+			}
+		},
+		/**
+		 * Offline handler.
+		 * @param {XMLHttpRequest} xhr
+		 * @param {String} status
+		 * @param {Error} error
+		 */
+		error: function (xhr, status, error) {
+			var response = $.parseJSON(localStorage.getItem('Tasklists.get'));
+			if ($.isArray(response.items)) {
+				callback(Tasklists.createFromJson(response.items));
+			}
+			else {
+				throw new Error('invalid JSON of tasklists in cache');
 			}
 		}
 	});
@@ -78,20 +101,43 @@ function Tasks (items) {
  * @param {Function} callback async callback function
  */
 Tasks.get = function (tasklistID, callback) {
+	if (!$.isFunction(callback)) {
+		throw new Error('callback is not function');
+	}
 	$.ajax({
 		url: '/tasks/list',
 		data: {
 			tasklistID: tasklistID
 		},
 		dataType: 'json',
-		success: function (response) {
+		/**
+		 * Handler.
+		 * @param response
+		 * @param {String} status
+		 * @param {XMLHttpRequest} xhr
+		 */
+		success: function (response, status, xhr) {
 			if ($.isArray(response.items)) {
-				if ($.isFunction(callback)) {
-					callback(Tasks.createFromJson(response.items));
-				}
+				localStorage['Tasks.get.' + tasklistID] = xhr.responseText;
+				callback(Tasks.createFromJson(response.items));
 			}
 			else {
-				currentOAuth2Session.authorize();
+				throw new Error('invalid JSON response of tasks');
+			}
+		},
+		/**
+		 * Offline handler.
+		 * @param {XMLHttpRequest} xhr
+		 * @param {String} status
+		 * @param {Error} error
+		 */
+		error: function (xhr, status, error) {
+			var response = $.parseJSON(localStorage['Tasks.get.' + tasklistID]);
+			if ($.isArray(response.items)) {
+				callback(Tasks.createFromJson(response.items));
+			}
+			else {
+				throw new Error('invalid JSON of tasks in cache');
 			}
 		}
 	});
