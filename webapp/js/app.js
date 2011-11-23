@@ -48,6 +48,24 @@ $(function () {
 	if ($.isDevelopment()) {
 		$('.development').hide().show();
 	}
+	// offline
+	if (sessionStorage['session-offline']) {
+		$('#session-offline').attr('checked', 'checked');
+	}
+	$('#session-offline').change(function () {
+		if (this.checked) {
+			sessionStorage['session-offline'] = true;
+		}
+		else {
+			sessionStorage.removeItem('session-offline');
+		}
+	});
+	$(document).ajaxSend(function (event, xhr) {
+		if (sessionStorage['session-offline']) {
+			// fail the request intentionally if offline
+			xhr.abort();
+		}
+	});
 	// start session
 	currentOAuth2Session = new OAuth2Session();
 	currentOAuth2Session.onAuthorized = function () {

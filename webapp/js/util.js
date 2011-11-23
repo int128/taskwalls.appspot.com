@@ -249,17 +249,20 @@ OAuth2Session.prototype.onAuthorized = function () {};
  */
 OAuth2Session.prototype.onUnauthorized = function () {};
 /**
- * @class null implementation of localStorage
- * @returns {NullLocalStorage}
+ * @class null implementation of web storage
+ * @returns {NullStorage}
  */
-function NullLocalStorage () {
+function NullStorage () {
 	this.length = 0;
 }
-NullLocalStorage.prototype.key = function () {};
-NullLocalStorage.prototype.getItem = function () {};
-NullLocalStorage.prototype.setItem = function () {};
-NullLocalStorage.prototype.removeItem = function () {};
-NullLocalStorage.prototype.clear = function () {};
+NullStorage.prototype.key = function () {};
+NullStorage.prototype.getItem = function () {};
+NullStorage.prototype.setItem = function () {};
+NullStorage.prototype.removeItem = function () {};
+NullStorage.prototype.clear = function () {};
 if (typeof localStorage == undefined) {
-	localStorage = new NullLocalStorage();
+	localStorage = new NullStorage();
+}
+if (typeof sessionStorage == undefined) {
+	sessionStorage = new NullStorage();
 }
