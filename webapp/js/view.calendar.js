@@ -15,19 +15,6 @@ function UICalendar () {
 	 */
 	this.earliest = new Date();
 	this.earliest.setHours(24, 0, 0, 0);
-	// build place for planning tasks
-	$('#planning-tasks').droppable({
-		accept: 'div.task',
-		tolerance: 'pointer',
-		hoverClass: 'hover',
-		drop: function (event, ui) {
-			$(ui.draggable).css({top: 0, left: 0});
-			// check if dropped row is different from last one
-			if ($(ui.draggable).parents('.t0').size() == 0) {
-				$(ui.draggable).trigger('dropped', [this, null]);
-			}
-		}
-	});
 	// build table with today
 	$('#calendar').empty().append($('<tbody/>'));
 	this.extendMonth(this.earliest);

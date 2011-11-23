@@ -399,30 +399,6 @@ td.task-column {
 }
 
 /*
- * planning tasks.
- */
-#planning-tasks {
-	position: fixed;
-	top: 0;
-	right: 0;
-	background: rgba(255, 255, 255, 0.7);
-	border-left: solid 1px #ccc;
-	border-bottom: solid 1px #ccc;
-}
-
-#planning-tasks.hover {
-	background: #ddd;
-}
-
-#planning-tasks>h2 {
-	font-size: 100%;
-}
-
-#planning-tasks>.stack {
-	margin: 10px;
-}
-
-/*
  * Tasks.
  */
 .task {
