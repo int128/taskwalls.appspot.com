@@ -42,9 +42,6 @@ Tasklists.get = function (callback) {
 			if (response && $.isArray(response.items)) {
 				callback(Tasklists.createFromJson(response.items));
 			}
-			else {
-				throw new Error('invalid JSON of tasklists in cache');
-			}
 		}
 	});
 };
@@ -135,9 +132,6 @@ Tasks.get = function (tasklistID, callback) {
 			var response = $.parseJSON(localStorage['Tasks.get.' + tasklistID]);
 			if (response && $.isArray(response.items)) {
 				callback(Tasks.createFromJson(response.items));
-			}
-			else {
-				throw new Error('invalid JSON of tasks in cache');
 			}
 		}
 	});

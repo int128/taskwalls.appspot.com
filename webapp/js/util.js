@@ -184,6 +184,7 @@ function OAuth2Session () {
  * Handle current request.
  */
 OAuth2Session.prototype.handle = function () {
+	var context = this;
 	var authorizationCodeMatch = location.search.match(/\?code=(.*)/);
 	if (authorizationCodeMatch) {
 		// step2: received authorization code
@@ -207,6 +208,15 @@ OAuth2Session.prototype.handle = function () {
 		 */
 		$(document).ajaxSend(function (event, xhr) {
 			xhr.setRequestHeader('X-TaskWall-Session', $.cookie('s'));
+		});
+		/**
+		 * @param {XMLHttpRequest} xhr
+		 */
+		$(document).ajaxError(function (event, xhr, settings, e) {
+			if (xhr.status == 403) {
+				// session expired
+				context.authorize();
+			}
 		});
 		this.onAuthorized();
 		return;
