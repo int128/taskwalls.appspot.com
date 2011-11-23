@@ -288,6 +288,7 @@ tr.d1>td.month-column {
 
 tr.d1>td.month-column>div {
 	position: absolute;
+	min-width: 30px;
 	font-size: 200%;
 	text-shadow: #888 1px 1px 1px;
 	padding: 7px;
@@ -396,6 +397,28 @@ td.task-column {
 
 #calendar .task-column>.new-task-button:HOVER {
 	color: #000;
+}
+
+/*
+ * Calendar manipulation.
+ */
+#calendar-next {
+	background: #fff;
+	text-align: center;
+	color: #888;
+}
+
+#calendar-next:HOVER {
+	background: #eee;
+	color: #000;
+}
+
+#calendar-next a {
+	display: block;
+	padding-top: 15px;
+	padding-bottom: 15px;
+	text-decoration: none;
+	color: inherit;
 }
 
 /*

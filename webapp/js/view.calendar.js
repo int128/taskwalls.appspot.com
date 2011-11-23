@@ -56,6 +56,7 @@ UICalendar.prototype.setTasklists = function (tasklists) {
  * @param {Number} time date to extend
  */
 UICalendar.prototype.extend = function (time) {
+	var context = this;
 	var date = new Date(time);
 	date.setHours(0, 0, 0, 0);
 	if (date < this.earliest) {
@@ -65,11 +66,20 @@ UICalendar.prototype.extend = function (time) {
 		}
 	}
 	else if (date > this.latest) {
-		while (this.latest <= date) {
+		while (this.latest < date) {
 			this.latest = new Date(this.latest.getTime() + 86400000);
 			$('#calendar>tbody').append(this.createDateRow(this.latest));
 		}
 	}
+	// next month link
+	var next = $.resource('calendar-next-template');
+	$('.year', next).text(this.latest.getFullYear());
+	$('.month', next).text(this.latest.getMonth() + 1);
+	$('a', next).click(function () {
+		context.extendMonth(context.latest.getTime());
+		return false;
+	});
+	$('#calendar-next').empty().append(next);
 };
 /**
  * Extend rows of the calendar.
