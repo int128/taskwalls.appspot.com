@@ -39,7 +39,7 @@ Tasklists.get = function (callback) {
 		 */
 		error: function (xhr, status, error) {
 			var response = $.parseJSON(localStorage.getItem('Tasklists.get'));
-			if ($.isArray(response.items)) {
+			if (response && $.isArray(response.items)) {
 				callback(Tasklists.createFromJson(response.items));
 			}
 			else {
@@ -133,7 +133,7 @@ Tasks.get = function (tasklistID, callback) {
 		 */
 		error: function (xhr, status, error) {
 			var response = $.parseJSON(localStorage['Tasks.get.' + tasklistID]);
-			if ($.isArray(response.items)) {
+			if (response && $.isArray(response.items)) {
 				callback(Tasks.createFromJson(response.items));
 			}
 			else {
