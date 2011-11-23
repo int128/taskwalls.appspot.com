@@ -31,6 +31,7 @@ $(function () {
 			$('#loading').hide();
 			$('#global-error-message').fadeIn();
 		}
+		_window_onerror_handling = false;
 	};
 	$('#global-error-message').click(function () {
 		$(this).fadeOut();
