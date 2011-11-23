@@ -21,93 +21,7 @@ $(function () {
 		}
 	});
 });
-// session
-/**
- * @class OAuth 2.0 session controller.
- */
-function OAuth2Session () {
-	this.clientId = '965159379100.apps.googleusercontent.com';
-};
-/**
- * Handle current request.
- */
-OAuth2Session.prototype.handle = function () {
-	var authorizationCodeMatch = location.search.match(/\?code=(.*)/);
-	if (authorizationCodeMatch) {
-		// step2: received authorization code
-		this.onAuthorizing();
-		$.post('/oauth2', {code: authorizationCodeMatch[1]}, function () {
-			location.replace(location.pathname);
-		});
-		return;
-	}
-	var authorizationErrorMatch = location.search.match(/\?error=/);
-	if (authorizationErrorMatch) {
-		// step2-1: authorization error
-		location.replace(location.pathname);
-		return;
-	}
-	if ($.cookie('s')) {
-		// step3: authorized
-		this.onAuthorized();
-		return;
-	}
-	else {
-		// step1: unauthorized
-		this.onUnauthorized();
-		return;
-	}
-};
-/**
- * Get the login URL.
- * @returns {String} URL
- */
-OAuth2Session.prototype.getLoginURL = function () {
-	return 'https://accounts.google.com/o/oauth2/auth'
-		+ '?redirect_uri=' + (location.protocol + '//' + location.host + location.pathname)
-		+ '&response_type=code'
-		+ '&scope=https://www.googleapis.com/auth/tasks'
-		+ '&access_type=offline'
-		+ '&client_id=' + this.clientId;
-};
-/**
- * Authorize.
- */
-OAuth2Session.prototype.authorize = function () {
-	$('#global-error-message').hide();
-	location.replace(this.getLoginURL());
-};
-/**
- * Event handler for authorization in progress.
- */
-OAuth2Session.prototype.onAuthorizing = function () {};
-/**
- * Event handler on authorized.
- */
-OAuth2Session.prototype.onAuthorized = function () {
-	/**
-	 * Add token to request header.
-	 * @param {XMLHttpRequest} xhr
-	 */
-	$(document).ajaxSend(function (event, xhr) {
-		xhr.setRequestHeader('X-TaskWall-Session', $.cookie('s'));
-	});
-	// initilize page
-	new UIPage();
-	$('.authorized').hide().show();
-};
-/**
- * Event handler for unauthorized.
- */
-OAuth2Session.prototype.onUnauthorized = function () {
-	$('a.session-login').button();
-	$('.unauthorized').hide().show();
-};
-/**
- * Current session.
- */
-var currentOAuth2Session = new OAuth2Session();
-// controller
+// front controller
 $(function () {
 	// global error handler
 	var _window_onerror_handling = false;
@@ -134,13 +48,25 @@ $(function () {
 	if ($.isDevelopment()) {
 		$('.development').hide().show();
 	}
-	// OAuth session
+	// start session
+	currentOAuth2Session = new OAuth2Session();
+	currentOAuth2Session.onAuthorized = function () {
+		new UIPage();
+		$('a.session-logout').attr('href', '/logout');
+		$('.authorized').hide().show();
+	};
+	currentOAuth2Session.onUnauthorized = function () {
+		$('a.session-login').attr('href', currentOAuth2Session.getLoginURL()).button();
+		$('.unauthorized').hide().show();
+	};
 	currentOAuth2Session.handle();
-	$('a.session-login').attr('href', currentOAuth2Session.getLoginURL());
-	$('a.session-logout').attr('href', '/logout');
 });
 /**
- * @class constants
+ * Current session.
+ */
+var currentOAuth2Session;
+/**
+ * Constants.
  */
 var Constants = {
 	tasklistColors: 24,
@@ -156,8 +82,3 @@ var Constants = {
 		return IDs;
 	}
 };
-
-
-
-
-
