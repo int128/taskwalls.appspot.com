@@ -21,7 +21,7 @@ import com.google.api.client.googleapis.auth.oauth2.draft10.GoogleAccessTokenReq
 import com.google.api.client.http.HttpResponseException;
 import com.google.api.client.http.HttpTransport;
 import com.google.api.client.json.GenericJson;
-import com.google.api.client.json.jackson.JacksonFactory;
+import com.google.api.client.json.JsonFactory;
 import com.google.api.services.tasks.Tasks;
 import com.google.appengine.api.memcache.Expiration;
 
@@ -60,7 +60,7 @@ public abstract class ControllerBase extends Controller
 			return forward("/errors/noSession");
 		}
 		HttpTransport httpTransport = NetHttpTransportLocator.get();
-		JacksonFactory jsonFactory = JacksonFactoryLocator.get();
+		JsonFactory jsonFactory = JacksonFactoryLocator.get();
 		GoogleAccessProtectedResource resource = new GoogleAccessProtectedResource(
 				token.getAccessToken(),
 				httpTransport,
