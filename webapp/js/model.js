@@ -85,6 +85,26 @@ function Tasklist (json) {
 	}
 }
 /**
+ * Clear completed tasks in the tasklist.
+ * @param {Function} success
+ * @param {Function} error
+ */
+Tasklist.prototype.clearCompleted = function (success, error) {
+	$.ajax({
+		url: '/tasks/v1/users/' + this.id + '/lists',
+		type: 'POST',
+		/**
+		 * @param {XMLHttpRequest} xhr
+		 */
+		beforeSend: function (xhr) {
+			xhr.setRequestHeader('X-HTTP-Method-Override', 'POST');
+		},
+		dataType: 'json',
+		success: success,
+		error: error
+	});
+};
+/**
  * Constructor.
  * @class represents tasks model
  * @param {Array} items array of {@link Task}

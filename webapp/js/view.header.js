@@ -20,6 +20,21 @@ function UIHeader (page) {
 		new UINewTasklist().open(page.tasklists);
 		return false;
 	});
+	$('.clear-complete-tasks', this.element).click(function () {
+		/**
+		 * @param {UITasklist} uiTasklist
+		 */
+		$.each(page.tasklists.getItems(), function (i, uiTasklist) {
+			var elements = uiTasklist.getCompletedTasks();
+			elements.addClass('ajax-in-progress');
+			uiTasklist.getTasklist().clearCompleted(function () {
+				elements.remove();
+			}, function () {
+				elements.removeClass('ajax-in-progress');
+			});
+		});
+		return false;
+	});
 };
 /**
  * @class UI element of {@link Tasklists}.
@@ -31,6 +46,7 @@ function UITasklists () {
  * Clear tasklists.
  */
 UITasklists.prototype.clear = function () {
+	this.items = [];
 	$('#tasklists').empty();
 };
 /**
@@ -38,7 +54,15 @@ UITasklists.prototype.clear = function () {
  * @param {UITasklist} uiTasklist
  */
 UITasklists.prototype.add = function (uiTasklist) {
+	this.items.push(uiTasklist);
 	$('#tasklists').append(uiTasklist.getElement());
+};
+/**
+ * Get tasklists.
+ * @returns {Array} array of {@link UITasklist}.
+ */
+UITasklists.prototype.getItems = function () {
+	return this.items;
 };
 /**
  * UI element of the tasklist.
@@ -115,6 +139,13 @@ UITasklist.prototype.toggle = function () {
 	else {
 		$('.tasklist-' + this.tasklist.id).fadeIn();
 	}
+};
+/**
+ * Get elements of completed tasks in the tasklist.
+ * @returns {jQuery}
+ */
+UITasklist.prototype.getCompletedTasks = function () {
+	return $('.task-status-completed.tasklist-' + this.tasklist.id);
 };
 /**
  * Remove the tasklist and its tasks.
