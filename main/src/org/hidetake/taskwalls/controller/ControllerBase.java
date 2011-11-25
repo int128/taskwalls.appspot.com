@@ -15,7 +15,6 @@ import org.hidetake.taskwalls.service.oauth2.NetHttpTransportLocator;
 import org.hidetake.taskwalls.util.GenericJsonWrapper;
 import org.slim3.controller.Controller;
 import org.slim3.controller.Navigation;
-import org.slim3.memcache.Memcache;
 
 import com.google.api.client.auth.oauth2.draft10.AccessTokenRequest.RefreshTokenGrant;
 import com.google.api.client.auth.oauth2.draft10.AccessTokenResponse;
@@ -26,7 +25,6 @@ import com.google.api.client.http.HttpTransport;
 import com.google.api.client.json.GenericJson;
 import com.google.api.client.json.JsonFactory;
 import com.google.api.services.tasks.Tasks;
-import com.google.appengine.api.memcache.Expiration;
 
 /**
  * Base controller class that depends on Google Tasks API.
@@ -84,12 +82,12 @@ public abstract class ControllerBase extends Controller
 						token.getRefreshToken());
 				AccessTokenResponse tokenResponse = execute(grant);
 				Date expire = new Date(System.currentTimeMillis() + tokenResponse.expiresIn * 1000L);
-				CachedToken refreshedToken = new CachedToken(
+				CachedToken newToken = new CachedToken(
 						tokenResponse.accessToken,
 						token.getRefreshToken(),
 						expire);
-				Memcache.put(sessionKey, refreshedToken,
-						Expiration.byDeltaSeconds(Constants.sessionExpiration));
+				session.setToken(newToken);
+				SessionService.put(session);
 				resource.setAccessToken(tokenResponse.accessToken);
 			}
 			catch (IOException e) {
