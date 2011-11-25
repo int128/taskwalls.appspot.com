@@ -88,7 +88,7 @@ function Tasklist (json) {
  */
 Tasklist.prototype.clearCompleted = function (success, error) {
 	$.ajax({
-		url: '/tasks/v1/users/' + this.id + '/lists',
+		url: '/tasks/v1/lists/' + this.id + '/clear',
 		type: 'POST',
 		/**
 		 * @param {XMLHttpRequest} xhr
