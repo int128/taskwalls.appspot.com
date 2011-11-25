@@ -65,8 +65,8 @@ public abstract class ControllerBase extends Controller
 				token.getAccessToken(),
 				httpTransport,
 				jsonFactory,
-				Constants.clientCredential.getClientId(),
-				Constants.clientCredential.getClientSecret(),
+				AppCredential.clientCredential.getClientId(),
+				AppCredential.clientCredential.getClientSecret(),
 				token.getRefreshToken());
 
 		// refresh the token if expires
@@ -75,8 +75,8 @@ public abstract class ControllerBase extends Controller
 				GoogleRefreshTokenGrant grant = new GoogleRefreshTokenGrant(
 						httpTransport,
 						jsonFactory,
-						Constants.clientCredential.getClientId(),
-						Constants.clientCredential.getClientSecret(),
+						AppCredential.clientCredential.getClientId(),
+						AppCredential.clientCredential.getClientSecret(),
 						token.getRefreshToken());
 				AccessTokenResponse tokenResponse = execute(grant);
 				Date expire = new Date(System.currentTimeMillis() + tokenResponse.expiresIn * 1000L);
@@ -85,7 +85,7 @@ public abstract class ControllerBase extends Controller
 						token.getRefreshToken(),
 						expire);
 				Memcache.put(sessionKey, refreshedToken,
-						Expiration.byDeltaSeconds(Constants.sessionExpiration));
+						Expiration.byDeltaSeconds(AppCredential.sessionExpiration));
 				resource.setAccessToken(tokenResponse.accessToken);
 			}
 			catch (IOException e) {
@@ -94,7 +94,7 @@ public abstract class ControllerBase extends Controller
 
 			// extends cookie expiration
 			Cookie cookie = new Cookie(Oauth2Controller.COOKIE_SESSIONID, sessionKey);
-			cookie.setMaxAge(Constants.sessionExpiration);
+			cookie.setMaxAge(AppCredential.sessionExpiration);
 			response.addCookie(cookie);
 		}
 

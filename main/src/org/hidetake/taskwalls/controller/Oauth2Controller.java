@@ -53,8 +53,8 @@ public class Oauth2Controller extends Controller
 		GoogleAuthorizationCodeGrant grant = new GoogleAuthorizationCodeGrant(
 				NetHttpTransportLocator.get(),
 				JacksonFactoryLocator.get(),
-				Constants.clientCredential.getClientId(),
-				Constants.clientCredential.getClientSecret(),
+				AppCredential.clientCredential.getClientId(),
+				AppCredential.clientCredential.getClientSecret(),
 				authorizationCode,
 				redirectURI);
 		AccessTokenResponse tokenResponse = execute(grant);
@@ -68,8 +68,8 @@ public class Oauth2Controller extends Controller
 		MessageDigest digest = MessageDigest.getInstance("SHA-256");
 		digest.reset();
 		digest.update(UUID.randomUUID().toString().getBytes());
-		digest.update(Constants.clientCredential.getClientId().getBytes());
-		digest.update(Constants.clientCredential.getClientSecret().getBytes());
+		digest.update(AppCredential.clientCredential.getClientId().getBytes());
+		digest.update(AppCredential.clientCredential.getClientSecret().getBytes());
 		digest.update(authorizationCode.getBytes());
 		digest.update(token.getAccessToken().getBytes());
 		digest.update(token.getRefreshToken().getBytes());
@@ -78,11 +78,11 @@ public class Oauth2Controller extends Controller
 			sessionKeyBuilder.append(Integer.toHexString(b & 0xff));
 		}
 		String sessionKey = sessionKeyBuilder.toString();
-		Memcache.put(sessionKey, token, Expiration.byDeltaSeconds(Constants.sessionExpiration));
+		Memcache.put(sessionKey, token, Expiration.byDeltaSeconds(AppCredential.sessionExpiration));
 
 		// create session cookie
 		Cookie cookie = new Cookie(Oauth2Controller.COOKIE_SESSIONID, sessionKey);
-		cookie.setMaxAge(Constants.sessionExpiration);
+		cookie.setMaxAge(AppCredential.sessionExpiration);
 		response.addCookie(cookie);
 		return null;
 	}
