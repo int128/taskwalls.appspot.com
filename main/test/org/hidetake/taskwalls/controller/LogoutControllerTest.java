@@ -6,6 +6,7 @@ import javax.servlet.http.Cookie;
 
 import org.slim3.memcache.Memcache;
 import org.slim3.tester.ControllerTestCase;
+import org.hidetake.taskwalls.Constants;
 import org.hidetake.taskwalls.service.oauth2.CachedToken;
 import org.junit.Test;
 import static org.junit.Assert.*;
@@ -21,7 +22,7 @@ public class LogoutControllerTest extends ControllerTestCase
 		Date expire = new Date(System.currentTimeMillis() + 3600 * 1000L);
 		CachedToken token = new CachedToken("hogeAccess", "hogeRefresh", expire);
 		Memcache.put("hogeSessionKey", token);
-		tester.request.addCookie(new Cookie(Oauth2Controller.COOKIE_SESSIONID, "hogeSessionKey"));
+		tester.request.addCookie(new Cookie(Constants.cookieSessionID, "hogeSessionKey"));
 		tester.start("/logout");
 		LogoutController controller = tester.getController();
 		assertThat(controller, is(notNullValue()));

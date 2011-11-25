@@ -8,6 +8,7 @@ import java.util.logging.Logger;
 
 import javax.servlet.http.Cookie;
 
+import org.hidetake.taskwalls.Constants;
 import org.hidetake.taskwalls.service.oauth2.CachedToken;
 import org.hidetake.taskwalls.service.oauth2.JacksonFactoryLocator;
 import org.hidetake.taskwalls.service.oauth2.NetHttpTransportLocator;
@@ -30,8 +31,6 @@ public class Oauth2Controller extends Controller
 {
 
 	private static final Logger logger = Logger.getLogger(Oauth2Controller.class.getName());
-	// TODO: move to constants class
-	protected static final String COOKIE_SESSIONID = "s";
 
 	@Override
 	public Navigation run() throws Exception
@@ -78,11 +77,11 @@ public class Oauth2Controller extends Controller
 			sessionKeyBuilder.append(Integer.toHexString(b & 0xff));
 		}
 		String sessionKey = sessionKeyBuilder.toString();
-		Memcache.put(sessionKey, token, Expiration.byDeltaSeconds(AppCredential.sessionExpiration));
+		Memcache.put(sessionKey, token, Expiration.byDeltaSeconds(Constants.sessionExpiration));
 
 		// create session cookie
-		Cookie cookie = new Cookie(Oauth2Controller.COOKIE_SESSIONID, sessionKey);
-		cookie.setMaxAge(AppCredential.sessionExpiration);
+		Cookie cookie = new Cookie(Constants.cookieSessionID, sessionKey);
+		cookie.setMaxAge(Constants.sessionExpiration);
 		response.addCookie(cookie);
 		return null;
 	}

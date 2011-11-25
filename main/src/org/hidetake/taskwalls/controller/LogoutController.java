@@ -4,6 +4,7 @@ import java.util.logging.Logger;
 
 import javax.servlet.http.Cookie;
 
+import org.hidetake.taskwalls.Constants;
 import org.hidetake.taskwalls.util.StackTraceUtil;
 import org.slim3.controller.Controller;
 import org.slim3.controller.Navigation;
@@ -27,7 +28,7 @@ public class LogoutController extends Controller
 			String sessionKey = null;
 			for (Cookie cookie : request.getCookies()) {
 				// find session key
-				if (Oauth2Controller.COOKIE_SESSIONID.equals(cookie.getName())) {
+				if (Constants.cookieSessionID.equals(cookie.getName())) {
 					sessionKey = cookie.getValue();
 				}
 				// delete the cookie

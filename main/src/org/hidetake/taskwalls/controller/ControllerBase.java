@@ -6,6 +6,7 @@ import java.util.logging.Logger;
 
 import javax.servlet.http.Cookie;
 
+import org.hidetake.taskwalls.Constants;
 import org.hidetake.taskwalls.service.oauth2.CachedToken;
 import org.hidetake.taskwalls.service.oauth2.JacksonFactoryLocator;
 import org.hidetake.taskwalls.service.oauth2.NetHttpTransportLocator;
@@ -85,7 +86,7 @@ public abstract class ControllerBase extends Controller
 						token.getRefreshToken(),
 						expire);
 				Memcache.put(sessionKey, refreshedToken,
-						Expiration.byDeltaSeconds(AppCredential.sessionExpiration));
+						Expiration.byDeltaSeconds(Constants.sessionExpiration));
 				resource.setAccessToken(tokenResponse.accessToken);
 			}
 			catch (IOException e) {
@@ -93,8 +94,8 @@ public abstract class ControllerBase extends Controller
 			}
 
 			// extends cookie expiration
-			Cookie cookie = new Cookie(Oauth2Controller.COOKIE_SESSIONID, sessionKey);
-			cookie.setMaxAge(AppCredential.sessionExpiration);
+			Cookie cookie = new Cookie(Constants.cookieSessionID, sessionKey);
+			cookie.setMaxAge(Constants.sessionExpiration);
 			response.addCookie(cookie);
 		}
 
