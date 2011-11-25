@@ -27,9 +27,6 @@ Tasklists.get = function (callback) {
 				localStorage.setItem('Tasklists.get', xhr.responseText);
 				callback(Tasklists.createFromJson(response.items));
 			}
-			else {
-				throw new Error('invalid JSON response of tasklists');
-			}
 		},
 		/**
 		 * Offline handler.
@@ -137,9 +134,6 @@ Tasks.get = function (tasklistID, callback) {
 			if ($.isArray(response.items)) {
 				localStorage['Tasks.get.' + tasklistID] = xhr.responseText;
 				callback(Tasks.createFromJson(response.items));
-			}
-			else {
-				throw new Error('invalid JSON response of tasks');
 			}
 		},
 		/**
