@@ -8,12 +8,10 @@ import static org.hamcrest.CoreMatchers.*;
 public class TasklistOptionsTest extends AppEngineTestCase
 {
 
-	private TasklistOptions model = new TasklistOptions();
-
 	@Test
-	public void test() throws Exception
+	public void createKey() throws Exception
 	{
-		assertThat(model, is(notNullValue()));
+		assertThat(TasklistOptions.createKey("xxx"), is(notNullValue()));
 	}
 
 }
