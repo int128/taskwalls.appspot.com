@@ -7,6 +7,8 @@ import java.util.logging.Logger;
 import javax.servlet.http.Cookie;
 
 import org.hidetake.taskwalls.Constants;
+import org.hidetake.taskwalls.model.Session;
+import org.hidetake.taskwalls.service.SessionService;
 import org.hidetake.taskwalls.service.oauth2.CachedToken;
 import org.hidetake.taskwalls.service.oauth2.JacksonFactoryLocator;
 import org.hidetake.taskwalls.service.oauth2.NetHttpTransportLocator;
@@ -53,13 +55,14 @@ public abstract class ControllerBase extends Controller
 	{
 		sessionKey = request.getHeader(HEADER_SESSIONID);
 		if (sessionKey == null) {
-			return forward("/errors/noSession");
+			return forward("/errors/preconditionFailed");
 		}
 
-		CachedToken token = Memcache.get(sessionKey);
-		if (token == null) {
+		Session session = SessionService.get(sessionKey);
+		if (session == null) {
 			return forward("/errors/noSession");
 		}
+		CachedToken token = session.getToken();
 		HttpTransport httpTransport = NetHttpTransportLocator.get();
 		JsonFactory jsonFactory = JacksonFactoryLocator.get();
 		GoogleAccessProtectedResource resource = new GoogleAccessProtectedResource(

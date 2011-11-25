@@ -9,19 +9,19 @@ import java.util.logging.Logger;
 import javax.servlet.http.Cookie;
 
 import org.hidetake.taskwalls.Constants;
+import org.hidetake.taskwalls.model.Session;
+import org.hidetake.taskwalls.service.SessionService;
 import org.hidetake.taskwalls.service.oauth2.CachedToken;
 import org.hidetake.taskwalls.service.oauth2.JacksonFactoryLocator;
 import org.hidetake.taskwalls.service.oauth2.NetHttpTransportLocator;
 import org.hidetake.taskwalls.util.AjaxPreconditions;
 import org.slim3.controller.Controller;
 import org.slim3.controller.Navigation;
-import org.slim3.memcache.Memcache;
 
 import com.google.api.client.auth.oauth2.draft10.AccessTokenRequest.AuthorizationCodeGrant;
 import com.google.api.client.auth.oauth2.draft10.AccessTokenResponse;
 import com.google.api.client.googleapis.auth.oauth2.draft10.GoogleAccessTokenRequest.GoogleAuthorizationCodeGrant;
 import com.google.api.client.http.HttpResponseException;
-import com.google.appengine.api.memcache.Expiration;
 
 /**
  * Authorize and begin session.
@@ -72,15 +72,19 @@ public class Oauth2Controller extends Controller
 		digest.update(authorizationCode.getBytes());
 		digest.update(token.getAccessToken().getBytes());
 		digest.update(token.getRefreshToken().getBytes());
-		StringBuilder sessionKeyBuilder = new StringBuilder();
+		StringBuilder sessionIDBuilder = new StringBuilder();
 		for (byte b : digest.digest()) {
-			sessionKeyBuilder.append(Integer.toHexString(b & 0xff));
+			sessionIDBuilder.append(Integer.toHexString(b & 0xff));
 		}
-		String sessionKey = sessionKeyBuilder.toString();
-		Memcache.put(sessionKey, token, Expiration.byDeltaSeconds(Constants.sessionExpiration));
+		String sessionID = sessionIDBuilder.toString();
+
+		Session session = new Session();
+		session.setKey(Session.createKey(sessionID));
+		session.setToken(token);
+		SessionService.put(session);
 
 		// create session cookie
-		Cookie cookie = new Cookie(Constants.cookieSessionID, sessionKey);
+		Cookie cookie = new Cookie(Constants.cookieSessionID, sessionID);
 		cookie.setMaxAge(Constants.sessionExpiration);
 		response.addCookie(cookie);
 		return null;
