@@ -17,4 +17,9 @@ public class Constants
 	 */
 	public static final String cookieSessionID = "s";
 
+	/**
+	 * Header key of the session ID.
+	 */
+	public static final String headerSessionID = "X-TaskWall-Session";
+
 }

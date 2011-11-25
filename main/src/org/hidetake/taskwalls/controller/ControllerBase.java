@@ -33,14 +33,7 @@ import com.google.api.services.tasks.Tasks;
 public abstract class ControllerBase extends Controller
 {
 
-	private static final String HEADER_SESSIONID = "X-TaskWall-Session";
 	private static final Logger logger = Logger.getLogger(ControllerBase.class.getName());
-
-	/**
-	 * Session key.
-	 * This field must be initialized at {@link #setUp()}.
-	 */
-	protected String sessionKey;
 
 	/**
 	 * Tasks API service.
@@ -51,27 +44,19 @@ public abstract class ControllerBase extends Controller
 	@Override
 	protected Navigation setUp()
 	{
-		sessionKey = request.getHeader(HEADER_SESSIONID);
-		if (sessionKey == null) {
+		String sessionID = request.getHeader(Constants.headerSessionID);
+		if (sessionID == null) {
 			return forward("/errors/preconditionFailed");
 		}
-
-		Session session = SessionService.get(sessionKey);
+		Session session = SessionService.get(sessionID);
 		if (session == null) {
 			return forward("/errors/noSession");
 		}
-		CachedToken token = session.getToken();
 		HttpTransport httpTransport = NetHttpTransportLocator.get();
 		JsonFactory jsonFactory = JacksonFactoryLocator.get();
-		GoogleAccessProtectedResource resource = new GoogleAccessProtectedResource(
-				token.getAccessToken(),
-				httpTransport,
-				jsonFactory,
-				AppCredential.clientCredential.getClientId(),
-				AppCredential.clientCredential.getClientSecret(),
-				token.getRefreshToken());
 
 		// refresh the token if expires
+		CachedToken token = session.getToken();
 		if (new Date().after(token.getExpire())) {
 			try {
 				GoogleRefreshTokenGrant grant = new GoogleRefreshTokenGrant(
@@ -88,18 +73,26 @@ public abstract class ControllerBase extends Controller
 						expire);
 				session.setToken(newToken);
 				SessionService.put(session);
-				resource.setAccessToken(tokenResponse.accessToken);
+				// alter the token
+				token = newToken;
 			}
 			catch (IOException e) {
 				return forward("/errors/noSession");
 			}
 
 			// extends cookie expiration
-			Cookie cookie = new Cookie(Constants.cookieSessionID, sessionKey);
+			Cookie cookie = new Cookie(Constants.cookieSessionID, sessionID);
 			cookie.setMaxAge(Constants.sessionExpiration);
 			response.addCookie(cookie);
 		}
 
+		GoogleAccessProtectedResource resource = new GoogleAccessProtectedResource(
+				token.getAccessToken(),
+				httpTransport,
+				jsonFactory,
+				AppCredential.clientCredential.getClientId(),
+				AppCredential.clientCredential.getClientSecret(),
+				token.getRefreshToken());
 		tasksService = new Tasks(httpTransport, resource, jsonFactory);
 		return null;
 	}

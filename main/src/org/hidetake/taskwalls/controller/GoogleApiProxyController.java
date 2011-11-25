@@ -4,13 +4,15 @@ import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
 import java.util.logging.Logger;
 
+import org.hidetake.taskwalls.Constants;
+import org.hidetake.taskwalls.model.Session;
+import org.hidetake.taskwalls.service.SessionService;
 import org.hidetake.taskwalls.service.oauth2.CachedToken;
 import org.hidetake.taskwalls.service.oauth2.JacksonFactoryLocator;
 import org.hidetake.taskwalls.service.oauth2.NetHttpTransportLocator;
 import org.hidetake.taskwalls.util.AjaxPreconditions;
 import org.slim3.controller.Navigation;
 import org.slim3.controller.validator.Validators;
-import org.slim3.memcache.Memcache;
 
 import com.google.api.client.googleapis.auth.oauth2.draft10.GoogleAccessProtectedResource;
 import com.google.api.client.http.GenericUrl;
@@ -52,11 +54,13 @@ public class GoogleApiProxyController extends ControllerBase
 			logger.warning("invalid method: " + request.getHeader("X-HTTP-Method-Override"));
 			return forward("/errors/preconditionFailed");
 		}
-
-		// make a request
 		HttpTransport httpTransport = NetHttpTransportLocator.get();
 		JsonFactory jsonFactory = JacksonFactoryLocator.get();
-		CachedToken token = Memcache.get(sessionKey);
+
+		// make a request
+		String sessionID = request.getHeader(Constants.headerSessionID);
+		Session session = SessionService.get(sessionID);
+		CachedToken token = session.getToken();
 		GoogleAccessProtectedResource resource = new GoogleAccessProtectedResource(
 				token.getAccessToken(),
 				httpTransport,
