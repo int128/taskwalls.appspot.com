@@ -72,4 +72,20 @@ public class SessionServiceTest extends AppEngineTestCase
 		assertThat(stored.getToken().getExpire().getTime(), is(now));
 	}
 
+	@Test
+	public void delete() throws Exception
+	{
+		Session session = new Session();
+		session.setKey(Session.createKey("hogeSession"));
+		session.setToken(new CachedToken("accessToken", "refreshToken", new Date()));
+		// wait for complete
+		Future<Key> future = SessionService.put(session);
+		future.get();
+		assertThat(tester.count(Session.class), is(1));
+		assertThat(Memcache.statistics().getItemCount(), is(1L));
+		SessionService.delete("hogeSession");
+		assertThat(tester.count(Session.class), is(0));
+		assertThat(Memcache.statistics().getItemCount(), is(0L));
+	}
+
 }

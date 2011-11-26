@@ -63,4 +63,18 @@ public class SessionService
 		return stored;
 	}
 
+	/**
+	 * Delete the session.
+	 * @param sessionID
+	 */
+	public static void delete(String sessionID)
+	{
+		if (sessionID == null) {
+			throw new NullPointerException("sessionID is null");
+		}
+		Key key = Session.createKey(sessionID);
+		Memcache.delete(key);
+		Datastore.delete(key);
+	}
+
 }
