@@ -5,10 +5,10 @@ import java.util.logging.Logger;
 import javax.servlet.http.Cookie;
 
 import org.hidetake.taskwalls.Constants;
+import org.hidetake.taskwalls.service.SessionService;
 import org.hidetake.taskwalls.util.StackTraceUtil;
 import org.slim3.controller.Controller;
 import org.slim3.controller.Navigation;
-import org.slim3.memcache.Memcache;
 
 /**
  * Logout current session.
@@ -25,19 +25,15 @@ public class LogoutController extends Controller
 	public Navigation run() throws Exception
 	{
 		if (request.getCookies() != null) {
-			String sessionKey = null;
 			for (Cookie cookie : request.getCookies()) {
-				// find session key
 				if (Constants.cookieSessionID.equals(cookie.getName())) {
-					sessionKey = cookie.getValue();
+					// delete the session
+					String sessionID = cookie.getValue();
+					SessionService.delete(sessionID);
 				}
 				// delete the cookie
 				cookie.setMaxAge(0);
 				response.addCookie(cookie);
-			}
-			if (sessionKey != null) {
-				// delete the session
-				Memcache.delete(sessionKey);
 			}
 		}
 		return redirect("/");
