@@ -4,7 +4,7 @@ import java.util.Date;
 
 import javax.servlet.http.Cookie;
 
-import org.hidetake.taskwalls.service.oauth2.CachedToken;
+import org.hidetake.taskwalls.model.oauth2.CachedToken;
 import org.slim3.memcache.Memcache;
 import org.slim3.tester.ControllerTester;
 

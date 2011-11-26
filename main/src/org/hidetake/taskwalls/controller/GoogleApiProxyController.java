@@ -6,11 +6,11 @@ import java.util.logging.Logger;
 
 import org.hidetake.taskwalls.Constants;
 import org.hidetake.taskwalls.model.Session;
+import org.hidetake.taskwalls.model.oauth2.CachedToken;
 import org.hidetake.taskwalls.service.SessionService;
-import org.hidetake.taskwalls.service.oauth2.CachedToken;
-import org.hidetake.taskwalls.service.oauth2.JacksonFactoryLocator;
-import org.hidetake.taskwalls.service.oauth2.NetHttpTransportLocator;
 import org.hidetake.taskwalls.util.AjaxPreconditions;
+import org.hidetake.taskwalls.util.googleapis.JacksonFactoryLocator;
+import org.hidetake.taskwalls.util.googleapis.NetHttpTransportLocator;
 import org.slim3.controller.Navigation;
 import org.slim3.controller.validator.Validators;
 

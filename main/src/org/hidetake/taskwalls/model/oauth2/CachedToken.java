@@ -1,4 +1,4 @@
-package org.hidetake.taskwalls.service.oauth2;
+package org.hidetake.taskwalls.model.oauth2;
 
 import java.io.Serializable;
 import java.util.Date;

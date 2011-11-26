@@ -1,4 +1,4 @@
-package org.hidetake.taskwalls.service.oauth2;
+package org.hidetake.taskwalls.util.googleapis;
 
 import com.google.api.client.http.javanet.NetHttpTransport;
 

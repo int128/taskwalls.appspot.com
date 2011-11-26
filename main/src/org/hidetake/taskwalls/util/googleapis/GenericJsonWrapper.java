@@ -1,4 +1,4 @@
-package org.hidetake.taskwalls.util;
+package org.hidetake.taskwalls.util.googleapis;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;

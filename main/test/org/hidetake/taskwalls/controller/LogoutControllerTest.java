@@ -7,7 +7,7 @@ import javax.servlet.http.Cookie;
 import org.slim3.memcache.Memcache;
 import org.slim3.tester.ControllerTestCase;
 import org.hidetake.taskwalls.Constants;
-import org.hidetake.taskwalls.service.oauth2.CachedToken;
+import org.hidetake.taskwalls.model.oauth2.CachedToken;
 import org.junit.Test;
 import static org.junit.Assert.*;
 

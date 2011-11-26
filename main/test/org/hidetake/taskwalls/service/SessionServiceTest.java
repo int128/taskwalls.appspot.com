@@ -4,7 +4,7 @@ import java.util.Date;
 import java.util.concurrent.Future;
 
 import org.hidetake.taskwalls.model.Session;
-import org.hidetake.taskwalls.service.oauth2.CachedToken;
+import org.hidetake.taskwalls.model.oauth2.CachedToken;
 import org.junit.Test;
 import org.slim3.memcache.Memcache;
 import org.slim3.tester.AppEngineTestCase;

@@ -1,4 +1,4 @@
-package org.hidetake.taskwalls.service.oauth2;
+package org.hidetake.taskwalls.model.oauth2;
 
 /**
  * Represents an identifier for OAuth2 clients.

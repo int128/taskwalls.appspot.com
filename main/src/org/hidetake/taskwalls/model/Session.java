@@ -4,7 +4,7 @@ import java.io.Serializable;
 
 import com.google.appengine.api.datastore.Key;
 
-import org.hidetake.taskwalls.service.oauth2.CachedToken;
+import org.hidetake.taskwalls.model.oauth2.CachedToken;
 import org.slim3.datastore.Attribute;
 import org.slim3.datastore.Datastore;
 import org.slim3.datastore.Model;
