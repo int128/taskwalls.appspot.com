@@ -94,6 +94,7 @@ public abstract class ControllerBase extends Controller
 				AppCredential.clientCredential.getClientSecret(),
 				token.getRefreshToken());
 		tasksService = new Tasks(httpTransport, resource, jsonFactory);
+		tasksService.setUserIp(request.getRemoteAddr());
 		return null;
 	}
 
