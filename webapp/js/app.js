@@ -79,13 +79,13 @@ $(function () {
 		localStorage.clear();
 	};
 	currentOAuth2Session.onUnauthorized = function () {
-		$('a.session-login').attr('href', currentOAuth2Session.getLoginURL()).button();
+		$('a.session-login').attr('href', currentOAuth2Session.getAuthorizationURL()).button();
 		$('.unauthorized').hide().show();
 	};
 	currentOAuth2Session.handle();
 });
 /**
- * Current {@link OAuth2Session}.
+ * @type OAuth2Session
  */
 var currentOAuth2Session;
 /**

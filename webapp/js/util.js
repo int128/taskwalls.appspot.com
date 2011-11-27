@@ -197,7 +197,7 @@ OAuth2Session.prototype.handle = function () {
 	var authorizationErrorMatch = location.search.match(/\?error=/);
 	if (authorizationErrorMatch) {
 		// step2-1: authorization error
-		location.replace(location.pathname);
+		location.replace('/logout');
 		return;
 	}
 	if ($.cookie('s')) {
@@ -228,10 +228,10 @@ OAuth2Session.prototype.handle = function () {
 	}
 };
 /**
- * Get the login URL.
+ * Get the authorization URL.
  * @returns {String} URL
  */
-OAuth2Session.prototype.getLoginURL = function () {
+OAuth2Session.prototype.getAuthorizationURL = function () {
 	return 'https://accounts.google.com/o/oauth2/auth'
 		+ '?redirect_uri=' + (location.protocol + '//' + location.host + location.pathname)
 		+ '&response_type=code'
@@ -244,7 +244,7 @@ OAuth2Session.prototype.getLoginURL = function () {
  */
 OAuth2Session.prototype.authorize = function () {
 	$('#global-error-message').hide();
-	location.replace(this.getLoginURL());
+	location.replace(this.getAuthorizationURL());
 };
 /**
  * Event handler for authorization in progress.
