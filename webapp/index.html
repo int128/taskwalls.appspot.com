@@ -99,24 +99,30 @@ Task Wall service<br/>
 <div id="update-task-title-template" class="update-task-title resource">
 <form action="/tasks/update/title" method="post">
 <div><textarea name="title"></textarea></div>
-<div><input type="hidden" name="id" /></div>
-<div><input type="hidden" name="tasklistID" /></div>
+<div>
+<input type="hidden" name="id" />
+<input type="hidden" name="tasklistID" />
+</div>
 </form>
 </div>
 
 <div id="update-task-due-template" class="update-task-due resource">
 <form action="/tasks/update/dueTime" method="post">
-<div><input type="hidden" name="id" /></div>
-<div><input type="hidden" name="tasklistID" /></div>
-<div><input type="hidden" name="dueTime" /></div>
+<div>
+<input type="hidden" name="id" />
+<input type="hidden" name="tasklistID" />
+<input type="hidden" name="dueTime" />
+</div>
 </form>
 </div>
 
 <div id="update-task-status-template" class="update-task-status resource">
 <form action="/tasks/update/status" method="post">
-<div><input type="hidden" name="id" /></div>
-<div><input type="hidden" name="tasklistID" /></div>
-<div><input type="hidden" name="statusIsCompleted" /></div>
+<div>
+<input type="hidden" name="id" />
+<input type="hidden" name="tasklistID" />
+<input type="hidden" name="statusIsCompleted" />
+</div>
 </form>
 </div>
 
@@ -138,24 +144,28 @@ Task Wall service<br/>
 <div class="due-none">期限なし</div>
 <div><input type="text" name="title" /></div>
 <div><textarea name="notes"></textarea></div>
-<div><input type="hidden" name="dueTime" /></div>
-<div><input type="hidden" name="id" /></div>
-<div><input type="hidden" name="tasklistID" /></div>
 <div><button>タスクを更新</button></div>
+<div>
+<input type="hidden" name="dueTime" />
+<input type="hidden" name="id" />
+<input type="hidden" name="tasklistID" />
+</div>
 </form>
 <div class="datepicker"></div>
 <form class="move" action="/tasks/update/tasklist" method="post">
-<div><input type="hidden" name="id" /></div>
-<div><input type="hidden" name="tasklistID" /></div>
 <div class="tasklists selection"></div>
 <div><button>別のタスクリストに移動</button></div>
+<div>
+<input type="hidden" name="id" />
+<input type="hidden" name="tasklistID" />
+</div>
 </form>
 <form class="delete" action="/tasks/delete" method="post">
-<div><input type="hidden" name="id" /></div>
-<div><input type="hidden" name="tasklistID" /></div>
 <div><a href="#delete">タスクを削除する...</a></div>
-<div class="confirm">
-<div><button>タスクを削除する</button></div>
+<div class="confirm"><div><button>タスクを削除する</button></div></div>
+<div>
+<input type="hidden" name="id" />
+<input type="hidden" name="tasklistID" />
 </div>
 </form>
 </div>
