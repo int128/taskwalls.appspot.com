@@ -13,34 +13,30 @@ Tasklists.get = function (callback) {
 	if (!$.isFunction(callback)) {
 		throw new Error('callback is not function');
 	}
-	$.ajax({
-		url: '/tasklists/list',
-		dataType: 'json',
-		/**
-		 * Handler.
-		 * @param response
-		 * @param {String} status
-		 * @param {XMLHttpRequest} xhr
-		 */
-		success: function (response, status, xhr) {
-			if ($.isArray(response.items)) {
-				localStorage.setItem('Tasklists.get', xhr.responseText);
-				callback(Tasklists.createFromJson(response.items));
-			}
-		},
-		/**
-		 * Offline handler.
-		 * @param {XMLHttpRequest} xhr
-		 * @param {String} status
-		 * @param {Error} error
-		 */
-		error: function (xhr, status, error) {
-			var response = $.parseJSON(localStorage.getItem('Tasklists.get'));
-			if (response && $.isArray(response.items)) {
-				callback(Tasklists.createFromJson(response.items));
-			}
+	if (AppSettings.isOffline()) {
+		var response = $.parseJSON(localStorage.getItem('Tasklists.get'));
+		if (response && $.isArray(response.items)) {
+			callback(Tasklists.createFromJson(response.items));
 		}
-	});
+	}
+	else {
+		$.ajax({
+			url: '/tasklists/list',
+			dataType: 'json',
+			/**
+			 * Handler.
+			 * @param response
+			 * @param {String} status
+			 * @param {XMLHttpRequest} xhr
+			 */
+			success: function (response, status, xhr) {
+				if ($.isArray(response.items)) {
+					localStorage.setItem('Tasklists.get', xhr.responseText);
+					callback(Tasklists.createFromJson(response.items));
+				}
+			}
+		});
+	}
 };
 /**
  * Create an instance from JSON.
@@ -78,7 +74,7 @@ function Tasklist (json) {
 	// auto generate color ID
 	if (this.colorID == undefined) {
 		var factor = Math.abs(new String(this.id).hashCode());
-		this.colorID = factor % Constants.tasklistColors;
+		this.colorID = factor % AppSettings.tasklistColors;
 	}
 }
 /**
@@ -118,37 +114,33 @@ Tasks.get = function (tasklistID, callback) {
 	if (!$.isFunction(callback)) {
 		throw new Error('callback is not function');
 	}
-	$.ajax({
-		url: '/tasks/list',
-		data: {
-			tasklistID: tasklistID
-		},
-		dataType: 'json',
-		/**
-		 * Handler.
-		 * @param response
-		 * @param {String} status
-		 * @param {XMLHttpRequest} xhr
-		 */
-		success: function (response, status, xhr) {
-			if ($.isArray(response.items)) {
-				localStorage['Tasks.get.' + tasklistID] = xhr.responseText;
-				callback(Tasks.createFromJson(response.items));
-			}
-		},
-		/**
-		 * Offline handler.
-		 * @param {XMLHttpRequest} xhr
-		 * @param {String} status
-		 * @param {Error} error
-		 */
-		error: function (xhr, status, error) {
-			var response = $.parseJSON(localStorage['Tasks.get.' + tasklistID]);
-			if (response && $.isArray(response.items)) {
-				callback(Tasks.createFromJson(response.items));
-			}
+	if (AppSettings.isOffline()) {
+		var response = $.parseJSON(localStorage['Tasks.get.' + tasklistID]);
+		if (response && $.isArray(response.items)) {
+			callback(Tasks.createFromJson(response.items));
 		}
-	});
+	}
+	else {
+		$.ajax({
+			url: '/tasks/list',
+			data: {
+				tasklistID: tasklistID
+			},
+			dataType: 'json',
+			/**
+			 * Handler.
+			 * @param response
+			 * @param {String} status
+			 * @param {XMLHttpRequest} xhr
+			 */
+			success: function (response, status, xhr) {
+				if ($.isArray(response.items)) {
+					localStorage['Tasks.get.' + tasklistID] = xhr.responseText;
+					callback(Tasks.createFromJson(response.items));
+				}
+			}
+		});
+	}
 };
 /**
  * Create an instance from JSON.

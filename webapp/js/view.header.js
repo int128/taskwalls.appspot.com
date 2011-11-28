@@ -247,7 +247,7 @@ UIUpdateTasklist.prototype.open = function (uiTasklist) {
 		.cancel(function () {
 			context.close();
 		});
-	$.each(Constants.tasklistColorIDs(), function (i, colorID) {
+	$.each(AppSettings.tasklistColorIDs(), function (i, colorID) {
 		$('<div class="tasklist-mark"/>')
 			.addClass('tasklistcolor-' + colorID)
 			.data('colorID', colorID)

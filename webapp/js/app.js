@@ -54,18 +54,7 @@ $(function () {
 		$('#session-offline').attr('checked', 'checked');
 	}
 	$('#session-offline').change(function () {
-		if (this.checked) {
-			sessionStorage['session-offline'] = true;
-		}
-		else {
-			sessionStorage.removeItem('session-offline');
-		}
-	});
-	$(document).ajaxSend(function (event, xhr) {
-		if (sessionStorage['session-offline']) {
-			// fail the request intentionally if offline
-			xhr.abort();
-		}
+		AppSettings.setOffline(this.checked);
 	});
 	// start session
 	currentOAuth2Session = new OAuth2Session();
@@ -89,19 +78,38 @@ $(function () {
  */
 var currentOAuth2Session;
 /**
- * Constants.
+ * Application settings.
  */
-var Constants = {
-	tasklistColors: 24,
-	/**
-	 * Generates array of color IDs.
-	 * @returns {Array} array of number
-	 */
-	tasklistColorIDs: function () {
-		var IDs = [];
-		for (var colorID = 0; colorID < this.tasklistColors; colorID++) {
-			IDs.push(colorID);
-		}
-		return IDs;
+function AppSettings () {
+};
+AppSettings.tasklistColors = 24;
+/**
+ * Generates array of color IDs.
+ * @returns {Array} array of number
+ */
+AppSettings.tasklistColorIDs = function () {
+	var IDs = [];
+	for (var colorID = 0; colorID < this.tasklistColors; colorID++) {
+		IDs.push(colorID);
+	}
+	return IDs;
+};
+/**
+ * Is offline mode?
+ * @returns {Boolean}
+ */
+AppSettings.isOffline = function () {
+	return sessionStorage['session-offline'] == 'true';
+};
+/**
+ * Set offline mode.
+ * @param {Boolean} enabled
+ */
+AppSettings.setOffline = function (enabled) {
+	if (enabled) {
+		sessionStorage['session-offline'] = true;
+	}
+	else {
+		sessionStorage.removeItem('session-offline');
 	}
 };
