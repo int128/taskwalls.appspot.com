@@ -1,7 +1,8 @@
 /**
- * @class DateUtil
+ * Date utility.
  */
-var DateUtil = {};
+function DateUtil () {
+};
 /**
  * @param {Date} date
  * @param future
