@@ -226,7 +226,12 @@ UITask.prototype.refresh = function (task) {
 				.error(function () {
 					context.refresh(task);
 				});
-			$('input[name="statusIsCompleted"]', form).val(this.checked);
+			if (this.checked) {
+				$('input[name="status"]', form).val('completed');
+			}
+			else {
+				$('input[name="status"]', form).val('needsAction');
+			}
 			context.enterAjaxInProgress();
 			$(form).submit();
 		});
