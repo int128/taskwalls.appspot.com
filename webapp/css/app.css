@@ -144,7 +144,7 @@ input[type="text"]:HOVER,textarea:HOVER {
  */
 .tasklist-legend {
 	z-index: 500;
-	padding: 5px;
+	overflow-y: hidden;
 	margin-bottom: 5px;
 	border: solid 1px #ddd;
 	border-left: solid 5px #ddd;
@@ -161,21 +161,31 @@ input[type="text"]:HOVER,textarea:HOVER {
 
 .tasklist-legend.hidden {
 	border-left-width: 1px;
-	padding-left: 9px;
+	padding-left: 4px;
+}
+
+.tasklist-legend>.title {
+	padding: 5px;
 }
 
 .tasklist-legend>.toggle {
-	float: left;
-	margin-right: 3px;
-	width: 15px;
-	height: 15px;
-	border: solid 1px #888;
-	border-radius: 3px;
-	-moz-border-radius: 3px;
+	position: absolute;
+	width: 40px;
+	height: 50px;
+}
+
+.tasklist-legend>.toggle>.balloon-tip {
+	position: absolute;
+	left: 100px;
+	min-width: 120px;
 }
 
 .tasklist-legend>.toggle:HOVER {
-	background: #ccc;
+	background: rgba(0, 0, 0, 0.1);
+}
+
+.tasklist-legend>.toggle:HOVER>.balloon-tip {
+	display: block;
 }
 
 /*
@@ -373,21 +383,13 @@ td.task-column {
 	font-size: 30px;
 }
 
-.task-column>.new-task-button>.guide {
-	display: none;
-	z-index: 300;
+.task-column>.new-task-button>.balloon-tip {
 	position: absolute;
 	right: 60px;
 	margin-top: 8px;
-	padding-left: 10px;
-	padding-right: 10px;
-	border-radius: 10px;
-	-moz-border-radius: 10px;
-	background: rgba(0, 0, 0, 0.7);
-	color: #fff;
 }
 
-.task-column>.new-task-button:HOVER>.guide {
+.task-column>.new-task-button:HOVER>.balloon-tip {
 	display: block;
 }
 
@@ -590,6 +592,17 @@ td.task-column {
 	width: 100%;
 	height: 100%;
 	z-index: 300;
+}
+
+.balloon-tip {
+	display: none;
+	z-index: 300;
+	padding-left: 10px;
+	padding-right: 10px;
+	border-radius: 10px;
+	-moz-border-radius: 10px;
+	background: rgba(0, 0, 0, 0.7);
+	color: #fff;
 }
 
 /*
