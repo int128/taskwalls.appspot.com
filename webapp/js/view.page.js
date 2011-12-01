@@ -55,9 +55,12 @@ UIPage.prototype.loadOtherTasks = function (tasklists, defaultTasklistID) {
 					.addClass('tasklistcolor-' + tasklists.getByID(tasklist.id).colorID);
 			}
 			else {
-				context.tasklists.add(new UITasklist(tasklist, false));
+				var uiTasklist = new UITasklist(tasklist, false);
+				context.tasklists.add(uiTasklist);
+				uiTasklist.enterAjax();
 				Tasks.get(tasklist.id, function (tasks) {
 					context.calendar.add(tasks);
+					uiTasklist.leaveAjax();
 				});
 			}
 		});

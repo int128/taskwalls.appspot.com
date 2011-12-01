@@ -146,6 +146,18 @@ UITask.prototype.getElement = function () {
 	return this.element;
 };
 /**
+ * Enter AJAX state.
+ */
+UITask.prototype.enterAjax = function () {
+	this.element.addClass('ajax-in-progress');
+};
+/**
+ * Leave AJAX state.
+ */
+UITask.prototype.leaveAjax = function () {
+	this.element.removeClass('ajax-in-progress');
+};
+/**
  * Get the task.
  */
 UITask.prototype.getTask = function () {
@@ -198,7 +210,7 @@ UITask.prototype.refresh = function (task) {
 				});
 			$('input[name="dueTime"]', form).val(DateUtil.getUTCTime(date));
 			$(this).appendTo($(column));
-			context.enterAjaxInProgress();
+			context.enterAjax();
 			$(form).submit();
 		})
 		.draggable({
@@ -232,7 +244,7 @@ UITask.prototype.refresh = function (task) {
 			else {
 				$('input[name="status"]', form).val('needsAction');
 			}
-			context.enterAjaxInProgress();
+			context.enterAjax();
 			$(form).submit();
 		});
 	if (task.status == 'completed') {
@@ -263,7 +275,7 @@ UITask.prototype.refresh = function (task) {
 				.height(height)
 				.blur(function () {
 					if (formController.validate(form)) {
-						context.enterAjaxInProgress();
+						context.enterAjax();
 						$(form).submit();
 					}
 					else {
@@ -289,12 +301,6 @@ UITask.prototype.refresh = function (task) {
  */
 UITask.prototype.remove = function () {
 	this.element.remove();
-};
-/**
- * Enter to AJAX status.
- */
-UITask.prototype.enterAjaxInProgress = function () {
-	this.element.addClass('ajax-in-progress');
 };
 /**
  * @class creating task dialog

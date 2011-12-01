@@ -81,6 +81,18 @@ UITasklist.prototype.getElement = function () {
 	return this.element;
 };
 /**
+ * Enter AJAX state.
+ */
+UITasklist.prototype.enterAjax = function () {
+	$(this.element).addClass('ajax-in-progress');
+};
+/**
+ * Leave AJAX state.
+ */
+UITasklist.prototype.leaveAjax = function () {
+	$(this.element).removeClass('ajax-in-progress');
+};
+/**
  * @returns {Tasklist} the tasklist
  */
 UITasklist.prototype.getTasklist = function () {
