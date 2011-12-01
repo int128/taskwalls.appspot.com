@@ -103,11 +103,11 @@ UITasklist.prototype.refresh = function (tasklist) {
 	this.element = $.resource('tasklist-legend-template')
 		.addClass('tasklistcolor-' + tasklist.colorID)
 		.click(function () {
-			new UIUpdateTasklist().open(context);
+			context.toggle();
 		});
 	$('.title', this.element).text(tasklist.title);
-	$('.toggle', this.element).click(function () {
-		context.toggle();
+	$('.setting', this.element).click(function () {
+		new UIUpdateTasklist().open(context);
 		return false;
 	});
 	// replace if already exists

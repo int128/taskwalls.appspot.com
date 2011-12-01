@@ -144,6 +144,7 @@ input[type="text"]:HOVER,textarea:HOVER {
  */
 .tasklist-legend {
 	z-index: 500;
+	padding: 5px;
 	overflow-y: hidden;
 	margin-bottom: 5px;
 	border: solid 1px #ddd;
@@ -161,31 +162,20 @@ input[type="text"]:HOVER,textarea:HOVER {
 
 .tasklist-legend.hidden {
 	border-left-width: 1px;
-	padding-left: 4px;
+	padding-left: 9px;
 }
 
 .tasklist-legend>.title {
-	padding: 5px;
+	float: left;
 }
 
-.tasklist-legend>.toggle {
-	position: absolute;
-	width: 40px;
-	height: 50px;
+.tasklist-legend>.setting {
+	float: right;
+	opacity: 0.5;
 }
 
-.tasklist-legend>.toggle>.balloon-tip {
-	position: absolute;
-	left: 100px;
-	min-width: 120px;
-}
-
-.tasklist-legend>.toggle:HOVER {
-	background: rgba(0, 0, 0, 0.1);
-}
-
-.tasklist-legend>.toggle:HOVER>.balloon-tip {
-	display: block;
+.tasklist-legend>.setting:HOVER {
+	opacity: 1.0;
 }
 
 /*
