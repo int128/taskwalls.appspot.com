@@ -32,6 +32,7 @@ Tasklists.get = function (callback) {
 			success: function (response, status, xhr) {
 				if ($.isArray(response.items)) {
 					localStorage.setItem('Tasklists.get', xhr.responseText);
+					AppSettings.setCachedDate('Tasklists.get', new Date());
 					callback(Tasklists.createFromJson(response.items));
 				}
 			}

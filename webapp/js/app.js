@@ -113,3 +113,19 @@ AppSettings.setOffline = function (enabled) {
 		sessionStorage.removeItem('session-offline');
 	}
 };
+/**
+ * Set last cached date.
+ * @param {String} key
+ * @param {Date} date
+ */
+AppSettings.setCachedDate = function (key, date) {
+	localStorage[key + '#cached'] = date.getTime();
+};
+/**
+ * Get last cached date.
+ * @param {String} key
+ * @returns {Date}
+ */
+AppSettings.getCachedDate = function (key) {
+	return new Date(parseInt(localStorage[key + '#cached']));
+};
