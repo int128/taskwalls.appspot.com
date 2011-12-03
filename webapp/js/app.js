@@ -15,9 +15,6 @@ $(function () {
 	$.extend({
 		resource: function (key) {
 			return $('#' + key).clone().removeClass('resource').removeAttr('id');
-		},
-		isDevelopment: function () {
-			return location.hostname == 'localhost';
 		}
 	});
 });
@@ -46,7 +43,7 @@ $(function () {
 		$('#loading').fadeOut();
 	});
 	// development only
-	if ($.isDevelopment()) {
+	if (location.hostname == 'localhost') {
 		$('.development').hide().show();
 	}
 	// offline
