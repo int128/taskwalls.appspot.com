@@ -15,8 +15,8 @@ Tasklists.get = function (callback) {
 	}
 	if (AppSettings.isOffline()) {
 		var response = $.parseJSON(localStorage.getItem('Tasklists.get'));
-		if (response && $.isArray(response.items)) {
-			callback(Tasklists.createFromJson(response.items));
+		if (response) {
+			callback(Tasklists.createFromJson(response));
 		}
 	}
 	else {
@@ -30,10 +30,10 @@ Tasklists.get = function (callback) {
 			 * @param {XMLHttpRequest} xhr
 			 */
 			success: function (response, status, xhr) {
-				if ($.isArray(response.items)) {
+				if (response) {
 					localStorage.setItem('Tasklists.get', xhr.responseText);
 					AppSettings.setCachedDate('Tasklists.get', new Date());
-					callback(Tasklists.createFromJson(response.items));
+					callback(Tasklists.createFromJson(response));
 				}
 			}
 		});
@@ -41,10 +41,14 @@ Tasklists.get = function (callback) {
 };
 /**
  * Create an instance from JSON.
- * @param {Array} items array of JSON tasklist
+ * @param response natural JSON of tasklists
  * @returns {Tasklists}
  */
-Tasklists.createFromJson = function (items) {
+Tasklists.createFromJson = function (response) {
+	var items = [];
+	if ($.isArray(response.items)) {
+		items = response.items;
+	}
 	return new Tasklists($.map(items, function (item) {
 		return new Tasklist(item);
 	}));
@@ -117,8 +121,8 @@ Tasks.get = function (tasklistID, callback) {
 	}
 	if (AppSettings.isOffline()) {
 		var response = $.parseJSON(localStorage['Tasks.get.' + tasklistID]);
-		if (response && $.isArray(response.items)) {
-			callback(Tasks.createFromJson(response.items));
+		if (response) {
+			callback(Tasks.createFromJson(response));
 		}
 	}
 	else {
@@ -135,9 +139,9 @@ Tasks.get = function (tasklistID, callback) {
 			 * @param {XMLHttpRequest} xhr
 			 */
 			success: function (response, status, xhr) {
-				if ($.isArray(response.items)) {
+				if (response) {
 					localStorage['Tasks.get.' + tasklistID] = xhr.responseText;
-					callback(Tasks.createFromJson(response.items));
+					callback(Tasks.createFromJson(response));
 				}
 			}
 		});
@@ -145,10 +149,14 @@ Tasks.get = function (tasklistID, callback) {
 };
 /**
  * Create an instance from JSON.
- * @param {Array} items array of JSON task
+ * @param response natural JSON of tasks
  * @returns {Tasks}
  */
-Tasks.createFromJson = function (items) {
+Tasks.createFromJson = function (response) {
+	var items = [];
+	if ($.isArray(response.items)) {
+		items = response.items;
+	}
 	return new Tasks($.map(items, function (item) {
 		return new Task(item);
 	}));
