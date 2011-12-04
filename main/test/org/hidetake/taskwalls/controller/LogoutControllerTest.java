@@ -1,35 +1,40 @@
 package org.hidetake.taskwalls.controller;
 
-import java.util.Date;
-
-import javax.servlet.http.Cookie;
-
-import org.slim3.memcache.Memcache;
-import org.slim3.tester.ControllerTestCase;
-import org.hidetake.taskwalls.Constants;
-import org.hidetake.taskwalls.model.oauth2.CachedToken;
+import org.hidetake.taskwalls.service.SessionService;
 import org.junit.Test;
-import static org.junit.Assert.*;
+import org.slim3.tester.ControllerTestCase;
 
 import static org.hamcrest.CoreMatchers.*;
+
+import static org.junit.Assert.*;
 
 public class LogoutControllerTest extends ControllerTestCase
 {
 
 	@Test
-	public void run() throws Exception
+	public void logoutSession() throws Exception
 	{
-		Date expire = new Date(System.currentTimeMillis() + 3600 * 1000L);
-		CachedToken token = new CachedToken("hogeAccess", "hogeRefresh", expire);
-		Memcache.put("hogeSessionKey", token);
-		tester.request.addCookie(new Cookie(Constants.cookieSessionID, "hogeSessionKey"));
+		String sessionID = RequestTestUtil.enableSession(tester);
+		assertThat(SessionService.get(sessionID), is(notNullValue()));
 		tester.start("/logout");
 		LogoutController controller = tester.getController();
 		assertThat(controller, is(notNullValue()));
 		assertThat(tester.isRedirect(), is(true));
-		assertThat(tester.getDestinationPath(), is("./"));
+		assertThat(tester.getDestinationPath(), is("/"));
+		assertThat(tester.response.getCookies().length, is(not(0)));
 		assertThat(tester.response.getCookies()[0].getMaxAge(), is(0));
-		assertThat(Memcache.<CachedToken> get("hogeSessionKey"), is(nullValue()));
+		assertThat(SessionService.get(sessionID), is(nullValue()));
+	}
+
+	@Test
+	public void doNotionWhenNoSession() throws Exception
+	{
+		tester.start("/logout");
+		LogoutController controller = tester.getController();
+		assertThat(controller, is(notNullValue()));
+		assertThat(tester.isRedirect(), is(true));
+		assertThat(tester.getDestinationPath(), is("/"));
+		assertThat(tester.response.getCookies().length, is(0));
 	}
 
 }

@@ -24,8 +24,9 @@ public class RequestTestUtil
 	 * This method creates a session and adds the cookie and header.
 	 * 
 	 * @param tester
+	 * @return session ID
 	 */
-	public static void enableSession(ControllerTester tester)
+	public static String enableSession(ControllerTester tester)
 	{
 		Date expire = new Date(System.currentTimeMillis() + 3600 * 1000L);
 		CachedToken cachedToken = new CachedToken("access", "refresh", expire);
@@ -36,6 +37,7 @@ public class RequestTestUtil
 		SessionService.put(session);
 		tester.request.addCookie(new Cookie(Constants.cookieSessionID, sessionID));
 		tester.request.setHeader(Constants.headerSessionID, sessionID);
+		return sessionID;
 	}
 
 	/**
