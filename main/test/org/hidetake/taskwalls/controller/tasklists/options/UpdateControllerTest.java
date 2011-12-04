@@ -15,6 +15,18 @@ public class UpdateControllerTest extends ControllerTestCase
 {
 
 	@Test
+	public void xhr() throws Exception
+	{
+		RequestTestUtil.enableSession(tester);
+		RequestTestUtil.setMethodAsPost(tester);
+		tester.start("/tasklists/options/update");
+		UpdateController controller = tester.getController();
+		assertThat(controller, is(notNullValue()));
+		assertThat(tester.isRedirect(), is(false));
+		assertThat(tester.getDestinationPath(), is("/errors/preconditionFailed"));
+	}
+
+	@Test
 	public void preconditionFailed() throws Exception
 	{
 		RequestTestUtil.enableSession(tester);
