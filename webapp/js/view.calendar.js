@@ -15,7 +15,7 @@ function UICalendar () {
 	 */
 	this.earliest = new Date();
 	this.earliest.setHours(24, 0, 0, 0);
-	// build table with today
+	// build table rows
 	$('#calendar>tbody').empty();
 	this.extendMonth(this.earliest);
 };
