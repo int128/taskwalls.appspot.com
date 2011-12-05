@@ -319,6 +319,7 @@ td.weekday-column,td.date-column,td.task-column {
 
 tr.today>td.weekday-column,tr.today>td.date-column,tr.today>td.task-column {
 	background-color: #eee;
+	border-top: solid 1px #f00;
 }
 
 td.month-column {
