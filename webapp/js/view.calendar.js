@@ -87,10 +87,10 @@ UICalendar.prototype.extend = function (time) {
  */
 UICalendar.prototype.extendMonth = function (time) {
 	var date = new Date(time);
-	date.setHours(0, 0, 0, 0);
-	date.setDate(1);
 	this.extend(date.getTime());
+	date.setHours(0, 0, 0, 0);
 	date.setMonth(date.getMonth() + 1);
+	date.setDate(1);
 	this.extend(date.getTime());
 };
 /**
