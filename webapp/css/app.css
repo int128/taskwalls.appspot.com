@@ -87,14 +87,49 @@ input[type="text"]:HOVER,textarea:HOVER {
  * Welcome content.
  */
 #welcome-content {
-	margin-top: 5em;
+	margin-top: 3em;
 	text-align: center;
 }
 
+#welcome-content .login {
+	margin: 3em;
+}
+
+#welcome-content .session-login {
+	padding: 1em;
+	border-radius: 5px;
+	-moz-border-radius: 5px;
+	background: #eee;
+	box-shadow: 0px 3px 10px 3px rgba(192, 192, 32, 0.2);
+	background: -webkit-gradient(linear, left top, left bottom, from(#fff), to(#ffc) );
+	background: -moz-linear-gradient(top, #fff, #ffd);
+	border: solid 1px gold;
+	text-decoration: none;
+	color: #444;
+	font-weight: bold;
+	font-size: 110%;
+}
+
+#welcome-content .session-login:HOVER {
+	box-shadow: 0px 3px 10px 3px rgba(192, 192, 32, 0.6);
+	color: #000;
+}
+
+#welcome-content .screenshot {
+	width: 800px;
+	height: 300px;
+	margin-top: 4em;
+	margin-bottom: 3em;
+	margin-left: auto;
+	margin-right: auto;
+	background: url('/css/screenshot.20111208.png') no-repeat;
+	border: solid 1px #ccc;
+	border-radius: 5px;
+	-moz-border-radius: 5px;
+}
+
 #welcome-content .footer {
-	position: absolute;
-	bottom: 10px;
-	width: 100%;
+	margin: 3em;
 	color: #888;
 	text-align: center;
 }

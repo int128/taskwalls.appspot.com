@@ -65,7 +65,7 @@ $(function () {
 		localStorage.clear();
 	};
 	currentOAuth2Session.onUnauthorized = function () {
-		$('a.session-login').attr('href', currentOAuth2Session.getAuthorizationURL()).button();
+		$('a.session-login').attr('href', currentOAuth2Session.getAuthorizationURL());
 		$('.unauthorized').hide().show();
 	};
 	currentOAuth2Session.handle();
