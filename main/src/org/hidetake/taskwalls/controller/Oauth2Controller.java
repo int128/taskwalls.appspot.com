@@ -1,6 +1,7 @@
 package org.hidetake.taskwalls.controller;
 
 import java.io.IOException;
+import java.net.URI;
 import java.security.MessageDigest;
 import java.util.Date;
 import java.util.UUID;
@@ -47,15 +48,13 @@ public class Oauth2Controller extends Controller
 		}
 
 		// exchange authorization code and token
-		String requestURL = request.getRequestURL().toString();
-		String redirectURI = requestURL.substring(0, requestURL.lastIndexOf('/') + 1);
 		GoogleAuthorizationCodeGrant grant = new GoogleAuthorizationCodeGrant(
 				NetHttpTransportLocator.get(),
 				JacksonFactoryLocator.get(),
 				AppCredential.clientCredential.getClientId(),
 				AppCredential.clientCredential.getClientSecret(),
 				authorizationCode,
-				redirectURI);
+				getRedirectURI());
 		AccessTokenResponse tokenResponse = execute(grant);
 		Date expire = new Date(System.currentTimeMillis() + tokenResponse.expiresIn * 1000L);
 		CachedToken token = new CachedToken(
@@ -98,6 +97,11 @@ public class Oauth2Controller extends Controller
 			logger.warning(httpResponseException.getResponse().parseAsString());
 		}
 		return super.handleError(e);
+	}
+
+	private String getRedirectURI()
+	{
+		return URI.create(request.getRequestURL().toString()).resolve("/").toASCIIString();
 	}
 
 	/**

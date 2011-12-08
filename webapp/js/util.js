@@ -194,7 +194,7 @@ OAuth2Session.prototype.handle = function () {
 			url: '/oauth2',
 			type: 'POST',
 			data: {
-				code: authorizationCodeMatch[1]
+				code: decodeURIComponent(authorizationCodeMatch[1])
 			},
 			success: function () {
 				location.replace(location.pathname);
