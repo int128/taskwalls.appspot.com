@@ -15,7 +15,7 @@
 <body>
 <div id="root">
 <div>
-<div id="welcome-content" class="unauthorized">
+<div id="welcome-content" class="oauth2state unauthorized">
 <h1>Task Wall<span style="color: gold;">*</span></h1>
 <div style="text-align: center; font-weight: bold; margin-top: -1em; color: #888;">BETA</div>
 <p class="description">
@@ -29,15 +29,25 @@ Task Wallは、Googleタスクから取得したタスク情報をカレンダ�
 タスク情報はサーバを経由して取得しますが、サーバには残りません。
 </p>
 <p>
-<img src="/css/google_g_logo_webtreatsetc.png" />
-<img src="/css/oauth-2-sm.png"/>
+<img src="/css/google_g_logo_webtreatsetc.png" alt="Google API" />
+<img src="/css/oauth-2-sm.png" alt="OAuth 2.0" />
 </p>
 <div class="footer">
 Task Wall &copy; hidetake.org, 2011.
 </div>
 </div>
 
-<div id="myheader" class="authorized">
+<div id="authorizing-content" class="oauth2state authorizing">
+<h1>Task Wall<span style="color: gold;">*</span></h1>
+<div style="text-align: center; font-weight: bold; margin-top: -1em; color: #888;">BETA</div>
+<p>Google APIと通信しています...</p>
+<p>
+<img src="/css/google_g_logo_webtreatsetc.png" alt="Google API" />
+<img src="/css/oauth-2-sm.png" alt="OAuth 2.0" />
+</p>
+</div>
+
+<div id="myheader" class="oauth2state authorized">
 <h1 class="stack">Task Wall<span style="color: gold;">*</span></h1>
 <div style="text-align: center; font-weight: bold; margin-top: -1em; color: #888;">BETA</div>
 <div class="stack">
@@ -62,7 +72,7 @@ Task Wall service<br/>
 </div>
 </div>
 
-<div id="mycontent" class="authorized">
+<div id="mycontent" class="oauth2state authorized">
 <div id="calendar-cached-date">
 オフラインモードです。最後にタスクリストを読み込んだのは
 <span class="month"></span>月<span class="day"></span>日 <span class="hour"></span>:<span class="minute"></span>

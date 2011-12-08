@@ -90,6 +90,16 @@ public class Oauth2Controller extends Controller
 		return null;
 	}
 
+	@Override
+	protected Navigation handleError(Throwable e) throws Throwable
+	{
+		if (e instanceof HttpResponseException) {
+			HttpResponseException httpResponseException = (HttpResponseException) e;
+			logger.warning(httpResponseException.getResponse().parseAsString());
+		}
+		return super.handleError(e);
+	}
+
 	/**
 	 * Execute grant with retry.
 	 * @param grant

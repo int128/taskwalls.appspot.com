@@ -35,7 +35,7 @@ input[type="text"]:HOVER,textarea:HOVER {
 #root {
 }
 
-.authorized,.unauthorized {
+.oauth2state.authorized,.oauth2state.authorizing,.oauth2state.unauthorized {
 	display: none;
 }
 
@@ -131,6 +131,14 @@ input[type="text"]:HOVER,textarea:HOVER {
 #welcome-content .footer {
 	margin: 3em;
 	color: #888;
+	text-align: center;
+}
+
+/* 
+ * Authorizing.
+ */
+#authorizing-content {
+	margin-top: 3em;
 	text-align: center;
 }
 

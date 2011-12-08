@@ -190,8 +190,19 @@ OAuth2Session.prototype.handle = function () {
 	if (authorizationCodeMatch) {
 		// step2: received authorization code
 		this.onAuthorizing();
-		$.post('/oauth2', {code: authorizationCodeMatch[1]}, function () {
-			location.replace(location.pathname);
+		$.ajax({
+			url: '/oauth2',
+			type: 'POST',
+			data: {
+				code: authorizationCodeMatch[1]
+			},
+			success: function () {
+				location.replace(location.pathname);
+			},
+			error: function () {
+				// step2-1: authorization error
+				location.replace('/logout');
+			}
 		});
 		return;
 	}

@@ -137,15 +137,27 @@ public abstract class ControllerBase extends Controller
 		try {
 			return grant.execute();
 		}
-		catch (IOException e) {
-			logger.warning(e.getLocalizedMessage());
+		catch (HttpResponseException e) {
+			try {
+				logger.warning(e.getResponse().parseAsString());
+			}
+			catch (IOException e2) {
+				// failed to parseAsString()
+				logger.warning(e.getLocalizedMessage());
+			}
 		}
 		// 2nd
 		try {
 			return grant.execute();
 		}
-		catch (IOException e) {
-			logger.warning(e.getLocalizedMessage());
+		catch (HttpResponseException e) {
+			try {
+				logger.warning(e.getResponse().parseAsString());
+			}
+			catch (IOException e2) {
+				// failed to parseAsString()
+				logger.warning(e.getLocalizedMessage());
+			}
 		}
 		// 3rd
 		return grant.execute();
