@@ -248,7 +248,7 @@ OAuth2Session.prototype.getAuthorizationURL = function () {
 		+ '?redirect_uri=' + (location.protocol + '//' + location.host + location.pathname)
 		+ '&response_type=code'
 		+ '&scope=https://www.googleapis.com/auth/tasks'
-		+ '&access_type=offline'
+//		+ '&access_type=offline'
 		+ '&client_id=' + this.clientId;
 };
 /**
