@@ -21,9 +21,7 @@ import com.google.api.client.auth.oauth2.draft10.AccessTokenResponse;
 import com.google.api.client.googleapis.auth.oauth2.draft10.GoogleAccessProtectedResource;
 import com.google.api.client.googleapis.auth.oauth2.draft10.GoogleAccessTokenRequest.GoogleRefreshTokenGrant;
 import com.google.api.client.http.HttpResponseException;
-import com.google.api.client.http.HttpTransport;
 import com.google.api.client.json.GenericJson;
-import com.google.api.client.json.JsonFactory;
 import com.google.api.services.tasks.Tasks;
 
 /**
@@ -52,16 +50,14 @@ public abstract class ControllerBase extends Controller
 		if (session == null) {
 			return forward("/errors/noSession");
 		}
-		HttpTransport httpTransport = NetHttpTransportLocator.get();
-		JsonFactory jsonFactory = JacksonFactoryLocator.get();
 
 		// refresh the token if expires
 		CachedToken token = session.getToken();
 		if (new Date().after(token.getExpire())) {
 			try {
 				GoogleRefreshTokenGrant grant = new GoogleRefreshTokenGrant(
-						httpTransport,
-						jsonFactory,
+						NetHttpTransportLocator.get(),
+						JacksonFactoryLocator.get(),
 						AppCredential.clientCredential.getClientId(),
 						AppCredential.clientCredential.getClientSecret(),
 						token.getRefreshToken());
@@ -88,12 +84,15 @@ public abstract class ControllerBase extends Controller
 
 		GoogleAccessProtectedResource resource = new GoogleAccessProtectedResource(
 				token.getAccessToken(),
-				httpTransport,
-				jsonFactory,
+				NetHttpTransportLocator.get(),
+				JacksonFactoryLocator.get(),
 				AppCredential.clientCredential.getClientId(),
 				AppCredential.clientCredential.getClientSecret(),
 				token.getRefreshToken());
-		tasksService = new Tasks(httpTransport, resource, jsonFactory);
+		tasksService = new Tasks(
+				NetHttpTransportLocator.get(),
+				resource,
+				JacksonFactoryLocator.get());
 		tasksService.setUserIp(request.getRemoteAddr());
 		return null;
 	}
