@@ -70,7 +70,9 @@ public class Oauth2Controller extends Controller
 		digest.update(AppCredential.clientCredential.getClientSecret().getBytes());
 		digest.update(authorizationCode.getBytes());
 		digest.update(token.getAccessToken().getBytes());
-		digest.update(token.getRefreshToken().getBytes());
+		if (token.getRefreshToken() != null) {
+			digest.update(token.getRefreshToken().getBytes());
+		}
 		StringBuilder sessionIDBuilder = new StringBuilder();
 		for (byte b : digest.digest()) {
 			sessionIDBuilder.append(Integer.toHexString(b & 0xff));

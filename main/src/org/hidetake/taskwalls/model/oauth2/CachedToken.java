@@ -20,16 +20,13 @@ public class CachedToken implements Serializable
 	/**
 	 * Constructor.
 	 * @param accessToken access token
-	 * @param refreshToken refresh token
+	 * @param refreshToken refresh token (may be null)
 	 * @param expire expires date
 	 */
 	public CachedToken(String accessToken, String refreshToken, Date expire)
 	{
 		if (accessToken == null) {
 			throw new NullPointerException("accessToken is null");
-		}
-		if (refreshToken == null) {
-			throw new NullPointerException("refreshToken is null");
 		}
 		if (expire == null) {
 			throw new NullPointerException("expire is null");
@@ -44,6 +41,10 @@ public class CachedToken implements Serializable
 		return accessToken;
 	}
 
+	/**
+	 * Get the refresh token. This may be null.
+	 * @return
+	 */
 	public String getRefreshToken()
 	{
 		return refreshToken;
