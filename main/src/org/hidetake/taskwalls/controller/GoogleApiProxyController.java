@@ -65,8 +65,8 @@ public class GoogleApiProxyController extends ControllerBase
 				token.getAccessToken(),
 				httpTransport,
 				jsonFactory,
-				AppCredential.clientCredential.getClientId(),
-				AppCredential.clientCredential.getClientSecret(),
+				AppCredential.CLIENT_CREDENTIAL.getClientId(),
+				AppCredential.CLIENT_CREDENTIAL.getClientSecret(),
 				token.getRefreshToken());
 		HttpRequest proxyRequest = httpTransport.createRequestFactory().buildRequest(
 				method,

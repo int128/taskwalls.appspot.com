@@ -51,8 +51,8 @@ public class Oauth2Controller extends Controller
 		GoogleAuthorizationCodeGrant grant = new GoogleAuthorizationCodeGrant(
 				NetHttpTransportLocator.get(),
 				JacksonFactoryLocator.get(),
-				AppCredential.clientCredential.getClientId(),
-				AppCredential.clientCredential.getClientSecret(),
+				AppCredential.CLIENT_CREDENTIAL.getClientId(),
+				AppCredential.CLIENT_CREDENTIAL.getClientSecret(),
 				authorizationCode,
 				getRedirectURI());
 		AccessTokenResponse tokenResponse = execute(grant);
@@ -66,8 +66,8 @@ public class Oauth2Controller extends Controller
 		MessageDigest digest = MessageDigest.getInstance("SHA-256");
 		digest.reset();
 		digest.update(UUID.randomUUID().toString().getBytes());
-		digest.update(AppCredential.clientCredential.getClientId().getBytes());
-		digest.update(AppCredential.clientCredential.getClientSecret().getBytes());
+		digest.update(AppCredential.CLIENT_CREDENTIAL.getClientId().getBytes());
+		digest.update(AppCredential.CLIENT_CREDENTIAL.getClientSecret().getBytes());
 		digest.update(authorizationCode.getBytes());
 		digest.update(token.getAccessToken().getBytes());
 		if (token.getRefreshToken() != null) {

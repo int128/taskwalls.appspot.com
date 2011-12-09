@@ -72,8 +72,8 @@ public abstract class ControllerBase extends Controller
 			GoogleRefreshTokenGrant grant = new GoogleRefreshTokenGrant(
 					NetHttpTransportLocator.get(),
 					JacksonFactoryLocator.get(),
-					AppCredential.clientCredential.getClientId(),
-					AppCredential.clientCredential.getClientSecret(),
+					AppCredential.CLIENT_CREDENTIAL.getClientId(),
+					AppCredential.CLIENT_CREDENTIAL.getClientSecret(),
 					token.getRefreshToken());
 			// retry 3 times
 			AccessTokenResponse tokenResponse;
@@ -109,8 +109,8 @@ public abstract class ControllerBase extends Controller
 				token.getAccessToken(),
 				NetHttpTransportLocator.get(),
 				JacksonFactoryLocator.get(),
-				AppCredential.clientCredential.getClientId(),
-				AppCredential.clientCredential.getClientSecret(),
+				AppCredential.CLIENT_CREDENTIAL.getClientId(),
+				AppCredential.CLIENT_CREDENTIAL.getClientSecret(),
 				token.getRefreshToken());
 		tasksService = new Tasks(
 				NetHttpTransportLocator.get(),
