@@ -26,7 +26,7 @@ public class LogoutController extends Controller
 	{
 		if (request.getCookies() != null) {
 			for (Cookie cookie : request.getCookies()) {
-				if (Constants.cookieSessionID.equals(cookie.getName())) {
+				if (Constants.COOKIE_SESSION_ID.equals(cookie.getName())) {
 					// delete the session
 					String sessionID = cookie.getValue();
 					SessionService.delete(sessionID);

@@ -27,7 +27,7 @@ public class ControllerBaseTest extends ControllerTestCase
 	public void sessionExpired() throws Exception
 	{
 		String sessionID = UUID.randomUUID().toString();
-		tester.request.setHeader(Constants.headerSessionID, sessionID);
+		tester.request.setHeader(Constants.HEADER_SESSION_ID, sessionID);
 		tester.start("/controllerBaseTest");
 		ControllerBaseTestController controller = tester.getController();
 		assertThat(controller, is(notNullValue()));

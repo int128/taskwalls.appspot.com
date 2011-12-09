@@ -19,7 +19,7 @@ public class SessionService
 {
 
 	private static final Expiration expiration =
-			Expiration.byDeltaSeconds(Constants.sessionExpiration);
+			Expiration.byDeltaSeconds(Constants.SESSION_EXPIRATION);
 
 	private SessionService()
 	{

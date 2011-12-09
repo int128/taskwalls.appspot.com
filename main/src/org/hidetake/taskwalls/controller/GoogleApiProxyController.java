@@ -58,7 +58,7 @@ public class GoogleApiProxyController extends ControllerBase
 		JsonFactory jsonFactory = JacksonFactoryLocator.get();
 
 		// make a request
-		String sessionID = request.getHeader(Constants.headerSessionID);
+		String sessionID = request.getHeader(Constants.HEADER_SESSION_ID);
 		Session session = SessionService.get(sessionID);
 		CachedToken token = session.getToken();
 		GoogleAccessProtectedResource resource = new GoogleAccessProtectedResource(

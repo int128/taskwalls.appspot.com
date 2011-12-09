@@ -85,8 +85,8 @@ public class Oauth2Controller extends Controller
 		SessionService.put(session);
 
 		// create session cookie
-		Cookie cookie = new Cookie(Constants.cookieSessionID, sessionID);
-		cookie.setMaxAge(Constants.sessionExpiration);
+		Cookie cookie = new Cookie(Constants.COOKIE_SESSION_ID, sessionID);
+		cookie.setMaxAge(Constants.SESSION_EXPIRATION);
 		response.addCookie(cookie);
 		return null;
 	}

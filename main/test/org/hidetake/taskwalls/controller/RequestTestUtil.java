@@ -35,8 +35,8 @@ public class RequestTestUtil
 		session.setKey(Session.createKey(sessionID));
 		session.setToken(cachedToken);
 		SessionService.put(session);
-		tester.request.addCookie(new Cookie(Constants.cookieSessionID, sessionID));
-		tester.request.setHeader(Constants.headerSessionID, sessionID);
+		tester.request.addCookie(new Cookie(Constants.COOKIE_SESSION_ID, sessionID));
+		tester.request.setHeader(Constants.HEADER_SESSION_ID, sessionID);
 		return sessionID;
 	}
 

@@ -53,7 +53,7 @@ public abstract class ControllerBase extends Controller
 
 	private Navigation setUpServices() throws IOException
 	{
-		String sessionID = request.getHeader(Constants.headerSessionID);
+		String sessionID = request.getHeader(Constants.HEADER_SESSION_ID);
 		if (sessionID == null) {
 			logger.warning("Precondition failed: no session ID");
 			response.sendError(Constants.STATUS_PRECONDITION_FAILED);
@@ -100,8 +100,8 @@ public abstract class ControllerBase extends Controller
 			SessionService.put(session);
 			token = newToken;
 			// extends cookie life time
-			Cookie cookie = new Cookie(Constants.cookieSessionID, sessionID);
-			cookie.setMaxAge(Constants.sessionExpiration);
+			Cookie cookie = new Cookie(Constants.COOKIE_SESSION_ID, sessionID);
+			cookie.setMaxAge(Constants.SESSION_EXPIRATION);
 			response.addCookie(cookie);
 		}
 
