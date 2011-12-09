@@ -1,6 +1,5 @@
 package org.hidetake.taskwalls.controller;
 
-import java.io.IOException;
 import java.net.URI;
 import java.security.MessageDigest;
 import java.util.Date;
@@ -14,12 +13,12 @@ import org.hidetake.taskwalls.model.Session;
 import org.hidetake.taskwalls.model.oauth2.CachedToken;
 import org.hidetake.taskwalls.service.SessionService;
 import org.hidetake.taskwalls.util.AjaxPreconditions;
+import org.hidetake.taskwalls.util.googleapis.HttpResponseExceptionUtil;
 import org.hidetake.taskwalls.util.googleapis.JacksonFactoryLocator;
 import org.hidetake.taskwalls.util.googleapis.NetHttpTransportLocator;
 import org.slim3.controller.Controller;
 import org.slim3.controller.Navigation;
 
-import com.google.api.client.auth.oauth2.draft10.AccessTokenRequest.AuthorizationCodeGrant;
 import com.google.api.client.auth.oauth2.draft10.AccessTokenResponse;
 import com.google.api.client.googleapis.auth.oauth2.draft10.GoogleAccessTokenRequest.GoogleAuthorizationCodeGrant;
 import com.google.api.client.http.HttpResponseException;
@@ -61,7 +60,20 @@ public class Oauth2Controller extends Controller
 				AppCredential.CLIENT_CREDENTIAL.getClientSecret(),
 				authorizationCode,
 				getRedirectURI());
-		AccessTokenResponse tokenResponse = execute(grant);
+		AccessTokenResponse tokenResponse;
+		try {
+			tokenResponse = grant.execute();
+		}
+		catch (HttpResponseException e) {
+			logger.severe(HttpResponseExceptionUtil.getMessage(e));
+		}
+		try {
+			tokenResponse = grant.execute();
+		}
+		catch (HttpResponseException e) {
+			logger.severe(HttpResponseExceptionUtil.getMessage(e));
+		}
+		tokenResponse = grant.execute();
 		Date expire = new Date(System.currentTimeMillis() + tokenResponse.expiresIn * 1000L);
 		CachedToken token = new CachedToken(
 				tokenResponse.accessToken,
@@ -101,52 +113,14 @@ public class Oauth2Controller extends Controller
 	protected Navigation handleError(Throwable e) throws Throwable
 	{
 		if (e instanceof HttpResponseException) {
-			HttpResponseException httpResponseException = (HttpResponseException) e;
-			logger.warning(httpResponseException.getResponse().parseAsString());
+			logger.severe(HttpResponseExceptionUtil.getMessage((HttpResponseException) e));
 		}
 		return super.handleError(e);
 	}
 
-	private String getRedirectURI()
+	protected String getRedirectURI()
 	{
 		return URI.create(request.getRequestURL().toString()).resolve("/").toASCIIString();
-	}
-
-	/**
-	 * Execute grant with retry.
-	 * @param grant
-	 * @return
-	 * @throws IOException
-	 */
-	private static AccessTokenResponse execute(AuthorizationCodeGrant grant) throws IOException
-	{
-		try {
-			return grant.execute();
-		}
-		catch (HttpResponseException e) {
-			try {
-				logger.warning(e.getResponse().parseAsString());
-			}
-			catch (IOException e2) {
-				// failed to parseAsString()
-				logger.warning(e.getLocalizedMessage());
-			}
-		}
-		// 2nd retry
-		try {
-			return grant.execute();
-		}
-		catch (HttpResponseException e) {
-			try {
-				logger.warning(e.getResponse().parseAsString());
-			}
-			catch (IOException e2) {
-				// failed to parseAsString()
-				logger.warning(e.getLocalizedMessage());
-			}
-		}
-		// 3rd retry
-		return grant.execute();
 	}
 
 }
