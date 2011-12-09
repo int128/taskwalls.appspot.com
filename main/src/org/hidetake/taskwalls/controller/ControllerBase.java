@@ -40,6 +40,24 @@ public abstract class ControllerBase extends Controller
 	 */
 	protected Tasks tasksService;
 
+	/**
+	 * Returns JSON response.
+	 * This method checks the request is XHR.
+	 * @param object object to serialize as JSON
+	 * @return always null
+	 * @throws IOException
+	 */
+	protected Navigation jsonResponse(GenericJson object) throws IOException
+	{
+		String json = GenericJsonWrapper.toString(object);
+		response.setHeader("X-Content-Type-Options", "nosniff");
+		response.setContentType("application/json");
+		response.setCharacterEncoding("UTF-8");
+		response.getWriter().append(json);
+		response.flushBuffer();
+		return null;
+	}
+
 	@Override
 	protected Navigation setUp()
 	{
@@ -117,24 +135,6 @@ public abstract class ControllerBase extends Controller
 				resource,
 				JacksonFactoryLocator.get());
 		tasksService.setUserIp(request.getRemoteAddr());
-		return null;
-	}
-
-	/**
-	 * Returns JSON response.
-	 * This method checks the request is XHR.
-	 * @param object object to serialize as JSON
-	 * @return always null
-	 * @throws IOException
-	 */
-	protected Navigation jsonResponse(GenericJson object) throws IOException
-	{
-		String json = GenericJsonWrapper.toString(object);
-		response.setHeader("X-Content-Type-Options", "nosniff");
-		response.setContentType("application/json");
-		response.setCharacterEncoding("UTF-8");
-		response.getWriter().append(json);
-		response.flushBuffer();
 		return null;
 	}
 
