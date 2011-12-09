@@ -37,14 +37,20 @@ public class Oauth2Controller extends Controller
 	public Navigation run() throws Exception
 	{
 		if (!isPost()) {
-			return forward("/errors/preconditionFailed");
+			logger.warning("Precondition failed: not POST");
+			response.sendError(Constants.STATUS_PRECONDITION_FAILED);
+			return null;
 		}
 		if (!AjaxPreconditions.isXHR(request)) {
-			return forward("/errors/preconditionFailed");
+			logger.warning("Precondition failed: not XHR");
+			response.sendError(Constants.STATUS_PRECONDITION_FAILED);
+			return null;
 		}
 		String authorizationCode = asString("code");
 		if (authorizationCode == null) {
-			return forward("/errors/preconditionFailed");
+			logger.warning("Precondition failed: code is null");
+			response.sendError(Constants.STATUS_PRECONDITION_FAILED);
+			return null;
 		}
 
 		// exchange authorization code and token

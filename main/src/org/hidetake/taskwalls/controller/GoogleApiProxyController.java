@@ -36,23 +36,28 @@ public class GoogleApiProxyController extends ControllerBase
 	@Override
 	public Navigation run() throws Exception
 	{
-		// preconditions
 		if (!isPost()) {
-			logger.warning("request must be POST");
-			return forward("/errors/preconditionFailed");
+			logger.warning("Precondition failed: not POST");
+			response.sendError(Constants.STATUS_PRECONDITION_FAILED);
+			return null;
 		}
 		if (!AjaxPreconditions.isXHR(request)) {
-			logger.warning("request must be via XHR");
-			return forward("/errors/preconditionFailed");
+			logger.warning("Precondition failed: not XHR");
+			response.sendError(Constants.STATUS_PRECONDITION_FAILED);
+			return null;
 		}
 		if (!validate()) {
-			return forward("/errors/preconditionFailed");
+			logger.warning("Precondition failed: " + errors.toString());
+			response.sendError(Constants.STATUS_PRECONDITION_FAILED);
+			return null;
 		}
 		String uri = BASE_URI + asString("path");
 		HttpMethod method = HttpMethod.valueOf(request.getHeader("X-HTTP-Method-Override"));
 		if (method == null) {
-			logger.warning("invalid method: " + request.getHeader("X-HTTP-Method-Override"));
-			return forward("/errors/preconditionFailed");
+			logger.warning("Precondition failed: unknown method: "
+					+ request.getHeader("X-HTTP-Method-Override"));
+			response.sendError(Constants.STATUS_PRECONDITION_FAILED);
+			return null;
 		}
 		HttpTransport httpTransport = NetHttpTransportLocator.get();
 		JsonFactory jsonFactory = JacksonFactoryLocator.get();

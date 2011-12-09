@@ -1,5 +1,6 @@
 package org.hidetake.taskwalls.controller.tasklists.options;
 
+import org.hidetake.taskwalls.Constants;
 import org.hidetake.taskwalls.controller.RequestTestUtil;
 import org.hidetake.taskwalls.meta.TasklistOptionsMeta;
 import org.hidetake.taskwalls.model.TasklistOptions;
@@ -23,7 +24,8 @@ public class UpdateControllerTest extends ControllerTestCase
 		UpdateController controller = tester.getController();
 		assertThat(controller, is(notNullValue()));
 		assertThat(tester.isRedirect(), is(false));
-		assertThat(tester.getDestinationPath(), is("/errors/preconditionFailed"));
+		assertThat(tester.getDestinationPath(), is(nullValue()));
+		assertThat(tester.response.getStatus(), is(Constants.STATUS_PRECONDITION_FAILED));
 	}
 
 	@Test
@@ -36,7 +38,8 @@ public class UpdateControllerTest extends ControllerTestCase
 		UpdateController controller = tester.getController();
 		assertThat(controller, is(notNullValue()));
 		assertThat(tester.isRedirect(), is(false));
-		assertThat(tester.getDestinationPath(), is("/errors/preconditionFailed"));
+		assertThat(tester.getDestinationPath(), is(nullValue()));
+		assertThat(tester.response.getStatus(), is(Constants.STATUS_PRECONDITION_FAILED));
 	}
 
 	@Test
