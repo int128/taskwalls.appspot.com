@@ -11,12 +11,13 @@ import org.hidetake.taskwalls.model.Session;
 import org.hidetake.taskwalls.model.oauth2.CachedToken;
 import org.hidetake.taskwalls.service.SessionService;
 import org.hidetake.taskwalls.util.googleapis.GenericJsonWrapper;
+import org.hidetake.taskwalls.util.googleapis.HttpResponseExceptionUtil;
 import org.hidetake.taskwalls.util.googleapis.JacksonFactoryLocator;
 import org.hidetake.taskwalls.util.googleapis.NetHttpTransportLocator;
 import org.slim3.controller.Controller;
 import org.slim3.controller.Navigation;
+import org.slim3.util.ThrowableUtil;
 
-import com.google.api.client.auth.oauth2.draft10.AccessTokenRequest.RefreshTokenGrant;
 import com.google.api.client.auth.oauth2.draft10.AccessTokenResponse;
 import com.google.api.client.googleapis.auth.oauth2.draft10.GoogleAccessProtectedResource;
 import com.google.api.client.googleapis.auth.oauth2.draft10.GoogleAccessTokenRequest.GoogleRefreshTokenGrant;
@@ -42,41 +43,63 @@ public abstract class ControllerBase extends Controller
 	@Override
 	protected Navigation setUp()
 	{
+		try {
+			return setUpServices();
+		}
+		catch (IOException e) {
+			throw ThrowableUtil.wrap(e);
+		}
+	}
+
+	private Navigation setUpServices() throws IOException
+	{
 		String sessionID = request.getHeader(Constants.headerSessionID);
 		if (sessionID == null) {
-			return forward("/errors/preconditionFailed");
+			logger.warning("Precondition failed: no session ID");
+			response.sendError(Constants.STATUS_PRECONDITION_FAILED);
+			return null;
 		}
 		Session session = SessionService.get(sessionID);
 		if (session == null) {
-			return forward("/errors/noSession");
+			logger.warning("Session has been expired or not found");
+			response.sendError(Constants.STATUS_NO_SESSION);
+			return null;
 		}
 
 		// refresh the token if expires
 		CachedToken token = session.getToken();
 		if (new Date().after(token.getExpire())) {
+			GoogleRefreshTokenGrant grant = new GoogleRefreshTokenGrant(
+					NetHttpTransportLocator.get(),
+					JacksonFactoryLocator.get(),
+					AppCredential.clientCredential.getClientId(),
+					AppCredential.clientCredential.getClientSecret(),
+					token.getRefreshToken());
+			// retry 3 times
+			AccessTokenResponse tokenResponse;
 			try {
-				GoogleRefreshTokenGrant grant = new GoogleRefreshTokenGrant(
-						NetHttpTransportLocator.get(),
-						JacksonFactoryLocator.get(),
-						AppCredential.clientCredential.getClientId(),
-						AppCredential.clientCredential.getClientSecret(),
-						token.getRefreshToken());
-				AccessTokenResponse tokenResponse = execute(grant);
-				Date expire = new Date(System.currentTimeMillis() + tokenResponse.expiresIn * 1000L);
-				CachedToken newToken = new CachedToken(
-						tokenResponse.accessToken,
-						token.getRefreshToken(),
-						expire);
-				session.setToken(newToken);
-				SessionService.put(session);
-				// alter the token
-				token = newToken;
+				tokenResponse = grant.execute();
 			}
-			catch (IOException e) {
-				return forward("/errors/noSession");
+			catch (HttpResponseException e) {
+				logger.warning(HttpResponseExceptionUtil.getMessage(e));
 			}
-
-			// extends cookie expiration
+			try {
+				tokenResponse = grant.execute();
+			}
+			catch (HttpResponseException e) {
+				logger.warning(HttpResponseExceptionUtil.getMessage(e));
+			}
+			tokenResponse = grant.execute();
+			// alter the token
+			Date expire = new Date(System.currentTimeMillis() + tokenResponse.expiresIn * 1000L);
+			CachedToken newToken = new CachedToken(
+					tokenResponse.accessToken,
+					token.getRefreshToken(),
+					expire);
+			session.setToken(newToken);
+			SessionService.put(session);
+			token = newToken;
+			// extends cookie life time
 			Cookie cookie = new Cookie(Constants.cookieSessionID, sessionID);
 			cookie.setMaxAge(Constants.sessionExpiration);
 			response.addCookie(cookie);
@@ -119,47 +142,9 @@ public abstract class ControllerBase extends Controller
 	protected Navigation handleError(Throwable e) throws Throwable
 	{
 		if (e instanceof HttpResponseException) {
-			HttpResponseException httpResponseException = (HttpResponseException) e;
-			logger.warning(httpResponseException.getResponse().parseAsString());
+			logger.severe(HttpResponseExceptionUtil.getMessage((HttpResponseException) e));
 		}
 		return super.handleError(e);
-	}
-
-	/**
-	 * Execute grant with retry.
-	 * @param grant
-	 * @return
-	 * @throws IOException
-	 */
-	private static AccessTokenResponse execute(RefreshTokenGrant grant) throws IOException
-	{
-		try {
-			return grant.execute();
-		}
-		catch (HttpResponseException e) {
-			try {
-				logger.warning(e.getResponse().parseAsString());
-			}
-			catch (IOException e2) {
-				// failed to parseAsString()
-				logger.warning(e.getLocalizedMessage());
-			}
-		}
-		// 2nd
-		try {
-			return grant.execute();
-		}
-		catch (HttpResponseException e) {
-			try {
-				logger.warning(e.getResponse().parseAsString());
-			}
-			catch (IOException e2) {
-				// failed to parseAsString()
-				logger.warning(e.getLocalizedMessage());
-			}
-		}
-		// 3rd
-		return grant.execute();
 	}
 
 }

@@ -22,4 +22,8 @@ public class Constants
 	 */
 	public static final String headerSessionID = "X-TaskWall-Session";
 
+	public static final int STATUS_PRECONDITION_FAILED = 400;
+
+	public static final int STATUS_NO_SESSION = 403;
+
 }
