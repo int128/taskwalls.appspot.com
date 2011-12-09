@@ -69,7 +69,7 @@ public abstract class ControllerBase extends Controller
 		}
 	}
 
-	private Navigation setUpServices() throws IOException
+	protected Navigation setUpServices() throws IOException
 	{
 		String sessionID = request.getHeader(Constants.HEADER_SESSION_ID);
 		if (sessionID == null) {
