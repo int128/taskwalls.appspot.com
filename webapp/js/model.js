@@ -221,6 +221,7 @@ function Task (json) {
 	else {
 		this.dueDate = null;
 	}
+	// FIXME: appears that selfLink does not contain its tasklist ID. (2011/12/9)
 	// tasklist ID
 	var uriParts = new String(this.selfLink).split('/');
 	this.tasklistID = uriParts[uriParts.length - 3];
