@@ -32,7 +32,8 @@ public class ControllerBaseTest extends ControllerTestCase
 		ControllerBaseTestController controller = tester.getController();
 		assertThat(controller, is(notNullValue()));
 		assertThat(tester.isRedirect(), is(false));
-		assertThat(tester.getDestinationPath(), is("/errors/noSession"));
+		assertThat(tester.getDestinationPath(), is(nullValue()));
+		assertThat(tester.response.getStatus(), is(Constants.STATUS_NO_SESSION));
 	}
 
 	@Test

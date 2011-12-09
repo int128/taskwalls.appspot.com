@@ -1,5 +1,6 @@
 package org.hidetake.taskwalls.controller.tasklists;
 
+import org.hidetake.taskwalls.Constants;
 import org.junit.Test;
 import org.slim3.tester.ControllerTestCase;
 
@@ -17,7 +18,8 @@ public class DeleteControllerTest extends ControllerTestCase
 		DeleteController controller = tester.getController();
 		assertThat(controller, is(notNullValue()));
 		assertThat(tester.isRedirect(), is(false));
-		assertThat(tester.getDestinationPath(), is("/errors/noSession"));
+		assertThat(tester.getDestinationPath(), is(nullValue()));
+		assertThat(tester.response.getStatus(), is(Constants.STATUS_NO_SESSION));
 	}
 
 }
