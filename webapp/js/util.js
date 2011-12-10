@@ -189,7 +189,7 @@ OAuth2Session.prototype.handle = function () {
 	var context = this;
 	var params = RequestUtil.getQueryParameters();
 	if (params['code']) {
-		if (params['state'] == 'localhost:8888') {
+		if (params['state'] == 'localhost:8888' && location.host != 'localhost:8888') {
 			// step2-1: development environment redirection
 			location.replace('http://localhost:8888/' + location.search);
 			return;
