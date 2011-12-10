@@ -1,5 +1,5 @@
 /**
- * Date utility.
+ * @class Date utility.
  */
 function DateUtil () {
 };
@@ -180,35 +180,40 @@ String.prototype.hashCode = function () {
  */
 function OAuth2Session () {
 	this.clientId = '965159379100.apps.googleusercontent.com';
+	this.redirectURI = 'https%3A%2F%2Ftaskwalls.appspot.com%2F';
 };
 /**
  * Handle current request.
  */
 OAuth2Session.prototype.handle = function () {
 	var context = this;
-	var authorizationCodeMatch = location.search.match(/\?code=(.*)/);
-	if (authorizationCodeMatch) {
+	var params = RequestUtil.getQueryParameters();
+	if (params['code']) {
+		if (params['state'] == 'localhost:8888') {
+			// step2-1: development environment redirection
+			location.replace('http://localhost:8888/' + location.search);
+			return;
+		}
 		// step2: received authorization code
 		this.onAuthorizing();
 		$.ajax({
 			url: '/oauth2',
 			type: 'POST',
 			data: {
-				code: decodeURIComponent(authorizationCodeMatch[1])
+				code: decodeURIComponent(params['code'])
 			},
 			success: function () {
 				location.replace(location.pathname);
 			},
 			error: function () {
-				// step2-1: authorization error
+				// step2-3: authorization error
 				location.replace('/logout');
 			}
 		});
 		return;
 	}
-	var authorizationErrorMatch = location.search.match(/\?error=/);
-	if (authorizationErrorMatch) {
-		// step2-1: authorization error
+	if (params['error']) {
+		// step2-2: authorization denied
 		location.replace('/logout');
 		return;
 	}
@@ -245,7 +250,8 @@ OAuth2Session.prototype.handle = function () {
  */
 OAuth2Session.prototype.getAuthorizationURL = function () {
 	return 'https://accounts.google.com/o/oauth2/auth'
-		+ '?redirect_uri=' + (location.protocol + '//' + location.host + location.pathname)
+		+ '?redirect_uri=' + this.redirectURI
+		+ '&state=' + location.host
 		+ '&response_type=code'
 		+ '&scope=https://www.googleapis.com/auth/tasks'
 		+ '&access_type=offline'
@@ -288,3 +294,23 @@ if (typeof localStorage == undefined) {
 if (typeof sessionStorage == undefined) {
 	sessionStorage = new NullStorage();
 }
+/**
+ * @class Request utility.
+ */
+function RequestUtil () {
+};
+/**
+ * Parse query string.
+ * @returns hash of query parameters
+ * @see http://code.google.com/intl/ja/apis/accounts/docs/OAuth2UserAgent.html
+ */
+RequestUtil.getQueryParameters = function () {
+	var params = {};
+	var queryString = location.hash.substring(1);
+	var regex = /([^&=]+)=([^&]*)/g;
+	var m;
+	while (m = regex.exec(queryString)) {
+		params[decodeURIComponent(m[1])] = decodeURIComponent(m[2]);
+	}
+	return params;
+};
