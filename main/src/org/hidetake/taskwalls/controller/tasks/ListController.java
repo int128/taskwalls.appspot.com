@@ -39,7 +39,7 @@ public class ListController extends ControllerBase
 		}
 
 		String tasklistID = asString("tasklistID");
-		Tasks tasks = tasksService.tasks.list(tasklistID).execute();
+		Tasks tasks = tasksService.tasks().list(tasklistID).execute();
 		return jsonResponse(tasks);
 	}
 

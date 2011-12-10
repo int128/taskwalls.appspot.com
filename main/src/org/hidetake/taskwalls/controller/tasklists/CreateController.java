@@ -37,7 +37,7 @@ public class CreateController extends ControllerBase
 		TaskList taskList = new TaskList();
 		taskList.setId(asString("id"));
 		taskList.setTitle(asString("title"));
-		TaskList created = tasksService.tasklists.insert(taskList).execute();
+		TaskList created = tasksService.tasklists().insert(taskList).execute();
 		return jsonResponse(created);
 	}
 

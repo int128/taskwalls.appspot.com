@@ -10,7 +10,6 @@ import org.hidetake.taskwalls.Constants;
 import org.hidetake.taskwalls.model.Session;
 import org.hidetake.taskwalls.model.oauth2.CachedToken;
 import org.hidetake.taskwalls.service.SessionService;
-import org.hidetake.taskwalls.util.googleapis.GenericJsonWrapper;
 import org.hidetake.taskwalls.util.googleapis.HttpResponseExceptionUtil;
 import org.hidetake.taskwalls.util.googleapis.JacksonFactoryLocator;
 import org.hidetake.taskwalls.util.googleapis.NetHttpTransportLocator;
@@ -22,8 +21,11 @@ import com.google.api.client.auth.oauth2.draft10.AccessTokenResponse;
 import com.google.api.client.googleapis.auth.oauth2.draft10.GoogleAccessProtectedResource;
 import com.google.api.client.googleapis.auth.oauth2.draft10.GoogleAccessTokenRequest.GoogleRefreshTokenGrant;
 import com.google.api.client.http.HttpResponseException;
+import com.google.api.client.http.json.JsonHttpRequest;
+import com.google.api.client.http.json.JsonHttpRequestInitializer;
 import com.google.api.client.json.GenericJson;
 import com.google.api.services.tasks.Tasks;
+import com.google.api.services.tasks.TasksRequest;
 
 /**
  * Base controller class that depends on Google Tasks API.
@@ -49,11 +51,15 @@ public abstract class ControllerBase extends Controller
 	 */
 	protected Navigation jsonResponse(GenericJson object) throws IOException
 	{
-		String json = GenericJsonWrapper.toString(object);
 		response.setHeader("X-Content-Type-Options", "nosniff");
 		response.setContentType("application/json");
 		response.setCharacterEncoding("UTF-8");
-		response.getWriter().append(json);
+		if (object == null) {
+			response.getWriter().append("null");
+		}
+		else {
+			response.getWriter().append(object.toString());
+		}
 		response.flushBuffer();
 		return null;
 	}
@@ -130,11 +136,19 @@ public abstract class ControllerBase extends Controller
 				AppCredential.CLIENT_CREDENTIAL.getClientId(),
 				AppCredential.CLIENT_CREDENTIAL.getClientSecret(),
 				token.getRefreshToken());
-		tasksService = new Tasks(
-				NetHttpTransportLocator.get(),
-				resource,
-				JacksonFactoryLocator.get());
-		tasksService.setUserIp(request.getRemoteAddr());
+		JsonHttpRequestInitializer requestInitializer = new JsonHttpRequestInitializer()
+		{
+			@Override
+			public void initialize(JsonHttpRequest jsonHttpRequest) throws IOException
+			{
+				TasksRequest tasksRequest = (TasksRequest) jsonHttpRequest;
+				tasksRequest.setUserIp(request.getRemoteAddr());
+			}
+		};
+		tasksService = Tasks.builder(NetHttpTransportLocator.get(), JacksonFactoryLocator.get())
+				.setHttpRequestInitializer(resource)
+				.setJsonHttpRequestInitializer(requestInitializer)
+				.build();
 		return null;
 	}
 

@@ -43,7 +43,7 @@ public class UpdateController extends ControllerBase
 		TaskList taskList = new TaskList();
 		taskList.setId(asString("id"));
 		taskList.setTitle(asString("title"));
-		Patch patch = tasksService.tasklists.patch(asString("id"), taskList);
+		Patch patch = tasksService.tasklists().patch(asString("id"), taskList);
 		TaskList patched = patch.execute();
 
 		TasklistOptions.mergeTo(patched);

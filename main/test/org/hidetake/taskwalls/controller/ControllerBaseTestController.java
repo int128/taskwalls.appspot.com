@@ -16,7 +16,7 @@ public class ControllerBaseTestController extends ControllerBase
 		}
 		else {
 			GenericJson json = new GenericJson();
-			json.jsonFactory = JacksonFactoryLocator.get();
+			json.setFactory(JacksonFactoryLocator.get());
 			return jsonResponse(json);
 		}
 	}

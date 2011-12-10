@@ -3,7 +3,6 @@ package org.hidetake.taskwalls.util;
 import java.io.IOException;
 import java.io.Serializable;
 
-import org.hidetake.taskwalls.util.googleapis.GenericJsonWrapper;
 import org.hidetake.taskwalls.util.googleapis.JacksonFactoryLocator;
 import org.slim3.memcache.Memcache;
 import org.slim3.util.AppEngineUtil;
@@ -109,7 +108,13 @@ public class JsonCache
 	 */
 	public <K extends Serializable, V extends GenericJson> void put(K key, V value)
 	{
-		String json = GenericJsonWrapper.toString(value);
+		if (key == null) {
+			throw new NullPointerException("key is null");
+		}
+		if (value == null) {
+			throw new NullPointerException("value is null");
+		}
+		String json = value.toString();
 		Memcache.put(key, json, currentPolicy.expiration);
 	}
 

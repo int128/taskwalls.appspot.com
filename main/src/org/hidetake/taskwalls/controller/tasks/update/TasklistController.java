@@ -38,7 +38,7 @@ public class TasklistController extends ControllerBase
 			return null;
 		}
 
-		Task original = tasksService.tasks.get(asString("tasklistID"), asString("id")).execute();
+		Task original = tasksService.tasks().get(asString("tasklistID"), asString("id")).execute();
 		Task task = new Task();
 		task.setCompleted(original.getCompleted());
 		task.setDeleted(original.getDeleted());
@@ -51,8 +51,8 @@ public class TasklistController extends ControllerBase
 		task.setTitle(original.getTitle());
 		task.setUpdated(original.getUpdated());
 		// TODO: transaction
-		Task moved = tasksService.tasks.insert(asString("destinationTasklistID"), task).execute();
-		tasksService.tasks.delete(asString("tasklistID"), asString("id")).execute();
+		Task moved = tasksService.tasks().insert(asString("destinationTasklistID"), task).execute();
+		tasksService.tasks().delete(asString("tasklistID"), asString("id")).execute();
 		return jsonResponse(moved);
 	}
 

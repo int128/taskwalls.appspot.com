@@ -51,7 +51,7 @@ public class UpdateController extends ControllerBase
 			task.setCompleted(Data.NULL_DATE_TIME);
 		}
 
-		Patch patch = tasksService.tasks.patch(asString("tasklistID"), task.getId(), task);
+		Patch patch = tasksService.tasks().patch(asString("tasklistID"), task.getId(), task);
 		Task patched = patch.execute();
 		return jsonResponse(patched);
 	}

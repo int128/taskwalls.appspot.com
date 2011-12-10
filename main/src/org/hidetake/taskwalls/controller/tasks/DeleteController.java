@@ -32,7 +32,7 @@ public class DeleteController extends ControllerBase
 			return null;
 		}
 
-		tasksService.tasks.delete(asString("tasklistID"), asString("id")).execute();
+		tasksService.tasks().delete(asString("tasklistID"), asString("id")).execute();
 		return null;
 	}
 

@@ -40,7 +40,7 @@ public class CreateController extends ControllerBase
 		task.setNotes(asString("notes"));
 		task.setDue(new DateTime(asLong("dueTime"), 0));
 
-		Task created = tasksService.tasks.insert(asString("tasklistID"), task).execute();
+		Task created = tasksService.tasks().insert(asString("tasklistID"), task).execute();
 		return jsonResponse(created);
 	}
 

@@ -22,6 +22,7 @@ public class GenericJsonWrapper
 	 * 
 	 * @param item data key/value pairs
 	 * @return serialized JSON string representation
+	 * @deprecated fixed bug in google-api-client-java 1.6.0
 	 */
 	public static String toString(GenericJson item)
 	{

@@ -33,7 +33,7 @@ public class ListController extends ControllerBase
 			return null;
 		}
 
-		TaskLists taskLists = tasksService.tasklists.list().execute();
+		TaskLists taskLists = tasksService.tasklists().list().execute();
 		TasklistOptions.mergeTo(taskLists);
 		return jsonResponse(taskLists);
 	}
