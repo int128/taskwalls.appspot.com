@@ -253,8 +253,8 @@ OAuth2Session.prototype.getAuthorizationURL = function () {
 	return 'https://accounts.google.com/o/oauth2/auth'
 		+ '?redirect_uri=https%3A%2F%2Ftaskwalls.appspot.com%2F'
 		+ '&response_type=code'
-		+ '&scope=https://www.googleapis.com/auth/tasks'
-		+ '&access_type=offline'
+		+ '&scope=https%3A%2F%2Fwww.googleapis.com%2Fauth%2Ftasks'
+//		+ '&access_type=offline'
 		+ '&client_id=965159379100.apps.googleusercontent.com'
 		+ '&state=' + location.host;
 };
