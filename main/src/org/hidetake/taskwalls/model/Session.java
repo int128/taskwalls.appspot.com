@@ -2,18 +2,18 @@ package org.hidetake.taskwalls.model;
 
 import java.io.Serializable;
 
-import com.google.appengine.api.datastore.Key;
-
 import org.hidetake.taskwalls.model.oauth2.CachedToken;
 import org.slim3.datastore.Attribute;
 import org.slim3.datastore.Datastore;
 import org.slim3.datastore.Model;
 
-@Model(schemaVersion = 1)
+import com.google.appengine.api.datastore.Key;
+
+@Model(schemaVersion = 2)
 public class Session implements Serializable
 {
 
-	private static final long serialVersionUID = 1L;
+	private static final long serialVersionUID = 2L;
 
 	/**
 	 * Create the key.
@@ -30,6 +30,8 @@ public class Session implements Serializable
 
 	@Attribute(lob = true)
 	private CachedToken token;
+
+	private boolean refreshable;
 
 	/**
 	 * Returns the key.
@@ -60,6 +62,21 @@ public class Session implements Serializable
 	public void setToken(CachedToken token)
 	{
 		this.token = token;
+		this.setRefreshable(token.getRefreshToken() != null);
+	}
+
+	public boolean isRefreshable()
+	{
+		return refreshable;
+	}
+
+	/**
+	 * @deprecated
+	 * @param refreshable
+	 */
+	public void setRefreshable(boolean refreshable)
+	{
+		this.refreshable = refreshable;
 	}
 
 }
