@@ -90,16 +90,21 @@ public abstract class ControllerBase extends Controller
 			return null;
 		}
 
-		// refresh the token if expires
 		CachedToken token = session.getToken();
 		if (new Date().after(token.getExpire())) {
+			// check refresh token
+			if (token.getRefreshToken() == null) {
+				logger.warning("Refresh token is null, please re-authorize");
+				response.sendError(Constants.STATUS_NO_SESSION);
+				return null;
+			}
+			// refresh the token if expires
 			GoogleRefreshTokenGrant grant = new GoogleRefreshTokenGrant(
 					NetHttpTransportLocator.get(),
 					JacksonFactoryLocator.get(),
 					AppCredential.CLIENT_CREDENTIAL.getClientId(),
 					AppCredential.CLIENT_CREDENTIAL.getClientSecret(),
 					token.getRefreshToken());
-			// retry 3 times
 			AccessTokenResponse tokenResponse;
 			try {
 				tokenResponse = grant.execute();
@@ -114,6 +119,7 @@ public abstract class ControllerBase extends Controller
 				logger.warning(HttpResponseExceptionUtil.getMessage(e));
 			}
 			tokenResponse = grant.execute();
+
 			// alter the token
 			Date expire = new Date(System.currentTimeMillis() + tokenResponse.expiresIn * 1000L);
 			CachedToken newToken = new CachedToken(
@@ -123,6 +129,7 @@ public abstract class ControllerBase extends Controller
 			session.setToken(newToken);
 			SessionService.put(session);
 			token = newToken;
+
 			// extends cookie life time
 			Cookie cookie = new Cookie(Constants.COOKIE_SESSION_ID, sessionID);
 			cookie.setMaxAge(Constants.SESSION_EXPIRATION);
