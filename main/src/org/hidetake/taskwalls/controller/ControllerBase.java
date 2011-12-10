@@ -20,6 +20,7 @@ import org.slim3.util.ThrowableUtil;
 import com.google.api.client.auth.oauth2.draft10.AccessTokenResponse;
 import com.google.api.client.googleapis.auth.oauth2.draft10.GoogleAccessProtectedResource;
 import com.google.api.client.googleapis.auth.oauth2.draft10.GoogleAccessTokenRequest.GoogleRefreshTokenGrant;
+import com.google.api.client.http.HttpResponse;
 import com.google.api.client.http.HttpResponseException;
 import com.google.api.client.http.json.JsonHttpRequest;
 import com.google.api.client.http.json.JsonHttpRequestInitializer;
@@ -165,7 +166,16 @@ public abstract class ControllerBase extends Controller
 	protected Navigation handleError(Throwable e) throws Throwable
 	{
 		if (e instanceof HttpResponseException) {
-			logger.severe(HttpResponseExceptionUtil.getMessage((HttpResponseException) e));
+			HttpResponseException httpResponseException = (HttpResponseException) e;
+			logger.severe(HttpResponseExceptionUtil.getMessage(httpResponseException));
+			HttpResponse httpResponse = httpResponseException.getResponse();
+			if (httpResponse != null) {
+				if (httpResponse.getStatusCode() == 401) {
+					// 401 invalid credentials
+					response.sendError(Constants.STATUS_NO_SESSION);
+					return null;
+				}
+			}
 		}
 		return super.handleError(e);
 	}
