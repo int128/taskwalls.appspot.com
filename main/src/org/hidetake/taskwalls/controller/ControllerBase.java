@@ -98,6 +98,7 @@ public abstract class ControllerBase extends Controller
 				response.sendError(Constants.STATUS_NO_SESSION);
 				return null;
 			}
+
 			// refresh the token if expires
 			GoogleRefreshTokenGrant grant = new GoogleRefreshTokenGrant(
 					NetHttpTransportLocator.get(),
@@ -136,6 +137,7 @@ public abstract class ControllerBase extends Controller
 			response.addCookie(cookie);
 		}
 
+		// instantiate service
 		GoogleAccessProtectedResource resource = new GoogleAccessProtectedResource(
 				token.getAccessToken(),
 				NetHttpTransportLocator.get(),
