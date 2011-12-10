@@ -232,6 +232,9 @@ OAuth2Session.prototype.handle = function () {
 				// session expired
 				context.authorize();
 			}
+			else {
+				throw e;
+			}
 		});
 		this.onAuthorized();
 		return;
