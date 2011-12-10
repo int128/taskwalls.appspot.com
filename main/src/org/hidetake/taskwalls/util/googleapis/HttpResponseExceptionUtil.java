@@ -18,15 +18,15 @@ public class HttpResponseExceptionUtil
 
 	/**
 	 * Get the error message in JSON response.
-	 * @param e
-	 * @return
+	 * @param e exception
+	 * @return error message
 	 */
 	public static String getMessage(HttpResponseException e)
 	{
 		if (e == null) {
 			throw new NullPointerException("e is null");
 		}
-		if (e.getResponse() != null) {
+		if (e.getResponse() == null) {
 			return e.getLocalizedMessage();
 		}
 		try {
