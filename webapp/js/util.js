@@ -306,7 +306,7 @@ function RequestUtil () {
  */
 RequestUtil.getQueryParameters = function () {
 	var params = {};
-	var queryString = location.hash.substring(1);
+	var queryString = location.search.substring(1);
 	var regex = /([^&=]+)=([^&]*)/g;
 	var m;
 	while (m = regex.exec(queryString)) {
