@@ -1,5 +1,6 @@
 package org.hidetake.taskwalls.controller;
 
+import java.net.URI;
 import java.security.MessageDigest;
 import java.util.Date;
 import java.util.UUID;
@@ -58,7 +59,7 @@ public class Oauth2Controller extends Controller
 				AppCredential.CLIENT_CREDENTIAL.getClientId(),
 				AppCredential.CLIENT_CREDENTIAL.getClientSecret(),
 				authorizationCode,
-				AppCredential.REDIRECT_URI);
+				getRedirectURI());
 		AccessTokenResponse tokenResponse;
 		try {
 			tokenResponse = grant.execute();
@@ -106,6 +107,11 @@ public class Oauth2Controller extends Controller
 		cookie.setMaxAge(Constants.SESSION_EXPIRATION);
 		response.addCookie(cookie);
 		return null;
+	}
+
+	protected String getRedirectURI()
+	{
+		return URI.create(request.getRequestURL().toString()).resolve("/").toASCIIString();
 	}
 
 	@Override

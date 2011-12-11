@@ -251,12 +251,12 @@ OAuth2Session.prototype.handle = function () {
  */
 OAuth2Session.prototype.getAuthorizationURL = function () {
 	return 'https://accounts.google.com/o/oauth2/auth'
-		+ '?redirect_uri=https%3A%2F%2Ftaskwalls.appspot.com%2F'
+		+ '?redirect_uri=' + (location.protocol + '//' + location.host + location.pathname)
 		+ '&response_type=code'
-		+ '&scope=https%3A%2F%2Fwww.googleapis.com%2Fauth%2Ftasks'
-//		+ '&access_type=offline'
-		+ '&client_id=965159379100.apps.googleusercontent.com'
-		+ '&state=' + location.host;
+		+ '&scope=https://www.googleapis.com/auth/tasks'
+		+ '&access_type=offline'
+		+ '&approval_prompt=force'
+		+ '&client_id=965159379100.apps.googleusercontent.com';
 };
 /**
  * Authorize.
