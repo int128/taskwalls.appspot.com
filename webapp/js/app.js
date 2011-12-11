@@ -3,7 +3,7 @@
  * (c) hidetake.org, 2011.
  */
 // libs
-document.write('<script type="text/javascript" src="/js/lib/jquery.cookie.js"></script>');
+document.write('<script type="text/javascript" src="/js/jquery.cookie.js"></script>');
 // modules
 document.write('<script type="text/javascript" src="/js/util.js"></script>');
 document.write('<script type="text/javascript" src="/js/model.js"></script>');
