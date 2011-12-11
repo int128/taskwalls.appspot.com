@@ -1,7 +1,6 @@
 package org.hidetake.taskwalls.controller;
 
 import java.net.URI;
-import java.util.Date;
 import java.util.UUID;
 import java.util.logging.Logger;
 
@@ -10,17 +9,14 @@ import javax.servlet.http.Cookie;
 import org.hidetake.taskwalls.Constants;
 import org.hidetake.taskwalls.model.Session;
 import org.hidetake.taskwalls.model.oauth2.CachedToken;
+import org.hidetake.taskwalls.service.GoogleOAuth2Service;
 import org.hidetake.taskwalls.service.SessionService;
 import org.hidetake.taskwalls.util.AjaxPreconditions;
 import org.hidetake.taskwalls.util.DigestGenerator;
 import org.hidetake.taskwalls.util.googleapis.HttpResponseExceptionUtil;
-import org.hidetake.taskwalls.util.googleapis.JacksonFactoryLocator;
-import org.hidetake.taskwalls.util.googleapis.NetHttpTransportLocator;
 import org.slim3.controller.Controller;
 import org.slim3.controller.Navigation;
 
-import com.google.api.client.auth.oauth2.draft10.AccessTokenResponse;
-import com.google.api.client.googleapis.auth.oauth2.draft10.GoogleAccessTokenRequest.GoogleAuthorizationCodeGrant;
 import com.google.api.client.http.HttpResponseException;
 
 /**
@@ -31,6 +27,12 @@ public class Oauth2Controller extends Controller
 {
 
 	private static final Logger logger = Logger.getLogger(Oauth2Controller.class.getName());
+
+	/**
+	 * OAuth 2.0 service.
+	 */
+	protected GoogleOAuth2Service oauth2Service = new GoogleOAuth2Service(
+			AppCredential.CLIENT_CREDENTIAL);
 
 	@Override
 	public Navigation run() throws Exception
@@ -52,35 +54,10 @@ public class Oauth2Controller extends Controller
 			return null;
 		}
 
-		// exchange authorization code and token
-		GoogleAuthorizationCodeGrant grant = new GoogleAuthorizationCodeGrant(
-				NetHttpTransportLocator.get(),
-				JacksonFactoryLocator.get(),
-				AppCredential.CLIENT_CREDENTIAL.getClientId(),
-				AppCredential.CLIENT_CREDENTIAL.getClientSecret(),
-				authorizationCode,
-				getRedirectURI());
-		AccessTokenResponse tokenResponse;
-		try {
-			tokenResponse = grant.execute();
-		}
-		catch (HttpResponseException e) {
-			logger.severe(HttpResponseExceptionUtil.getMessage(e));
-		}
-		try {
-			tokenResponse = grant.execute();
-		}
-		catch (HttpResponseException e) {
-			logger.severe(HttpResponseExceptionUtil.getMessage(e));
-		}
-		tokenResponse = grant.execute();
-		Date expire = new Date(System.currentTimeMillis() + tokenResponse.expiresIn * 1000L);
-		CachedToken token = new CachedToken(
-				tokenResponse.accessToken,
-				tokenResponse.refreshToken,
-				expire);
+		// exchange authorization code for token
+		CachedToken token = oauth2Service.exchange(authorizationCode, getRedirectURI());
 
-		// create session
+		// start a session
 		String sessionID = DigestGenerator.create().update(
 				UUID.randomUUID(),
 				AppCredential.CLIENT_CREDENTIAL.getClientId(),
@@ -93,7 +70,6 @@ public class Oauth2Controller extends Controller
 		session.setToken(token);
 		SessionService.put(session);
 
-		// create session cookie
 		Cookie cookie = new Cookie(Constants.COOKIE_SESSION_ID, sessionID);
 		cookie.setMaxAge(Constants.SESSION_EXPIRATION);
 		response.addCookie(cookie);

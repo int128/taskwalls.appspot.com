@@ -36,6 +36,10 @@ public class CachedToken implements Serializable
 		this.expire = expire;
 	}
 
+	/**
+	 * Get the access token.
+	 * @return
+	 */
 	public String getAccessToken()
 	{
 		return accessToken;
@@ -50,9 +54,22 @@ public class CachedToken implements Serializable
 		return refreshToken;
 	}
 
+	/**
+	 * Get the expire date.
+	 * @return
+	 */
 	public Date getExpire()
 	{
 		return expire;
+	}
+
+	/**
+	 * Returns whether the access token has been expired.
+	 * @return
+	 */
+	public boolean isExpired()
+	{
+		return getExpire().getTime() < System.currentTimeMillis();
 	}
 
 }

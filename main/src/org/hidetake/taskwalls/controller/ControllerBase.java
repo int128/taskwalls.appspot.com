@@ -1,7 +1,6 @@
 package org.hidetake.taskwalls.controller;
 
 import java.io.IOException;
-import java.util.Date;
 import java.util.logging.Logger;
 
 import javax.servlet.http.Cookie;
@@ -9,6 +8,7 @@ import javax.servlet.http.Cookie;
 import org.hidetake.taskwalls.Constants;
 import org.hidetake.taskwalls.model.Session;
 import org.hidetake.taskwalls.model.oauth2.CachedToken;
+import org.hidetake.taskwalls.service.GoogleOAuth2Service;
 import org.hidetake.taskwalls.service.SessionService;
 import org.hidetake.taskwalls.util.googleapis.HttpResponseExceptionUtil;
 import org.hidetake.taskwalls.util.googleapis.JacksonFactoryLocator;
@@ -18,9 +18,7 @@ import org.slim3.controller.Controller;
 import org.slim3.controller.Navigation;
 import org.slim3.util.ThrowableUtil;
 
-import com.google.api.client.auth.oauth2.draft10.AccessTokenResponse;
 import com.google.api.client.googleapis.auth.oauth2.draft10.GoogleAccessProtectedResource;
-import com.google.api.client.googleapis.auth.oauth2.draft10.GoogleAccessTokenRequest.GoogleRefreshTokenGrant;
 import com.google.api.client.http.HttpResponse;
 import com.google.api.client.http.HttpResponseException;
 import com.google.api.client.json.GenericJson;
@@ -40,6 +38,12 @@ public abstract class ControllerBase extends Controller
 	 * This field must be initialized at {@link #setUp()}.
 	 */
 	protected Tasks tasksService;
+
+	/**
+	 * OAuth 2.0 service.
+	 */
+	protected GoogleOAuth2Service oauth2Service = new GoogleOAuth2Service(
+			AppCredential.CLIENT_CREDENTIAL);
 
 	/**
 	 * Returns JSON response.
@@ -89,46 +93,17 @@ public abstract class ControllerBase extends Controller
 			return null;
 		}
 
+		// refresh the token if expires
 		CachedToken token = session.getToken();
-		if (new Date().after(token.getExpire())) {
-			// check refresh token
+		if (token.isExpired()) {
 			if (token.getRefreshToken() == null) {
 				logger.warning("Refresh token is null, please re-authorize");
 				response.sendError(Constants.STATUS_NO_SESSION);
 				return null;
 			}
-
-			// refresh the token if expires
-			GoogleRefreshTokenGrant grant = new GoogleRefreshTokenGrant(
-					NetHttpTransportLocator.get(),
-					JacksonFactoryLocator.get(),
-					AppCredential.CLIENT_CREDENTIAL.getClientId(),
-					AppCredential.CLIENT_CREDENTIAL.getClientSecret(),
-					token.getRefreshToken());
-			AccessTokenResponse tokenResponse;
-			try {
-				tokenResponse = grant.execute();
-			}
-			catch (HttpResponseException e) {
-				logger.warning(HttpResponseExceptionUtil.getMessage(e));
-			}
-			try {
-				tokenResponse = grant.execute();
-			}
-			catch (HttpResponseException e) {
-				logger.warning(HttpResponseExceptionUtil.getMessage(e));
-			}
-			tokenResponse = grant.execute();
-
-			// alter the token
-			Date expire = new Date(System.currentTimeMillis() + tokenResponse.expiresIn * 1000L);
-			CachedToken newToken = new CachedToken(
-					tokenResponse.accessToken,
-					token.getRefreshToken(),
-					expire);
-			session.setToken(newToken);
+			token = oauth2Service.refresh(token);
+			session.setToken(token);
 			SessionService.put(session);
-			token = newToken;
 
 			// extends cookie life time
 			Cookie cookie = new Cookie(Constants.COOKIE_SESSION_ID, sessionID);
