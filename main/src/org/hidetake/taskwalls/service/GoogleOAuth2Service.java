@@ -2,12 +2,16 @@ package org.hidetake.taskwalls.service;
 
 import java.io.IOException;
 import java.util.Date;
+import java.util.logging.Logger;
 
 import org.hidetake.taskwalls.model.oauth2.CachedToken;
 import org.hidetake.taskwalls.model.oauth2.ClientCredential;
+import org.hidetake.taskwalls.util.StackTraceUtil;
+import org.hidetake.taskwalls.util.googleapis.HttpResponseExceptionUtil;
 import org.hidetake.taskwalls.util.googleapis.JacksonFactoryLocator;
 import org.hidetake.taskwalls.util.googleapis.NetHttpTransportLocator;
 
+import com.google.api.client.auth.oauth2.draft10.AccessTokenRequest;
 import com.google.api.client.auth.oauth2.draft10.AccessTokenResponse;
 import com.google.api.client.googleapis.auth.oauth2.draft10.GoogleAccessTokenRequest.GoogleAuthorizationCodeGrant;
 import com.google.api.client.googleapis.auth.oauth2.draft10.GoogleAccessTokenRequest.GoogleRefreshTokenGrant;
@@ -20,6 +24,7 @@ import com.google.api.client.http.HttpResponseException;
 public class GoogleOAuth2Service
 {
 
+	private static final Logger logger = Logger.getLogger(GoogleOAuth2Service.class.getName());
 	private final ClientCredential clientCredential;
 
 	public GoogleOAuth2Service(ClientCredential clientCredential)
@@ -52,7 +57,7 @@ public class GoogleOAuth2Service
 				clientCredential.getClientSecret(),
 				authorizationCode,
 				redirectURI);
-		AccessTokenResponse tokenResponse = grant.execute();
+		AccessTokenResponse tokenResponse = execute(grant);
 		Date expire = new Date(System.currentTimeMillis() + tokenResponse.expiresIn * 1000L);
 		return new CachedToken(
 				tokenResponse.accessToken,
@@ -82,12 +87,41 @@ public class GoogleOAuth2Service
 				clientCredential.getClientId(),
 				clientCredential.getClientSecret(),
 				token.getRefreshToken());
-		AccessTokenResponse tokenResponse = grant.execute();
+		AccessTokenResponse tokenResponse = execute(grant);
 		Date expire = new Date(System.currentTimeMillis() + tokenResponse.expiresIn * 1000L);
 		return new CachedToken(
 				tokenResponse.accessToken,
 				token.getRefreshToken(),
 				expire);
+	}
+
+	private static AccessTokenResponse execute(AccessTokenRequest accessTokenRequest)
+			throws HttpResponseException, IOException
+	{
+		// 1st chance
+		try {
+			return accessTokenRequest.execute();
+		}
+		catch (HttpResponseException e) {
+			logger.severe(HttpResponseExceptionUtil.getMessage(e));
+			logger.severe(StackTraceUtil.format(e));
+		}
+		catch (IOException e) {
+			logger.severe(StackTraceUtil.format(e));
+		}
+		// 2nd chance
+		try {
+			return accessTokenRequest.execute();
+		}
+		catch (HttpResponseException e) {
+			logger.severe(HttpResponseExceptionUtil.getMessage(e));
+			logger.severe(StackTraceUtil.format(e));
+		}
+		catch (IOException e) {
+			logger.severe(StackTraceUtil.format(e));
+		}
+		// last chance
+		return accessTokenRequest.execute();
 	}
 
 }
