@@ -1,7 +1,6 @@
 package org.hidetake.taskwalls.controller;
 
 import java.net.URI;
-import java.security.MessageDigest;
 import java.util.Date;
 import java.util.UUID;
 import java.util.logging.Logger;
@@ -13,6 +12,7 @@ import org.hidetake.taskwalls.model.Session;
 import org.hidetake.taskwalls.model.oauth2.CachedToken;
 import org.hidetake.taskwalls.service.SessionService;
 import org.hidetake.taskwalls.util.AjaxPreconditions;
+import org.hidetake.taskwalls.util.DigestGenerator;
 import org.hidetake.taskwalls.util.googleapis.HttpResponseExceptionUtil;
 import org.hidetake.taskwalls.util.googleapis.JacksonFactoryLocator;
 import org.hidetake.taskwalls.util.googleapis.NetHttpTransportLocator;
@@ -81,22 +81,13 @@ public class Oauth2Controller extends Controller
 				expire);
 
 		// create session
-		MessageDigest digest = MessageDigest.getInstance("SHA-256");
-		digest.reset();
-		digest.update(UUID.randomUUID().toString().getBytes());
-		digest.update(AppCredential.CLIENT_CREDENTIAL.getClientId().getBytes());
-		digest.update(AppCredential.CLIENT_CREDENTIAL.getClientSecret().getBytes());
-		digest.update(authorizationCode.getBytes());
-		digest.update(token.getAccessToken().getBytes());
-		if (token.getRefreshToken() != null) {
-			digest.update(token.getRefreshToken().getBytes());
-		}
-		StringBuilder sessionIDBuilder = new StringBuilder();
-		for (byte b : digest.digest()) {
-			sessionIDBuilder.append(Integer.toHexString(b & 0xff));
-		}
-		String sessionID = sessionIDBuilder.toString();
-
+		String sessionID = DigestGenerator.create().update(
+				UUID.randomUUID(),
+				AppCredential.CLIENT_CREDENTIAL.getClientId(),
+				AppCredential.CLIENT_CREDENTIAL.getClientSecret(),
+				authorizationCode,
+				token.getAccessToken(),
+				token.getRefreshToken()).getAsHexString();
 		Session session = new Session();
 		session.setKey(Session.createKey(sessionID));
 		session.setToken(token);
