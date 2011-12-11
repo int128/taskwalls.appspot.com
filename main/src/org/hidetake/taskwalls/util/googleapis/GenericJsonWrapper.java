@@ -12,6 +12,7 @@ import com.google.api.client.json.JsonGenerator;
 /**
  * Wrapper class of {@link GenericJson}.
  * 
+ * @deprecated
  * @author hidetake.org
  */
 public class GenericJsonWrapper
