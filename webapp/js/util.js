@@ -187,11 +187,6 @@ OAuth2Session.prototype.handle = function () {
 	var context = this;
 	var params = RequestUtil.getQueryParameters();
 	if (params['code']) {
-		if (params['state'] == 'localhost:8888' && location.host != 'localhost:8888') {
-			// step2-1: development environment redirection
-			location.replace('http://localhost:8888/' + location.search);
-			return;
-		}
 		// step2: received authorization code
 		this.onAuthorizing();
 		$.ajax({
@@ -204,7 +199,7 @@ OAuth2Session.prototype.handle = function () {
 				location.replace(location.pathname);
 			},
 			error: function () {
-				// step2-3: authorization error
+				// step2-1: authorization error
 				location.replace('/logout');
 			}
 		});
