@@ -13,6 +13,7 @@ import org.hidetake.taskwalls.service.SessionService;
 import org.hidetake.taskwalls.util.googleapis.HttpResponseExceptionUtil;
 import org.hidetake.taskwalls.util.googleapis.JacksonFactoryLocator;
 import org.hidetake.taskwalls.util.googleapis.NetHttpTransportLocator;
+import org.hidetake.taskwalls.util.googleapis.TasksRequestInitializer;
 import org.slim3.controller.Controller;
 import org.slim3.controller.Navigation;
 import org.slim3.util.ThrowableUtil;
@@ -22,11 +23,8 @@ import com.google.api.client.googleapis.auth.oauth2.draft10.GoogleAccessProtecte
 import com.google.api.client.googleapis.auth.oauth2.draft10.GoogleAccessTokenRequest.GoogleRefreshTokenGrant;
 import com.google.api.client.http.HttpResponse;
 import com.google.api.client.http.HttpResponseException;
-import com.google.api.client.http.json.JsonHttpRequest;
-import com.google.api.client.http.json.JsonHttpRequestInitializer;
 import com.google.api.client.json.GenericJson;
 import com.google.api.services.tasks.Tasks;
-import com.google.api.services.tasks.TasksRequest;
 
 /**
  * Base controller class that depends on Google Tasks API.
@@ -146,18 +144,12 @@ public abstract class ControllerBase extends Controller
 				AppCredential.CLIENT_CREDENTIAL.getClientId(),
 				AppCredential.CLIENT_CREDENTIAL.getClientSecret(),
 				token.getRefreshToken());
-		JsonHttpRequestInitializer requestInitializer = new JsonHttpRequestInitializer()
-		{
-			@Override
-			public void initialize(JsonHttpRequest jsonHttpRequest) throws IOException
-			{
-				TasksRequest tasksRequest = (TasksRequest) jsonHttpRequest;
-				tasksRequest.setUserIp(request.getRemoteAddr());
-			}
-		};
-		tasksService = Tasks.builder(NetHttpTransportLocator.get(), JacksonFactoryLocator.get())
+		TasksRequestInitializer tasksRequestInitializer = new TasksRequestInitializer();
+		tasksRequestInitializer.setUserIp(request.getRemoteAddr());
+		tasksService = Tasks
+				.builder(NetHttpTransportLocator.get(), JacksonFactoryLocator.get())
 				.setHttpRequestInitializer(resource)
-				.setJsonHttpRequestInitializer(requestInitializer)
+				.setJsonHttpRequestInitializer(tasksRequestInitializer)
 				.build();
 		return null;
 	}
