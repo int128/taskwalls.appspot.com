@@ -164,16 +164,16 @@ FormController.prototype.cancelHandler = function () {
  * @see http://werxltd.com/wp/2010/05/13/javascript-implementation-of-javas-string-hashcode-method/
  */
 String.prototype.hashCode = function () {
-	var hash = 0;
+	var h = 0;
 	if (this.length == 0) {
-		return hash;
+		return h;
 	}
 	for (var i = 0; i < this.length; i++) {
-		var char = this.charCodeAt(i);
-		hash = ((hash<<5)-hash)+char;
-		hash = hash & hash; // Convert to 32bit integer
+		var c = this.charCodeAt(i);
+		h = ((h<<5)-h)+c;
+		h = h & h; // Convert to 32bit integer
 	}
-	return hash;
+	return h;
 };
 /**
  * @class OAuth 2.0 session controller.
@@ -196,18 +196,18 @@ OAuth2Session.prototype.handle = function () {
 				code: params['code']
 			},
 			success: function () {
-				location.replace(location.pathname);
+				window.location.replace(window.location.pathname);
 			},
 			error: function () {
 				// step2-1: authorization error
-				location.replace('/logout');
+				window.location.replace('/logout');
 			}
 		});
 		return;
 	}
 	if (params['error']) {
 		// step2-2: authorization denied
-		location.replace('/logout');
+		window.location.replace('/logout');
 		return;
 	}
 	if ($.cookie('s')) {
@@ -246,7 +246,7 @@ OAuth2Session.prototype.handle = function () {
  */
 OAuth2Session.prototype.getAuthorizationURL = function () {
 	return 'https://accounts.google.com/o/oauth2/auth'
-		+ '?redirect_uri=' + (location.protocol + '//' + location.host + location.pathname)
+		+ '?redirect_uri=' + (window.location.protocol + '//' + window.location.host + window.location.pathname)
 		+ '&response_type=code'
 		+ '&scope=https://www.googleapis.com/auth/tasks'
 		+ '&access_type=offline'
@@ -258,7 +258,7 @@ OAuth2Session.prototype.getAuthorizationURL = function () {
  */
 OAuth2Session.prototype.authorize = function () {
 	$('#global-error-message').hide();
-	location.replace(this.getAuthorizationURL());
+	window.location.replace(this.getAuthorizationURL());
 };
 /**
  * Event handler for authorization in progress.
@@ -302,7 +302,7 @@ function RequestUtil () {
  */
 RequestUtil.getQueryParameters = function () {
 	var params = {};
-	var queryString = location.search.substring(1);
+	var queryString = window.location.search.substring(1);
 	var regex = /([^&=]+)=([^&]*)/g;
 	var m;
 	while (m = regex.exec(queryString)) {

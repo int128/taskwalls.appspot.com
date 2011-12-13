@@ -43,7 +43,7 @@ $(function () {
 		$('#loading').fadeOut();
 	});
 	// development only
-	if (location.hostname == 'localhost') {
+	if (window.location.hostname == 'localhost') {
 		$('.development').hide().show();
 	}
 	// offline
