@@ -86,7 +86,7 @@
 			<groupId>org.slim3</groupId>
 			<artifactId>slim3-gen</artifactId>
 			<version>${slim3.version}</version>
-			<scope>provided</scope>
+			<scope>test</scope>
 			<exclusions>
 				<exclusion>
 					<groupId>org.apache.ant</groupId>
@@ -103,6 +103,12 @@
 			<groupId>org.mockito</groupId>
 			<artifactId>mockito-core</artifactId>
 			<version>1.9.0-rc1</version>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>com.google.javascript</groupId>
+			<artifactId>closure-compiler</artifactId>
+			<version>r1592</version>
 			<scope>test</scope>
 		</dependency>
 	</dependencies>
@@ -165,14 +171,14 @@
 						</configuration>
 					</execution>
 					<execution>
-						<id>copy-dependencies-for-apt</id>
+						<id>copy-dependencies-for-test</id>
 						<phase>generate-sources</phase>
 						<goals>
 							<goal>copy-dependencies</goal>
 						</goals>
 						<configuration>
 							<outputDirectory>${test.war}/WEB-INF/lib</outputDirectory>
-							<includeArtifactIds>slim3-gen</includeArtifactIds>
+							<includeScope>test</includeScope>
 							<overWriteReleases>false</overWriteReleases>
 							<overWriteSnapshots>true</overWriteSnapshots>
 							<overWriteIfNewer>true</overWriteIfNewer>

@@ -1,0 +1,22 @@
+<?xml version="1.0"?>
+<project basedir="../" default="compile">
+
+	<taskdef name="jscomp" classname="com.google.javascript.jscomp.ant.CompileTask" />
+	<target name="compile">
+		<jscomp compilationLevel="advanced" warning="verbose" debug="false" output="webapp/js/min.js">
+			<externs dir="webapp/js">
+				<file name="env/mock.js" />
+			</externs>
+			<sources dir="webapp/js">
+				<file name="util.js" />
+				<file name="model.js" />
+				<file name="view.calendar.js" />
+				<file name="view.header.js" />
+				<file name="view.page.js" />
+				<file name="jquery.cookie.js" />
+				<file name="app.js" />
+			</sources>
+		</jscomp>
+	</target>
+
+</project>
