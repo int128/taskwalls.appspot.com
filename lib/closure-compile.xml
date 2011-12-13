@@ -10,18 +10,14 @@
 	</taskdef>
 	<target name="compile">
 		<jscomp compilationlevel="whitespace" warning="verbose" debug="false" output="${js.output}">
-			<sources dir="${basedir}/webapp/js/lib">
-				<file name="jquery-1.7.1.min.js" />
-				<file name="jquery-ui-1.8.16.min.js" />
-			</sources>
 			<sources dir="${basedir}/webapp/js/src">
+				<file name="app.js" />
 				<file name="util.js" />
 				<file name="model.js" />
 				<file name="view.calendar.js" />
 				<file name="view.header.js" />
 				<file name="view.page.js" />
 				<file name="jquery.cookie.js" />
-				<file name="app.js" />
 			</sources>
 		</jscomp>
 	</target>

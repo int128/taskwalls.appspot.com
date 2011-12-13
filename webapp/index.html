@@ -7,7 +7,14 @@
 <meta http-equiv="content-style-type" content="text/css" />
 <meta http-equiv="content-script-type" content="text/javascript" />
 <script type="text/javascript">//<![CDATA[
-(function (s){document.write('<scr'+'ipt src="/js/app.'+s+'.js"></scr'+'ipt>')})(location.hostname)
+(function(s){for(var i in s){document.write('<scr'+'ipt src="'+s[i]+'"></scr'+'ipt>')}})((location.hostname=='localhost')?[
+'/js/lib/jquery-1.7.1.js',
+'/js/lib/jquery-ui-1.8.16.js'
+]:[
+'https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js',
+'https://ajax.googleapis.com/ajax/libs/jqueryui/1.8.16/jquery-ui.min.js',
+]);
+(function(s){document.write('<scr'+'ipt src="/js/app.'+s+'.js"></scr'+'ipt>')})(location.hostname)
 //]]></script>
 <link rel="stylesheet" href="https://ajax.googleapis.com/ajax/libs/jqueryui/1.8.16/themes/base/jquery-ui.css" />
 <link rel="stylesheet" href="/css/app.css" />
