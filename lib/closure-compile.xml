@@ -1,8 +1,7 @@
 <?xml version="1.0"?>
 <project basedir="../" default="compile">
 
-	<property name="jscomp.output" value="${basedir}/www-test/js/env.taskwalls.appspot.com.js" />
-	<property name="min.output" value="${basedir}/webapp/js/env.taskwalls.appspot.com.js" />
+	<property name="js.output" value="${basedir}/webapp/js/app.taskwalls.appspot.com.js" />
 
 	<taskdef name="jscomp" classname="com.google.javascript.jscomp.ant.CompileTask">
 		<classpath>
@@ -10,10 +9,11 @@
 		</classpath>
 	</taskdef>
 	<target name="compile">
-		<jscomp compilationLevel="advanced" warning="verbose" debug="false" output="${jscomp.output}">
-			<externs dir="${basedir}/lib/">
-				<file name="closure-externs.js" />
-			</externs>
+		<jscomp compilationlevel="whitespace" warning="verbose" debug="false" output="${js.output}">
+			<sources dir="${basedir}/webapp/js/lib">
+				<file name="jquery-1.7.1.min.js" />
+				<file name="jquery-ui-1.8.16.min.js" />
+			</sources>
 			<sources dir="${basedir}/webapp/js/src">
 				<file name="util.js" />
 				<file name="model.js" />
@@ -24,12 +24,6 @@
 				<file name="app.js" />
 			</sources>
 		</jscomp>
-		<concat destfile="${min.output}">
-			<fileset dir="${basedir}/webapp/js/lib" includes="*.min.js" />
-			<filelist>
-				<file name="${jscomp.output}" />
-			</filelist>
-		</concat>
 	</target>
 
 </project>
