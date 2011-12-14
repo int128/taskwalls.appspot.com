@@ -16,14 +16,12 @@ import com.google.api.services.tasks.model.TaskList;
  * Updates the tasklist.
  * @author hidetake.org
  */
-public class UpdateController extends ControllerBase
-{
+public class UpdateController extends ControllerBase {
 
 	private static final Logger logger = Logger.getLogger(UpdateController.class.getName());
 
 	@Override
-	public Navigation run() throws Exception
-	{
+	public Navigation run() throws Exception {
 		if (!isPost()) {
 			logger.warning("Precondition failed: not POST");
 			response.sendError(Constants.STATUS_PRECONDITION_FAILED);
@@ -51,8 +49,7 @@ public class UpdateController extends ControllerBase
 		return jsonResponse(patched);
 	}
 
-	private boolean validate()
-	{
+	private boolean validate() {
 		Validators v = new Validators(request);
 		v.add("id", v.required());
 		v.add("title", v.required());

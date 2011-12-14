@@ -8,17 +8,14 @@ import com.google.api.client.json.jackson.JacksonFactory;
  * 
  * @author hidetake.org
  */
-public class JacksonFactoryLocator
-{
+public class JacksonFactoryLocator {
 
 	private static JacksonFactory singleton;
 
-	private JacksonFactoryLocator()
-	{
+	private JacksonFactoryLocator() {
 	}
 
-	public static JacksonFactory get()
-	{
+	public static JacksonFactory get() {
 		if (singleton == null) {
 			singleton = new JacksonFactory();
 		}

@@ -8,8 +8,7 @@ import java.util.Date;
  * 
  * @author hidetake.org
  */
-public class CachedToken implements Serializable
-{
+public class CachedToken implements Serializable {
 
 	private static final long serialVersionUID = 2L;
 
@@ -23,8 +22,7 @@ public class CachedToken implements Serializable
 	 * @param refreshToken refresh token (may be null)
 	 * @param expire expires date
 	 */
-	public CachedToken(String accessToken, String refreshToken, Date expire)
-	{
+	public CachedToken(String accessToken, String refreshToken, Date expire) {
 		if (accessToken == null) {
 			throw new NullPointerException("accessToken is null");
 		}
@@ -40,8 +38,7 @@ public class CachedToken implements Serializable
 	 * Get the access token.
 	 * @return
 	 */
-	public String getAccessToken()
-	{
+	public String getAccessToken() {
 		return accessToken;
 	}
 
@@ -49,8 +46,7 @@ public class CachedToken implements Serializable
 	 * Get the refresh token. This may be null.
 	 * @return
 	 */
-	public String getRefreshToken()
-	{
+	public String getRefreshToken() {
 		return refreshToken;
 	}
 
@@ -58,8 +54,7 @@ public class CachedToken implements Serializable
 	 * Get the expire date.
 	 * @return
 	 */
-	public Date getExpire()
-	{
+	public Date getExpire() {
 		return expire;
 	}
 
@@ -67,8 +62,7 @@ public class CachedToken implements Serializable
 	 * Returns whether the access token has been expired.
 	 * @return
 	 */
-	public boolean isExpired()
-	{
+	public boolean isExpired() {
 		return getExpire().getTime() < System.currentTimeMillis();
 	}
 

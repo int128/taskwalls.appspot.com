@@ -7,12 +7,10 @@ import static org.junit.Assert.*;
 
 import static org.hamcrest.CoreMatchers.*;
 
-public class UpdateControllerTest extends ControllerTestCase
-{
+public class UpdateControllerTest extends ControllerTestCase {
 
 	@Test
-	public void noSession() throws Exception
-	{
+	public void noSession() throws Exception {
 		tester.start("/tasks/update");
 		UpdateController controller = tester.getController();
 		assertThat(controller, is(notNullValue()));

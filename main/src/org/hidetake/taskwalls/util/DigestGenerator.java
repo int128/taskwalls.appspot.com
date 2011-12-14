@@ -8,13 +8,11 @@ import java.security.NoSuchAlgorithmException;
  * 
  * @author hidetake.org
  */
-public class DigestGenerator
-{
+public class DigestGenerator {
 
 	private final MessageDigest digest;
 
-	private DigestGenerator(MessageDigest digest)
-	{
+	private DigestGenerator(MessageDigest digest) {
 		this.digest = digest;
 	}
 
@@ -23,8 +21,7 @@ public class DigestGenerator
 	 * @return
 	 * @throws NoSuchAlgorithmException
 	 */
-	public static DigestGenerator create() throws NoSuchAlgorithmException
-	{
+	public static DigestGenerator create() throws NoSuchAlgorithmException {
 		return new DigestGenerator(MessageDigest.getInstance("SHA-256"));
 	}
 
@@ -34,8 +31,7 @@ public class DigestGenerator
 	 * @return
 	 * @throws NoSuchAlgorithmException
 	 */
-	public static DigestGenerator create(String algorithm) throws NoSuchAlgorithmException
-	{
+	public static DigestGenerator create(String algorithm) throws NoSuchAlgorithmException {
 		return new DigestGenerator(MessageDigest.getInstance(algorithm));
 	}
 
@@ -43,8 +39,7 @@ public class DigestGenerator
 	 * Resets the digest.
 	 * @see java.security.MessageDigest#reset()
 	 */
-	public void reset()
-	{
+	public void reset() {
 		digest.reset();
 	}
 
@@ -53,8 +48,7 @@ public class DigestGenerator
 	 * @param factors uniqueness factors (skipped if null)
 	 * @return this
 	 */
-	public DigestGenerator update(Object... factors)
-	{
+	public DigestGenerator update(Object... factors) {
 		for (Object factor : factors) {
 			if (factor != null) {
 				digest.update(factor.toString().getBytes());
@@ -67,8 +61,7 @@ public class DigestGenerator
 	 * Computes the digest and resets.
 	 * @return
 	 */
-	public String getAsHexString()
-	{
+	public String getAsHexString() {
 		StringBuilder sessionIDBuilder = new StringBuilder();
 		for (byte b : digest.digest()) {
 			sessionIDBuilder.append(Integer.toHexString(b & 0xff));

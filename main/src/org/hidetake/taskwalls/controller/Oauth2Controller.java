@@ -23,8 +23,7 @@ import com.google.api.client.http.HttpResponseException;
  * Authorize and begin session.
  * @author hidetake.org
  */
-public class Oauth2Controller extends Controller
-{
+public class Oauth2Controller extends Controller {
 
 	private static final Logger logger = Logger.getLogger(Oauth2Controller.class.getName());
 
@@ -35,8 +34,7 @@ public class Oauth2Controller extends Controller
 			AppCredential.CLIENT_CREDENTIAL);
 
 	@Override
-	public Navigation run() throws Exception
-	{
+	public Navigation run() throws Exception {
 		if (!isPost()) {
 			logger.warning("Precondition failed: not POST");
 			response.sendError(Constants.STATUS_PRECONDITION_FAILED);
@@ -76,14 +74,12 @@ public class Oauth2Controller extends Controller
 		return null;
 	}
 
-	protected String getRedirectURI()
-	{
+	protected String getRedirectURI() {
 		return URI.create(request.getRequestURL().toString()).resolve("/").toASCIIString();
 	}
 
 	@Override
-	protected Navigation handleError(Throwable e) throws Throwable
-	{
+	protected Navigation handleError(Throwable e) throws Throwable {
 		if (e instanceof HttpResponseException) {
 			logger.severe(HttpResponseExceptionUtil.getMessage((HttpResponseException) e));
 		}

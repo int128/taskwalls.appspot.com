@@ -5,12 +5,10 @@ import org.junit.Test;
 import static org.junit.Assert.*;
 import static org.hamcrest.CoreMatchers.*;
 
-public class LoadControllerTest extends ControllerTestCase
-{
+public class LoadControllerTest extends ControllerTestCase {
 
 	@Test
-	public void run() throws Exception
-	{
+	public void run() throws Exception {
 		tester.start("/js/load");
 		LoadController controller = tester.getController();
 		assertThat(controller, is(notNullValue()));

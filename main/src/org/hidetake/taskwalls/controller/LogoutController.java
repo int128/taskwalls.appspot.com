@@ -16,14 +16,12 @@ import org.slim3.controller.Navigation;
  * 
  * @author hidetake.org
  */
-public class LogoutController extends Controller
-{
+public class LogoutController extends Controller {
 
 	private static final Logger logger = Logger.getLogger(LogoutController.class.getName());
 
 	@Override
-	public Navigation run() throws Exception
-	{
+	public Navigation run() throws Exception {
 		if (request.getCookies() != null) {
 			for (Cookie cookie : request.getCookies()) {
 				if (Constants.COOKIE_SESSION_ID.equals(cookie.getName())) {
@@ -40,8 +38,7 @@ public class LogoutController extends Controller
 	}
 
 	@Override
-	protected Navigation handleError(Throwable error) throws Throwable
-	{
+	protected Navigation handleError(Throwable error) throws Throwable {
 		// redirect anyway
 		logger.severe(StackTraceUtil.format(error));
 		return redirect("/");

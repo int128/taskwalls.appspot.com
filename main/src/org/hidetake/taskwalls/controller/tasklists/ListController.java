@@ -14,14 +14,12 @@ import com.google.api.services.tasks.model.TaskLists;
  * Get tasklists.
  * @author hidetake.org
  */
-public class ListController extends ControllerBase
-{
+public class ListController extends ControllerBase {
 
 	private static final Logger logger = Logger.getLogger(ListController.class.getName());
 
 	@Override
-	public Navigation run() throws Exception
-	{
+	public Navigation run() throws Exception {
 		if (!isGet()) {
 			logger.warning("Precondition failed: not GET");
 			response.sendError(Constants.STATUS_PRECONDITION_FAILED);

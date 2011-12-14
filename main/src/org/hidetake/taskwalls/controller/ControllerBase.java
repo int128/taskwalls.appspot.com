@@ -28,8 +28,7 @@ import com.google.api.services.tasks.Tasks;
  * Base controller class that depends on Google Tasks API.
  * @author hidetake.org
  */
-public abstract class ControllerBase extends Controller
-{
+public abstract class ControllerBase extends Controller {
 
 	private static final Logger logger = Logger.getLogger(ControllerBase.class.getName());
 
@@ -52,8 +51,7 @@ public abstract class ControllerBase extends Controller
 	 * @return always null
 	 * @throws IOException
 	 */
-	protected Navigation jsonResponse(GenericJson object) throws IOException
-	{
+	protected Navigation jsonResponse(GenericJson object) throws IOException {
 		response.setHeader("X-Content-Type-Options", "nosniff");
 		response.setContentType("application/json");
 		response.setCharacterEncoding("UTF-8");
@@ -68,8 +66,7 @@ public abstract class ControllerBase extends Controller
 	}
 
 	@Override
-	protected Navigation setUp()
-	{
+	protected Navigation setUp() {
 		try {
 			return setUpServices();
 		}
@@ -78,8 +75,7 @@ public abstract class ControllerBase extends Controller
 		}
 	}
 
-	protected Navigation setUpServices() throws IOException
-	{
+	protected Navigation setUpServices() throws IOException {
 		String sessionID = request.getHeader(Constants.HEADER_SESSION_ID);
 		if (sessionID == null) {
 			logger.warning("Precondition failed: no session ID");
@@ -130,8 +126,7 @@ public abstract class ControllerBase extends Controller
 	}
 
 	@Override
-	protected Navigation handleError(Throwable e) throws Throwable
-	{
+	protected Navigation handleError(Throwable e) throws Throwable {
 		if (e instanceof HttpResponseException) {
 			HttpResponseException httpResponseException = (HttpResponseException) e;
 			logger.severe(HttpResponseExceptionUtil.getMessage(httpResponseException));

@@ -15,14 +15,12 @@ import com.google.appengine.api.memcache.Expiration;
  * Service class for model {@link Session}.
  * @author hidetake.org
  */
-public class SessionService
-{
+public class SessionService {
 
 	private static final Expiration expiration =
 			Expiration.byDeltaSeconds(Constants.SESSION_EXPIRATION);
 
-	private SessionService()
-	{
+	private SessionService() {
 	}
 
 	/**
@@ -31,8 +29,7 @@ public class SessionService
 	 * @param session
 	 * @return future key
 	 */
-	public static Future<Key> put(Session session)
-	{
+	public static Future<Key> put(Session session) {
 		if (session == null) {
 			throw new NullPointerException("session is null");
 		}
@@ -46,8 +43,7 @@ public class SessionService
 	 * @param sessionID
 	 * @return null if not found
 	 */
-	public static Session get(String sessionID)
-	{
+	public static Session get(String sessionID) {
 		if (sessionID == null) {
 			throw new NullPointerException("sessionID is null");
 		}
@@ -67,8 +63,7 @@ public class SessionService
 	 * Delete the session.
 	 * @param sessionID
 	 */
-	public static void delete(String sessionID)
-	{
+	public static void delete(String sessionID) {
 		if (sessionID == null) {
 			throw new NullPointerException("sessionID is null");
 		}

@@ -5,12 +5,10 @@ import org.slim3.controller.Navigation;
 
 import com.google.api.client.json.GenericJson;
 
-public class ControllerBaseTestController extends ControllerBase
-{
+public class ControllerBaseTestController extends ControllerBase {
 
 	@Override
-	protected Navigation run() throws Exception
-	{
+	protected Navigation run() throws Exception {
 		if (asBoolean("json") == null) {
 			return null;
 		}

@@ -10,14 +10,12 @@ import org.slim3.controller.validator.Validators;
 
 import com.google.api.services.tasks.model.TaskList;
 
-public class CreateController extends ControllerBase
-{
+public class CreateController extends ControllerBase {
 
 	private static final Logger logger = Logger.getLogger(CreateController.class.getName());
 
 	@Override
-	public Navigation run() throws Exception
-	{
+	public Navigation run() throws Exception {
 		if (!isPost()) {
 			logger.warning("Precondition failed: not POST");
 			response.sendError(Constants.STATUS_PRECONDITION_FAILED);
@@ -41,8 +39,7 @@ public class CreateController extends ControllerBase
 		return jsonResponse(created);
 	}
 
-	private boolean validate()
-	{
+	private boolean validate() {
 		Validators v = new Validators(request);
 		v.add("title", v.required());
 		return v.validate();

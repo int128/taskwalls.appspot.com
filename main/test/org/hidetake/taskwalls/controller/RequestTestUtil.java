@@ -16,8 +16,7 @@ import org.slim3.tester.ControllerTester;
  * Request utility class for tests.
  * @author hidetake.org
  */
-public class RequestTestUtil
-{
+public class RequestTestUtil {
 
 	/**
 	 * Enables the session.
@@ -26,8 +25,7 @@ public class RequestTestUtil
 	 * @param tester
 	 * @return session ID
 	 */
-	public static String enableSession(ControllerTester tester)
-	{
+	public static String enableSession(ControllerTester tester) {
 		Date expire = new Date(System.currentTimeMillis() + 3600 * 1000L);
 		CachedToken cachedToken = new CachedToken("access", "refresh", expire);
 		String sessionID = UUID.randomUUID().toString();
@@ -45,8 +43,7 @@ public class RequestTestUtil
 	 * 
 	 * @param tester
 	 */
-	public static void setMethodAsPost(ControllerTester tester)
-	{
+	public static void setMethodAsPost(ControllerTester tester) {
 		tester.request.setMethod("POST");
 	}
 
@@ -55,8 +52,7 @@ public class RequestTestUtil
 	 * 
 	 * @param tester
 	 */
-	public static void setXHR(ControllerTester tester)
-	{
+	public static void setXHR(ControllerTester tester) {
 		tester.request.setHeader(AjaxPreconditions.XHR_HEADER_NAME,
 				AjaxPreconditions.XHR_HEADER_VALUE);
 	}

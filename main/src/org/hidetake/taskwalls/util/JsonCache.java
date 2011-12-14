@@ -15,22 +15,19 @@ import com.google.appengine.api.memcache.Expiration;
  * 
  * @author hidetake.org
  */
-public class JsonCache
-{
+public class JsonCache {
 
 	/**
 	 * Cache policy.
 	 */
-	public static class Policy
-	{
+	public static class Policy {
 		private Expiration expiration = null;
 
 		/**
 		 * Set {@link Expiration}, default is null.
 		 * @param expiration
 		 */
-		public void setExpiration(Expiration expiration)
-		{
+		public void setExpiration(Expiration expiration) {
 			this.expiration = expiration;
 		}
 	}
@@ -38,12 +35,10 @@ public class JsonCache
 	/**
 	 * Cache entry.
 	 */
-	public class Entry
-	{
+	public class Entry {
 		private final Serializable[] keys;
 
-		public Entry(Serializable[] keys)
-		{
+		public Entry(Serializable[] keys) {
 			this.keys = keys;
 		}
 
@@ -53,8 +48,7 @@ public class JsonCache
 		 * @return
 		 * @throws IOException
 		 */
-		public <V extends GenericJson> V get(Class<V> clazz) throws IOException
-		{
+		public <V extends GenericJson> V get(Class<V> clazz) throws IOException {
 			return JsonCache.this.get(keys, clazz);
 		}
 
@@ -62,8 +56,7 @@ public class JsonCache
 		 * Put object into cache as JSON string.
 		 * @param value object
 		 */
-		public <V extends GenericJson> void put(V value)
-		{
+		public <V extends GenericJson> void put(V value) {
 			JsonCache.this.put(keys, value);
 		}
 	}
@@ -92,8 +85,7 @@ public class JsonCache
 	 * @throws IOException
 	 */
 	public <K extends Serializable, V extends GenericJson> V get(K key, Class<V> clazz)
-			throws IOException
-	{
+			throws IOException {
 		String json = Memcache.get(key);
 		if (json == null) {
 			return null;
@@ -106,8 +98,7 @@ public class JsonCache
 	 * @param key cache key
 	 * @param value object
 	 */
-	public <K extends Serializable, V extends GenericJson> void put(K key, V value)
-	{
+	public <K extends Serializable, V extends GenericJson> void put(K key, V value) {
 		if (key == null) {
 			throw new NullPointerException("key is null");
 		}
@@ -123,8 +114,7 @@ public class JsonCache
 	 * @param keys cache keys
 	 * @return
 	 */
-	public Entry keys(Serializable... keys)
-	{
+	public Entry keys(Serializable... keys) {
 		return new Entry(keys);
 	}
 

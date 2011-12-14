@@ -14,14 +14,12 @@ import com.google.api.services.tasks.model.Task;
  * Move the task to another tasklist.
  * @author hidetake.org
  */
-public class TasklistController extends ControllerBase
-{
+public class TasklistController extends ControllerBase {
 
 	private static final Logger logger = Logger.getLogger(TasklistController.class.getName());
 
 	@Override
-	public Navigation run() throws Exception
-	{
+	public Navigation run() throws Exception {
 		if (!isPost()) {
 			logger.warning("Precondition failed: not POST");
 			response.sendError(Constants.STATUS_PRECONDITION_FAILED);
@@ -56,8 +54,7 @@ public class TasklistController extends ControllerBase
 		return jsonResponse(moved);
 	}
 
-	private boolean validate()
-	{
+	private boolean validate() {
 		Validators v = new Validators(request);
 		v.add("tasklistID", v.required());
 		v.add("id", v.required());

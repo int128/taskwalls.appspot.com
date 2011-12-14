@@ -15,12 +15,10 @@ import static org.hamcrest.CoreMatchers.*;
 
 import static org.junit.Assert.*;
 
-public class SessionServiceTest extends AppEngineTestCase
-{
+public class SessionServiceTest extends AppEngineTestCase {
 
 	@Test
-	public void put() throws Exception
-	{
+	public void put() throws Exception {
 		Session session = new Session();
 		session.setKey(Session.createKey("hogeSession"));
 		session.setToken(new CachedToken("accessToken", "refreshToken", new Date()));
@@ -31,14 +29,12 @@ public class SessionServiceTest extends AppEngineTestCase
 	}
 
 	@Test(expected = NullPointerException.class)
-	public void putNull() throws Exception
-	{
+	public void putNull() throws Exception {
 		SessionService.put(null);
 	}
 
 	@Test
-	public void get() throws Exception
-	{
+	public void get() throws Exception {
 		long now = System.currentTimeMillis();
 		Session session = new Session();
 		session.setKey(Session.createKey("hogeSession"));
@@ -54,8 +50,7 @@ public class SessionServiceTest extends AppEngineTestCase
 	}
 
 	@Test
-	public void getCacheExpires() throws Exception
-	{
+	public void getCacheExpires() throws Exception {
 		long now = System.currentTimeMillis();
 		Session session = new Session();
 		session.setKey(Session.createKey("hogeSession"));
@@ -73,8 +68,7 @@ public class SessionServiceTest extends AppEngineTestCase
 	}
 
 	@Test
-	public void delete() throws Exception
-	{
+	public void delete() throws Exception {
 		Session session = new Session();
 		session.setKey(Session.createKey("hogeSession"));
 		session.setToken(new CachedToken("accessToken", "refreshToken", new Date()));

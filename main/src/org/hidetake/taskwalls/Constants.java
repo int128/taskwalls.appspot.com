@@ -4,8 +4,7 @@ package org.hidetake.taskwalls;
  * Application constants.
  * @author hidetake.org
  */
-public class Constants
-{
+public class Constants {
 
 	/**
 	 * Session expiration time in seconds.

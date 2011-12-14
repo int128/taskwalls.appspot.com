@@ -13,12 +13,10 @@ import static org.junit.Assert.*;
  * Test for {@link TasklistOptionsService}.
  * @author hidetake.org
  */
-public class TasklistOptionsServiceTest extends AppEngineTestCase
-{
+public class TasklistOptionsServiceTest extends AppEngineTestCase {
 
 	@Test
-	public void put() throws Exception
-	{
+	public void put() throws Exception {
 		TasklistOptions tasklistOptions = new TasklistOptions();
 		tasklistOptions.setKey(TasklistOptions.createKey("hogeKey"));
 		tasklistOptions.setColorID(3);

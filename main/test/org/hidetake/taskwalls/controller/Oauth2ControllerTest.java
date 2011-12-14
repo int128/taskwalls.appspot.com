@@ -8,12 +8,10 @@ import static org.hamcrest.CoreMatchers.*;
 
 import static org.junit.Assert.*;
 
-public class Oauth2ControllerTest extends ControllerTestCase
-{
+public class Oauth2ControllerTest extends ControllerTestCase {
 
 	@Test
-	public void withoutCode() throws Exception
-	{
+	public void withoutCode() throws Exception {
 		tester.start("/oauth2");
 		Oauth2Controller controller = tester.getController();
 		assertThat(controller, is(notNullValue()));
@@ -23,8 +21,7 @@ public class Oauth2ControllerTest extends ControllerTestCase
 	}
 
 	// @Test
-	public void withCode() throws Exception
-	{
+	public void withCode() throws Exception {
 		// TODO: how to test OAuth2?
 	}
 

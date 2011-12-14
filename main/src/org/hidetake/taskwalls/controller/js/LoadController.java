@@ -24,8 +24,7 @@ import com.google.javascript.jscomp.Result;
  * Load scripts (development only).
  * @author hidetake.org
  */
-public class LoadController extends Controller
-{
+public class LoadController extends Controller {
 
 	private static final String JS_LIB = "js/lib";
 	private static final String JS_SRC = "js/src";
@@ -33,8 +32,7 @@ public class LoadController extends Controller
 	private static final Logger logger = Logger.getLogger(LoadController.class.getName());
 
 	@Override
-	public Navigation run() throws Exception
-	{
+	public Navigation run() throws Exception {
 		response.setCharacterEncoding("UTF-8");
 		response.setContentType("text/javascript");
 		if (isDevelopment()) {
@@ -44,8 +42,7 @@ public class LoadController extends Controller
 		return null;
 	}
 
-	protected void runOnDevelopment() throws Exception
-	{
+	protected void runOnDevelopment() throws Exception {
 		// include scripts
 		PrintWriter writer = response.getWriter();
 		for (File file : findJavaScriptFiles(JS_LIB, JS_SRC)) {
@@ -81,13 +78,11 @@ public class LoadController extends Controller
 	 * @param directories
 	 * @return list of files
 	 */
-	private static List<File> findJavaScriptFiles(String... directories)
-	{
+	private static List<File> findJavaScriptFiles(String... directories) {
 		FilenameFilter filter = new FilenameFilter()
 		{
 			@Override
-			public boolean accept(File dir, String name)
-			{
+			public boolean accept(File dir, String name) {
 				return name.endsWith(".js");
 			}
 		};
@@ -106,8 +101,7 @@ public class LoadController extends Controller
 	 * @param scripts
 	 * @return
 	 */
-	private static String compile(List<File> scripts)
-	{
+	private static String compile(List<File> scripts) {
 		List<JSSourceFile> externs = new ArrayList<JSSourceFile>();
 		List<JSSourceFile> sources = new ArrayList<JSSourceFile>();
 		for (File file : scripts) {

@@ -8,17 +8,14 @@ import com.google.api.client.http.javanet.NetHttpTransport;
  * 
  * @author hidetake.org
  */
-public class NetHttpTransportLocator
-{
+public class NetHttpTransportLocator {
 
 	private static NetHttpTransport singleton;
 
-	private NetHttpTransportLocator()
-	{
+	private NetHttpTransportLocator() {
 	}
 
-	public static NetHttpTransport get()
-	{
+	public static NetHttpTransport get() {
 		if (singleton == null) {
 			singleton = new NetHttpTransport();
 		}

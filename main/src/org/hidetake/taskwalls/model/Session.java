@@ -10,8 +10,7 @@ import org.slim3.datastore.Model;
 import com.google.appengine.api.datastore.Key;
 
 @Model(schemaVersion = 2)
-public class Session implements Serializable
-{
+public class Session implements Serializable {
 
 	private static final long serialVersionUID = 2L;
 
@@ -20,8 +19,7 @@ public class Session implements Serializable
 	 * @param sessionID
 	 * @return the key
 	 */
-	public static Key createKey(String sessionID)
-	{
+	public static Key createKey(String sessionID) {
 		return Datastore.createKey(Session.class, sessionID);
 	}
 
@@ -38,8 +36,7 @@ public class Session implements Serializable
 	 * 
 	 * @return the key
 	 */
-	public Key getKey()
-	{
+	public Key getKey() {
 		return key;
 	}
 
@@ -49,24 +46,20 @@ public class Session implements Serializable
 	 * @param key
 	 *        the key
 	 */
-	public void setKey(Key key)
-	{
+	public void setKey(Key key) {
 		this.key = key;
 	}
 
-	public CachedToken getToken()
-	{
+	public CachedToken getToken() {
 		return token;
 	}
 
-	public void setToken(CachedToken token)
-	{
+	public void setToken(CachedToken token) {
 		this.token = token;
 		this.setRefreshable(token.getRefreshToken() != null);
 	}
 
-	public boolean isRefreshable()
-	{
+	public boolean isRefreshable() {
 		return refreshable;
 	}
 
@@ -74,8 +67,7 @@ public class Session implements Serializable
 	 * @deprecated
 	 * @param refreshable
 	 */
-	public void setRefreshable(boolean refreshable)
-	{
+	public void setRefreshable(boolean refreshable) {
 		this.refreshable = refreshable;
 	}
 

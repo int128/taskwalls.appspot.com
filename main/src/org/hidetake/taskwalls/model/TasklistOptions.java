@@ -17,8 +17,7 @@ import com.google.appengine.api.datastore.Key;
  * @author hidetake.org
  */
 @Model(schemaVersion = 1)
-public class TasklistOptions implements Serializable
-{
+public class TasklistOptions implements Serializable {
 
 	private static final long serialVersionUID = 1L;
 
@@ -31,8 +30,7 @@ public class TasklistOptions implements Serializable
 	 * @param taskList
 	 * @return
 	 */
-	public static TaskList mergeTo(TaskList taskList)
-	{
+	public static TaskList mergeTo(TaskList taskList) {
 		TasklistOptionsMeta m = TasklistOptionsMeta.get();
 		TasklistOptions tasklistOptions = TasklistOptionsService.get(taskList.getId());
 		if (tasklistOptions != null) {
@@ -46,16 +44,14 @@ public class TasklistOptions implements Serializable
 	 * @param taskLists
 	 * @return
 	 */
-	public static TaskLists mergeTo(TaskLists taskLists)
-	{
+	public static TaskLists mergeTo(TaskLists taskLists) {
 		for (TaskList taskList : taskLists.getItems()) {
 			mergeTo(taskList);
 		}
 		return taskLists;
 	}
 
-	public static Key createKey(String id)
-	{
+	public static Key createKey(String id) {
 		return Datastore.createKey(TasklistOptionsMeta.get(), id);
 	}
 
@@ -63,8 +59,7 @@ public class TasklistOptions implements Serializable
 	 * Returns the key.
 	 * @return the key
 	 */
-	public Key getKey()
-	{
+	public Key getKey() {
 		return key;
 	}
 
@@ -72,8 +67,7 @@ public class TasklistOptions implements Serializable
 	 * Sets the key.
 	 * @param key the key
 	 */
-	public void setKey(Key key)
-	{
+	public void setKey(Key key) {
 		this.key = key;
 	}
 
@@ -81,8 +75,7 @@ public class TasklistOptions implements Serializable
 	 * Returns the tasklist color ID.
 	 * @return
 	 */
-	public int getColorID()
-	{
+	public int getColorID() {
 		return colorID;
 	}
 
@@ -90,8 +83,7 @@ public class TasklistOptions implements Serializable
 	 * Sets the tasklist color ID.
 	 * @param colorID
 	 */
-	public void setColorID(int colorID)
-	{
+	public void setColorID(int colorID) {
 		this.colorID = colorID;
 	}
 

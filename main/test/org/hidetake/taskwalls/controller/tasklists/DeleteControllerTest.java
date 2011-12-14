@@ -8,12 +8,10 @@ import static org.hamcrest.CoreMatchers.*;
 
 import static org.junit.Assert.*;
 
-public class DeleteControllerTest extends ControllerTestCase
-{
+public class DeleteControllerTest extends ControllerTestCase {
 
 	@Test
-	public void noSession() throws Exception
-	{
+	public void noSession() throws Exception {
 		tester.start("/tasklists/delete");
 		DeleteController controller = tester.getController();
 		assertThat(controller, is(notNullValue()));

@@ -21,14 +21,12 @@ import com.google.api.client.http.HttpResponseException;
  * Google API OAuth 2.0 service (server-side flow).
  * @author hidetake.org
  */
-public class GoogleOAuth2Service
-{
+public class GoogleOAuth2Service {
 
 	private static final Logger logger = Logger.getLogger(GoogleOAuth2Service.class.getName());
 	private final ClientCredential clientCredential;
 
-	public GoogleOAuth2Service(ClientCredential clientCredential)
-	{
+	public GoogleOAuth2Service(ClientCredential clientCredential) {
 		this.clientCredential = clientCredential;
 	}
 
@@ -41,8 +39,7 @@ public class GoogleOAuth2Service
 	 * @throws IOException
 	 */
 	public CachedToken exchange(String authorizationCode, String redirectURI)
-			throws HttpResponseException, IOException
-	{
+			throws HttpResponseException, IOException {
 		if (authorizationCode == null) {
 			throw new NullPointerException("authorizationCode is null");
 		}
@@ -72,8 +69,7 @@ public class GoogleOAuth2Service
 	 * @throws HttpResponseException
 	 * @throws IOException
 	 */
-	public CachedToken refresh(CachedToken token) throws HttpResponseException, IOException
-	{
+	public CachedToken refresh(CachedToken token) throws HttpResponseException, IOException {
 		if (token == null) {
 			throw new NullPointerException("token is null");
 		}
@@ -96,8 +92,7 @@ public class GoogleOAuth2Service
 	}
 
 	private static AccessTokenResponse execute(AccessTokenRequest accessTokenRequest)
-			throws HttpResponseException, IOException
-	{
+			throws HttpResponseException, IOException {
 		// 1st chance
 		try {
 			return accessTokenRequest.execute();

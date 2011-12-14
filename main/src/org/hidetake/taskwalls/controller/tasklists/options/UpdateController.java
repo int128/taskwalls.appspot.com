@@ -15,14 +15,12 @@ import org.slim3.controller.validator.Validators;
  * Updates the tasklist options.
  * @author hidetake.org
  */
-public class UpdateController extends ControllerBase
-{
+public class UpdateController extends ControllerBase {
 
 	private static final Logger logger = Logger.getLogger(UpdateController.class.getName());
 
 	@Override
-	public Navigation run() throws Exception
-	{
+	public Navigation run() throws Exception {
 		if (!isPost()) {
 			logger.warning("Precondition failed: not POST");
 			response.sendError(Constants.STATUS_PRECONDITION_FAILED);
@@ -47,8 +45,7 @@ public class UpdateController extends ControllerBase
 		return null;
 	}
 
-	private boolean validate()
-	{
+	private boolean validate() {
 		TasklistOptionsMeta m = TasklistOptionsMeta.get();
 		Validators v = new Validators(request);
 		v.add("id", v.required());

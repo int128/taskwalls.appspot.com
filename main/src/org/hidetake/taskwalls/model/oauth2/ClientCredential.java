@@ -5,8 +5,7 @@ package org.hidetake.taskwalls.model.oauth2;
  * 
  * @author hidetake.org
  */
-public final class ClientCredential
-{
+public final class ClientCredential {
 
 	private final String clientId;
 	private final String clientSecret;
@@ -16,19 +15,16 @@ public final class ClientCredential
 	 * @param clientId
 	 * @param clientSecret
 	 */
-	public ClientCredential(String clientId, String clientSecret)
-	{
+	public ClientCredential(String clientId, String clientSecret) {
 		this.clientId = clientId;
 		this.clientSecret = clientSecret;
 	}
 
-	public String getClientId()
-	{
+	public String getClientId() {
 		return clientId;
 	}
 
-	public String getClientSecret()
-	{
+	public String getClientSecret() {
 		return clientSecret;
 	}
 

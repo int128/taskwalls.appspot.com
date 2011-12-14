@@ -8,12 +8,10 @@ import static org.hamcrest.CoreMatchers.*;
 
 import static org.junit.Assert.*;
 
-public class LogoutControllerTest extends ControllerTestCase
-{
+public class LogoutControllerTest extends ControllerTestCase {
 
 	@Test
-	public void logoutSession() throws Exception
-	{
+	public void logoutSession() throws Exception {
 		String sessionID = RequestTestUtil.enableSession(tester);
 		assertThat(SessionService.get(sessionID), is(notNullValue()));
 		tester.start("/logout");
@@ -27,8 +25,7 @@ public class LogoutControllerTest extends ControllerTestCase
 	}
 
 	@Test
-	public void doNotionWhenNoSession() throws Exception
-	{
+	public void doNotionWhenNoSession() throws Exception {
 		tester.start("/logout");
 		LogoutController controller = tester.getController();
 		assertThat(controller, is(notNullValue()));

@@ -15,8 +15,7 @@ import com.google.api.client.json.JsonGenerator;
  * @deprecated
  * @author hidetake.org
  */
-public class GenericJsonWrapper
-{
+public class GenericJsonWrapper {
 
 	/**
 	 * Workaround for {@link JsonFactory#toString(Object)}.
@@ -25,8 +24,7 @@ public class GenericJsonWrapper
 	 * @return serialized JSON string representation
 	 * @deprecated fixed bug in google-api-client-java 1.6.0
 	 */
-	public static String toString(GenericJson item)
-	{
+	public static String toString(GenericJson item) {
 		ByteArrayOutputStream byteStream = new ByteArrayOutputStream();
 		try {
 			JsonGenerator generator = item.jsonFactory.createJsonGenerator(byteStream, JsonEncoding.UTF8);

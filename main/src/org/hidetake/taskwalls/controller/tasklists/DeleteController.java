@@ -8,14 +8,12 @@ import org.hidetake.taskwalls.util.AjaxPreconditions;
 import org.slim3.controller.Navigation;
 import org.slim3.controller.validator.Validators;
 
-public class DeleteController extends ControllerBase
-{
+public class DeleteController extends ControllerBase {
 
 	private static final Logger logger = Logger.getLogger(DeleteController.class.getName());
 
 	@Override
-	public Navigation run() throws Exception
-	{
+	public Navigation run() throws Exception {
 		if (!isPost()) {
 			logger.warning("Precondition failed: not POST");
 			response.sendError(Constants.STATUS_PRECONDITION_FAILED);
@@ -36,8 +34,7 @@ public class DeleteController extends ControllerBase
 		return null;
 	}
 
-	private boolean validate()
-	{
+	private boolean validate() {
 		Validators v = new Validators(request);
 		v.add("id", v.required());
 		return v.validate();

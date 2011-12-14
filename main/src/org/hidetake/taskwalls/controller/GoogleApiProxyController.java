@@ -27,15 +27,13 @@ import com.google.api.client.json.JsonFactory;
  * Proxy endpoint for Google APIs.
  * @author hidetake.org
  */
-public class GoogleApiProxyController extends ControllerBase
-{
+public class GoogleApiProxyController extends ControllerBase {
 
 	private static final Logger logger = Logger.getLogger(GoogleApiProxyController.class.getName());
 	private static final String BASE_URI = "https://www.googleapis.com";
 
 	@Override
-	public Navigation run() throws Exception
-	{
+	public Navigation run() throws Exception {
 		if (!isPost()) {
 			logger.warning("Precondition failed: not POST");
 			response.sendError(Constants.STATUS_PRECONDITION_FAILED);
@@ -101,8 +99,7 @@ public class GoogleApiProxyController extends ControllerBase
 		return null;
 	}
 
-	private boolean validate()
-	{
+	private boolean validate() {
 		Validators v = new Validators(request);
 		v.add("path", v.required(), v.regexp("^/.+"), v.maxlength(256));
 		return v.validate();

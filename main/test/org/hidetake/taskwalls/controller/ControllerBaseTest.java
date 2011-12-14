@@ -10,12 +10,10 @@ import static org.hamcrest.CoreMatchers.*;
 
 import static org.junit.Assert.*;
 
-public class ControllerBaseTest extends ControllerTestCase
-{
+public class ControllerBaseTest extends ControllerTestCase {
 
 	@Test
-	public void noSessionHeader() throws Exception
-	{
+	public void noSessionHeader() throws Exception {
 		tester.start("/controllerBaseTest");
 		ControllerBaseTestController controller = tester.getController();
 		assertThat(controller, is(notNullValue()));
@@ -25,8 +23,7 @@ public class ControllerBaseTest extends ControllerTestCase
 	}
 
 	@Test
-	public void sessionExpired() throws Exception
-	{
+	public void sessionExpired() throws Exception {
 		String sessionID = UUID.randomUUID().toString();
 		tester.request.setHeader(Constants.HEADER_SESSION_ID, sessionID);
 		tester.start("/controllerBaseTest");
@@ -38,8 +35,7 @@ public class ControllerBaseTest extends ControllerTestCase
 	}
 
 	@Test
-	public void sessionEnabled() throws Exception
-	{
+	public void sessionEnabled() throws Exception {
 		RequestTestUtil.enableSession(tester);
 		tester.start("/controllerBaseTest");
 		ControllerBaseTestController controller = tester.getController();
@@ -49,8 +45,7 @@ public class ControllerBaseTest extends ControllerTestCase
 	}
 
 	@Test
-	public void jsonResponse() throws Exception
-	{
+	public void jsonResponse() throws Exception {
 		RequestTestUtil.enableSession(tester);
 		tester.param("json", true);
 		tester.start("/controllerBaseTest");

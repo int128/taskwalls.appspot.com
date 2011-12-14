@@ -14,14 +14,12 @@ import com.google.api.services.tasks.model.Tasks;
  * Get tasks.
  * @author hidetake.org
  */
-public class ListController extends ControllerBase
-{
+public class ListController extends ControllerBase {
 
 	private static final Logger logger = Logger.getLogger(ListController.class.getName());
 
 	@Override
-	public Navigation run() throws Exception
-	{
+	public Navigation run() throws Exception {
 		if (!isGet()) {
 			logger.warning("Precondition failed: not GET");
 			response.sendError(Constants.STATUS_PRECONDITION_FAILED);
@@ -43,8 +41,7 @@ public class ListController extends ControllerBase
 		return jsonResponse(tasks);
 	}
 
-	private boolean validate()
-	{
+	private boolean validate() {
 		Validators v = new Validators(request);
 		v.add("tasklistID", v.required());
 		return v.validate();

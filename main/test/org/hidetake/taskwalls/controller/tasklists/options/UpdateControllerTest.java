@@ -12,12 +12,10 @@ import static org.hamcrest.CoreMatchers.*;
 
 import static org.junit.Assert.*;
 
-public class UpdateControllerTest extends ControllerTestCase
-{
+public class UpdateControllerTest extends ControllerTestCase {
 
 	@Test
-	public void xhr() throws Exception
-	{
+	public void xhr() throws Exception {
 		RequestTestUtil.enableSession(tester);
 		RequestTestUtil.setMethodAsPost(tester);
 		tester.start("/tasklists/options/update");
@@ -29,8 +27,7 @@ public class UpdateControllerTest extends ControllerTestCase
 	}
 
 	@Test
-	public void preconditionFailed() throws Exception
-	{
+	public void preconditionFailed() throws Exception {
 		RequestTestUtil.enableSession(tester);
 		RequestTestUtil.setMethodAsPost(tester);
 		RequestTestUtil.setXHR(tester);
@@ -43,8 +40,7 @@ public class UpdateControllerTest extends ControllerTestCase
 	}
 
 	@Test
-	public void valid() throws Exception
-	{
+	public void valid() throws Exception {
 		RequestTestUtil.enableSession(tester);
 		RequestTestUtil.setMethodAsPost(tester);
 		RequestTestUtil.setXHR(tester);

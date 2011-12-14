@@ -5,8 +5,7 @@ import java.io.InputStream;
 import java.text.MessageFormat;
 import java.util.Properties;
 
-public class Messages
-{
+public class Messages {
 
 	private final Properties properties = new Properties();
 
@@ -15,8 +14,7 @@ public class Messages
 	 * @param inputStream XML format properties file
 	 * @return instance
 	 */
-	public static Messages loadXML(InputStream inputStream)
-	{
+	public static Messages loadXML(InputStream inputStream) {
 		try {
 			Messages messages = new Messages();
 			messages.properties.loadFromXML(inputStream);
@@ -32,8 +30,7 @@ public class Messages
 	 * @param inputStream properties file
 	 * @return instance
 	 */
-	public static Messages loadProperties(InputStream inputStream)
-	{
+	public static Messages loadProperties(InputStream inputStream) {
 		try {
 			Messages messages = new Messages();
 			messages.properties.load(inputStream);
@@ -44,8 +41,7 @@ public class Messages
 		}
 	}
 
-	protected Properties getProperties()
-	{
+	protected Properties getProperties() {
 		return properties;
 	}
 
@@ -55,8 +51,7 @@ public class Messages
 	 * @return
 	 * @throws IllegalArgumentException key not found
 	 */
-	public String get(String key)
-	{
+	public String get(String key) {
 		String value = properties.getProperty(key);
 		if (value == null) {
 			throw new IllegalArgumentException("key not found: " + key);
@@ -71,8 +66,7 @@ public class Messages
 	 * @return
 	 * @throws IllegalArgumentException key not found
 	 */
-	public String format(String key, Object... arguments)
-	{
+	public String format(String key, Object... arguments) {
 		return MessageFormat.format(get(key), arguments);
 	}
 

@@ -9,11 +9,9 @@ import com.google.api.client.http.HttpResponseException;
  * 
  * @author hidetake.org
  */
-public class HttpResponseExceptionUtil
-{
+public class HttpResponseExceptionUtil {
 
-	private HttpResponseExceptionUtil()
-	{
+	private HttpResponseExceptionUtil() {
 	}
 
 	/**
@@ -21,8 +19,7 @@ public class HttpResponseExceptionUtil
 	 * @param e exception
 	 * @return error message
 	 */
-	public static String getMessage(HttpResponseException e)
-	{
+	public static String getMessage(HttpResponseException e) {
 		if (e == null) {
 			throw new NullPointerException("e is null");
 		}

@@ -5,12 +5,10 @@ import org.junit.Test;
 import static org.junit.Assert.*;
 import static org.hamcrest.CoreMatchers.*;
 
-public class GoogleApiProxyControllerTest extends ControllerTestCase
-{
+public class GoogleApiProxyControllerTest extends ControllerTestCase {
 
 	@Test
-	public void run() throws Exception
-	{
+	public void run() throws Exception {
 		tester.start("/googleApiProxy");
 		GoogleApiProxyController controller = tester.getController();
 		assertThat(controller, is(notNullValue()));
