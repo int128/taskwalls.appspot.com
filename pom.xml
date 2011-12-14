@@ -109,7 +109,12 @@
 			<groupId>com.google.javascript</groupId>
 			<artifactId>closure-compiler</artifactId>
 			<version>r1592</version>
-			<scope>test</scope>
+			<exclusions>
+				<exclusion>
+					<artifactId>ant</artifactId>
+					<groupId>org.apache.ant</groupId>
+				</exclusion>
+			</exclusions>
 		</dependency>
 	</dependencies>
 	<build>
@@ -178,7 +183,7 @@
 						</goals>
 						<configuration>
 							<outputDirectory>${test.war}/WEB-INF/lib</outputDirectory>
-							<includeScope>test</includeScope>
+							<includeArtifactIds>slim3-gen</includeArtifactIds>
 							<overWriteReleases>false</overWriteReleases>
 							<overWriteSnapshots>true</overWriteSnapshots>
 							<overWriteIfNewer>true</overWriteIfNewer>
