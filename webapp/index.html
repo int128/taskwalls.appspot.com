@@ -33,8 +33,8 @@ Task Wallは、Googleタスクから取得したタスク情報をカレンダ�
 タスク情報はサーバを経由して取得しますが、サーバには残りません。
 </p>
 <p>
-<span class="icon google-api" title="Google API"></span>
-<span class="icon oauth2" title="OAuth 2.0"></span>
+<span class="icon icon-google-api" title="Google API"></span>
+<span class="icon icon-oauth2" title="OAuth 2.0"></span>
 </p>
 <div class="footer">
 Task Wall &copy; hidetake.org, 2011.
@@ -46,32 +46,30 @@ Task Wall &copy; hidetake.org, 2011.
 <div style="text-align: center; font-weight: bold; margin-top: -1em; color: #888;">BETA</div>
 <p>Google APIと通信しています...</p>
 <p>
-<span class="icon google-api" title="Google API"></span>
-<span class="icon oauth2" title="OAuth 2.0"></span>
+<span class="icon icon-google-api" title="Google API"></span>
+<span class="icon icon-oauth2" title="OAuth 2.0"></span>
 </p>
 </div>
 
 <div id="myheader" class="oauth2state authorized">
 <h1 class="stack">Task Wall<span style="color: gold;">*</span></h1>
-<div style="text-align: center; font-weight: bold; margin-top: -1em; color: #888;">BETA</div>
-<div class="stack">
-<div><a href="#" class="toggle-tasks needsAction">未完了タスク</a></div>
-<div><a href="#" class="toggle-tasks completed">完了タスク</a></div>
+<div style="text-align: center; font-weight: bold; margin-left: 5px; margin-top: -10px; color: #888;">BETA</div>
+<div class="stack icons">
+<div><a href="#reload"><span class="icon icon-reload" title="更新"></span></a></div>
+<a href="#" class="toggle-tasks completed"><span class="icon icon-completed-tasks" title="完了したタスクの表示を切り替える"></span></a>
+<a href="#" class="toggle-tasks needsAction"><span class="icon icon-needsAction-tasks" title="未完了のタスクの表示を切り替える"></span></a>
 </div>
-<div class="stack">
-<div id="tasklists"></div>
-<div><a href="#create-tasklist">新しいタスクリスト</a></div>
-</div>
-<div class="stack">
-<div><a href="#reload">更新</a></div>
-<div><a href="#" class="clear-complete-tasks">完了タスクを消去</a></div>
-<div><a href="#" class="session-logout">ログアウト</a></div>
+<div class="stack"><div id="tasklists"></div></div>
+<div class="stack icons">
+<div><a href="#create-tasklist"><span class="icon icon-create-tasklist" title="新しいタスクリスト"></span></a></div>
+<div><a href="#clear-completed-tasks"><span class="icon icon-clear-completed-tasks" title="完了したタスクを消去"></span></a></div>
+<div><a href="#" class="session-logout"><span class="icon icon-logout" title="ログアウト"></span></a></div>
 <div class="development">
 <input type="checkbox" id="session-offline" /><label for="session-offline">オフライン</label>
 </div>
 </div>
-<div class="footer">
-Task Wall service<br/>
+<div class="stack footer">
+Task Wall<br/>
 &copy; hidetake.org, 2011.
 </div>
 </div>

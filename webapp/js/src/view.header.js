@@ -20,7 +20,7 @@ function UIHeader (page) {
 		new UINewTasklist().open(page.tasklists);
 		return false;
 	});
-	$('.clear-complete-tasks', this.element).click(function () {
+	$('a[href="#clear-completed-tasks"]', this.element).click(function () {
 		/**
 		 * @param {UITasklist} uiTasklist
 		 */

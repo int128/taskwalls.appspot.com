@@ -158,6 +158,8 @@ input[type="text"]:HOVER,textarea:HOVER {
 	left: -10px;
 	padding-left: 5px;
 	width: 120px;
+	overflow-y: auto;
+	overflow-x: hidden;
 	background: white;
 	border-right: solid 1px #ccc;
 	box-shadow: 0 0 10px 3px rgba(0, 0, 0, 0.4);
@@ -172,13 +174,17 @@ input[type="text"]:HOVER,textarea:HOVER {
 }
 
 #myheader>.stack {
-	margin: 15px 15px;
+	margin-left: 15px;
+	margin-right: 10px;
+	margin-top: 10px;
+	margin-bottom: 10px;
+}
+
+#myheader>.stack.icons {
+	text-align: center;
 }
 
 #myheader .footer {
-	position: absolute;
-	bottom: 10px;
-	width: 100%;
 	color: #888;
 	text-align: center;
 }
@@ -193,8 +199,8 @@ input[type="text"]:HOVER,textarea:HOVER {
 	margin-bottom: 5px;
 	border: solid 1px #ddd;
 	border-left: solid 5px #ddd;
-	border-radius: 3px;
-	-moz-border-radius: 3px;
+	border-radius: 5px;
+	-moz-border-radius: 5px;
 	cursor: pointer;
 }
 
@@ -657,18 +663,59 @@ td.task-column {
 .icon {
 	display: inline-block;
 	background-repeat: no-repeat;
+	opacity: 0.3;
 }
 
-.icon.google-api {
+.icon:HOVER {
+	opacity: 1.0;
+}
+
+.icon-google-api {
 	background-image: url('/css/google_g_logo_webtreatsetc.png');
 	height: 128px;
 	width: 128px;
 }
 
-.icon.oauth2 {
+.icon-oauth2 {
 	background-image: url('/css/oauth-2-sm.png');
 	height: 128px;
 	width: 128px;
+}
+
+.icon-completed-tasks {
+	background-image: url('/css/icons/tasks.resized.png');
+	height: 32px;
+	width: 32px;
+}
+
+.icon-needsAction-tasks {
+	background-image: url('/css/icons/tasks_needsAction.resized.png');
+	height: 32px;
+	width: 32px;
+}
+
+.icon-create-tasklist {
+	background-image: url('/css/icons/run.resized.png');
+	height: 32px;
+	width: 32px;
+}
+
+.icon-reload {
+	background-image: url('/css/icons/power_restart.resized.png');
+	height: 32px;
+	width: 32px;
+}
+
+.icon-clear-completed-tasks {
+	background-image: url('/css/icons/trash_full.resized.png');
+	height: 32px;
+	width: 32px;
+}
+
+.icon-logout {
+	background-image: url('/css/icons/power_standby.resized.png');
+	height: 32px;
+	width: 32px;
 }
 
 /*
