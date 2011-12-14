@@ -7,12 +7,14 @@ import java.io.Writer;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.Date;
 import java.util.List;
 import java.util.logging.Logger;
 
 import org.slim3.controller.Controller;
 import org.slim3.controller.Navigation;
 import org.slim3.memcache.Memcache;
+import org.slim3.util.DateUtil;
 import org.slim3.util.LongUtil;
 
 import com.google.javascript.jscomp.Compiler;
@@ -70,7 +72,10 @@ public class LoadController extends Controller {
 					.newInstance(JSCOMP_OUTPUT);
 			fileWriter.append(compiled);
 			fileWriter.close();
-			logger.warning("Compiled source has been saved to " + JSCOMP_OUTPUT);
+			logger.warning("Compiled source has been saved to " + JSCOMP_OUTPUT
+					+ " (Last-modified: "
+					+ DateUtil.toString(new Date(lastModified), DateUtil.ISO_DATE_TIME_PATTERN)
+					+ ")");
 		}
 	}
 
