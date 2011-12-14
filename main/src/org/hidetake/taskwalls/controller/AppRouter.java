@@ -15,7 +15,6 @@ public class AppRouter extends RouterImpl {
 	 */
 	public AppRouter() {
 		addRouting("/tasks/v1/lists/{id}/clear", "/googleApiProxy?path=/tasks/v1/lists/{id}/clear");
-		addRouting("/tasks/v1/users/{id}/lists", "/googleApiProxy?path=/tasks/v1/users/{id}/lists");
 	}
 
 }
