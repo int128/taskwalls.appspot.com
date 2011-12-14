@@ -652,6 +652,26 @@ td.task-column {
 }
 
 /*
+ * Icons.
+ */
+.icon {
+	display: inline-block;
+	background-repeat: no-repeat;
+}
+
+.icon.google-api {
+	background-image: url('/css/google_g_logo_webtreatsetc.png');
+	height: 128px;
+	width: 128px;
+}
+
+.icon.oauth2 {
+	background-image: url('/css/oauth-2-sm.png');
+	height: 128px;
+	width: 128px;
+}
+
+/*
  * Colors.
  */
 .tasklistcolor-0  { border-left-color: #b76; }
