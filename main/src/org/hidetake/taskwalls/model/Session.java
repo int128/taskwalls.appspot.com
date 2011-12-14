@@ -16,6 +16,7 @@ public class Session implements Serializable {
 
 	/**
 	 * Create the key.
+	 * 
 	 * @param sessionID
 	 * @return the key
 	 */
@@ -44,7 +45,7 @@ public class Session implements Serializable {
 	 * Sets the key.
 	 * 
 	 * @param key
-	 *        the key
+	 *            the key
 	 */
 	public void setKey(Key key) {
 		this.key = key;

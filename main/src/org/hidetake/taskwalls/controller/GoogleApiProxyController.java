@@ -25,6 +25,7 @@ import com.google.api.client.json.JsonFactory;
 
 /**
  * Proxy endpoint for Google APIs.
+ * 
  * @author hidetake.org
  */
 public class GoogleApiProxyController extends ControllerBase {

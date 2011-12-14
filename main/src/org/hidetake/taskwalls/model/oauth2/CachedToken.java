@@ -18,6 +18,7 @@ public class CachedToken implements Serializable {
 
 	/**
 	 * Constructor.
+	 * 
 	 * @param accessToken access token
 	 * @param refreshToken refresh token (may be null)
 	 * @param expire expires date
@@ -36,6 +37,7 @@ public class CachedToken implements Serializable {
 
 	/**
 	 * Get the access token.
+	 * 
 	 * @return
 	 */
 	public String getAccessToken() {
@@ -44,6 +46,7 @@ public class CachedToken implements Serializable {
 
 	/**
 	 * Get the refresh token. This may be null.
+	 * 
 	 * @return
 	 */
 	public String getRefreshToken() {
@@ -52,6 +55,7 @@ public class CachedToken implements Serializable {
 
 	/**
 	 * Get the expire date.
+	 * 
 	 * @return
 	 */
 	public Date getExpire() {
@@ -60,6 +64,7 @@ public class CachedToken implements Serializable {
 
 	/**
 	 * Returns whether the access token has been expired.
+	 * 
 	 * @return
 	 */
 	public boolean isExpired() {

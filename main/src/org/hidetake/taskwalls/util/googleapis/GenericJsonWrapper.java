@@ -30,14 +30,12 @@ public class GenericJsonWrapper {
 			JsonGenerator generator = item.jsonFactory.createJsonGenerator(byteStream, JsonEncoding.UTF8);
 			generator.serialize(item);
 			generator.flush();
-		}
-		catch (IOException e) {
+		} catch (IOException e) {
 			throw new RuntimeException(e);
 		}
 		try {
 			return byteStream.toString("UTF-8");
-		}
-		catch (UnsupportedEncodingException e) {
+		} catch (UnsupportedEncodingException e) {
 			throw new RuntimeException(e);
 		}
 	}

@@ -13,6 +13,7 @@ import com.google.appengine.api.memcache.Expiration;
 
 /**
  * Service class for model {@link Session}.
+ * 
  * @author hidetake.org
  */
 public class SessionService {
@@ -26,6 +27,7 @@ public class SessionService {
 	/**
 	 * Put the session into datastore.
 	 * Session will be written asynchronously.
+	 * 
 	 * @param session
 	 * @return future key
 	 */
@@ -40,6 +42,7 @@ public class SessionService {
 
 	/**
 	 * Get the session from datastore.
+	 * 
 	 * @param sessionID
 	 * @return null if not found
 	 */
@@ -61,6 +64,7 @@ public class SessionService {
 
 	/**
 	 * Delete the session.
+	 * 
 	 * @param sessionID
 	 */
 	public static void delete(String sessionID) {

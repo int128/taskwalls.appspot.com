@@ -26,6 +26,7 @@ import com.google.api.services.tasks.Tasks;
 
 /**
  * Base controller class that depends on Google Tasks API.
+ * 
  * @author hidetake.org
  */
 public abstract class ControllerBase extends Controller {
@@ -47,6 +48,7 @@ public abstract class ControllerBase extends Controller {
 	/**
 	 * Returns JSON response.
 	 * This method checks the request is XHR.
+	 * 
 	 * @param object object to serialize as JSON
 	 * @return always null
 	 * @throws IOException
@@ -57,8 +59,7 @@ public abstract class ControllerBase extends Controller {
 		response.setCharacterEncoding("UTF-8");
 		if (object == null) {
 			response.getWriter().append("null");
-		}
-		else {
+		} else {
 			response.getWriter().append(object.toString());
 		}
 		response.flushBuffer();
@@ -69,8 +70,7 @@ public abstract class ControllerBase extends Controller {
 	protected Navigation setUp() {
 		try {
 			return setUpServices();
-		}
-		catch (IOException e) {
+		} catch (IOException e) {
 			throw ThrowableUtil.wrap(e);
 		}
 	}

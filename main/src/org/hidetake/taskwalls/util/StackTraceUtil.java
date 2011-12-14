@@ -5,6 +5,7 @@ import java.io.StringWriter;
 
 /**
  * Stack trace utility.
+ * 
  * @author hidetake.org
  */
 public class StackTraceUtil {
@@ -14,6 +15,7 @@ public class StackTraceUtil {
 
 	/**
 	 * Returns stack trace message.
+	 * 
 	 * @param throwable
 	 * @return
 	 */

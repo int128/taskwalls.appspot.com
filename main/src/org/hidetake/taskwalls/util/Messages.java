@@ -11,6 +11,7 @@ public class Messages {
 
 	/**
 	 * Instantiate {@link Messages} omitting {@link IOException} check.
+	 * 
 	 * @param inputStream XML format properties file
 	 * @return instance
 	 */
@@ -19,14 +20,14 @@ public class Messages {
 			Messages messages = new Messages();
 			messages.properties.loadFromXML(inputStream);
 			return messages;
-		}
-		catch (IOException e) {
+		} catch (IOException e) {
 			throw new RuntimeException(e);
 		}
 	}
 
 	/**
 	 * Instantiate {@link Messages} omitting {@link IOException} check.
+	 * 
 	 * @param inputStream properties file
 	 * @return instance
 	 */
@@ -35,8 +36,7 @@ public class Messages {
 			Messages messages = new Messages();
 			messages.properties.load(inputStream);
 			return messages;
-		}
-		catch (IOException e) {
+		} catch (IOException e) {
 			throw new RuntimeException(e);
 		}
 	}
@@ -47,6 +47,7 @@ public class Messages {
 
 	/**
 	 * Get value from properties.
+	 * 
 	 * @param key
 	 * @return
 	 * @throws IllegalArgumentException key not found
@@ -61,6 +62,7 @@ public class Messages {
 
 	/**
 	 * Format message.
+	 * 
 	 * @param key
 	 * @param arguments
 	 * @return

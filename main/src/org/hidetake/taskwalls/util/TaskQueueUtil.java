@@ -13,6 +13,7 @@ public class TaskQueueUtil {
 
 	/**
 	 * Returns the queue name.
+	 * 
 	 * @param request
 	 * @return queue name or null if request is not task
 	 */
@@ -25,6 +26,7 @@ public class TaskQueueUtil {
 
 	/**
 	 * Returns task name.
+	 * 
 	 * @param request
 	 * @return task name or null if request is not task
 	 */
@@ -37,6 +39,7 @@ public class TaskQueueUtil {
 
 	/**
 	 * Returns task retry count.
+	 * 
 	 * @param request
 	 * @return task retry count or -1 if request is not task
 	 */
@@ -47,8 +50,7 @@ public class TaskQueueUtil {
 		try {
 			String retryCount = request.getHeader(HEADER_APPENGINE_TASKRETRYCOUNT);
 			return Integer.parseInt(retryCount);
-		}
-		catch (NumberFormatException e) {
+		} catch (NumberFormatException e) {
 			return -1;
 		}
 	}

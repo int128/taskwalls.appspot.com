@@ -2,6 +2,7 @@ package org.hidetake.taskwalls;
 
 /**
  * Application constants.
+ * 
  * @author hidetake.org
  */
 public class Constants {

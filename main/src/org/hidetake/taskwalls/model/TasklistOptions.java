@@ -14,6 +14,7 @@ import com.google.appengine.api.datastore.Key;
 
 /**
  * Tasklist options model.
+ * 
  * @author hidetake.org
  */
 @Model(schemaVersion = 1)
@@ -27,6 +28,7 @@ public class TasklistOptions implements Serializable {
 
 	/**
 	 * Merge {@link TasklistOptions} to given {@link TaskList}.
+	 * 
 	 * @param taskList
 	 * @return
 	 */
@@ -41,6 +43,7 @@ public class TasklistOptions implements Serializable {
 
 	/**
 	 * Merge {@link TasklistOptions} to given {@link TaskLists}.
+	 * 
 	 * @param taskLists
 	 * @return
 	 */
@@ -57,6 +60,7 @@ public class TasklistOptions implements Serializable {
 
 	/**
 	 * Returns the key.
+	 * 
 	 * @return the key
 	 */
 	public Key getKey() {
@@ -65,6 +69,7 @@ public class TasklistOptions implements Serializable {
 
 	/**
 	 * Sets the key.
+	 * 
 	 * @param key the key
 	 */
 	public void setKey(Key key) {
@@ -73,6 +78,7 @@ public class TasklistOptions implements Serializable {
 
 	/**
 	 * Returns the tasklist color ID.
+	 * 
 	 * @return
 	 */
 	public int getColorID() {
@@ -81,6 +87,7 @@ public class TasklistOptions implements Serializable {
 
 	/**
 	 * Sets the tasklist color ID.
+	 * 
 	 * @param colorID
 	 */
 	public void setColorID(int colorID) {

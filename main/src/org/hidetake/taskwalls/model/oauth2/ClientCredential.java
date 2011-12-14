@@ -12,6 +12,7 @@ public final class ClientCredential {
 
 	/**
 	 * Constructor.
+	 * 
 	 * @param clientId
 	 * @param clientSecret
 	 */

@@ -22,6 +22,7 @@ import com.google.javascript.jscomp.Result;
 
 /**
  * Load scripts (development only).
+ * 
  * @author hidetake.org
  */
 public class LoadController extends Controller {
@@ -75,12 +76,12 @@ public class LoadController extends Controller {
 
 	/**
 	 * Finds JavaScript files under directories.
+	 * 
 	 * @param directories
 	 * @return list of files
 	 */
 	private static List<File> findJavaScriptFiles(String... directories) {
-		FilenameFilter filter = new FilenameFilter()
-		{
+		FilenameFilter filter = new FilenameFilter() {
 			@Override
 			public boolean accept(File dir, String name) {
 				return name.endsWith(".js");
@@ -98,6 +99,7 @@ public class LoadController extends Controller {
 
 	/**
 	 * Compiles JavaScript sources.
+	 * 
 	 * @param scripts
 	 * @return
 	 */

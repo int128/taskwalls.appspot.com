@@ -8,6 +8,7 @@ import com.google.api.services.tasks.TasksRequest;
 
 /**
  * Request initializer for {@link TasksRequest}.
+ * 
  * @author hidetake.org
  */
 public class TasksRequestInitializer implements JsonHttpRequestInitializer {

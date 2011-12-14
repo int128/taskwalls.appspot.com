@@ -11,8 +11,7 @@ public class ControllerBaseTestController extends ControllerBase {
 	protected Navigation run() throws Exception {
 		if (asBoolean("json") == null) {
 			return null;
-		}
-		else {
+		} else {
 			GenericJson json = new GenericJson();
 			json.setFactory(JacksonFactoryLocator.get());
 			return jsonResponse(json);

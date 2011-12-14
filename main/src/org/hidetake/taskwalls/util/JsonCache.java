@@ -25,6 +25,7 @@ public class JsonCache {
 
 		/**
 		 * Set {@link Expiration}, default is null.
+		 * 
 		 * @param expiration
 		 */
 		public void setExpiration(Expiration expiration) {
@@ -44,6 +45,7 @@ public class JsonCache {
 
 		/**
 		 * Get object from cache.
+		 * 
 		 * @param clazz
 		 * @return
 		 * @throws IOException
@@ -54,6 +56,7 @@ public class JsonCache {
 
 		/**
 		 * Put object into cache as JSON string.
+		 * 
 		 * @param value object
 		 */
 		public <V extends GenericJson> void put(V value) {
@@ -79,6 +82,7 @@ public class JsonCache {
 
 	/**
 	 * Get object from cache.
+	 * 
 	 * @param key
 	 * @param clazz
 	 * @return
@@ -95,6 +99,7 @@ public class JsonCache {
 
 	/**
 	 * Put object into cache as JSON string.
+	 * 
 	 * @param key cache key
 	 * @param value object
 	 */
@@ -111,6 +116,7 @@ public class JsonCache {
 
 	/**
 	 * Returns {@link Entry}.
+	 * 
 	 * @param keys cache keys
 	 * @return
 	 */

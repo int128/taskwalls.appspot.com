@@ -18,6 +18,7 @@ public class DigestGenerator {
 
 	/**
 	 * Creates an instance by default algorithm (SHA-256).
+	 * 
 	 * @return
 	 * @throws NoSuchAlgorithmException
 	 */
@@ -27,6 +28,7 @@ public class DigestGenerator {
 
 	/**
 	 * Creates an instance by specified algorithm.
+	 * 
 	 * @param algorithm
 	 * @return
 	 * @throws NoSuchAlgorithmException
@@ -37,6 +39,7 @@ public class DigestGenerator {
 
 	/**
 	 * Resets the digest.
+	 * 
 	 * @see java.security.MessageDigest#reset()
 	 */
 	public void reset() {
@@ -45,6 +48,7 @@ public class DigestGenerator {
 
 	/**
 	 * Updates the digest.
+	 * 
 	 * @param factors uniqueness factors (skipped if null)
 	 * @return this
 	 */
@@ -59,6 +63,7 @@ public class DigestGenerator {
 
 	/**
 	 * Computes the digest and resets.
+	 * 
 	 * @return
 	 */
 	public String getAsHexString() {

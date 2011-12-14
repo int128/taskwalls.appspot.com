@@ -19,6 +19,7 @@ import com.google.api.client.http.HttpResponseException;
 
 /**
  * Google API OAuth 2.0 service (server-side flow).
+ * 
  * @author hidetake.org
  */
 public class GoogleOAuth2Service {
@@ -32,6 +33,7 @@ public class GoogleOAuth2Service {
 
 	/**
 	 * Exchange authorization code for token.
+	 * 
 	 * @param authorizationCode
 	 * @param redirectURI
 	 * @return token
@@ -64,6 +66,7 @@ public class GoogleOAuth2Service {
 
 	/**
 	 * Refresh the token.
+	 * 
 	 * @param token expired token (refresh token should not be null)
 	 * @return new token
 	 * @throws HttpResponseException
@@ -96,23 +99,19 @@ public class GoogleOAuth2Service {
 		// 1st chance
 		try {
 			return accessTokenRequest.execute();
-		}
-		catch (HttpResponseException e) {
+		} catch (HttpResponseException e) {
 			logger.severe(HttpResponseExceptionUtil.getMessage(e));
 			logger.severe(StackTraceUtil.format(e));
-		}
-		catch (IOException e) {
+		} catch (IOException e) {
 			logger.severe(StackTraceUtil.format(e));
 		}
 		// 2nd chance
 		try {
 			return accessTokenRequest.execute();
-		}
-		catch (HttpResponseException e) {
+		} catch (HttpResponseException e) {
 			logger.severe(HttpResponseExceptionUtil.getMessage(e));
 			logger.severe(StackTraceUtil.format(e));
-		}
-		catch (IOException e) {
+		} catch (IOException e) {
 			logger.severe(StackTraceUtil.format(e));
 		}
 		// last chance

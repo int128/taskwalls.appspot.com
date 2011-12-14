@@ -21,6 +21,7 @@ import com.google.api.client.http.HttpResponseException;
 
 /**
  * Authorize and begin session.
+ * 
  * @author hidetake.org
  */
 public class Oauth2Controller extends Controller {

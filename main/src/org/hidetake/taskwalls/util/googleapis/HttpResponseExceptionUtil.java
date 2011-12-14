@@ -16,6 +16,7 @@ public class HttpResponseExceptionUtil {
 
 	/**
 	 * Get the error message in JSON response.
+	 * 
 	 * @param e exception
 	 * @return error message
 	 */
@@ -28,8 +29,7 @@ public class HttpResponseExceptionUtil {
 		}
 		try {
 			return e.getResponse().parseAsString();
-		}
-		catch (IOException ioException) {
+		} catch (IOException ioException) {
 			// ignore internal exception
 			return e.getLocalizedMessage();
 		}

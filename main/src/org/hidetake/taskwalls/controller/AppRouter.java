@@ -5,6 +5,7 @@ import org.slim3.controller.router.RouterImpl;
 
 /**
  * {@link Router}.
+ * 
  * @author hidetake.org
  */
 public class AppRouter extends RouterImpl {
