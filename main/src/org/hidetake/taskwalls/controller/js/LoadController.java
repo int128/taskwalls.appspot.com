@@ -1,16 +1,19 @@
 package org.hidetake.taskwalls.controller.js;
 
 import java.io.File;
-import java.io.IOException;
+import java.io.FilenameFilter;
 import java.io.PrintWriter;
 import java.io.Writer;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 import java.util.logging.Logger;
 
 import org.slim3.controller.Controller;
 import org.slim3.controller.Navigation;
 import org.slim3.memcache.Memcache;
+import org.slim3.util.LongUtil;
 
 import com.google.javascript.jscomp.Compiler;
 import com.google.javascript.jscomp.CompilerOptions;
@@ -35,63 +38,90 @@ public class LoadController extends Controller
 		response.setCharacterEncoding("UTF-8");
 		response.setContentType("text/javascript");
 		if (isDevelopment()) {
-			load(JS_LIB);
-			load(JS_SRC);
-			compile();
+			runOnDevelopment();
 		}
 		response.flushBuffer();
 		return null;
 	}
 
-	private void load(String directory) throws IOException
+	protected void runOnDevelopment() throws Exception
 	{
+		// include scripts
 		PrintWriter writer = response.getWriter();
-		for (File file : new File(directory).listFiles()) {
+		for (File file : findJavaScriptFiles(JS_LIB, JS_SRC)) {
 			writer.append("document.write('<script type=\"text/javascript\" src=\"");
 			writer.append(file.getPath());
 			writer.append("\"></script>');");
 		}
+
+		// check for modification
+		List<File> sources = findJavaScriptFiles(JS_SRC);
+		List<Long> sourcesLastModified = new ArrayList<Long>(sources.size());
+		for (File file : sources) {
+			sourcesLastModified.add(file.lastModified());
+		}
+		long lastModified = Collections.max(sourcesLastModified);
+		long since = LongUtil.toPrimitiveLong(Memcache.get(LoadController.class.getName()));
+		Memcache.put(LoadController.class.getName(), lastModified);
+
+		// compile sources
+		if (since < lastModified) {
+			String compiled = compile(sources);
+			Writer fileWriter = (Writer) Class.forName("java.io.FileWriter")
+					.getConstructor(String.class)
+					.newInstance(JSCOMP_OUTPUT);
+			fileWriter.append(compiled);
+			fileWriter.close();
+			logger.warning("Compiled source has been saved to " + JSCOMP_OUTPUT);
+		}
 	}
 
-	private void compile() throws Exception
+	/**
+	 * Finds JavaScript files under directories.
+	 * @param directories
+	 * @return list of files
+	 */
+	private static List<File> findJavaScriptFiles(String... directories)
 	{
-		List<JSSourceFile> sources = new ArrayList<JSSourceFile>();
-		long modified = Long.MIN_VALUE;
-		for (File file : new File(JS_SRC).listFiles()) {
-			long modifiedThis = file.lastModified();
-			if (modified > modifiedThis) {
-				modified = modifiedThis;
+		FilenameFilter filter = new FilenameFilter()
+		{
+			@Override
+			public boolean accept(File dir, String name)
+			{
+				return name.endsWith(".js");
 			}
+		};
+		List<File> result = new ArrayList<File>();
+		for (String directory : directories) {
+			File[] files = new File(directory).listFiles(filter);
+			if (files != null) {
+				result.addAll(Arrays.asList(files));
+			}
+		}
+		return result;
+	}
+
+	/**
+	 * Compiles JavaScript sources.
+	 * @param scripts
+	 * @return
+	 */
+	private static String compile(List<File> scripts)
+	{
+		List<JSSourceFile> externs = new ArrayList<JSSourceFile>();
+		List<JSSourceFile> sources = new ArrayList<JSSourceFile>();
+		for (File file : scripts) {
 			sources.add(JSSourceFile.fromFile(file));
 		}
 
-		Long previousModified = Memcache.get(LoadController.class.getName());
-		if (previousModified != null && previousModified.longValue() == modified) {
-			// not modified
-			return;
-		}
-		Memcache.put(LoadController.class.getName(), modified);
-
-		// compile
 		Compiler compiler = new Compiler(System.err);
 		compiler.disableThreads();
 		CompilerOptions options = new CompilerOptions();
-		Result result = compiler.compile(
-				new JSSourceFile[0],
-				sources.toArray(new JSSourceFile[0]),
-				options);
+		Result result = compiler.compile(externs, sources, options);
 		if (!result.success) {
 			throw new RuntimeException("Closure Compiler returned error");
 		}
-
-		// write to min.js
-		Writer fileWriter = (Writer) Class.forName("java.io.FileWriter")
-				.getConstructor(String.class)
-				.newInstance(JSCOMP_OUTPUT);
-		fileWriter.append(compiler.toSource());
-		fileWriter.close();
-
-		logger.warning("Closure Compiler result saved: " + JSCOMP_OUTPUT);
+		return compiler.toSource();
 	}
 
 }
