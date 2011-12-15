@@ -453,6 +453,23 @@ td.task-column {
 	color: dimgray;
 }
 
+.calendar-operations-tab {
+	text-align: center;
+}
+
+.calendar-operations-tab>a {
+	padding: 10px 15px;
+	border-radius: 10px;
+	-moz-border-radius: 10px;
+	background: rgba(0, 0, 0, 0.3);
+	text-decoration: none;
+	color: #fff;
+}
+
+.calendar-operations-tab>a:HOVER {
+	background: rgba(0, 0, 0, 0.7);
+}
+
 /*
  * Calendar manipulation.
  */
@@ -702,12 +719,6 @@ td.task-column {
 
 .icon-reload {
 	background-image: url('/css/icons/power_restart.resized.png');
-	height: 32px;
-	width: 32px;
-}
-
-.icon-clear-completed-tasks {
-	background-image: url('/css/icons/trash_full.resized.png');
 	height: 32px;
 	width: 32px;
 }

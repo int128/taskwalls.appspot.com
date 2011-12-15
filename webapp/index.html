@@ -68,7 +68,6 @@ Task Wall &copy; hidetake.org, 2011.
 <div class="stack"><div id="tasklists"></div></div>
 <div class="stack icons">
 <div><a href="#create-tasklist"><span class="icon icon-create-tasklist" title="新しいタスクリスト"></span></a></div>
-<div><a href="#clear-completed-tasks"><span class="icon icon-clear-completed-tasks" title="完了したタスクを消去"></span></a></div>
 <div><a href="#" class="session-logout"><span class="icon icon-logout" title="ログアウト"></span></a></div>
 <div class="development">
 <input type="checkbox" id="session-offline" /><label for="session-offline">オフライン</label>
@@ -86,9 +85,10 @@ Task Wall<br/>
 <span class="month"></span>月<span class="day"></span>日 <span class="hour"></span>:<span class="minute"></span>
 です。
 </div>
-<table id="calendar">
-<tbody></tbody>
-</table>
+<div class="calendar-operations-tab">
+<a href="#clear-completed-tasks">完了したタスクを消す</a>
+</div>
+<table id="calendar"><tbody></tbody></table>
 <div id="calendar-next"></div>
 </div>
 
