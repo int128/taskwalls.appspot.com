@@ -189,6 +189,21 @@ input[type="text"]:HOVER,textarea:HOVER {
 	text-align: center;
 }
 
+.new-tasklist-button {
+	margin-top: -8px;
+	text-align: right;
+}
+
+.new-tasklist-button>a {
+	text-decoration: none;
+	font-size: 24pt;
+	color: #ccc;
+}
+
+.new-tasklist-button>a:HOVER {
+	color: #000;
+}
+
 /*
  * Tasklists.
  */
@@ -707,12 +722,6 @@ td.task-column {
 
 .icon-needsAction-tasks {
 	background-image: url('/css/icons/tasks_needsAction.resized.png');
-	height: 32px;
-	width: 32px;
-}
-
-.icon-create-tasklist {
-	background-image: url('/css/icons/run.resized.png');
 	height: 32px;
 	width: 32px;
 }
