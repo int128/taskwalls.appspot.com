@@ -20,21 +20,6 @@ function UIHeader (page) {
 		new UINewTasklist().open(page.tasklists);
 		return false;
 	});
-	$('a[href="#clear-completed-tasks"]', this.element).click(function () {
-		/**
-		 * @param {UITasklist} uiTasklist
-		 */
-		$.each(page.tasklists.getItems(), function (i, uiTasklist) {
-			var elements = uiTasklist.getCompletedTasks();
-			elements.addClass('ajax-in-progress');
-			uiTasklist.getTasklist().clearCompleted(function () {
-				elements.remove();
-			}, function () {
-				elements.removeClass('ajax-in-progress');
-			});
-		});
-		return false;
-	});
 };
 /**
  * @class UI element of {@link Tasklists}.

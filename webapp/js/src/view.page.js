@@ -51,6 +51,22 @@ UIPage.prototype.refresh = function () {
 	else {
 		$('#calendar-cached-date').hide();
 	}
+	// calendar tab
+	$('a[href="#clear-completed-tasks"]').click(function () {
+		/**
+		 * @param {UITasklist} uiTasklist
+		 */
+		$.each(context.tasklists.getItems(), function (i, uiTasklist) {
+			var elements = uiTasklist.getCompletedTasks();
+			elements.addClass('ajax-in-progress');
+			uiTasklist.getTasklist().clearCompleted(function () {
+				elements.remove();
+			}, function () {
+				elements.removeClass('ajax-in-progress');
+			});
+		});
+		return false;
+	});
 };
 /**
  * Load tasks except tasks of the default tasklist.
