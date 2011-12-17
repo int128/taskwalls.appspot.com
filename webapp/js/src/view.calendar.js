@@ -177,13 +177,13 @@ UITask.prototype.refresh = function (task) {
 	if (task.dueDate) {
 		rowTime = task.dueDate.getTime();
 	}
-	if ($(originalElement).parents('.t' + rowTime).size() > 0) {
-		$(originalElement).replaceWith(this.element);
+	$(originalElement).remove();
+	var taskGroup = $('.t' + rowTime + '>.task-column>.taskgroup-tasklistID-' + task.tasklistID);
+	if (taskGroup.size() == 0) {
+		taskGroup = $('<div class="taskgroup"/>').addClass('taskgroup-tasklistID-' + task.tasklistID);
+		$('.t' + rowTime + '>.task-column').append(taskGroup);
 	}
-	else {
-		$(originalElement).remove();
-		$('.t' + rowTime + '>.task-column').append(this.element);
-	}
+	taskGroup.append(this.element);
 	// build inner elements
 	this.element
 		.addClass('task-status-' + task.status)

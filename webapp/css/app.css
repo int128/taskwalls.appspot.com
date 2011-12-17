@@ -457,6 +457,9 @@ td.task-column {
 	color: #000;
 }
 
+/*
+ * Calendar misc.
+ */
 #calendar-cached-date {
 	display: none;
 	position: fixed;
@@ -485,9 +488,6 @@ td.task-column {
 	background: rgba(0, 0, 0, 0.7);
 }
 
-/*
- * Calendar manipulation.
- */
 #calendar-next {
 	background: #fff;
 	text-align: center;
@@ -508,10 +508,16 @@ td.task-column {
 }
 
 /*
+ * Tasks group.
+ */
+.taskgroup {
+	float: left;
+}
+
+/*
  * Tasks.
  */
 .task {
-	float: left;
 	overflow: hidden;
 	width: 200px;
 	min-height: 40px;
@@ -524,6 +530,10 @@ td.task-column {
 	border-radius: 3px;
 	-moz-border-radius: 3px;
 	box-shadow: 0px 3px 10px 3px rgba(0, 0, 0, 0.2);
+}
+
+.task-column>.task {
+	float: left;
 }
 
 .task:HOVER {
@@ -545,11 +555,6 @@ td.task-column {
 .task.ui-draggable-dragging {
 	z-index: 130;
 	box-shadow: 0px 3px 10px 3px rgba(0, 0, 0, 0.4);
-}
-
-#planning-tasks .task {
-	height: 1.5em;
-	min-height: 1.5em;
 }
 
 /*
