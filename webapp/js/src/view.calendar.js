@@ -187,7 +187,7 @@ UITask.prototype.refresh = function (task) {
 	// build inner elements
 	this.element
 		.addClass('task-status-' + task.status)
-		.addClass('tasklist-' + task.tasklistID)
+		.addClass('task-tasklistID-' + task.tasklistID)
 		.addClass('tasklistcolor-' + this.uiCalendar.getTasklists().getByID(task.tasklistID).colorID)
 		/**
 		 * Updates task due time when dropped on another row.

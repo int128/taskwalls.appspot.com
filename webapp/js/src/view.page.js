@@ -79,7 +79,7 @@ UIPage.prototype.loadOtherTasks = function (tasklists, defaultTasklistID) {
 		$.each(tasklists.items, function (i, tasklist) {
 			if (tasklist.id == defaultTasklistID) {
 				context.tasklists.add(new UITasklist(tasklist, true));
-				$('.tasklist-' + tasklist.id)
+				$('.task-tasklistID-' + tasklist.id)
 					.addClass('tasklistcolor-' + tasklists.getByID(tasklist.id).colorID);
 			}
 			else {

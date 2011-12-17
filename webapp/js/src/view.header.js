@@ -117,7 +117,7 @@ UITasklist.prototype.refresh = function (tasklist) {
  * @param {Number} colorID
  */
 UITasklist.prototype.changeColor = function (colorID) {
-	$('.tasklist-' + this.tasklist.id)
+	$('.task-tasklistID-' + this.tasklist.id)
 		.removeClass('tasklistcolor-' + this.tasklist.colorID)
 		.addClass('tasklistcolor-' + colorID);
 	this.element
@@ -131,10 +131,10 @@ UITasklist.prototype.changeColor = function (colorID) {
 UITasklist.prototype.toggle = function () {
 	this.element.toggleClass('hidden');
 	if (this.element.hasClass('hidden')) {
-		$('.tasklist-' + this.tasklist.id).fadeOut();
+		$('.task-tasklistID-' + this.tasklist.id).fadeOut();
 	}
 	else {
-		$('.tasklist-' + this.tasklist.id).fadeIn();
+		$('.task-tasklistID-' + this.tasklist.id).fadeIn();
 	}
 };
 /**
@@ -142,13 +142,13 @@ UITasklist.prototype.toggle = function () {
  * @returns {jQuery}
  */
 UITasklist.prototype.getCompletedTasks = function () {
-	return $('.task-status-completed.tasklist-' + this.tasklist.id);
+	return $('.task-status-completed.task-tasklistID-' + this.tasklist.id);
 };
 /**
  * Remove the tasklist and its tasks.
  */
 UITasklist.prototype.remove = function () {
-	$('.tasklist-' + this.tasklist.id).remove();
+	$('.task-tasklistID-' + this.tasklist.id).remove();
 	this.element.remove();
 };
 /**
