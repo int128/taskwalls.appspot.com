@@ -189,8 +189,30 @@ input[type="text"]:HOVER,textarea:HOVER {
 	text-align: center;
 }
 
+.toggle-tasks>a {
+	display: block;
+	margin-bottom: 5px;
+	padding-top: 5px;
+	padding-bottom: 5px;
+	border-radius: 5px;
+	-moz-border-radius: 5px;
+	background: #666;
+	text-align: center;
+	text-decoration: none;
+	color: #eee;
+}
+
+.toggle-tasks>a.hidden {
+	background: #ccc;
+}
+
+.toggle-tasks>a:HOVER {
+	color: #fff;
+}
+
 .new-tasklist-button {
 	margin-top: -8px;
+	margin-bottom: -8px;
 	text-align: right;
 }
 

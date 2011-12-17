@@ -4,12 +4,14 @@
  */
 function UIHeader (page) {
 	this.element = $('#myheader');
-	$('.toggle-tasks.needsAction', this.element).click(function () {
+	$('a[href="#toggle-tasks-needsAction"]', this.element).click(function () {
 		$('.task-status-needsAction').fadeToggle();
+		$(this).toggleClass('hidden');
 		return false;
 	});
-	$('.toggle-tasks.completed', this.element).click(function () {
+	$('a[href="#toggle-tasks-completed"]', this.element).click(function () {
 		$('.task-status-completed').fadeToggle();
+		$(this).toggleClass('hidden');
 		return false;
 	});
 	$('a[href="#reload"]', this.element).click(function () {
