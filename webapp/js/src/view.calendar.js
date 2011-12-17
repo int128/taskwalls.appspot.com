@@ -60,7 +60,7 @@ UICalendar.prototype.extend = function (time) {
 	var date = new Date(time);
 	date.setHours(0, 0, 0, 0);
 	if (date < this.earliest) {
-		while (this.earliest >= date) {
+		while (this.earliest > date) {
 			this.earliest = new Date(this.earliest.getTime() - 86400000);
 			$('#calendar>tbody').prepend(this.createDateRow(this.earliest));
 		}
@@ -86,12 +86,16 @@ UICalendar.prototype.extend = function (time) {
  * @param {Number} time date to extend
  */
 UICalendar.prototype.extendMonth = function (time) {
-	var date = new Date(time);
-	this.extend(date.getTime());
-	date.setHours(0, 0, 0, 0);
-	date.setMonth(date.getMonth() + 1);
-	date.setDate(1);
-	this.extend(date.getTime());
+	// (from) yesterday
+	var fromDate = new Date(time);
+	fromDate.setHours(-24, 0, 0, 0);
+	this.extend(fromDate.getTime());
+	// (to) first day in next month
+	var toDate = new Date(time);
+	toDate.setHours(0, 0, 0, 0);
+	toDate.setMonth(toDate.getMonth() + 1);
+	toDate.setDate(1);
+	this.extend(toDate.getTime());
 };
 /**
  * Create a table row of date.
