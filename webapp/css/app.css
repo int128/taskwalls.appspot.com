@@ -361,7 +361,7 @@ input[type="text"]:HOVER,textarea:HOVER {
 	vertical-align: middle;
 }
 
-tr.past>td.task-column>div.task.task-status-needsAction {
+tr.past>td.task-column .task.task-status-needsAction {
 	color: #f00;
 }
 
