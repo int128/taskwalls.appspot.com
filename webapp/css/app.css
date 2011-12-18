@@ -361,52 +361,8 @@ input[type="text"]:HOVER,textarea:HOVER {
 	vertical-align: middle;
 }
 
-tr.past>td.task-column .task.task-status-needsAction {
-	color: #f00;
-}
-
-tr.today>td.weekday-column,tr.today>td.date-column {
-	font-weight: bold;
-}
-
-tr.d1>td.month-column {
-	color: #000;
-}
-
-tr.d1>td.month-column>div {
-	position: absolute;
-	min-width: 30px;
-	font-size: 200%;
-	text-shadow: #888 1px 1px 1px;
-	padding: 7px;
-	border-radius: 20px;
-	-moz-border-radius: 20px;
-	background: rgba(0, 0, 0, 0.2);
-}
-
-tr.d1>td {
-	border-top: solid 1px #888;
-}
-
-tr.w0>td.weekday-column,tr.w0>td.date-column {
-	color: #f00;
-}
-
-tr.w6>td.weekday-column,tr.w6>td.date-column {
-	color: #11d;
-}
-
-tr.w1>td.weekday-column,tr.w1>td.date-column,tr.w1>td.task-column {
-	border-top: solid 1px #888;
-}
-
 td.weekday-column,td.date-column,td.task-column {
 	border-top: solid 1px #ccc;
-}
-
-tr.today>td.weekday-column,tr.today>td.date-column,tr.today>td.task-column {
-	background-color: #eee;
-	border-top: solid 1px #f00;
 }
 
 td.month-column {
@@ -437,10 +393,67 @@ td.task-column {
 	border-left: solid 1px #888;
 }
 
+/* first day of month */
+tr.d1>td.month-column {
+	color: #000;
+}
+
+tr.d1>td.month-column>div {
+	position: absolute;
+	min-width: 30px;
+	font-size: 200%;
+	text-shadow: #888 1px 1px 1px;
+	padding: 7px;
+	border-radius: 20px;
+	-moz-border-radius: 20px;
+	background: rgba(0, 0, 0, 0.2);
+}
+
+tr.d1>td {
+	border-top: solid 1px #888;
+}
+
+/* Sunday */
+tr.w0>td.weekday-column,tr.w0>td.date-column {
+	color: #f00;
+}
+
+/* Saturday */
+tr.w6>td.weekday-column,tr.w6>td.date-column {
+	color: #11d;
+}
+
+/* Monday */
+tr.w1>td.weekday-column,tr.w1>td.date-column,tr.w1>td.task-column {
+	border-top: solid 1px #888;
+}
+
+/* past tasks */
+tr.past {
+	background-color: #eee;
+}
+
+tr.past>td.task-column .task.task-status-needsAction {
+	color: #f00;
+}
+
+/* today tasks */
+tr.today>td.weekday-column,tr.today>td.date-column {
+	font-weight: bold;
+	font-size: 130%;
+}
+
+tr.today>td.weekday-column,tr.today>td.date-column,tr.today>td.task-column {
+	border-top: solid 1px #f00;
+}
+
 #calendar>tbody>tr.hover>td {
 	background: #ddd;
 }
 
+/*
+ * Calendar misc.
+ */
 .task-column>.new-task-button {
 	float: right;
 	width: 40px;
@@ -479,9 +492,6 @@ td.task-column {
 	color: #000;
 }
 
-/*
- * Calendar misc.
- */
 #calendar-cached-date {
 	display: none;
 	position: fixed;
