@@ -184,6 +184,14 @@ input[type="text"]:HOVER,textarea:HOVER {
 	text-align: center;
 }
 
+#myheader .icon {
+	opacity: 0.3;
+}
+
+#myheader .icon:HOVER {
+	opacity: 1.0;
+}
+
 #myheader .footer {
 	color: #888;
 	text-align: center;
@@ -732,11 +740,6 @@ tr.today>td.weekday-column,tr.today>td.date-column,tr.today>td.task-column {
 .icon {
 	display: inline-block;
 	background-repeat: no-repeat;
-	opacity: 0.3;
-}
-
-.icon:HOVER {
-	opacity: 1.0;
 }
 
 .icon-google-api {
