@@ -362,7 +362,7 @@ input[type="text"]:HOVER,textarea:HOVER {
 }
 
 tr.past>td.task-column>div.task.task-status-needsAction {
-	color: red;
+	color: #f00;
 }
 
 tr.today>td.weekday-column,tr.today>td.date-column {
@@ -370,7 +370,7 @@ tr.today>td.weekday-column,tr.today>td.date-column {
 }
 
 tr.d1>td.month-column {
-	color: black;
+	color: #000;
 }
 
 tr.d1>td.month-column>div {
@@ -389,7 +389,7 @@ tr.d1>td {
 }
 
 tr.w0>td.weekday-column,tr.w0>td.date-column {
-	color: red;
+	color: #f00;
 }
 
 tr.w6>td.weekday-column,tr.w6>td.date-column {
