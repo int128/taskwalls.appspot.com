@@ -401,12 +401,12 @@ td.task-column {
 	border-left: solid 1px #888;
 }
 
-/* first day of month */
-tr.d1>td.month-column {
+/* first day of month, first row */
+tr.d1>td.month-column,tr:FIRST-CHILD>td.month-column {
 	color: #000;
 }
 
-tr.d1>td.month-column>div {
+tr.d1>td.month-column>div,tr:FIRST-CHILD>td.month-column>div {
 	position: absolute;
 	min-width: 30px;
 	font-size: 200%;
