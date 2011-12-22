@@ -218,6 +218,10 @@ input[type="text"]:HOVER,textarea:HOVER {
 	color: #fff;
 }
 
+.toggle-tasks .count {
+	font-size: 24pt;
+}
+
 .new-tasklist-button {
 	margin-top: -8px;
 	margin-bottom: -8px;

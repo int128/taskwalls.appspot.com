@@ -299,6 +299,9 @@ UITask.prototype.refresh = function (task) {
 	if (task.notes) {
 		$('>div.notes', this.element).text(task.notes);
 	}
+	// TODO: revise dependencies
+	$('.toggle-tasks.completed .count').text($('.task.task-status-completed').size());
+	$('.toggle-tasks.needsAction .count').text($('.task.task-status-needsAction').size());
 };
 /**
  * Remove the task.
