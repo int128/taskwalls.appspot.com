@@ -225,7 +225,7 @@ input[type="text"]:HOVER,textarea:HOVER {
 .new-tasklist-button {
 	margin-top: -8px;
 	margin-bottom: -8px;
-	text-align: right;
+	text-align: center;
 }
 
 .new-tasklist-button>a {
@@ -272,13 +272,12 @@ input[type="text"]:HOVER,textarea:HOVER {
 	left: 80px;
 	width: 32px;
 	height: 32px;
-	/* TODO: replace with settings icon */
-	background: url('/css/icons/power_shut_down.resized.png') no-repeat;
+	background: url('/css/gear.png') no-repeat right;
 	opacity: 0.1;
 }
 
 .tasklist-legend .setting:HOVER {
-	opacity: 1.0;
+	opacity: 0.6;
 }
 
 /*
