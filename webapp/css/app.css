@@ -180,7 +180,7 @@ input[type="text"]:HOVER,textarea:HOVER {
 	margin-bottom: 10px;
 }
 
-#myheader>.stack.icons {
+#myheader .icons {
 	text-align: center;
 }
 
@@ -227,22 +227,6 @@ input[type="text"]:HOVER,textarea:HOVER {
 
 .toggle-tasks .count {
 	font-size: 24pt;
-}
-
-.new-tasklist-button {
-	margin-top: -8px;
-	margin-bottom: -8px;
-	text-align: center;
-}
-
-.new-tasklist-button>a {
-	text-decoration: none;
-	font-size: 24pt;
-	color: #ccc;
-}
-
-.new-tasklist-button>a:HOVER {
-	color: #000;
 }
 
 /*
@@ -780,9 +764,15 @@ tr.today>td.weekday-column,tr.today>td.date-column,tr.today>td.task-column {
 }
 
 .icon-logout {
-	background-image: url('/css/icons/power_standby.resized.png');
+	background-image: url('/css/power.png');
 	height: 32px;
 	width: 32px;
+}
+
+.icon-create-tasklist {
+	width: 32px;
+	height: 32px;
+	background: url('/css/3d_design_alt.png') no-repeat;
 }
 
 /*
