@@ -762,18 +762,6 @@ tr.today>td.weekday-column,tr.today>td.date-column,tr.today>td.task-column {
 	width: 128px;
 }
 
-.icon-completed-tasks {
-	background-image: url('/css/icons/tasks.resized.png');
-	height: 32px;
-	width: 32px;
-}
-
-.icon-needsAction-tasks {
-	background-image: url('/css/icons/tasks_needsAction.resized.png');
-	height: 32px;
-	width: 32px;
-}
-
 .icon-reload {
 	background-image: url('/css/icons/power_restart.resized.png');
 	height: 32px;
