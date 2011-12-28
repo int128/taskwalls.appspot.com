@@ -207,7 +207,7 @@ input[type="text"]:HOVER,textarea:HOVER {
 	background: #666;
 	text-align: center;
 	text-decoration: none;
-	color: #eee;
+	color: #fff;
 }
 
 .toggle-tasks>a.hidden {
@@ -215,7 +215,7 @@ input[type="text"]:HOVER,textarea:HOVER {
 }
 
 .toggle-tasks>a:HOVER {
-	color: #fff;
+	background: #333;
 }
 
 .toggle-tasks .count {
