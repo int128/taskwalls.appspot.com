@@ -243,8 +243,7 @@ input[type="text"]:HOVER,textarea:HOVER {
  */
 .tasklist-legend {
 	z-index: 500;
-	padding: 5px;
-	overflow-y: hidden;
+	overflow: hidden;
 	margin-bottom: 5px;
 	border: solid 1px #ddd;
 	border-left: solid 5px #ddd;
@@ -261,19 +260,24 @@ input[type="text"]:HOVER,textarea:HOVER {
 
 .tasklist-legend.hidden {
 	border-left-width: 1px;
-	padding-left: 9px;
+	padding-left: 4px;
 }
 
-.tasklist-legend>.title {
-	float: left;
+.tasklist-legend .title {
+	padding: 5px;
 }
 
-.tasklist-legend>.setting {
-	float: right;
-	opacity: 0.5;
+.tasklist-legend .setting {
+	position: absolute;
+	left: 80px;
+	width: 32px;
+	height: 32px;
+	/* TODO: replace with settings icon */
+	background: url('/css/icons/power_shut_down.resized.png') no-repeat;
+	opacity: 0.1;
 }
 
-.tasklist-legend>.setting:HOVER {
+.tasklist-legend .setting:HOVER {
 	opacity: 1.0;
 }
 
