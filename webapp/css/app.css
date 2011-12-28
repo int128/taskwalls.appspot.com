@@ -465,42 +465,31 @@ tr.today>td.weekday-column,tr.today>td.date-column,tr.today>td.task-column {
 /*
  * Calendar misc.
  */
-.task-column>.new-task-button {
+.task-column>.create-task-button {
 	float: right;
-	width: 40px;
-	height: 40px;
-	margin-right: 15px;
-	margin-bottom: 1px;
-	margin-top: 1px;
-	padding: 5px;
-	border: solid 1px transparent;
-	border-radius: 3px;
-	-moz-border-radius: 3px;
-	text-align: center;
-	color: transparent;
-	cursor: default;
+	margin: 10px;
 }
 
-.task-column>.new-task-button>.symbol {
-	font-size: 30px;
+.task-column>.create-task-button a {
+	display: inline-block;
+	background: url('/css/lightning.png') no-repeat center;
+	width: 48px;
+	height: 32px;
+	opacity: 0.3;
 }
 
-.task-column>.new-task-button>.balloon-tip {
+.task-column>.create-task-button:HOVER a {
+	opacity: 1.0;
+}
+
+.task-column>.create-task-button>.balloon-tip {
 	position: absolute;
 	right: 60px;
-	margin-top: 8px;
+	margin-top: 6px;
 }
 
-.task-column>.new-task-button:HOVER>.balloon-tip {
+.task-column>.create-task-button:HOVER>.balloon-tip {
 	display: block;
-}
-
-#calendar:HOVER .task-column>.new-task-button {
-	color: #ccc;
-}
-
-#calendar .task-column>.new-task-button:HOVER {
-	color: #000;
 }
 
 #calendar-cached-date {
@@ -736,9 +725,11 @@ tr.today>td.weekday-column,tr.today>td.date-column,tr.today>td.task-column {
 	z-index: 300;
 	padding-left: 10px;
 	padding-right: 10px;
+	padding-top: 1px;
+	padding-bottom: 1px;
 	border-radius: 10px;
 	-moz-border-radius: 10px;
-	background: rgba(0, 0, 0, 0.7);
+	background: rgba(0, 0, 0, 0.6);
 	color: #fff;
 }
 

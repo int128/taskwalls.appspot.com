@@ -124,7 +124,7 @@ UICalendar.prototype.createDateRow = function (date) {
 	$('.month-column>div', row).text(date.getMonth() + 1);
 	$('.date-column>div', row).text(date.getDate());
 	$('.weekday-column', row).append($.resource('key-weekday' + date.getDay()));
-	$('.new-task-button', row).click(function (event) {
+	$('a[href="#create-task"]', row).click(function (event) {
 		new UINewTask().open(context, date, event.pageY);
 	});
 	if (row.hasClass('today')) {
