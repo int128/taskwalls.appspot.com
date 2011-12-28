@@ -31,6 +31,17 @@ DateUtil.getUTCTime = function (date) {
 	return date.getTime() - date.getTimezoneOffset() * 60 * 1000;
 };
 /**
+ * Get time or zero if null.
+ * @param {Date} date
+ * @returns {Number}
+ */
+DateUtil.getTimeOrZero = function (date) {
+	if (date && date.getTime) {
+		return date.getTime();
+	}
+	return 0;
+};
+/**
  * @class Form controller for the AJAX API.
  * @param {HTMLFormElement} form
  */

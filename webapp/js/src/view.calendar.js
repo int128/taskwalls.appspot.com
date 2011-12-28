@@ -138,7 +138,6 @@ UICalendar.prototype.createDateRow = function (date) {
  * @param {UICalendar} uiCalendar
  */
 function UITask (task, uiCalendar) {
-	this.task = task;
 	this.uiCalendar = uiCalendar;
 	this.refresh(task);
 }
@@ -172,23 +171,32 @@ UITask.prototype.getTask = function () {
  * @param {Task} task the task
  */
 UITask.prototype.refresh = function (task) {
-	var context = this;
-	var originalElement = this.element;
-	this.element = $.resource('task-template');
-	this.task = task;
-	// append or move the element to due date row
-	var rowTime = 0;
-	if (task.dueDate) {
-		rowTime = task.dueDate.getTime();
-	}
-	$(originalElement).remove();
-	var taskGroup = $('.t' + rowTime + '>.task-column>.taskgroup-tasklistID-' + task.tasklistID);
-	if (taskGroup.size() == 0) {
-		taskGroup = $('<div class="taskgroup"/>').addClass('taskgroup-tasklistID-' + task.tasklistID);
-		$('.t' + rowTime + '>.task-column').append(taskGroup);
-	}
-	taskGroup.append(this.element);
+	// replace or append new element
+	(function () {
+		var originalElement = this.element;
+		var originalTask = this.task;
+		this.element = $.resource('task-template');
+		this.task = task;
+		if (originalTask &&
+			DateUtil.getTimeOrZero(originalTask.dueDate) == DateUtil.getTimeOrZero(task.dueDate) &&
+			originalTask.tasklistID == task.tasklistID) {
+			// replace the element if same date and same tasklist
+			$(originalElement).replaceWith(this.element);
+		}
+		else {
+			// remove and append new element
+			var rowTime = DateUtil.getTimeOrZero(task.dueDate);
+			$(originalElement).remove();
+			var taskGroup = $('.t' + rowTime + '>.task-column>.taskgroup-tasklistID-' + task.tasklistID);
+			if (taskGroup.size() == 0) {
+				taskGroup = $('<div/>').addClass('taskgroup').addClass('taskgroup-tasklistID-' + task.tasklistID);
+				$('.t' + rowTime + '>.task-column').append(taskGroup);
+			}
+			taskGroup.append(this.element);
+		}
+	}).apply(this);
 	// build inner elements
+	var context = this;
 	this.element
 		.addClass('task-status-' + task.status)
 		.addClass('task-tasklistID-' + task.tasklistID)
