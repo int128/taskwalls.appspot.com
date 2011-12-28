@@ -515,20 +515,29 @@ tr.today>td.weekday-column,tr.today>td.date-column,tr.today>td.task-column {
 }
 
 .calendar-operations-tab {
-	text-align: center;
+	position: absolute;
+	top: 5px;
+	left: 50%;
 }
 
 .calendar-operations-tab>a {
-	padding: 10px 15px;
+	padding-top: 20px;
+	padding-left: 10px;
+	padding-right: 10px;
+	padding-bottom: 10px;
 	border-radius: 10px;
 	-moz-border-radius: 10px;
-	background: rgba(0, 0, 0, 0.3);
+	background: #888;
+	background: -webkit-gradient(linear, left top, left bottom, from(#aaa), to(#888) );
+	background: -moz-linear-gradient(top, #aaa, #888);
 	text-decoration: none;
 	color: #fff;
 }
 
 .calendar-operations-tab>a:HOVER {
-	background: rgba(0, 0, 0, 0.7);
+	background: #333;
+	background: -webkit-gradient(linear, left top, left bottom, from(#888), to(#333) );
+	background: -moz-linear-gradient(top, #888, #333);
 }
 
 #calendar-next {
