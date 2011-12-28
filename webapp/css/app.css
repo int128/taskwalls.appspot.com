@@ -250,6 +250,7 @@ input[type="text"]:HOVER,textarea:HOVER {
  */
 .tasklist-legend {
 	z-index: 500;
+	min-height: 32px;
 	overflow: hidden;
 	margin-bottom: 5px;
 	border: solid 1px #ddd;
@@ -275,15 +276,19 @@ input[type="text"]:HOVER,textarea:HOVER {
 }
 
 .tasklist-legend .setting {
+	position: relative;
+}
+
+.tasklist-legend .setting>div {
 	position: absolute;
-	left: 80px;
+	right: 0;
 	width: 32px;
 	height: 32px;
 	background: url('/css/gear.png') no-repeat right;
 	opacity: 0.1;
 }
 
-.tasklist-legend .setting:HOVER {
+.tasklist-legend .setting>div:HOVER {
 	opacity: 0.6;
 }
 
