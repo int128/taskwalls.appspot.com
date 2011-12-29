@@ -147,7 +147,6 @@ input[type="text"]:HOVER,textarea:HOVER {
  * Header.
  */
 #mycontent {
-	margin-left: 110px;
 }
 
 #myheader {
@@ -363,13 +362,16 @@ input[type="text"]:HOVER,textarea:HOVER {
  * Calendar.
  */
 #calendar {
+}
+
+#calendar>table {
 	border-collapse: collapse;
 	table-layout: fixed;
 	width: 100%;
 }
 
-#calendar>tbody>tr>td {
-	vertical-align: middle;
+#calendar>table>tbody>tr.hover>td {
+	background: #ddd;
 }
 
 td.weekday-column,td.date-column,td.task-column {
@@ -377,9 +379,7 @@ td.weekday-column,td.date-column,td.task-column {
 }
 
 td.month-column {
-	width: 20px;
-	text-align: center;
-	color: transparent;
+	width: 150px;
 }
 
 td.weekday-column {
@@ -406,18 +406,30 @@ td.task-column {
 
 /* first day of month, first row */
 tr.d1>td.month-column,tr:FIRST-CHILD>td.month-column {
-	color: #000;
+	position: relative;
+}
+
+td.month-column>div {
+	display: none;
 }
 
 tr.d1>td.month-column>div,tr:FIRST-CHILD>td.month-column>div {
+	display: block;
 	position: absolute;
+	top: 5px;
+	right: -10px;
 	min-width: 30px;
+	min-height: 30px;
 	font-size: 200%;
 	text-shadow: #888 1px 1px 1px;
 	padding: 7px;
 	border-radius: 20px;
 	-moz-border-radius: 20px;
-	background: rgba(0, 0, 0, 0.2);
+	background: #888;
+	background: -webkit-gradient(linear, left top, left bottom, from(#aaa), to(#888) );
+	background: -moz-linear-gradient(top, #aaa, #888);
+	text-align: center;
+	color: #000;
 }
 
 tr.d1>td {
@@ -456,10 +468,6 @@ tr.today>td.weekday-column,tr.today>td.date-column {
 
 tr.today>td.weekday-column,tr.today>td.date-column,tr.today>td.task-column {
 	border-top: solid 1px #f00;
-}
-
-#calendar>tbody>tr.hover>td {
-	background: #ddd;
 }
 
 /*

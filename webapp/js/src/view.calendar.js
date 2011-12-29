@@ -16,7 +16,7 @@ function UICalendar () {
 	this.earliest = new Date();
 	this.earliest.setHours(24, 0, 0, 0);
 	// build table rows
-	$('#calendar>tbody').empty();
+	$('#calendar tbody').empty();
 	this.extendMonth(this.earliest);
 };
 /**
@@ -62,13 +62,13 @@ UICalendar.prototype.extend = function (time) {
 	if (date < this.earliest) {
 		while (this.earliest > date) {
 			this.earliest = new Date(this.earliest.getTime() - 86400000);
-			$('#calendar>tbody').prepend(this.createDateRow(this.earliest));
+			$('#calendar tbody').prepend(this.createDateRow(this.earliest));
 		}
 	}
 	else if (date > this.latest) {
 		while (this.latest < date) {
 			this.latest = new Date(this.latest.getTime() + 86400000);
-			$('#calendar>tbody').append(this.createDateRow(this.latest));
+			$('#calendar tbody').append(this.createDateRow(this.latest));
 		}
 	}
 	// next month link
