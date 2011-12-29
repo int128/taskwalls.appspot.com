@@ -77,7 +77,7 @@ Task Wall<br/>
 </div>
 
 <div id="mycontent" class="oauth2state authorized">
-<div id="calendar-cached-date">
+<div class="calendar-cached-date">
 オフラインモードです。最後にタスクリストを読み込んだのは
 <span class="month"></span>月<span class="day"></span>日 <span class="hour"></span>:<span class="minute"></span>
 です。
@@ -86,7 +86,9 @@ Task Wall<br/>
 <a href="#clear-completed-tasks">完了したタスクを消す</a>
 </div>
 <table id="calendar"><tbody></tbody></table>
-<div id="calendar-next"></div>
+<div class="calendar-next">
+<a href="#next-month"><span class="year"></span>年<span class="month"></span>月を表示</a>
+</div>
 </div>
 
 <div id="create-tasklist-template" class="create-tasklist resource">
@@ -223,10 +225,6 @@ Task Wall<br/>
 </td>
 </tr>
 </table>
-</div>
-
-<div id="calendar-next-template" class="resource">
-<a href="#next-month"><span class="year"></span>年<span class="month"></span>月を表示</a>
 </div>
 
 <div id="popup-overlay-template" class="popup-overlay resource"></div>

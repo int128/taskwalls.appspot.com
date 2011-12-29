@@ -72,14 +72,12 @@ UICalendar.prototype.extend = function (time) {
 		}
 	}
 	// next month link
-	var next = $.resource('calendar-next-template');
-	$('.year', next).text(this.latest.getFullYear());
-	$('.month', next).text(this.latest.getMonth() + 1);
-	$('a', next).click(function () {
+	$('.calendar-next .year').text(this.latest.getFullYear());
+	$('.calendar-next .month').text(this.latest.getMonth() + 1);
+	$('.calendar-next a').unbind('click').click(function () {
 		context.extendMonth(context.latest.getTime());
 		return false;
 	});
-	$('#calendar-next').empty().append(next);
 };
 /**
  * Extend rows of the calendar.

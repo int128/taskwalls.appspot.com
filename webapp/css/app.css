@@ -492,7 +492,7 @@ tr.today>td.weekday-column,tr.today>td.date-column,tr.today>td.task-column {
 	display: block;
 }
 
-#calendar-cached-date {
+.calendar-cached-date {
 	display: none;
 	position: fixed;
 	top: 0;
@@ -529,18 +529,18 @@ tr.today>td.weekday-column,tr.today>td.date-column,tr.today>td.task-column {
 	background: -moz-linear-gradient(top, #888, #333);
 }
 
-#calendar-next {
+.calendar-next {
 	background: #fff;
 	text-align: center;
 	color: #888;
 }
 
-#calendar-next:HOVER {
+.calendar-next:HOVER {
 	background: #eee;
 	color: #000;
 }
 
-#calendar-next a {
+.calendar-next a {
 	display: block;
 	padding-top: 15px;
 	padding-bottom: 15px;

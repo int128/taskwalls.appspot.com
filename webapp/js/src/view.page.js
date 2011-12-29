@@ -42,14 +42,14 @@ UIPage.prototype.refresh = function () {
 	// offline status
 	if (AppSettings.isOffline()) {
 		var cached = AppSettings.getCachedDate('Tasklists.get');
-		$('#calendar-cached-date>.month').text(cached.getMonth() + 1);
-		$('#calendar-cached-date>.day').text(cached.getDate());
-		$('#calendar-cached-date>.hour').text(cached.getHours());
-		$('#calendar-cached-date>.minute').text(cached.getMinutes());
-		$('#calendar-cached-date').show();
+		$('.calendar-cached-date>.month').text(cached.getMonth() + 1);
+		$('.calendar-cached-date>.day').text(cached.getDate());
+		$('.calendar-cached-date>.hour').text(cached.getHours());
+		$('.calendar-cached-date>.minute').text(cached.getMinutes());
+		$('.calendar-cached-date').show();
 	}
 	else {
-		$('#calendar-cached-date').hide();
+		$('.calendar-cached-date').hide();
 	}
 	// calendar tab
 	$('a[href="#clear-completed-tasks"]').click(function () {
