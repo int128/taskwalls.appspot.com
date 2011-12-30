@@ -362,6 +362,7 @@ input[type="text"]:HOVER,textarea:HOVER {
  * Calendar.
  */
 #calendar {
+	margin-right: 190px;
 }
 
 #calendar>table {
@@ -492,8 +493,8 @@ tr.today>td.weekday-column,tr.today>td.date-column,tr.today>td.task-column {
 
 .task-column>.create-task-button>.balloon-tip {
 	position: absolute;
-	right: 60px;
-	margin-top: 6px;
+	margin-left: 48px;
+	margin-top: 4px;
 }
 
 .task-column>.create-task-button:HOVER>.balloon-tip {
