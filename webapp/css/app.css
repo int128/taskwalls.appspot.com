@@ -362,7 +362,8 @@ input[type="text"]:HOVER,textarea:HOVER {
  * Calendar.
  */
 #calendar {
-	margin-right: 190px;
+	margin-right: 240px;
+	border-right: solid 1px #888;
 }
 
 #calendar>table {
@@ -371,7 +372,7 @@ input[type="text"]:HOVER,textarea:HOVER {
 	width: 100%;
 }
 
-#calendar>table>tbody>tr.hover>td {
+#calendar>table>tbody>tr.hover {
 	background: #ddd;
 }
 
@@ -555,6 +556,21 @@ tr.today>td.weekday-column,tr.today>td.date-column,tr.today>td.task-column {
 	padding-bottom: 15px;
 	text-decoration: none;
 	color: inherit;
+}
+
+/*
+ * Planner.
+ */
+#planner {
+	position: fixed;
+	top: 0;
+	right: 0;
+	bottom: 0;
+	width: 240px;
+}
+
+#planner.hover {
+	background: #ddd;
 }
 
 /*

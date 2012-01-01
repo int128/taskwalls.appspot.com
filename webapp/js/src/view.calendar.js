@@ -18,6 +18,25 @@ function UICalendar () {
 	// build table rows
 	$('#calendar tbody').empty();
 	this.extendMonth(this.earliest);
+	var context = this;
+	// planner
+	$('#planner').droppable({
+		accept: '.task',
+		tolerance: 'pointer',
+		hoverClass: 'hover',
+		drop: function (event, ui) {
+			$(ui.draggable).css({top: 0, left: 0});
+			// check if dropped row is different from last one
+			if ($(ui.draggable).parents('#planner').size() == 0) {
+				$(ui.draggable).trigger('dropped', [this, null]);
+			}
+		}
+	});
+	$('#planner a[href="#create-task"]').click(function (event) {
+		// FIXME: fix due date
+		new UINewTask().open(context, new Date(), event.pageY);
+		return false;
+	});
 };
 /**
  * Clear tasks in the calendar.
@@ -108,20 +127,21 @@ UICalendar.prototype.createDateRow = function (date) {
 		.addClass('d' + date.getDate())
 		.addClass(DateUtil.futureOrPast(date, 'future', 'today', 'past'))
 		.droppable({
-			accept: 'div.task',
+			accept: '.task',
 			tolerance: 'pointer',
 			hoverClass: 'hover',
 			drop: function (event, ui) {
 				$(ui.draggable).css({top: 0, left: 0});
 				// check if dropped row is different from last one
 				if ($(ui.draggable).parents('.t' + date.getTime()).size() == 0) {
-					$(ui.draggable).trigger('dropped', [$('>td.task-column', this), date]);
+					$(ui.draggable).trigger('dropped', [$('.task-column', this), date]);
 				}
 			}
 		});
 	$('.month-column>div', row).text(date.getMonth() + 1);
 	$('.date-column>div', row).text(date.getDate());
 	$('.weekday-column', row).append($.resource('key-weekday' + date.getDay()));
+	// TODO: change to live() method; use data?
 	$('a[href="#create-task"]', row).click(function (event) {
 		new UINewTask().open(context, date, event.pageY);
 		return false;
@@ -219,7 +239,9 @@ UITask.prototype.refresh = function (task) {
 					context.element.appendTo(oldplace).unwrap();
 					context.refresh(task);
 				});
-			$('input[name="dueTime"]', form).val(DateUtil.getUTCTime(date));
+			if (date) {
+				$('input[name="dueTime"]', form).val(DateUtil.getUTCTime(date));
+			}
 			$(this).appendTo($(column));
 			context.enterAjax();
 			$(form).submit();
