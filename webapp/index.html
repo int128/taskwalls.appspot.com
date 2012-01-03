@@ -206,7 +206,10 @@ Task Wall<br/>
 </form>
 <form class="delete" action="/tasks/delete" method="post">
 <div><a href="#delete">タスクを削除する...</a></div>
-<div class="confirm"><div><button>タスクを削除する</button></div></div>
+<div class="confirm">
+<div>本当に削除しますか？</div>
+<div><button>タスクを削除する</button></div>
+</div>
 <div>
 <input type="hidden" name="id" />
 <input type="hidden" name="tasklistID" />
