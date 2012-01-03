@@ -702,8 +702,8 @@ tr.today>td.weekday-column,tr.today>td.date-column,tr.today>td.task-column {
 	margin-bottom: 10px;
 }
 
-.update-task .datepicker-below {
-	margin-top: 5px;
+.update-task.due-tbd .due-selection,.update-task.due-tbd .due {
+	display: none;
 }
 
 .tasklists.selection {

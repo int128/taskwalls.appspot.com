@@ -414,11 +414,6 @@ UIUpdateTask.prototype.open = function (uiTask, uiCalendar) {
 			context.setDue(new Date(parseInt(timeInMillis)));
 		}
 	});
-	$('a[href="#clear-due"]', this.element).click(function () {
-		context.setDue(null);
-		$('.datepicker', context.element).datepicker('setDate', null);
-		return false;
-	});
 	// form for updating the task
 	new FormController($('>.forms>form.update', this.element))
 		.copyProperties(uiTask.getTask())
@@ -489,12 +484,10 @@ UIUpdateTask.prototype.setDue = function (due) {
 		$('>.forms>form.update>.due>.year', this.element).text(due.getFullYear());
 		$('>.forms>form.update>.due>.month', this.element).text(due.getMonth() + 1);
 		$('>.forms>form.update>.due>.day', this.element).text(due.getDate());
-		$('>.forms>form.update>.due', this.element).show();
-		$('>.forms>form.update>.due-none', this.element).hide();
+		this.element.removeClass('due-tbd');
 	}
 	else {
-		$('>.forms>form.update>.due', this.element).hide();
-		$('>.forms>form.update>.due-none', this.element).show();
+		this.element.addClass('due-tbd');
 	}
 };
 /**

@@ -186,7 +186,6 @@ Task Wall<br/>
 <div class="forms">
 <form class="update" action="/tasks/update" method="post">
 <div class="due"><span class="year"></span>年<span class="month"></span>月<span class="day"></span>日</div>
-<div class="due-none">期限未定のタスク</div>
 <div><input type="text" name="title" /></div>
 <div><textarea name="notes"></textarea></div>
 <div><button>タスクを更新</button></div>
@@ -196,10 +195,7 @@ Task Wall<br/>
 <input type="hidden" name="tasklistID" />
 </div>
 </form>
-<div class="due-selection">
-<div class="datepicker"></div>
-<div class="datepicker-below"><a href="#clear-due">タスクの期限を未定にする</a></div>
-</div>
+<div class="due-selection"><div class="datepicker"></div></div>
 <form class="move" action="/tasks/update/tasklist" method="post">
 <div class="tasklists selection"></div>
 <div><button>別のタスクリストに移動</button></div>
