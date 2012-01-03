@@ -407,7 +407,6 @@ UIUpdateTask.prototype.open = function (uiTask, uiCalendar) {
 	this.setDue(uiTask.getTask().dueDate);
 	$('>.forms>form button', this.element).button();
 	// update the task
-	// FIXME: only not "due-none" tasks
 	$('.datepicker', this.element).datepicker({
 		defaultDate: context.getDue(),
 		dateFormat: '@',
@@ -415,6 +414,12 @@ UIUpdateTask.prototype.open = function (uiTask, uiCalendar) {
 			context.setDue(new Date(parseInt(timeInMillis)));
 		}
 	});
+	$('a[href="#clear-due"]', this.element).click(function () {
+		context.setDue(null);
+		$('.datepicker', context.element).datepicker('setDate', null);
+		return false;
+	});
+	// form for updating the task
 	new FormController($('>.forms>form.update', this.element))
 		.copyProperties(uiTask.getTask())
 		.validator(function (form) {
@@ -433,7 +438,7 @@ UIUpdateTask.prototype.open = function (uiTask, uiCalendar) {
 		.cancel(function () {
 			context.close();
 		});
-	// delete the task
+	// form for deleting the task
 	new FormController($('>.forms>form.delete', this.element))
 		.copyProperties(uiTask.getTask())
 		.success(function () {
@@ -446,7 +451,7 @@ UIUpdateTask.prototype.open = function (uiTask, uiCalendar) {
 		$('.confirm', this.element).show();
 		return false;
 	});
-	// move the task to some tasklist
+	// form for moving the task to another tasklist
 	new UITasklistButtonSet($('>.forms>form.move>.tasklists', this.element), 'destinationTasklistID')
 		.onSelect(function () {
 			$('>.forms>form.update input[name="title"]', context.element).focus();
@@ -476,7 +481,7 @@ UIUpdateTask.prototype.close = function () {
 };
 /**
  * Set the due date.
- * @param {Date} due
+ * @param {Date} due due date (may be null)
  */
 UIUpdateTask.prototype.setDue = function (due) {
 	this.due = due;
@@ -494,7 +499,7 @@ UIUpdateTask.prototype.setDue = function (due) {
 };
 /**
  * Get the due date.
- * @returns {Date}
+ * @returns {Date} due date (may be null)
  */
 UIUpdateTask.prototype.getDue = function () {
 	return this.due;

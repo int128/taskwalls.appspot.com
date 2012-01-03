@@ -684,22 +684,26 @@ tr.today>td.weekday-column,tr.today>td.date-column,tr.today>td.task-column {
 	box-shadow: 0 0 10px 3px rgba(0, 0, 0, 0.4);
 }
 
-.update-task>.forms>form.update {
+.update-task form.update {
 	float: left;
 	margin-bottom: 10px;
 }
 
-.update-task>.forms>.datepicker {
+.update-task form.delete,.update-task form.move {
+	clear: both;
+	margin-top: 10px;
+	padding-top: 10px;
+	border-top: inset 1px #ccc;
+}
+
+.update-task .due-selection {
 	float: left;
 	margin-left: 10px;
 	margin-bottom: 10px;
 }
 
-.update-task>.forms>form.delete,.update-task>.forms>form.move {
-	clear: both;
-	margin-top: 10px;
-	padding-top: 10px;
-	border-top: inset 1px #ccc;
+.update-task .datepicker-below {
+	margin-top: 5px;
 }
 
 .tasklists.selection {
