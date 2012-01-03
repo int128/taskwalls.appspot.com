@@ -67,11 +67,11 @@ public class DigestGenerator {
 	 * @return
 	 */
 	public String getAsHexString() {
-		StringBuilder sessionIDBuilder = new StringBuilder();
+		StringBuilder builder = new StringBuilder();
 		for (byte b : digest.digest()) {
-			sessionIDBuilder.append(Integer.toHexString(b & 0xff));
+			builder.append(Integer.toHexString(b & 0xff));
 		}
-		return sessionIDBuilder.toString();
+		return builder.toString();
 	}
 
 }
