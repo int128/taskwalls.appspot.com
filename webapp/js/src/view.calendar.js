@@ -241,6 +241,9 @@ UITask.prototype.refresh = function (task) {
 			if (date) {
 				$('input[name="dueTime"]', form).val(DateUtil.getUTCTime(date));
 			}
+			else {
+				$('input[name="dueTime"]', form).val(0);
+			}
 			$(this).appendTo($(column));
 			context.enterAjax();
 			$(form).submit();
@@ -366,7 +369,7 @@ UICreateTask.prototype.open = function (uiCalendar, date, positionTop) {
 				$('input[name="dueTime"]', form).val(DateUtil.getUTCTime(context.getDue()));
 			}
 			else {
-				$('input[name="dueTime"]', form).val(null);
+				$('input[name="dueTime"]', form).val(0);
 			}
 			return $('input[name="title"]', form).val();
 		})
