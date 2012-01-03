@@ -575,9 +575,8 @@ tr.today>td.weekday-column,tr.today>td.date-column,tr.today>td.task-column {
 
 #planner>.description {
 	position: absolute;
-	top: 45%;
-	width: 100%;
-	text-align: center;
+	top: 15px;
+	left: 15px;
 	color: #ddd;
 	font-size: 130%;
 	cursor: default;
