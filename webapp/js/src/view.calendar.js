@@ -33,8 +33,7 @@ function UICalendar () {
 		}
 	});
 	$('#planner a[href="#create-task"]').click(function (event) {
-		// FIXME: fix due date
-		new UICreateTask().open(context, new Date(), event.pageY);
+		new UICreateTask().open(context, null, event.pageY);
 		return false;
 	});
 };
@@ -348,15 +347,13 @@ function UICreateTask () {
 /**
  * Open the dialog.
  * @param {UICalendar} uiCalendar
- * @param {Date} date due date
+ * @param {Date} date due date (may be null)
  * @param {Number} positionTop
  */
 UICreateTask.prototype.open = function (uiCalendar, date, positionTop) {
 	var context = this;
 	$('>form button', this.element).button();
-	$('>form .due>.month', this.element).text(date.getMonth() + 1);
-	$('>form .due>.day', this.element).text(date.getDate());
-	$('>form input[name="dueTime"]', this.element).val(DateUtil.getUTCTime(date));
+	this.setDue(date);
 	new UITasklistButtonSet($('>form>.tasklists', this.element), 'tasklistID')
 		.onSelect(function () {
 			$('>form input[name="title"]', context.element).focus();
@@ -365,6 +362,12 @@ UICreateTask.prototype.open = function (uiCalendar, date, positionTop) {
 		.selectFirst();
 	new FormController($('>form', this.element))
 		.validator(function (form) {
+			if (context.getDue()) {
+				$('input[name="dueTime"]', form).val(DateUtil.getUTCTime(context.getDue()));
+			}
+			else {
+				$('input[name="dueTime"]', form).val(null);
+			}
 			return $('input[name="title"]', form).val();
 		})
 		.success(function (created) {
@@ -389,6 +392,29 @@ UICreateTask.prototype.open = function (uiCalendar, date, positionTop) {
 UICreateTask.prototype.close = function () {
 	this.element.remove();
 	this.overlay.remove();
+};
+/**
+ * Set the due date.
+ * @param {Date} due due date (may be null)
+ */
+UICreateTask.prototype.setDue = function (due) {
+	this.due = due;
+	if (due) {
+		$('.due>.year', this.element).text(due.getFullYear());
+		$('.due>.month', this.element).text(due.getMonth() + 1);
+		$('.due>.day', this.element).text(due.getDate());
+		this.element.removeClass('due-tbd');
+	}
+	else {
+		this.element.addClass('due-tbd');
+	}
+};
+/**
+ * Get the due date.
+ * @returns {Date} due date (may be null)
+ */
+UICreateTask.prototype.getDue = function () {
+	return this.due;
 };
 /**
  * @class updating task dialog

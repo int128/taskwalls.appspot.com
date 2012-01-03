@@ -656,17 +656,16 @@ tr.today>td.weekday-column,tr.today>td.date-column,tr.today>td.task-column {
 	box-shadow: 0 0 10px 3px rgba(0, 0, 0, 0.4);
 }
 
-.create-task>.due {
-	margin-bottom: 5px;
-	font-weight: bold;
+.create-task.due-tbd .due {
+	display: none;
 }
 
-.create-task>form>div>input[type="text"],.update-task>.forms>form>div>input[type="text"] {
+.create-task input[type="text"],.update-task input[type="text"] {
 	width: 300px;
 	margin-top: 5px;
 }
 
-.create-task>form>div>textarea,.update-task>.forms>form>div>textarea {
+.create-task textarea,.update-task textarea {
 	width: 300px;
 	margin-top: 5px;
 	height: 100px;
