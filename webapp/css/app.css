@@ -505,7 +505,7 @@ tr.today>td.weekday-column,tr.today>td.date-column,tr.today>td.task-column {
 .calendar-cached-date {
 	display: none;
 	position: fixed;
-	top: 0;
+	bottom: 0;
 	right: 0;
 	z-index: 200;
 	padding: 3px;
