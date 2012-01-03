@@ -44,6 +44,9 @@ public class UpdateController extends ControllerBase {
 		if (asLong("dueTime") != null) {
 			task.setDue(new DateTime(asLong("dueTime"), 0));
 		}
+		else {
+			task.setDue(Data.NULL_DATE_TIME);
+		}
 		task.setStatus(asString("status"));
 		if ("needsAction".equals(asString("status"))) {
 			task.setCompleted(Data.NULL_DATE_TIME);

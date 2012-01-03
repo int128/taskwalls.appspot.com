@@ -8,6 +8,7 @@ import org.hidetake.taskwalls.util.AjaxPreconditions;
 import org.slim3.controller.Navigation;
 import org.slim3.controller.validator.Validators;
 
+import com.google.api.client.util.Data;
 import com.google.api.client.util.DateTime;
 import com.google.api.services.tasks.model.Task;
 
@@ -36,7 +37,12 @@ public class CreateController extends ControllerBase {
 		Task task = new Task();
 		task.setTitle(asString("title"));
 		task.setNotes(asString("notes"));
-		task.setDue(new DateTime(asLong("dueTime"), 0));
+		if (asLong("dueTime") != null) {
+			task.setDue(new DateTime(asLong("dueTime"), 0));
+		}
+		else {
+			task.setDue(Data.NULL_DATE_TIME);
+		}
 
 		Task created = tasksService.tasks().insert(asString("tasklistID"), task).execute();
 		return jsonResponse(created);
