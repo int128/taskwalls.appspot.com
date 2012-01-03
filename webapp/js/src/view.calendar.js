@@ -34,7 +34,7 @@ function UICalendar () {
 	});
 	$('#planner a[href="#create-task"]').click(function (event) {
 		// FIXME: fix due date
-		new UINewTask().open(context, new Date(), event.pageY);
+		new UICreateTask().open(context, new Date(), event.pageY);
 		return false;
 	});
 };
@@ -143,7 +143,7 @@ UICalendar.prototype.createDateRow = function (date) {
 	$('.weekday-column', row).append($.resource('key-weekday' + date.getDay()));
 	// TODO: change to live() method; use data?
 	$('a[href="#create-task"]', row).click(function (event) {
-		new UINewTask().open(context, date, event.pageY);
+		new UICreateTask().open(context, date, event.pageY);
 		return false;
 	});
 	if (row.hasClass('today')) {
@@ -341,8 +341,8 @@ UITask.prototype.remove = function () {
 /**
  * @class creating task dialog
  */
-function UINewTask () {
-	this.element = $.resource('new-task-template');
+function UICreateTask () {
+	this.element = $.resource('create-task-template');
 	this.overlay = $.resource('popup-overlay-template');
 };
 /**
@@ -351,7 +351,7 @@ function UINewTask () {
  * @param {Date} date due date
  * @param {Number} positionTop
  */
-UINewTask.prototype.open = function (uiCalendar, date, positionTop) {
+UICreateTask.prototype.open = function (uiCalendar, date, positionTop) {
 	var context = this;
 	$('>form button', this.element).button();
 	$('>form .due>.month', this.element).text(date.getMonth() + 1);
@@ -386,7 +386,7 @@ UINewTask.prototype.open = function (uiCalendar, date, positionTop) {
 /**
  * Close the dialog.
  */
-UINewTask.prototype.close = function () {
+UICreateTask.prototype.close = function () {
 	this.element.remove();
 	this.overlay.remove();
 };

@@ -644,7 +644,7 @@ tr.today>td.weekday-column,tr.today>td.date-column,tr.today>td.task-column {
 	background: transparent;
 }
 
-.new-task {
+.create-task {
 	z-index: 400;
 	position: absolute;
 	right: 40px;
@@ -656,17 +656,17 @@ tr.today>td.weekday-column,tr.today>td.date-column,tr.today>td.task-column {
 	box-shadow: 0 0 10px 3px rgba(0, 0, 0, 0.4);
 }
 
-.new-task>.due {
+.create-task>.due {
 	margin-bottom: 5px;
 	font-weight: bold;
 }
 
-.new-task>form>div>input[type="text"],.update-task>.forms>form>div>input[type="text"] {
+.create-task>form>div>input[type="text"],.update-task>.forms>form>div>input[type="text"] {
 	width: 300px;
 	margin-top: 5px;
 }
 
-.new-task>form>div>textarea,.update-task>.forms>form>div>textarea {
+.create-task>form>div>textarea,.update-task>.forms>form>div>textarea {
 	width: 300px;
 	margin-top: 5px;
 	height: 100px;

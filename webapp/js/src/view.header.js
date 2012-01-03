@@ -19,7 +19,7 @@ function UIHeader (page) {
 		return false;
 	});
 	$('a[href="#create-tasklist"]', this.element).click(function () {
-		new UINewTasklist().open(page.tasklists);
+		new UICreateTasklist().open(page.tasklists);
 		return false;
 	});
 };
@@ -156,7 +156,7 @@ UITasklist.prototype.remove = function () {
 /**
  * @class creating a tasklist dialog
  */
-function UINewTasklist () {
+function UICreateTasklist () {
 	this.element = $.resource('create-tasklist-template');
 	this.overlay = $.resource('popup-overlay-template');
 };
@@ -164,7 +164,7 @@ function UINewTasklist () {
  * Open the dialog.
  * @param {UITasklists} uiTasklists
  */
-UINewTasklist.prototype.open = function (uiTasklists) {
+UICreateTasklist.prototype.open = function (uiTasklists) {
 	var context = this;
 	$('>form button', this.element).button();
 	new FormController($('>form', this.element))
@@ -187,7 +187,7 @@ UINewTasklist.prototype.open = function (uiTasklists) {
 /**
  * Close the dialog.
  */
-UINewTasklist.prototype.close = function () {
+UICreateTasklist.prototype.close = function () {
 	this.element.remove();
 	this.overlay.remove();
 };
