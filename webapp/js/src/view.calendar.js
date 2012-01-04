@@ -204,13 +204,16 @@ UITask.prototype.refresh = function (task) {
 		else {
 			// remove and append new element
 			var rowTime = DateUtil.getTimeOrZero(task.dueDate);
-			$(originalElement).remove();
-			var taskGroup = $('.t' + rowTime + '>.task-column>.taskgroup-tasklistID-' + task.tasklistID);
+			var taskColumn = $('.t' + rowTime + '>.task-column');
+			var taskGroup = $('.taskgroup-tasklistID-' + task.tasklistID, taskColumn);
 			if (taskGroup.size() == 0) {
 				// create task group if not exists
-				taskGroup = $('<div/>').addClass('taskgroup').addClass('taskgroup-tasklistID-' + task.tasklistID);
-				$('.t' + rowTime + '>.task-column').append(taskGroup);
+				taskGroup = $('<div/>')
+					.addClass('taskgroup')
+					.addClass('taskgroup-tasklistID-' + task.tasklistID);
+				taskColumn.append(taskGroup);
 			}
+			$(originalElement).remove();
 			taskGroup.append(this.element);
 		}
 	}).apply(this);
