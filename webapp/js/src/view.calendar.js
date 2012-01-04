@@ -510,9 +510,9 @@ UIUpdateTask.prototype.close = function () {
 UIUpdateTask.prototype.setDue = function (due) {
 	this.due = due;
 	if (due) {
-		$('>.forms>form.update>.due>.year', this.element).text(due.getFullYear());
-		$('>.forms>form.update>.due>.month', this.element).text(due.getMonth() + 1);
-		$('>.forms>form.update>.due>.day', this.element).text(due.getDate());
+		$('.due>.year', this.element).text(due.getFullYear());
+		$('.due>.month', this.element).text(due.getMonth() + 1);
+		$('.due>.day', this.element).text(due.getDate());
 		this.element.removeClass('due-tbd');
 	}
 	else {
