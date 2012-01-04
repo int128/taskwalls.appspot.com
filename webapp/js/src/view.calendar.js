@@ -207,6 +207,7 @@ UITask.prototype.refresh = function (task) {
 			$(originalElement).remove();
 			var taskGroup = $('.t' + rowTime + '>.task-column>.taskgroup-tasklistID-' + task.tasklistID);
 			if (taskGroup.size() == 0) {
+				// create task group if not exists
 				taskGroup = $('<div/>').addClass('taskgroup').addClass('taskgroup-tasklistID-' + task.tasklistID);
 				$('.t' + rowTime + '>.task-column').append(taskGroup);
 			}
