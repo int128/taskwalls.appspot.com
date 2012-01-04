@@ -239,7 +239,7 @@ UITask.prototype.refresh = function (task) {
 					context.refresh(task);
 				});
 			if (date) {
-				$('input[name="dueTime"]', form).val(DateUtil.getUTCTime(date));
+				$('input[name="dueTime"]', form).val(date.getUTCTime());
 			}
 			else {
 				$('input[name="dueTime"]', form).val(0);
@@ -366,7 +366,7 @@ UICreateTask.prototype.open = function (uiCalendar, date, positionTop) {
 	new FormController($('>form', this.element))
 		.validator(function (form) {
 			if (context.getDue()) {
-				$('input[name="dueTime"]', form).val(DateUtil.getUTCTime(context.getDue()));
+				$('input[name="dueTime"]', form).val(context.getDue().getUTCTime());
 			}
 			else {
 				$('input[name="dueTime"]', form).val(0);
@@ -448,7 +448,7 @@ UIUpdateTask.prototype.open = function (uiTask, uiCalendar) {
 		.copyProperties(uiTask.getTask())
 		.validator(function (form) {
 			if (context.getDue()) {
-				$('input[name="dueTime"]', form).val(DateUtil.getUTCTime(context.getDue()));
+				$('input[name="dueTime"]', form).val(context.getDue().getUTCTime());
 			}
 			else {
 				$('input[name="dueTime"]', form).val(null);

@@ -24,13 +24,6 @@ DateUtil.futureOrPast = function (date, future, today, past) {
 	return today;
 };
 /**
- * @param {Date} date
- * @returns {Number} time in UTC
- */
-DateUtil.getUTCTime = function (date) {
-	return date.getTime() - date.getTimezoneOffset() * 60 * 1000;
-};
-/**
  * Get time or zero if null.
  * @param {Date} date
  * @returns {Number}
@@ -40,6 +33,13 @@ DateUtil.getTimeOrZero = function (date) {
 		return date.getTime();
 	}
 	return 0;
+};
+/**
+ * Get time-stamp in UTC.
+ * @returns {Number} time in UTC
+ */
+Date.prototype.getUTCTime = function () {
+	return this.getTime() - this.getTimezoneOffset() * 60 * 1000;
 };
 /**
  * Get hash code of {@link String}.
