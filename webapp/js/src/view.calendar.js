@@ -145,6 +145,9 @@ UICalendar.prototype.createDateRow = function (date) {
 		new UICreateTask().open(context, date, event.pageY);
 		return false;
 	});
+	if (DateUtil.isThisWeek(date)) {
+		row.addClass('thisweek');
+	}
 	if (row.hasClass('today')) {
 		row.attr('id', 'today');
 	}

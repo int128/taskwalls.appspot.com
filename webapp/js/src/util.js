@@ -24,6 +24,19 @@ DateUtil.futureOrPast = function (date, future, today, past) {
 	return today;
 };
 /**
+ * Returns true if the day is in this week.
+ * @param {Date} date
+ * @returns {Boolean}
+ */
+DateUtil.isThisWeek = function (date) {
+	var today = new Date();
+	today.setHours(0, 0, 0, 0);
+	var min = today.getTime() - today.getDay() * 24 * 3600 * 1000;
+	var max = today.getTime() + (7 - today.getDay()) * 24 * 3600 * 1000;
+	var dateTime = date.getTime();
+	return min <= dateTime && dateTime <= max;
+};
+/**
  * Get time or zero if null.
  * @param {Date} date
  * @returns {Number}
