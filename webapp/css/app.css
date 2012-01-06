@@ -196,6 +196,12 @@ input[type="text"]:HOVER,textarea:HOVER {
 	text-align: center;
 }
 
+.toggle-tasks-description {
+	margin-bottom: 5px;
+	text-align: center;
+	color: #888;
+}
+
 .toggle-tasks>a {
 	display: block;
 	margin-bottom: 5px;
@@ -471,6 +477,23 @@ tr.today>td.weekday-column,tr.today>td.date-column,tr.today>td.task-column {
 	border-top: solid 1px #f00;
 }
 
+/* this week's tasks */
+tr.thisweek>td.date-column {
+	border-left: solid 1px #666;
+}
+
+tr.thisweek>td.task-column {
+	border-right: solid 1px #ccc;
+}
+
+tr.thisweek.w1>td.weekday-column,tr.thisweek.w1>td.date-column,tr.thisweek.w1>td.task-column {
+	border-top: solid 1px #666;
+}
+
+tr.thisweek.w0>td.weekday-column,tr.thisweek.w0>td.date-column,tr.thisweek.w0>td.task-column {
+	border-bottom: solid 1px #666;
+}
+
 /*
  * Calendar misc.
  */
@@ -566,7 +589,7 @@ tr.today>td.weekday-column,tr.today>td.date-column,tr.today>td.task-column {
 	right: 0;
 	bottom: 0;
 	width: 240px;
-	box-shadow: 0 0 10px 3px rgba(0, 0, 0, 0.4);
+	box-shadow: 0 0 10px 3px rgba(0, 0, 0, 0.4) inset;
 }
 
 #planner.hover {
