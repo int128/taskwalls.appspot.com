@@ -196,6 +196,10 @@ input[type="text"]:HOVER,textarea:HOVER {
 	text-align: center;
 }
 
+#myheader .footer a {
+	text-decoration: none;
+}
+
 .toggle-tasks-description {
 	margin-bottom: 5px;
 	text-align: center;

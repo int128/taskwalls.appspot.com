@@ -22,6 +22,16 @@ function UIHeader (page) {
 		new UICreateTasklist().open(page.tasklists);
 		return false;
 	});
+	$('a[href="#help"]', this.element).click(function () {
+		// TODO: toggle help elements
+		alert('not implemented yet');
+		return false;
+	});
+	$('a[href="#about"]', this.element).click(function () {
+		// TODO: show about dialog
+		alert('not implemented yet');
+		return false;
+	});
 };
 /**
  * @class UI element of {@link Tasklists}.
