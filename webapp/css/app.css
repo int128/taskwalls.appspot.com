@@ -843,6 +843,12 @@ tr.thisweek.w0>td.border-columns {
 	width: 32px;
 }
 
+.icon-help {
+	background-image: url('/css/gom.png');
+	height: 32px;
+	width: 32px;
+}
+
 .icon-create-tasklist {
 	width: 32px;
 	height: 32px;
