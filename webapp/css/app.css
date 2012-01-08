@@ -831,12 +831,6 @@ tr.thisweek.w0>td.border-columns {
 	width: 128px;
 }
 
-.icon-reload {
-	background-image: url('/css/icons/power_restart.resized.png');
-	height: 32px;
-	width: 32px;
-}
-
 .icon-logout {
 	background-image: url('/css/power.png');
 	height: 32px;
