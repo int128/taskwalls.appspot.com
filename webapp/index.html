@@ -25,7 +25,7 @@ var s=document.getElementsByTagName("script")[0];s.parentNode.insertBefore(ga,s)
 </head>
 <body>
 
-<div id="welcome-content" class="oauth2state unauthorized">
+<section id="welcome-content" class="oauth2state unauthorized">
 <h1>Task Wall<span style="color: gold;">*</span></h1>
 <div style="text-align: center; font-weight: bold; margin-top: -1em; color: #888;">BETA</div>
 <p class="description">
@@ -37,12 +37,10 @@ Task WallはGoogleタスクと連携するタスク管理アプリです。<br/>
 <p class="description">
 Task Wallはベータ版です。
 </p>
-<div class="footer">
-Task Wall &copy; hidetake.org, 2011.
-</div>
-</div>
+<footer>Task Wall &copy; hidetake.org, 2011.</footer>
+</section>
 
-<div id="authorizing-content" class="oauth2state authorizing">
+<section id="authorizing-content" class="oauth2state authorizing">
 <h1>Task Wall<span style="color: gold;">*</span></h1>
 <div style="text-align: center; font-weight: bold; margin-top: -1em; color: #888;">BETA</div>
 <p>Google APIと通信しています...</p>
@@ -50,10 +48,10 @@ Task Wall &copy; hidetake.org, 2011.
 <span class="icon icon-google-api" title="Google API"></span>
 <span class="icon icon-oauth2" title="OAuth 2.0"></span>
 </p>
-</div>
+</section>
 
 <div class="oauth2state authorized">
-<div id="myheader">
+<section id="myheader">
 <h1 class="stack">Task Wall<span style="color: gold;">*</span></h1>
 <div class="stack" style="text-align: center; font-weight: bold; margin-top: -5px; color: #888;">BETA</div>
 <div class="stack">
@@ -75,7 +73,7 @@ Task Wall &copy; hidetake.org, 2011.
 <div class="stack development">
 <input type="checkbox" id="session-offline" /><label for="session-offline">オフライン</label>
 </div>
-</div>
+</section>
 <div class="calendar-cached-date">
 オフラインモードです。最後にタスクリストを読み込んだのは
 <span class="month"></span>月<span class="day"></span>日 <span class="hour"></span>:<span class="minute"></span>
@@ -84,15 +82,15 @@ Task Wall &copy; hidetake.org, 2011.
 <div class="calendar-operations-tab">
 <a href="#clear-completed-tasks">完了したタスクを消す</a>
 </div>
-<div id="calendar"><table><tbody></tbody></table></div>
-<div id="planner" class="t0">
+<section id="calendar"><table><tbody></tbody></table></section>
+<section id="planner" class="t0">
 <div class="task-column">
 <div class="description">計画中のタスク</div>
 <div class="create-task-button">
 <div class="balloon-tip">新しいタスクを作成する</div><a href="#create-task"></a>
 </div>
 </div>
-</div>
+</section>
 <div class="calendar-next">
 <a href="#next-month"><span class="year"></span>年<span class="month"></span>月を表示</a>
 </div>

@@ -126,7 +126,7 @@ input[type="text"]:HOVER,textarea:HOVER {
 	box-shadow: 0px 3px 10px 3px rgba(0, 0, 0, 0.2) inset;
 }
 
-#welcome-content .footer {
+#welcome-content footer {
 	margin: 3em;
 	color: #888;
 	text-align: center;
