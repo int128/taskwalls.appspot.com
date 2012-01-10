@@ -32,9 +32,6 @@ input[type="text"]:HOVER,textarea:HOVER {
 	border: solid 1px #888;
 }
 
-#root {
-}
-
 .oauth2state.authorized,.oauth2state.authorizing,.oauth2state.unauthorized {
 	display: none;
 }
