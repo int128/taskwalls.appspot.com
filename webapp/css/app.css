@@ -143,9 +143,6 @@ input[type="text"]:HOVER,textarea:HOVER {
 /*
  * Header.
  */
-#mycontent {
-}
-
 #myheader {
 	z-index: 100;
 	position: fixed;
