@@ -27,9 +27,14 @@ function UIHeader (page) {
 		alert('not implemented yet');
 		return false;
 	});
+	$('#about').dialog({
+		title: $('#about').data('title'),
+		autoOpen: false,
+		modal: true,
+		zIndex: 1000
+	});
 	$('a[href="#about"]', this.element).click(function () {
-		// TODO: show about dialog
-		alert('not implemented yet');
+		$('#about').dialog('open');
 		return false;
 	});
 };
