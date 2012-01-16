@@ -291,18 +291,11 @@ input[type="text"]:HOVER,textarea:HOVER {
 /*
  * Tasklist manipulation forms.
  */
-.create-tasklist {
-	z-index: 400;
+.popup-dialog.create-tasklist {
 	position: fixed;
 	top: 30%;
 	left: 50%;
 	margin-left: -160px;
-	padding: 10px;
-	border-radius: 5px;
-	-moz-border-radius: 5px;
-	border: solid 1px #888;
-	background: rgba(255, 255, 255, 1.0);
-	box-shadow: 0 0 10px 3px rgba(0, 0, 0, 0.4);
 }
 
 .create-tasklist input[type="text"] {
@@ -329,16 +322,10 @@ input[type="text"]:HOVER,textarea:HOVER {
 	border-right: 15px solid white;
 }
 
-.update-tasklist>.body {
+.update-tasklist>.popup-dialog.body {
 	position: relative;
-	z-index: 400;
 	top: -100px;
 	left: 20px;
-	padding: 10px;
-	border-radius: 10px;
-	-moz-border-radius: 10px;
-	background: white;
-	box-shadow: 0 0 10px 3px rgba(0, 0, 0, 0.4);
 }
 
 .update-tasklist form {
@@ -683,16 +670,9 @@ tr.thisweek.w0>td.border-columns {
 	background: transparent;
 }
 
-.create-task {
-	z-index: 400;
+.popup-dialog.create-task {
 	position: absolute;
 	right: 40px;
-	padding: 10px;
-	border-radius: 5px;
-	-moz-border-radius: 5px;
-	border: solid 1px #888;
-	background: rgba(255, 255, 255, 1.0);
-	box-shadow: 0 0 10px 3px rgba(0, 0, 0, 0.4);
 }
 
 .create-task.due-tbd .due {
@@ -710,16 +690,9 @@ tr.thisweek.w0>td.border-columns {
 	height: 100px;
 }
 
-.update-task {
-	z-index: 400;
+.popup-dialog.update-task {
 	position: absolute;
 	right: 40px;
-	padding: 10px;
-	border-radius: 5px;
-	-moz-border-radius: 5px;
-	border: solid 1px #888;
-	background: rgba(255, 255, 255, 1.0);
-	box-shadow: 0 0 10px 3px rgba(0, 0, 0, 0.4);
 }
 
 .update-task form.update {

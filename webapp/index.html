@@ -40,7 +40,7 @@ Task Wallはベータ版です。
 <footer>Task Wall &copy; hidetake.org, 2011.</footer>
 </section>
 
-<section id="about-dialog-template" class="popup-dialog about-dialog resource">
+<section id="about-dialog-template" class="about-dialog popup-dialog resource">
 <p>Task Wall<span style="color: gold;">*</span></p>
 <p class="description">
 Task WallはGoogleタスクと連携するタスク管理アプリです。<br/>
@@ -105,7 +105,7 @@ Task WallはGoogleタスクと連携するタスク管理アプリです。<br/>
 </div>
 </div>
 
-<div id="create-tasklist-template" class="create-tasklist resource">
+<div id="create-tasklist-template" class="create-tasklist popup-dialog resource">
 <form action="/tasklists/create" method="post">
 <div>新しいタスクリストを作成します。</div>
 <div><input type="text" name="title" /></div>
@@ -115,7 +115,7 @@ Task WallはGoogleタスクと連携するタスク管理アプリです。<br/>
 
 <div id="update-tasklist-template" class="update-tasklist resource">
 <div class="head"></div>
-<div class="body">
+<div class="body popup-dialog">
 <div class="default">デフォルトのタスクリスト</div>
 <div><a href="#toggle">表示を切り替える</a></div>
 <form class="tasklist" action="/tasklists/update" method="post">
@@ -174,7 +174,7 @@ Task WallはGoogleタスクと連携するタスク管理アプリです。<br/>
 </form>
 </div>
 
-<div id="create-task-template" class="create-task resource">
+<div id="create-task-template" class="create-task popup-dialog resource">
 <form action="/tasks/create" method="post">
 <div class="due"><span class="year"></span>年<span class="month"></span>月<span class="day"></span>日</div>
 <div><input type="text" name="title" /></div>
@@ -185,7 +185,7 @@ Task WallはGoogleタスクと連携するタスク管理アプリです。<br/>
 </form>
 </div>
 
-<div id="update-task-template" class="update-task resource">
+<div id="update-task-template" class="update-task popup-dialog resource">
 <div class="forms">
 <form class="update" action="/tasks/update" method="post">
 <div class="due"><span class="year"></span>年<span class="month"></span>月<span class="day"></span>日</div>
