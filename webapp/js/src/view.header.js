@@ -27,16 +27,34 @@ function UIHeader (page) {
 		alert('not implemented yet');
 		return false;
 	});
-	$('#about').dialog({
-		title: $('#about').data('title'),
-		autoOpen: false,
-		modal: true,
-		zIndex: 1000
-	});
 	$('a[href="#about"]', this.element).click(function () {
-		$('#about').dialog('open');
+		new UIAboutDialog().open();
 		return false;
 	});
+};
+/**
+ * @class the about dialog
+ */
+function UIAboutDialog () {
+	this.element = $.resource('about-dialog-template');
+	this.overlay = $.resource('popup-overlay-template');
+};
+/**
+ * Open the dialog.
+ */
+UIAboutDialog.prototype.open = function () {
+	var context = this;
+	this.element.appendTo('body').show();
+	this.overlay.appendTo('body').show().click(function () {
+		context.close();
+	});
+};
+/**
+ * Close the dialog.
+ */
+UIAboutDialog.prototype.close = function () {
+	this.element.remove();
+	this.overlay.remove();
 };
 /**
  * @class UI element of {@link Tasklists}.
