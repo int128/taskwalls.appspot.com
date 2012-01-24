@@ -233,12 +233,45 @@ input[type="text"]:HOVER,textarea:HOVER {
 	font-size: 24pt;
 }
 
-.popup-dialog.about-dialog {
+.help p {
+	margin-top: auto;
+	margin-bottom: auto;
+}
+
+.help h3 {
+	margin-top: auto;
+	margin-bottom: .5em;
+	font-weight: normal;
+	font-size: 130%;
+	color: #444;
+}
+
+.help>.popup-dialog.about {
 	position: fixed;
-	width: 400px;
-	top: 30%;
-	left: 50%;
-	margin-left: -200px;
+	top: 10%;
+	width: 28%;
+	left: 35%;
+}
+
+.help>.popup-dialog.center {
+	position: fixed;
+	top: 40%;
+	width: 28%;
+	left: 35%;
+}
+
+.help>.popup-dialog.left {
+	position: fixed;
+	width: 28%;
+	top: 40%;
+	left: 20px;
+}
+
+.help>.popup-dialog.right {
+	position: fixed;
+	width: 28%;
+	top: 40%;
+	right: 20px;
 }
 
 /*

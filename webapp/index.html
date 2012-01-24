@@ -40,9 +40,34 @@ Task Wallはベータ版です。
 <footer>Task Wall &copy; hidetake.org, 2011-2012.</footer>
 </section>
 
-<section id="about-dialog-template" class="about-dialog popup-dialog resource">
-<p>Task Wall<span style="color: gold;">*</span></p>
-<p>&copy; hidetake.org, 2011-2012.</p>
+<section id="help-template" class="help resource">
+<div class="about popup-dialog">
+<h3>Task Wall<span style="color: gold;">*</span></h3>
+<p>
+Task WallはGoogleタスクと連携するタスク管理アプリです。<br/>
+壁に付箋を貼る感覚でタスクを管理できます。
+</p>
+</div>
+<div class="center popup-dialog">
+<h3>カレンダー</h3>
+<p>
+タスクをドラッグして自主期限（ベースライン）を決めます。<br/>
+タイトルをクリックすると編集できます。<br/>
+空白をクリックすると詳細を編集できます。
+</p>
+</div>
+<div class="left popup-dialog">
+<h3>タスクリスト</h3>
+<p>場所や優先度に応じてタスクを分類します。</p>
+<hr/>
+<h3>今週の件数</h3>
+<p>消化したタスクと残っているタスクの数が表示されます。<br/>
+数をクリックすると表示が切り替わります。</p>
+</div>
+<div class="right popup-dialog">
+<h3>計画中のタスク</h3>
+<p>近い将来にやるタスクを追加します。</p>
+</div>
 </section>
 
 <section id="authorizing-content" class="oauth2state authorizing">
@@ -71,9 +96,6 @@ Task Wallはベータ版です。
 <div class="stack icons">
 <div><a href="#" class="session-logout"><span class="icon icon-logout" title="ログアウト"></span></a></div>
 <div><a href="#help"><span class="icon icon-help" title="ヘルプ"></span></a></div>
-</div>
-<div class="stack footer">
-<a href="#about">Task Wall<br/>&copy; hidetake.org, 2011-2012.</a>
 </div>
 <div class="stack development">
 <input type="checkbox" id="session-offline" /><label for="session-offline">オフライン</label>

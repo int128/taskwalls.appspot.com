@@ -23,26 +23,21 @@ function UIHeader (page) {
 		return false;
 	});
 	$('a[href="#help"]', this.element).click(function () {
-		// TODO: toggle help elements
-		alert('not implemented yet');
-		return false;
-	});
-	$('a[href="#about"]', this.element).click(function () {
-		new UIAboutDialog().open();
+		new UIHelp().open();
 		return false;
 	});
 };
 /**
- * @class the about dialog
+ * @class the help elements
  */
-function UIAboutDialog () {
-	this.element = $.resource('about-dialog-template');
+function UIHelp () {
+	this.element = $.resource('help-template');
 	this.overlay = $.resource('popup-overlay-template');
 };
 /**
  * Open the dialog.
  */
-UIAboutDialog.prototype.open = function () {
+UIHelp.prototype.open = function () {
 	var context = this;
 	this.element.appendTo('body').show();
 	this.overlay.appendTo('body').show().click(function () {
@@ -52,7 +47,7 @@ UIAboutDialog.prototype.open = function () {
 /**
  * Close the dialog.
  */
-UIAboutDialog.prototype.close = function () {
+UIHelp.prototype.close = function () {
 	this.element.remove();
 	this.overlay.remove();
 };
