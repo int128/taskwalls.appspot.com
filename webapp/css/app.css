@@ -239,39 +239,23 @@ input[type="text"]:HOVER,textarea:HOVER {
 }
 
 .help h3 {
-	margin-top: auto;
+	margin-top: .5em;
 	margin-bottom: .5em;
 	font-weight: normal;
 	font-size: 130%;
 	color: #444;
 }
 
-.help>.popup-dialog.about {
+.help>.about {
+	z-index: 400;
 	position: fixed;
-	top: 10%;
-	width: 28%;
-	left: 35%;
-}
-
-.help>.popup-dialog.center {
-	position: fixed;
-	top: 40%;
-	width: 28%;
-	left: 35%;
-}
-
-.help>.popup-dialog.left {
-	position: fixed;
-	width: 28%;
-	top: 40%;
-	left: 20px;
-}
-
-.help>.popup-dialog.right {
-	position: fixed;
-	width: 28%;
-	top: 40%;
-	right: 20px;
+	top: 100px;
+	bottom: 100px;
+	left: 100px;
+	right: 100px;
+	padding: 10px;
+	background: #fff;
+	box-shadow: 0 0 10px 10px rgba(0, 0, 0, 0.3);
 }
 
 /*
