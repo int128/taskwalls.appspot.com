@@ -32,15 +32,13 @@ function UIHeader (page) {
  */
 function UIHelp () {
 	this.element = $.resource('help-template');
-	this.overlay = $.resource('popup-overlay-template');
 };
 /**
  * Open the dialog.
  */
 UIHelp.prototype.open = function () {
 	var context = this;
-	this.element.appendTo('body').show();
-	this.overlay.appendTo('body').show().click(function () {
+	this.element.appendTo('body').show().click(function () {
 		context.close();
 	});
 };
@@ -49,7 +47,6 @@ UIHelp.prototype.open = function () {
  */
 UIHelp.prototype.close = function () {
 	this.element.remove();
-	this.overlay.remove();
 };
 /**
  * @class UI element of {@link Tasklists}.

@@ -233,29 +233,71 @@ input[type="text"]:HOVER,textarea:HOVER {
 	font-size: 24pt;
 }
 
+.help {
+	color: #fff;
+}
+
 .help p {
 	margin-top: auto;
 	margin-bottom: auto;
 }
 
 .help h3 {
-	margin-top: .5em;
+	margin-top: auto;
 	margin-bottom: .5em;
 	font-weight: normal;
 	font-size: 130%;
-	color: #444;
+	color: #ddd;
 }
 
-.help>.about {
-	z-index: 400;
-	position: fixed;
-	top: 100px;
-	bottom: 100px;
-	left: 100px;
-	right: 100px;
+.help>.left>.head {
+	content: '';
+	position: relative;
+	z-index: 401;
+	width: 0;
+	height: 0;
+	border-top: 15px solid transparent;
+	border-bottom: 15px solid transparent;
+	border-right: 15px solid rgba(0, 0, 0, 0.85);
+}
+
+.help>.left>.body {
+	position: relative;
+	top: -45px;
+	left: 15px;
+}
+
+.help .body {
+	z-index: 401;
+	width: 300px;
+	background: rgba(0, 0, 0, 0.85);
 	padding: 10px;
-	background: #fff;
-	box-shadow: 0 0 10px 10px rgba(0, 0, 0, 0.3);
+	border-radius: 5px;
+	-moz-border-radius: 5px;
+}
+
+.help>.tasklists {
+	position: fixed;
+	top: 160px;
+	left: 110px;
+}
+
+.help>.calendar {
+	position: fixed;
+	top: 50px;
+	left: 40%;
+}
+
+.help>.thisweek {
+	position: fixed;
+	top: 350px;
+	left: 110px;
+}
+
+.help>.planner {
+	position: fixed;
+	top: 50px;
+	right: 50px;
 }
 
 /*
