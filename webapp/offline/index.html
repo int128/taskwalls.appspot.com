@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="ja" manifest="this.appcache">
+<head>
+<meta charset="utf-8"/>
+<title>Offline Cache</title>
+<!--[if IE]>
+<meta http-equiv="X-UA-Compatible" content="IE=Edge,chrome=1" />
+<![endif]-->
+<!--[if lt IE 9]>
+<script>
+(function(a){for(var i in a){document.createElement(a[i])}})(['header', 'footer', 'section', 'article', 'aside', 'time', 'hgroup'])
+</script>
+<![endif]-->
+<meta name="viewport" content="width=device-width, minimum-scale=1, maximum-scale=1"/>
+<link rel="stylesheet" href="http://fonts.googleapis.com/css?family=PT+Sans"/>
+<link rel="stylesheet" href="/css/bootstrap.min.css"/>
+<link rel="stylesheet" href="/css/bootstrap-responsive.min.css"/>
+<link rel="stylesheet" href="/css/global.css"/>
+<style>
+</style>
+</head>
+<body>
+<div class="container">
+<header class="page-header">
+<h1>Offline Cache</h1>
+<p class="lead">window.applicationCache</p>
+</header>
+
+<h2>Event Log</h2>
+<ul id="eventlog"></ul>
+
+<h2>Manifest</h2>
+<pre id="appcache"></pre>
+
+<footer>
+<p>&copy; hidetake.org, 2012.</p>
+</footer>
+</div>
+<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script>
+<script src="/js/bootstrap.min.js"></script>
+<script>
+$(function () {
+	$.get($('html').attr('manifest'), function (v) {
+		$('#appcache').text(v);
+	});
+	var updateState = function (event) {
+		var time = $('<span/>').text(new Date().toLocaleString());
+		var type = $('<span/>').text(event.type);
+		$('#eventlog').append($('<li/>').append(time).append(type));
+	};
+	$(window.applicationCache).bind('checking', updateState);
+	$(window.applicationCache).bind('noupdate', updateState);
+	$(window.applicationCache).bind('downloading', updateState);
+	$(window.applicationCache).bind('progress', updateState);
+	$(window.applicationCache).bind('cached', updateState);
+	$(window.applicationCache).bind('updateready', updateState);
+	$(window.applicationCache).bind('obsolete', updateState);
+	$(window.applicationCache).bind('error', updateState);
+});
+</script>
+<script>
+var _gaq=_gaq||[];_gaq.push(['_setAccount','UA-3232369-2']);_gaq.push(['_trackPageview']);
+(function(){var ga=document.createElement('script');ga.type='text/javascript';ga.async=true;
+ga.src=('https:'==document.location.protocol?'https://ssl':'http://www')+'.google-analytics.com/ga.js';
+var s=document.getElementsByTagName('script')[0];s.parentNode.insertBefore(ga,s);})();
+</script>
+</body>
+</html>
