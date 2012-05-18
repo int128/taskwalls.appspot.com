@@ -4,6 +4,7 @@ CACHE:
 https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js
 https://ajax.googleapis.com/ajax/libs/jqueryui/1.8.16/jquery-ui.min.js
 https://ajax.googleapis.com/ajax/libs/jqueryui/1.8.16/themes/base/jquery-ui.css
+http://cloud.github.com/downloads/SteveSanderson/knockout/knockout-2.0.0.js
 
 NETWORK:
 *
