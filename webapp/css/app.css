@@ -153,11 +153,13 @@
 	text-align: center;
 }
 
-#myheader .icon {
+#myheader [class^='myicon-'],
+#myheader [class*=' myicon-'] {
 	opacity: 0.3;
 }
 
-#myheader .icon:HOVER {
+#myheader [class^='myicon-']:HOVER,
+#myheader [class*=' myicon-']:HOVER {
 	opacity: 1.0;
 }
 
@@ -833,36 +835,37 @@ tr.thisweek.w0>td.border-columns {
 /*
  * Icons.
  */
-.icon {
+[class^='myicon-'],
+[class*=' myicon-'] {
 	display: inline-block;
 	background-repeat: no-repeat;
 }
 
-.icon-google-api {
+.myicon-google-api {
 	background-image: url('/css/google_g_logo_webtreatsetc.png');
 	height: 128px;
 	width: 128px;
 }
 
-.icon-oauth2 {
+.myicon-oauth2 {
 	background-image: url('/css/oauth-2-sm.png');
 	height: 128px;
 	width: 128px;
 }
 
-.icon-logout {
+.myicon-logout {
 	background-image: url('/css/power.png');
 	height: 32px;
 	width: 32px;
 }
 
-.icon-help {
+.myicon-help {
 	background-image: url('/css/gom.png');
 	height: 32px;
 	width: 32px;
 }
 
-.icon-create-tasklist {
+.myicon-create-tasklist {
 	width: 32px;
 	height: 32px;
 	background: url('/css/3d_design_alt.png') no-repeat;
