@@ -126,7 +126,7 @@ Task Wallはベータ版です。
 <form action="/tasklists/create" method="post">
 <div>新しいタスクリストを作成します。</div>
 <div><input type="text" name="title" /></div>
-<div><button>タスクリストを作成</button></div>
+<div><button class="btn">タスクリストを作成</button></div>
 </form>
 </div>
 
@@ -150,7 +150,7 @@ Task Wallはベータ版です。
 <div><a href="#delete">タスクリストを削除する...</a></div>
 <div class="confirm">
 <div><strong>警告：</strong>タスクリストに含まれるすべてのタスクも削除されます。</div>
-<div><button>タスクリストを削除する</button></div>
+<div><button class="btn">タスクリストを削除する</button></div>
 </div>
 </form>
 </div>
@@ -198,7 +198,7 @@ Task Wallはベータ版です。
 <div><textarea name="notes"></textarea></div>
 <div><input type="hidden" name="dueTime" /></div>
 <div class="tasklists selection"></div>
-<div><button>タスクを作成</button></div>
+<div><button class="btn">タスクを作成</button></div>
 </form>
 </div>
 
@@ -208,7 +208,7 @@ Task Wallはベータ版です。
 <div class="due"><span class="year"></span>年<span class="month"></span>月<span class="day"></span>日</div>
 <div><input type="text" name="title" /></div>
 <div><textarea name="notes"></textarea></div>
-<div><button>タスクを更新</button></div>
+<div><button class="btn">タスクを更新</button></div>
 <div>
 <input type="hidden" name="dueTime" />
 <input type="hidden" name="id" />
@@ -218,7 +218,7 @@ Task Wallはベータ版です。
 <div class="due-selection"><div class="datepicker"></div></div>
 <form class="move" action="/tasks/update/tasklist" method="post">
 <div class="tasklists selection"></div>
-<div><button>別のタスクリストに移動</button></div>
+<div><button class="btn">別のタスクリストに移動</button></div>
 <div>
 <input type="hidden" name="id" />
 <input type="hidden" name="tasklistID" />
@@ -228,7 +228,7 @@ Task Wallはベータ版です。
 <div><a href="#delete">タスクを削除する...</a></div>
 <div class="confirm">
 <div>本当に削除しますか？</div>
-<div><button>タスクを削除する</button></div>
+<div><button class="btn">タスクを削除する</button></div>
 </div>
 <div>
 <input type="hidden" name="id" />
