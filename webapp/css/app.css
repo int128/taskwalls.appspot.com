@@ -7,20 +7,6 @@
 	font-family: 'trebuchet ms', sans-serif;
 }
 
-body {
-	margin: 0;
-	padding: 0;
-	font-size: 13px;
-}
-
-a:LINK {
-	color: dimgray;
-}
-
-a:VISITED {
-	color: dimgray;
-}
-
 .oauth2state.authorized,.oauth2state.authorizing,.oauth2state.unauthorized {
 	display: none;
 }
