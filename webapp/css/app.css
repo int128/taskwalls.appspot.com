@@ -21,17 +21,6 @@ a:VISITED {
 	color: dimgray;
 }
 
-input[type="text"],textarea {
-	padding: 3px;
-	border: solid 1px #ccc;
-	border-radius: 3px;
-	-moz-border-radius: 3px;
-}
-
-input[type="text"]:HOVER,textarea:HOVER {
-	border: solid 1px #888;
-}
-
 .oauth2state.authorized,.oauth2state.authorizing,.oauth2state.unauthorized {
 	display: none;
 }
