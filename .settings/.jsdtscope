@@ -7,7 +7,7 @@
 			<attribute name="hide" value="true"/>
 		</attributes>
 	</classpathentry>
-	<classpathentry kind="con" path="org.eclipse.wst.jsdt.launching.baseBrowserLibrary"/>
+	<classpathentry exported="true" kind="con" path="org.eclipse.wst.jsdt.launching.baseBrowserLibrary/StandardBrowser/html5"/>
 	<classpathentry kind="lib" path="webapp/js/lib"/>
 	<classpathentry kind="output" path=""/>
 </classpath>
