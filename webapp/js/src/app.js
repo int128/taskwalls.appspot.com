@@ -55,22 +55,22 @@ $(function () {
 		this.oauth2authorizing = ko.observable(false);
 		this.oauth2unauthorized = ko.observable(false);
 		// handle OAuth2 session
-		var currentOAuth2Session = new OAuth2Session();
-		currentOAuth2Session.onAuthorized = function () {
-			self.oauth2authorized(true);
-			new UIPage();
-			$('a.session-logout').attr('href', '/logout');
-		};
-		currentOAuth2Session.onAuthorizing = function () {
-			self.oauth2authorizing(true);
-			// clean up cache
-			localStorage.clear();
-		};
-		currentOAuth2Session.onUnauthorized = function () {
-			self.oauth2unauthorized(true);
-			$('a.session-login').attr('href', currentOAuth2Session.getAuthorizationURL());
-		};
-		currentOAuth2Session.handle();
+		new OAuth2Session(function () {
+			this.onAuthorized = function () {
+				self.oauth2authorized(true);
+				new UIPage();
+				$('a.session-logout').attr('href', '/logout');
+			};
+			this.onAuthorizing = function () {
+				self.oauth2authorizing(true);
+				// clean up cache
+				localStorage.clear();
+			};
+			this.onUnauthorized = function () {
+				self.oauth2unauthorized(true);
+				$('a.session-login').attr('href', this.getAuthorizationURL());
+			};
+		}).handle();
 	};
 	ko.applyBindings(new PageViewModel());
 });

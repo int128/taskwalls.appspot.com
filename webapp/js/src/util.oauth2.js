@@ -1,7 +1,12 @@
 /**
  * @class OAuth 2.0 session controller.
+ * @param {Function} initializer
  */
-function OAuth2Session () {
+function OAuth2Session (initializer) {
+	if ($.isFunction(initializer)) {
+		initializer.apply(this);
+	}
+	return this;
 };
 /**
  * Handle current request.
