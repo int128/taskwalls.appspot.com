@@ -17,7 +17,8 @@
 </head>
 <body>
 
-<section id="welcome-content" class="oauth2state unauthorized">
+<div data-bind="if: oauth2unauthorized">
+<section id="welcome-content">
 <h1>Task Wall<span style="color: gold;">*</span></h1>
 <div style="text-align: center; font-weight: bold; margin-top: -1em; color: #888;">BETA</div>
 <p class="description">
@@ -31,6 +32,7 @@ Task Wallはベータ版です。
 </p>
 <footer>Task Wall &copy; hidetake.org, 2011-2012.</footer>
 </section>
+</div>
 
 <section id="help-template" class="help resource">
 <div class="tasklists left">
@@ -68,7 +70,8 @@ Task Wallはベータ版です。
 </div>
 </section>
 
-<section id="authorizing-content" class="oauth2state authorizing">
+<div data-bind="if: oauth2authorizing">
+<section id="authorizing-content">
 <h1>Task Wall<span style="color: gold;">*</span></h1>
 <div style="text-align: center; font-weight: bold; margin-top: -1em; color: #888;">BETA</div>
 <p>Google APIと通信しています...</p>
@@ -77,8 +80,9 @@ Task Wallはベータ版です。
 <span class="myicon-oauth2" title="OAuth 2.0"></span>
 </p>
 </section>
+</div>
 
-<div class="oauth2state authorized">
+<div data-bind="if: oauth2authorized">
 <section id="myheader">
 <h1 class="stack">Task Wall<span style="color: gold;">*</span></h1>
 <div class="stack" style="text-align: center; font-weight: bold; margin-top: -5px; color: #888;">BETA</div>

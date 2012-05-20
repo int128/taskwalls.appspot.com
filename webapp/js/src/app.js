@@ -46,28 +46,34 @@ $(function () {
 	$('#session-offline').change(function () {
 		AppSettings.setOffline(this.checked);
 	});
-	// start session
-	currentOAuth2Session = new OAuth2Session();
-	currentOAuth2Session.onAuthorized = function () {
-		new UIPage();
-		$('a.session-logout').attr('href', '/logout');
-		$('.authorized').hide().show();
-	};
-	currentOAuth2Session.onAuthorizing = function () {
-		// clean up cache
-		localStorage.clear();
-		$('.authorizing').hide().show();
-	};
-	currentOAuth2Session.onUnauthorized = function () {
-		$('a.session-login').attr('href', currentOAuth2Session.getAuthorizationURL());
-		$('.unauthorized').hide().show();
-	};
-	currentOAuth2Session.handle();
 });
-/**
- * @type OAuth2Session
- */
-var currentOAuth2Session;
+// data binding
+$(function () {
+	var PageViewModel = function () {
+		var self = this;
+		this.oauth2authorized = ko.observable(false);
+		this.oauth2authorizing = ko.observable(false);
+		this.oauth2unauthorized = ko.observable(false);
+		// handle OAuth2 session
+		var currentOAuth2Session = new OAuth2Session();
+		currentOAuth2Session.onAuthorized = function () {
+			self.oauth2authorized(true);
+			new UIPage();
+			$('a.session-logout').attr('href', '/logout');
+		};
+		currentOAuth2Session.onAuthorizing = function () {
+			self.oauth2authorizing(true);
+			// clean up cache
+			localStorage.clear();
+		};
+		currentOAuth2Session.onUnauthorized = function () {
+			self.oauth2unauthorized(true);
+			$('a.session-login').attr('href', currentOAuth2Session.getAuthorizationURL());
+		};
+		currentOAuth2Session.handle();
+	};
+	ko.applyBindings(new PageViewModel());
+});
 /**
  * Application settings.
  */
