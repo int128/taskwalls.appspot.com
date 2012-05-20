@@ -556,7 +556,6 @@ tr.thisweek.w0>td.border-columns {
 }
 
 .calendar-cached-date {
-	display: none;
 	position: fixed;
 	bottom: 0;
 	right: 0;

@@ -105,14 +105,17 @@ Task Wallはベータ版です。
 <div><a href="#help"><span class="myicon-help" title="ヘルプ"></span></a></div>
 </div>
 <div class="stack development">
-<input type="checkbox" id="session-offline" /><label for="session-offline">オフライン</label>
+<label class="checkbox"><input data-bind="checked: offline" type="checkbox" class="checkbox"/>オフライン</label>
 </div>
 <p class="stack footer">&copy; hidetake.org, 2011-2012.</p>
 </section>
-<div class="calendar-cached-date">
+<div data-bind="if: offline">
+<div data-bind="with: lastCached" class="calendar-cached-date">
 オフラインモードです。最後にタスクリストを読み込んだのは
-<span class="month"></span>月<span class="day"></span>日 <span class="hour"></span>:<span class="minute"></span>
+<span data-bind="text: getMonth()+1"></span>月<span data-bind="text: getDate()"></span>日
+<span data-bind="text: getHours()"></span>:<span data-bind="text: getMinutes()"></span>
 です。
+</div>
 </div>
 <div class="calendar-operations-tab">
 <a href="#clear-completed-tasks">完了したタスクを消す</a>

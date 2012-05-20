@@ -39,13 +39,6 @@ $(function () {
 	if (window.location.hostname == 'localhost') {
 		$('.development').hide().show();
 	}
-	// offline
-	if (sessionStorage['session-offline']) {
-		$('#session-offline').attr('checked', 'checked');
-	}
-	$('#session-offline').change(function () {
-		AppSettings.setOffline(this.checked);
-	});
 });
 // data binding
 $(function () {
@@ -65,6 +58,17 @@ $(function () {
 				self.tasklists(tasklists.items);
 			});
 		};
+
+		// offline
+		this.offline = ko.computed({
+			read: function () {
+				return AppSettings.isOffline();
+			},
+			write: function (value) {
+				AppSettings.setOffline(value);
+			}
+		});
+		this.lastCached = ko.observable(AppSettings.getCachedDate('Tasklists.get'));
 
 		// handle OAuth2 session
 		this.oauth2authorized = ko.observable(false);
