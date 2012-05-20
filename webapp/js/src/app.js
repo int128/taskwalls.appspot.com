@@ -54,12 +54,12 @@ $(function () {
 		this.oauth2authorized = ko.observable(false);
 		this.oauth2authorizing = ko.observable(false);
 		this.oauth2unauthorized = ko.observable(false);
+		this.oauth2authorizationURL = ko.observable();
 		// handle OAuth2 session
 		new OAuth2Session(function () {
 			this.onAuthorized = function () {
 				self.oauth2authorized(true);
 				new UIPage();
-				$('a.session-logout').attr('href', '/logout');
 			};
 			this.onAuthorizing = function () {
 				self.oauth2authorizing(true);
@@ -68,7 +68,7 @@ $(function () {
 			};
 			this.onUnauthorized = function () {
 				self.oauth2unauthorized(true);
-				$('a.session-login').attr('href', this.getAuthorizationURL());
+				self.oauth2authorizationURL(this.getAuthorizationURL());
 			};
 		}).handle();
 	};

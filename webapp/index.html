@@ -25,7 +25,7 @@
 Task WallはGoogleタスクと連携するタスク管理アプリです。<br/>
 壁に付箋を貼る感覚でタスクを管理できます。
 </p>
-<p class="login"><a href="#login" class="session-login">Googleアカウントでログイン</a></p>
+<p class="login"><a data-bind="attr: {href: oauth2authorizationURL}" class="session-login">Googleアカウントでログイン</a></p>
 <p class="screenshot"></p>
 <p class="description">
 Task Wallはベータ版です。
@@ -96,7 +96,7 @@ Task Wallはベータ版です。
 <div class="toggle-tasks needsAction"><a href="#toggle-tasks-needsAction" title="未完了タスクの表示を切り替える">needs action<br/><span class="count"></span></a></div>
 </div>
 <div class="stack icons">
-<div><a href="#" class="session-logout"><span class="myicon-logout" title="ログアウト"></span></a></div>
+<div><a href="/logout" class="session-logout"><span class="myicon-logout" title="ログアウト"></span></a></div>
 <div><a href="#help"><span class="myicon-help" title="ヘルプ"></span></a></div>
 </div>
 <div class="stack development">
