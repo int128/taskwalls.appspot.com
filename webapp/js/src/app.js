@@ -51,15 +51,30 @@ $(function () {
 $(function () {
 	var PageViewModel = function () {
 		var self = this;
+
+		// tasks
+		this.tasklists = ko.observableArray();
+		this.defaultTasklistID = ko.observable('@default');
+		this.loadTasks = function () {
+			Tasks.get('@default', function (tasks) {
+				if (tasks.items.length > 0) {
+					self.defaultTasklistID(tasks.items[0].tasklistID);
+				}
+			});
+			Tasklists.get(function (tasklists) {
+				self.tasklists(tasklists.items);
+			});
+		};
+
+		// handle OAuth2 session
 		this.oauth2authorized = ko.observable(false);
 		this.oauth2authorizing = ko.observable(false);
 		this.oauth2unauthorized = ko.observable(false);
 		this.oauth2authorizationURL = ko.observable();
-		// handle OAuth2 session
 		new OAuth2Session(function () {
 			this.onAuthorized = function () {
 				self.oauth2authorized(true);
-				new UIPage();
+				self.loadTasks();
 			};
 			this.onAuthorizing = function () {
 				self.oauth2authorizing(true);

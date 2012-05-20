@@ -875,76 +875,76 @@ tr.thisweek.w0>td.border-columns {
 /*
  * Colors.
  */
-.tasklistcolor-0  { border-left-color: #b76; }
-.tasklistcolor-1  { border-left-color: #d76; }
-.tasklistcolor-2  { border-left-color: #f42; }
-.tasklistcolor-3  { border-left-color: #f54; }
-.tasklistcolor-4  { border-left-color: #f73; }
-.tasklistcolor-5  { border-left-color: #fb4; }
-.tasklistcolor-6  { border-left-color: #4d9; }
-.tasklistcolor-7  { border-left-color: #1a6; }
-.tasklistcolor-8  { border-left-color: #8d4; }
-.tasklistcolor-9  { border-left-color: #be7; }
-.tasklistcolor-10 { border-left-color: #fe8; }
-.tasklistcolor-11 { border-left-color: #fd6; }
-.tasklistcolor-12 { border-left-color: #9ec; }
-.tasklistcolor-13 { border-left-color: #aee; }
-.tasklistcolor-14 { border-left-color: #ace; }
-.tasklistcolor-15 { border-left-color: #58e; }
-.tasklistcolor-16 { border-left-color: #aaf; }
-.tasklistcolor-17 { border-left-color: #caf; }
-.tasklistcolor-18 { border-left-color: #ccc; }
-.tasklistcolor-19 { border-left-color: #dcc; }
-.tasklistcolor-20 { border-left-color: #dab; }
-.tasklistcolor-21 { border-left-color: #f9b; }
-.tasklistcolor-22 { border-left-color: #d7e; }
-.tasklistcolor-23 { border-left-color: #a8e; }
+[data-tasklistcolor='0']  { border-left-color: #b76; }
+[data-tasklistcolor='1']  { border-left-color: #d76; }
+[data-tasklistcolor='2']  { border-left-color: #f42; }
+[data-tasklistcolor='3']  { border-left-color: #f54; }
+[data-tasklistcolor='4']  { border-left-color: #f73; }
+[data-tasklistcolor='5']  { border-left-color: #fb4; }
+[data-tasklistcolor='6']  { border-left-color: #4d9; }
+[data-tasklistcolor='7']  { border-left-color: #1a6; }
+[data-tasklistcolor='8']  { border-left-color: #8d4; }
+[data-tasklistcolor='9']  { border-left-color: #be7; }
+[data-tasklistcolor='10'] { border-left-color: #fe8; }
+[data-tasklistcolor='11'] { border-left-color: #fd6; }
+[data-tasklistcolor='12'] { border-left-color: #9ec; }
+[data-tasklistcolor='13'] { border-left-color: #aee; }
+[data-tasklistcolor='14'] { border-left-color: #ace; }
+[data-tasklistcolor='15'] { border-left-color: #58e; }
+[data-tasklistcolor='16'] { border-left-color: #aaf; }
+[data-tasklistcolor='17'] { border-left-color: #caf; }
+[data-tasklistcolor='18'] { border-left-color: #ccc; }
+[data-tasklistcolor='19'] { border-left-color: #dcc; }
+[data-tasklistcolor='20'] { border-left-color: #dab; }
+[data-tasklistcolor='21'] { border-left-color: #f9b; }
+[data-tasklistcolor='22'] { border-left-color: #d7e; }
+[data-tasklistcolor='23'] { border-left-color: #a8e; }
 
-.tasklistcolor-0 { background: -webkit-gradient(linear, left top, left bottom, from(#fff), to(#fbf7f6) ); }
-.tasklistcolor-0 { background: -moz-linear-gradient(top, #fff, #fbf7f6); }
-.tasklistcolor-1 { background: -webkit-gradient(linear, left top, left bottom, from(#fff), to(#fdf7f6) ); }
-.tasklistcolor-1 { background: -moz-linear-gradient(top, #fff, #fdf7f6); }
-.tasklistcolor-2 { background: -webkit-gradient(linear, left top, left bottom, from(#fff), to(#fff4f2) ); }
-.tasklistcolor-2 { background: -moz-linear-gradient(top, #fff, #fff4f2); }
-.tasklistcolor-3 { background: -webkit-gradient(linear, left top, left bottom, from(#fff), to(#fff5f4) ); }
-.tasklistcolor-3 { background: -moz-linear-gradient(top, #fff, #fff5f4); }
-.tasklistcolor-4 { background: -webkit-gradient(linear, left top, left bottom, from(#fff), to(#fff7f3) ); }
-.tasklistcolor-4 { background: -moz-linear-gradient(top, #fff, #fff7f3); }
-.tasklistcolor-5 { background: -webkit-gradient(linear, left top, left bottom, from(#fff), to(#fffbf4) ); }
-.tasklistcolor-5 { background: -moz-linear-gradient(top, #fff, #fffbf4); }
-.tasklistcolor-6 { background: -webkit-gradient(linear, left top, left bottom, from(#fff), to(#f4fdf9) ); }
-.tasklistcolor-6 { background: -moz-linear-gradient(top, #fff, #f4fdf9); }
-.tasklistcolor-7 { background: -webkit-gradient(linear, left top, left bottom, from(#fff), to(#f1faf6) ); }
-.tasklistcolor-7 { background: -moz-linear-gradient(top, #fff, #f1faf6); }
-.tasklistcolor-8 { background: -webkit-gradient(linear, left top, left bottom, from(#fff), to(#f8fdf4) ); }
-.tasklistcolor-8 { background: -moz-linear-gradient(top, #fff, #f8fdf4); }
-.tasklistcolor-9 { background: -webkit-gradient(linear, left top, left bottom, from(#fff), to(#fbfef7) ); }
-.tasklistcolor-9 { background: -moz-linear-gradient(top, #fff, #fbfef7); }
-.tasklistcolor-10 { background: -webkit-gradient(linear, left top, left bottom, from(#fff), to(#fffef8) ); }
-.tasklistcolor-10 { background: -moz-linear-gradient(top, #fff, #fffef8); }
-.tasklistcolor-11 { background: -webkit-gradient(linear, left top, left bottom, from(#fff), to(#fffdf6) ); }
-.tasklistcolor-11 { background: -moz-linear-gradient(top, #fff, #fffdf6); }
-.tasklistcolor-12 { background: -webkit-gradient(linear, left top, left bottom, from(#fff), to(#f9fefc) ); }
-.tasklistcolor-12 { background: -moz-linear-gradient(top, #fff, #f9fefc); }
-.tasklistcolor-13 { background: -webkit-gradient(linear, left top, left bottom, from(#fff), to(#fafefe) ); }
-.tasklistcolor-13 { background: -moz-linear-gradient(top, #fff, #fafefe); }
-.tasklistcolor-14 { background: -webkit-gradient(linear, left top, left bottom, from(#fff), to(#fafcfe) ); }
-.tasklistcolor-14 { background: -moz-linear-gradient(top, #fff, #fafcfe); }
-.tasklistcolor-15 { background: -webkit-gradient(linear, left top, left bottom, from(#fff), to(#f5f8fe) ); }
-.tasklistcolor-15 { background: -moz-linear-gradient(top, #fff, #f5f8fe); }
-.tasklistcolor-16 { background: -webkit-gradient(linear, left top, left bottom, from(#fff), to(#fafaff) ); }
-.tasklistcolor-16 { background: -moz-linear-gradient(top, #fff, #fafaff); }
-.tasklistcolor-17 { background: -webkit-gradient(linear, left top, left bottom, from(#fff), to(#fcfaff) ); }
-.tasklistcolor-17 { background: -moz-linear-gradient(top, #fff, #fcfaff); }
-.tasklistcolor-18 { background: -webkit-gradient(linear, left top, left bottom, from(#fff), to(#fcfcfc) ); }
-.tasklistcolor-18 { background: -moz-linear-gradient(top, #fff, #fcfcfc); }
-.tasklistcolor-19 { background: -webkit-gradient(linear, left top, left bottom, from(#fff), to(#fdfcfc) ); }
-.tasklistcolor-19 { background: -moz-linear-gradient(top, #fff, #fdfcfc); }
-.tasklistcolor-20 { background: -webkit-gradient(linear, left top, left bottom, from(#fff), to(#fdfafb) ); }
-.tasklistcolor-20 { background: -moz-linear-gradient(top, #fff, #fdfafb); }
-.tasklistcolor-21 { background: -webkit-gradient(linear, left top, left bottom, from(#fff), to(#fff9fb) ); }
-.tasklistcolor-21 { background: -moz-linear-gradient(top, #fff, #fff9fb); }
-.tasklistcolor-22 { background: -webkit-gradient(linear, left top, left bottom, from(#fff), to(#fdf7fe) ); }
-.tasklistcolor-22 { background: -moz-linear-gradient(top, #fff, #fdf7fe); }
-.tasklistcolor-23 { background: -webkit-gradient(linear, left top, left bottom, from(#fff), to(#faf8fe) ); }
-.tasklistcolor-23 { background: -moz-linear-gradient(top, #fff, #faf8fe); }
+[data-tasklistcolor='0'] { background: -webkit-gradient(linear, left top, left bottom, from(#fff), to(#fbf7f6) ); }
+[data-tasklistcolor='0'] { background: -moz-linear-gradient(top, #fff, #fbf7f6); }
+[data-tasklistcolor='1'] { background: -webkit-gradient(linear, left top, left bottom, from(#fff), to(#fdf7f6) ); }
+[data-tasklistcolor='1'] { background: -moz-linear-gradient(top, #fff, #fdf7f6); }
+[data-tasklistcolor='2'] { background: -webkit-gradient(linear, left top, left bottom, from(#fff), to(#fff4f2) ); }
+[data-tasklistcolor='2'] { background: -moz-linear-gradient(top, #fff, #fff4f2); }
+[data-tasklistcolor='3'] { background: -webkit-gradient(linear, left top, left bottom, from(#fff), to(#fff5f4) ); }
+[data-tasklistcolor='3'] { background: -moz-linear-gradient(top, #fff, #fff5f4); }
+[data-tasklistcolor='4'] { background: -webkit-gradient(linear, left top, left bottom, from(#fff), to(#fff7f3) ); }
+[data-tasklistcolor='4'] { background: -moz-linear-gradient(top, #fff, #fff7f3); }
+[data-tasklistcolor='5'] { background: -webkit-gradient(linear, left top, left bottom, from(#fff), to(#fffbf4) ); }
+[data-tasklistcolor='5'] { background: -moz-linear-gradient(top, #fff, #fffbf4); }
+[data-tasklistcolor='6'] { background: -webkit-gradient(linear, left top, left bottom, from(#fff), to(#f4fdf9) ); }
+[data-tasklistcolor='6'] { background: -moz-linear-gradient(top, #fff, #f4fdf9); }
+[data-tasklistcolor='7'] { background: -webkit-gradient(linear, left top, left bottom, from(#fff), to(#f1faf6) ); }
+[data-tasklistcolor='7'] { background: -moz-linear-gradient(top, #fff, #f1faf6); }
+[data-tasklistcolor='8'] { background: -webkit-gradient(linear, left top, left bottom, from(#fff), to(#f8fdf4) ); }
+[data-tasklistcolor='8'] { background: -moz-linear-gradient(top, #fff, #f8fdf4); }
+[data-tasklistcolor='9'] { background: -webkit-gradient(linear, left top, left bottom, from(#fff), to(#fbfef7) ); }
+[data-tasklistcolor='9'] { background: -moz-linear-gradient(top, #fff, #fbfef7); }
+[data-tasklistcolor='10'] { background: -webkit-gradient(linear, left top, left bottom, from(#fff), to(#fffef8) ); }
+[data-tasklistcolor='10'] { background: -moz-linear-gradient(top, #fff, #fffef8); }
+[data-tasklistcolor='11'] { background: -webkit-gradient(linear, left top, left bottom, from(#fff), to(#fffdf6) ); }
+[data-tasklistcolor='11'] { background: -moz-linear-gradient(top, #fff, #fffdf6); }
+[data-tasklistcolor='12'] { background: -webkit-gradient(linear, left top, left bottom, from(#fff), to(#f9fefc) ); }
+[data-tasklistcolor='12'] { background: -moz-linear-gradient(top, #fff, #f9fefc); }
+[data-tasklistcolor='13'] { background: -webkit-gradient(linear, left top, left bottom, from(#fff), to(#fafefe) ); }
+[data-tasklistcolor='13'] { background: -moz-linear-gradient(top, #fff, #fafefe); }
+[data-tasklistcolor='14'] { background: -webkit-gradient(linear, left top, left bottom, from(#fff), to(#fafcfe) ); }
+[data-tasklistcolor='14'] { background: -moz-linear-gradient(top, #fff, #fafcfe); }
+[data-tasklistcolor='15'] { background: -webkit-gradient(linear, left top, left bottom, from(#fff), to(#f5f8fe) ); }
+[data-tasklistcolor='15'] { background: -moz-linear-gradient(top, #fff, #f5f8fe); }
+[data-tasklistcolor='16'] { background: -webkit-gradient(linear, left top, left bottom, from(#fff), to(#fafaff) ); }
+[data-tasklistcolor='16'] { background: -moz-linear-gradient(top, #fff, #fafaff); }
+[data-tasklistcolor='17'] { background: -webkit-gradient(linear, left top, left bottom, from(#fff), to(#fcfaff) ); }
+[data-tasklistcolor='17'] { background: -moz-linear-gradient(top, #fff, #fcfaff); }
+[data-tasklistcolor='18'] { background: -webkit-gradient(linear, left top, left bottom, from(#fff), to(#fcfcfc) ); }
+[data-tasklistcolor='18'] { background: -moz-linear-gradient(top, #fff, #fcfcfc); }
+[data-tasklistcolor='19'] { background: -webkit-gradient(linear, left top, left bottom, from(#fff), to(#fdfcfc) ); }
+[data-tasklistcolor='19'] { background: -moz-linear-gradient(top, #fff, #fdfcfc); }
+[data-tasklistcolor='20'] { background: -webkit-gradient(linear, left top, left bottom, from(#fff), to(#fdfafb) ); }
+[data-tasklistcolor='20'] { background: -moz-linear-gradient(top, #fff, #fdfafb); }
+[data-tasklistcolor='21'] { background: -webkit-gradient(linear, left top, left bottom, from(#fff), to(#fff9fb) ); }
+[data-tasklistcolor='21'] { background: -moz-linear-gradient(top, #fff, #fff9fb); }
+[data-tasklistcolor='22'] { background: -webkit-gradient(linear, left top, left bottom, from(#fff), to(#fdf7fe) ); }
+[data-tasklistcolor='22'] { background: -moz-linear-gradient(top, #fff, #fdf7fe); }
+[data-tasklistcolor='23'] { background: -webkit-gradient(linear, left top, left bottom, from(#fff), to(#faf8fe) ); }
+[data-tasklistcolor='23'] { background: -moz-linear-gradient(top, #fff, #faf8fe); }

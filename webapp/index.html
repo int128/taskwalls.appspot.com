@@ -87,7 +87,12 @@ Task Wallはベータ版です。
 <h1 class="stack">Task Wall<span style="color: gold;">*</span></h1>
 <div class="stack" style="text-align: center; font-weight: bold; margin-top: -5px; color: #888;">BETA</div>
 <div class="stack">
-<div id="tasklists"></div>
+<div data-bind="foreach: tasklists" id="tasklists">
+<div data-bind="attr: {'data-tasklistcolor': colorID}" class="tasklist-legend">
+<div class="setting"><div></div></div>
+<div data-bind="text: title" class="title"></div>
+</div>
+</div>
 <div class="icons"><a href="#create-tasklist"><span class="myicon-create-tasklist" title="新しいタスクリスト"></span></a></div>
 </div>
 <div class="stack">
@@ -158,11 +163,6 @@ Task Wallはベータ版です。
 </div>
 </form>
 </div>
-</div>
-
-<div id="tasklist-legend-template" class="tasklist-legend resource">
-<div class="setting"><div></div></div>
-<div class="title"></div>
 </div>
 
 <div id="update-task-title-template" class="update-task-title resource">

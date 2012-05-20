@@ -121,6 +121,7 @@ UITasklist.prototype.isDefault = function () {
  * @param {Tasklist} tasklist the tasklist
  */
 UITasklist.prototype.refresh = function (tasklist) {
+	// TODO: migrate event handlers
 	var context = this;
 	var originalElement = this.element;
 	this.tasklist = tasklist;
