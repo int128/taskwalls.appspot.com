@@ -120,7 +120,23 @@ Task Wallはベータ版です。
 <div class="calendar-operations-tab">
 <a href="#clear-completed-tasks">完了したタスクを消す</a>
 </div>
-<section id="calendar"><table><tbody></tbody></table></section>
+<section id="calendar">
+<table>
+<tbody data-bind="foreach: calendar.days">
+<tr>
+<td class="month-column"><div data-bind="text: month"></div></td>
+<td class="border-columns date-column"><div data-bind="text: day"></div></td>
+<td class="border-columns weekday-column"><div data-bind="text: weekday"></div></td>
+<td class="border-columns task-column">
+<div class="create-task-button">
+<div class="balloon-tip">新しいタスクを作成する</div>
+<a href="#create-task"></a>
+</div>
+</td>
+</tr>
+</tbody>
+</table>
+</section>
 <section id="planner" class="t0">
 <div class="task-column">
 <div class="description">計画中のタスク</div>
@@ -249,22 +265,6 @@ Task Wallはベータ版です。
 <input name="statusIsCompleted" type="checkbox" />
 <span class="title"></span>
 <div class="notes"></div>
-</div>
-
-<div class="resource">
-<table>
-<tr id="task-row-template">
-<td class="month-column"><div></div></td>
-<td class="border-columns date-column"><div></div></td>
-<td class="border-columns weekday-column"></td>
-<td class="border-columns task-column">
-<div class="create-task-button">
-<div class="balloon-tip">新しいタスクを作成する</div>
-<a href="#create-task"></a>
-</div>
-</td>
-</tr>
-</table>
 </div>
 
 <div id="popup-overlay-template" class="popup-overlay resource"></div>

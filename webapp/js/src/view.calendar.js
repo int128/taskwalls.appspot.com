@@ -1,3 +1,75 @@
+var CalendarViewModel = function () {
+	this.days = ko.observableArray();
+	this.earliestTime = ko.observable();
+	this.latestTime = ko.observable();
+	/**
+	 * Extend rows of the calendar.
+	 * @param {Number} or {Date} time time to extend
+	 */
+	this.extendTo = function (time) {
+		var normalizedTime = DateUtil.normalize(time).getTime();
+		if (normalizedTime > this.latestTime()) {
+			// append rows
+			var a = [];
+			var i = 0;
+			for (var t = this.latestTime() + 86400000; t <= normalizedTime; t += 86400000) {
+				a[i++] = new CalendarDayViewModel(new Date(t));
+			}
+			this.days(this.days().concat(a));
+		}
+		if (normalizedTime < this.earliestTime()) {
+			// prepend rows
+			var a = [];
+			var i = 0;
+			var e = this.earliestTime();
+			for (var t = normalizedTime; t < e; t += 86400000) {
+				a[i++] = new CalendarDayViewModel(new Date(t));
+			}
+			this.days(a.concat(this.days()));
+		}
+	};
+	/**
+	 * Extend rows of the calendar.
+	 * @param {Number} or {Date} time time to extend
+	 */
+	this.extendMonth = function (time) {
+		// (from) first day in this month
+		var fromDate = new Date(time);
+		fromDate.setHours(0, 0, 0, 0);
+		fromDate.setDate(1);
+		this.extendTo(fromDate);
+		// (to) first day in next month
+		var toDate = new Date(time);
+		toDate.setHours(0, 0, 0, 0);
+		toDate.setMonth(toDate.getMonth() + 1);
+		toDate.setDate(1);
+		this.extendTo(toDate);
+	};
+	// extend rows within this month
+	(function (time) {
+		this.earliestTime(time);
+		this.latestTime(time);
+		this.extendMonth(time);
+	}).call(this, DateUtil.normalize(new Date()).getTime());
+};
+var CalendarDayViewModel = function (date) {
+	this.date = ko.observable(date);
+	this.time = ko.computed(function () {
+		return this.date().getTime();
+	}, this);
+	this.month = ko.computed(function () {
+		return this.date().getMonth() + 1;
+	}, this);
+	this.day = ko.computed(function () {
+		return this.date().getDate();
+	}, this);
+	this.weekday = ko.computed(function () {
+		return $.resource('key-weekday' + this.date().getDay()).text();
+	}, this);
+};
+
+
+// FIXME: remove below
 /**
  * @class UI element of the calendar.
  */

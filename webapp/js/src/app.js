@@ -45,6 +45,9 @@ $(function () {
 	var PageViewModel = function () {
 		var self = this;
 
+		// calendar
+		this.calendar = new CalendarViewModel();
+
 		// tasks
 		this.tasklists = ko.observableArray();
 		this.defaultTasklistID = ko.observable('@default');

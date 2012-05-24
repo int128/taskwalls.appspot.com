@@ -1,7 +1,16 @@
 /**
  * @class Date utility.
  */
-function DateUtil () {
+var DateUtil = function () {};
+/**
+ * Normalize date. Hours, minutes and seconds will be 0.
+ * @param {Number} or {Date} time
+ * @returns {Date}
+ */
+DateUtil.normalize = function (time) {
+	var normalized = new Date(time);
+	normalized.setHours(0, 0, 0, 0);
+	return normalized;
 };
 /**
  * @param {Date} date
