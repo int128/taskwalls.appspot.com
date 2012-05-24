@@ -1,3 +1,58 @@
+var PageViewModel = function () {
+	var self = this;
+
+	// calendar
+	this.calendar = new CalendarViewModel();
+
+	// tasks
+	this.tasklists = ko.observableArray();
+	this.defaultTasklistID = ko.observable('@default');
+	this.loadTasks = function () {
+		Tasks.get('@default', function (tasks) {
+			if (tasks.items.length > 0) {
+				self.defaultTasklistID(tasks.items[0].tasklistID);
+			}
+		});
+		Tasklists.get(function (tasklists) {
+			self.tasklists(tasklists.items);
+		});
+	};
+
+	// offline
+	this.offline = ko.computed({
+		read: function () {
+			return AppSettings.isOffline();
+		},
+		write: function (value) {
+			AppSettings.setOffline(value);
+		}
+	});
+	this.lastCached = ko.observable(AppSettings.getCachedDate('Tasklists.get'));
+
+	// handle OAuth2 session
+	this.oauth2authorized = ko.observable(false);
+	this.oauth2authorizing = ko.observable(false);
+	this.oauth2unauthorized = ko.observable(false);
+	this.oauth2authorizationURL = ko.observable();
+	new OAuth2Session(function () {
+		this.onAuthorized = function () {
+			self.oauth2authorized(true);
+			self.loadTasks();
+		};
+		this.onAuthorizing = function () {
+			self.oauth2authorizing(true);
+			// clean up cache
+			localStorage.clear();
+		};
+		this.onUnauthorized = function () {
+			self.oauth2unauthorized(true);
+			self.oauth2authorizationURL(this.getAuthorizationURL());
+		};
+	}).handle();
+};
+
+
+// FIXME: remove below
 /**
  * @class the page
  */
