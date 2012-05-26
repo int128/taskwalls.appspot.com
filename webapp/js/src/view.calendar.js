@@ -1,4 +1,5 @@
 var CalendarViewModel = function () {
+	var self = this;
 	this.days = ko.observableArray();
 	this.earliestTime = ko.observable();
 	this.latestTime = ko.observable();
@@ -16,6 +17,7 @@ var CalendarViewModel = function () {
 				a[i++] = new CalendarDayViewModel(new Date(t));
 			}
 			this.days(this.days().concat(a));
+			this.latestTime(normalizedTime);
 		}
 		if (normalizedTime < this.earliestTime()) {
 			// prepend rows
@@ -26,6 +28,7 @@ var CalendarViewModel = function () {
 				a[i++] = new CalendarDayViewModel(new Date(t));
 			}
 			this.days(a.concat(this.days()));
+			this.earliestTime(normalizedTime);
 		}
 	};
 	/**
@@ -45,6 +48,28 @@ var CalendarViewModel = function () {
 		toDate.setDate(1);
 		this.extendTo(toDate);
 	};
+	/**
+	 * Add tasks into the calendar.
+	 * @param {Array} tasks
+	 */
+	this.addTasks = function (tasks) {
+		var dueMap = {};
+		$.each(tasks, function (i, task) {
+			var due = DateUtil.getTimeOrZero(task.dueDate());
+			if (!$.isArray(dueMap[due])) {
+				dueMap[due] = [];
+			}
+			dueMap[due].push(task);
+			self.extendTo(due);
+			console.info(task);
+		});
+		$.each(this.days(), function (i, dayvm) {
+			var due = dayvm.time();
+			if ($.isArray(dueMap[due])) {
+				dayvm.addTasks(dueMap[due]);
+			}
+		});
+	};
 	// extend rows within this month
 	(function (time) {
 		this.earliestTime(time);
@@ -53,6 +78,7 @@ var CalendarViewModel = function () {
 	}).call(this, DateUtil.normalize(new Date()).getTime());
 };
 var CalendarDayViewModel = function (date) {
+	this.tasks = ko.observableArray();
 	this.date = ko.observable(date);
 	this.time = ko.computed(function () {
 		return this.date().getTime();
@@ -66,6 +92,22 @@ var CalendarDayViewModel = function (date) {
 	this.weekday = ko.computed(function () {
 		return $.resource('key-weekday' + this.date().getDay()).text();
 	}, this);
+	/**
+	 * Add tasks on this day.
+	 * @param {Array} tasks
+	 */
+	this.addTasks = function (tasks) {
+		this.tasks($.merge(this.tasks(), tasks));
+	};
+};
+/**
+ * @class TaskViewModel view model of {Task}
+ */
+var TaskViewModel = function (task) {
+	var self = this;
+	$.each(['dueDate', 'title', 'completed', 'status', 'notes'], function () {
+		self[this] = ko.observable(task[this]);
+	});
 };
 
 

@@ -11,6 +11,11 @@ var PageViewModel = function () {
 		Tasks.get('@default', function (tasks) {
 			if (tasks.items.length > 0) {
 				self.defaultTasklistID(tasks.items[0].tasklistID);
+				var a = [];
+				$.each(tasks.items, function (i, task) {
+					a.push(new TaskViewModel(task));
+				});
+				self.calendar.addTasks(a);
 			}
 		});
 		Tasklists.get(function (tasklists) {

@@ -128,6 +128,13 @@ Task Wallはベータ版です。
 <td class="border-columns date-column"><div data-bind="text: day"></div></td>
 <td class="border-columns weekday-column"><div data-bind="text: weekday"></div></td>
 <td class="border-columns task-column">
+<div data-bind="foreach: tasks">
+<div class="task">
+<input data-bind="checked: completed" type="checkbox" />
+<span data-bind="text: title" class="title"></span>
+<div data-bind="text: notes" class="notes"></div>
+</div>
+</div>
 <div class="create-task-button">
 <div class="balloon-tip">新しいタスクを作成する</div>
 <a href="#create-task"></a>
@@ -259,12 +266,6 @@ Task Wallはベータ版です。
 </div>
 </form>
 </div>
-</div>
-
-<div id="task-template" class="task resource">
-<input name="statusIsCompleted" type="checkbox" />
-<span class="title"></span>
-<div class="notes"></div>
 </div>
 
 <div id="popup-overlay-template" class="popup-overlay resource"></div>
