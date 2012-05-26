@@ -104,8 +104,8 @@ Tasklist.prototype.clearCompleted = function (success, error) {
 };
 /**
  * Constructor.
- * @class represents tasks model
- * @param {Array} items array of {@link Task}
+ * @constructor {@link Tasks}
+ * @param {Array} items
  */
 function Tasks (items) {
 	this.items = items;
@@ -122,7 +122,7 @@ Tasks.get = function (tasklistID, callback) {
 	if (AppSettings.isOffline()) {
 		var response = $.parseJSON(localStorage['Tasks.get.' + tasklistID]);
 		if (response) {
-			callback(Tasks.createFromJson(response));
+			callback(new Tasks(response.items));
 		}
 	}
 	else {
@@ -141,88 +141,9 @@ Tasks.get = function (tasklistID, callback) {
 			success: function (response, status, xhr) {
 				if (response) {
 					localStorage['Tasks.get.' + tasklistID] = xhr.responseText;
-					callback(Tasks.createFromJson(response));
+					callback(new Tasks(response.items));
 				}
 			}
 		});
 	}
-};
-/**
- * Create an instance from JSON.
- * @param response natural JSON of tasks
- * @returns {Tasks}
- */
-Tasks.createFromJson = function (response) {
-	var items = [];
-	if ($.isArray(response.items)) {
-		items = response.items;
-	}
-	return new Tasks($.map(items, function (item) {
-		return new Task(item);
-	}));
-};
-/**
- * @returns latest date time in milliseconds
- */
-Tasks.prototype.latestTime = function () {
-	if (this.items.length == 0) {
-		return new Date().getTime();
-	}
-	return Math.max.apply(null, $.map(this.items, function (task) {
-		if (task.dueDate) {
-			return task.dueDate.getTime();
-		}
-	}));
-};
-/**
- * @returns earliest date time in milliseconds
- */
-Tasks.prototype.earliestTime = function () {
-	if (this.items.length == 0) {
-		return new Date().getTime();
-	}
-	return Math.min.apply(null, $.map(this.items, function (task) {
-		if (task.dueDate) {
-			return task.dueDate.getTime();
-		}
-	}));
-};
-/**
- * Get array of date from earliest to latest date in tasks.
- * @param {Number} marginDays
- * @returns {Array} array of {@link Date}
- */
-Tasks.prototype.days = function (marginDays) {
-	if (marginDays == undefined) {
-		marginDays = 0;
-	}
-	var minTime = this.earliestTime() - marginDays * 86400000;
-	var maxTime = this.latestTime() + marginDays * 86400000;
-	var result = [];
-	for (var time = minTime; time <= maxTime; time += 86400000) {
-		result.push(new Date(time));
-	}
-	return result;
-};
-/**
- * Constructor.
- * @param {Object} json natural JSON
- * @returns {Task} instance
- */
-function Task (json) {
-	for (var key in json) {
-		this[key] = json[key];
-	}
-	// due
-	if (this.due) {
-		this.dueDate = new Date(this.due);
-		this.dueDate.setHours(0, 0, 0, 0);
-	}
-	else {
-		this.dueDate = null;
-	}
-	// FIXME: appears that selfLink does not contain its tasklist ID. (2011/12/9)
-	// tasklist ID
-	var uriParts = new String(this.selfLink).split('/');
-	this.tasklistID = uriParts[uriParts.length - 3];
 };

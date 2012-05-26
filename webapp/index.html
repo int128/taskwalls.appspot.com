@@ -129,6 +129,7 @@ Task Wallはベータ版です。
 <td class="border-columns weekday-column"><div data-bind="text: weekday"></div></td>
 <td class="border-columns task-column">
 <div data-bind="foreach: tasks">
+<!--div data-bind="attr: {status: status, tasklist: tasklist.id}" class="task"-->
 <div class="task">
 <input data-bind="checked: completed" type="checkbox" />
 <span data-bind="text: title" class="title"></span>

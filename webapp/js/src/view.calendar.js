@@ -1,3 +1,6 @@
+/**
+ * @constructor {@link CalendarViewModel}
+ */
 var CalendarViewModel = function () {
 	var self = this;
 	this.days = ko.observableArray();
@@ -55,13 +58,12 @@ var CalendarViewModel = function () {
 	this.addTasks = function (tasks) {
 		var dueMap = {};
 		$.each(tasks, function (i, task) {
-			var due = DateUtil.getTimeOrZero(task.dueDate());
+			var due = DateUtil.getTimeOrZero(task.due());
 			if (!$.isArray(dueMap[due])) {
 				dueMap[due] = [];
 			}
 			dueMap[due].push(task);
 			self.extendTo(due);
-			console.info(task);
 		});
 		$.each(this.days(), function (i, dayvm) {
 			var due = dayvm.time();
@@ -77,6 +79,10 @@ var CalendarViewModel = function () {
 		this.extendMonth(time);
 	}).call(this, DateUtil.normalize(new Date()).getTime());
 };
+/**
+ * @constructor {@link CalendarDayViewModel}
+ * @param {Date} day of the row
+ */
 var CalendarDayViewModel = function (date) {
 	this.tasks = ko.observableArray();
 	this.date = ko.observable(date);
@@ -100,14 +106,20 @@ var CalendarDayViewModel = function (date) {
 		this.tasks($.merge(this.tasks(), tasks));
 	};
 };
-/**
- * @class TaskViewModel view model of {Task}
- */
-var TaskViewModel = function (task) {
+var TaskViewModel = function (task, tasklist) {
 	var self = this;
-	$.each(['dueDate', 'title', 'completed', 'status', 'notes'], function () {
+	$.each(['completed', 'notes', 'status', 'title', 'updated'], function () {
 		self[this] = ko.observable(task[this]);
 	});
+	this.due = ko.observable((function () {
+		if (task.due) {
+			var d = new Date(task.due);
+			d.setHours(0, 0, 0, 0);
+			return d;
+		}
+		return null;
+	})());
+	this.tasklist = ko.observable(tasklist);
 };
 
 
