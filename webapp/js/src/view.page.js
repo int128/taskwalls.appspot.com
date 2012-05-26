@@ -6,17 +6,11 @@ var PageViewModel = function () {
 
 	// tasks
 	this.tasklists = ko.observableArray();
-	this.defaultTasklistID = ko.observable('@default');
 	this.loadTasks = function () {
 		Tasks.get('@default', function (tasks) {
-			if (tasks.items.length > 0) {
-				self.defaultTasklistID(tasks.items[0].tasklistID);
-				var a = [];
-				$.each(tasks.items, function (i, task) {
-					a.push(new TaskViewModel(task));
-				});
-				self.calendar.addTasks(a);
-			}
+			self.calendar.addTasks($.map(tasks, function (task) {
+				return new TaskViewModel(task);
+			}));
 		});
 		Tasklists.get(function (tasklists) {
 			self.tasklists(tasklists.items);

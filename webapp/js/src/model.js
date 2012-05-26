@@ -103,12 +103,9 @@ Tasklist.prototype.clearCompleted = function (success, error) {
 	});
 };
 /**
- * Constructor.
  * @constructor {@link Tasks}
- * @param {Array} items
  */
-function Tasks (items) {
-	this.items = items;
+function Tasks () {
 };
 /**
  * Get tasks from server.
@@ -122,7 +119,7 @@ Tasks.get = function (tasklistID, callback) {
 	if (AppSettings.isOffline()) {
 		var response = $.parseJSON(localStorage['Tasks.get.' + tasklistID]);
 		if (response) {
-			callback(new Tasks(response.items));
+			callback(response.items);
 		}
 	}
 	else {
@@ -141,7 +138,7 @@ Tasks.get = function (tasklistID, callback) {
 			success: function (response, status, xhr) {
 				if (response) {
 					localStorage['Tasks.get.' + tasklistID] = xhr.responseText;
-					callback(new Tasks(response.items));
+					callback(response.items);
 				}
 			}
 		});
