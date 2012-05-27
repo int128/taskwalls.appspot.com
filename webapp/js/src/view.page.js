@@ -7,13 +7,41 @@ var PageViewModel = function () {
 	// tasks
 	this.tasklists = ko.observableArray();
 	this.loadTasks = function () {
+		var defaultTasklistID = null;
+		var tasklistsLoaded = false;
+		var loadAllTasklists = function () {
+			if (defaultTasklistID && tasklistsLoaded) {
+				$.each(self.tasklists(), function (i, tasklist) {
+					if (tasklist.id() != defaultTasklistID) {
+						Tasks.get(tasklist.id(), function (tasks) {
+							// FIXME: infinite loop?
+//							self.calendar.addTasks($.map(tasks, function (task) {
+//								return new TaskViewModel(task);
+//							}));
+						});
+					}
+				});
+			}
+		};
 		Tasks.get('@default', function (tasks) {
-			self.calendar.addTasks($.map(tasks, function (task) {
-				return new TaskViewModel(task);
-			}));
+			if (tasks.length > 0) {
+				self.calendar.addTasks($.map(tasks, function (task) {
+					return new TaskViewModel(task);
+				}));
+				// extract tasklist ID from URL
+				var p = new String(tasks[0].selfLink).split('/');
+				defaultTasklistID = p[p.length - 3];
+				loadAllTasklists();
+			}
 		});
 		Tasklists.get(function (tasklists) {
-			self.tasklists(tasklists.items);
+			if (tasklists.length > 0) {
+				self.tasklists($.map(tasklists, function (tasklist) {
+					return new TasklistViewModel(tasklist);
+				}));
+				tasklistsLoaded = true;
+				loadAllTasklists();
+			}
 		});
 	};
 

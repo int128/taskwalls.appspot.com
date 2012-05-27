@@ -106,6 +106,12 @@ var CalendarDayViewModel = function (date) {
 		this.tasks($.merge(this.tasks(), tasks));
 	};
 };
+var TasklistViewModel = function (tasklist) {
+	var self = this;
+	$.each(['id', 'title', 'colorID'], function () {
+		self[this] = ko.observable(tasklist[this]);
+	});
+};
 var TaskViewModel = function (task, tasklist) {
 	var self = this;
 	$.each(['completed', 'notes', 'status', 'title', 'updated'], function () {

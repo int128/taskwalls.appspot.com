@@ -1,12 +1,10 @@
 /**
- * @class represents tasklists model
- * @param {Array} items array of {@link Tasklist}
+ * @constructor {@link Tasklists}
  */
-function Tasklists (items) {
-	this.items = items;
+function Tasklists () {
 };
 /**
- * Get {@link Tasklists} from server.
+ * Get tasklists from server.
  * @param {Function} callback async callback function
  */
 Tasklists.get = function (callback) {
@@ -16,7 +14,9 @@ Tasklists.get = function (callback) {
 	if (AppSettings.isOffline()) {
 		var response = $.parseJSON(localStorage.getItem('Tasklists.get'));
 		if (response) {
-			callback(Tasklists.createFromJson(response));
+			callback($.map(response.items, function (item) {
+				return new Tasklist(item);
+			}));
 		}
 	}
 	else {
@@ -33,54 +33,21 @@ Tasklists.get = function (callback) {
 				if (response) {
 					localStorage.setItem('Tasklists.get', xhr.responseText);
 					AppSettings.setCachedDate('Tasklists.get', new Date());
-					callback(Tasklists.createFromJson(response));
+					callback($.map(response.items, function (item) {
+						return new Tasklist(item);
+					}));
 				}
 			}
 		});
 	}
 };
 /**
- * Create an instance from JSON.
- * @param response natural JSON of tasklists
- * @returns {Tasklists}
+ * @constructor {@link Tasklist}
+ * @param {Object} item JSON objct
  */
-Tasklists.createFromJson = function (response) {
-	var items = [];
-	if ($.isArray(response.items)) {
-		items = response.items;
-	}
-	return new Tasklists($.map(items, function (item) {
-		return new Tasklist(item);
-	}));
-};
-/**
- * Get item by tasklist ID.
- * @param {String} tasklistID
- * @returns {Object} tasklist JSON (empty hash if not found)
- */
-Tasklists.prototype.getByID = function (tasklistID) {
-	var result = {};
-	$.each(this.items, function (i, tasklist) {
-		if (tasklist.id == tasklistID) {
-			result = tasklist;
-			return false;
-		}
-	});
-	return result;
-};
-/**
- * Constructor.
- * @param {Object} json natural JSON
- */
-function Tasklist (json) {
-	for (var key in json) {
-		this[key] = json[key];
-	}
-	// auto generate color ID
-	if (this.colorID == undefined) {
-		var factor = Math.abs(new String(this.id).hashCode());
-		this.colorID = factor % AppSettings.tasklistColors;
-	}
+function Tasklist (item) {
+	$.extend(this, item);
+	this.colorID = Math.abs(new String(this.id).hashCode()) % AppSettings.tasklistColors;
 }
 /**
  * Clear completed tasks in the tasklist.
