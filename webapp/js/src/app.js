@@ -42,7 +42,10 @@ $(function () {
 });
 // data binding
 $(function () {
-	ko.applyBindings(new PageViewModel());
+	var vm = new PageViewModel();
+	ko.applyBindings(vm);
+	// TODO: debug purpose only
+	window.taskwalls_page_vm = vm;
 });
 /**
  * Application settings.
