@@ -5,11 +5,19 @@
 var CalendarViewModel = function (taskdata) {
 	this.taskdata = taskdata;
 	this.days = ko.observableArray();
+
 	// initialize rows
 	var today = DateUtil.normalize(new Date()).getTime();
 	this.earliestTime = ko.observable(today);
 	this.latestTime = ko.observable(today);
 	this.extendMonth(today);
+
+	this.nextMonth = ko.computed(function () {
+		var d = new Date(this.latestTime());
+		d.setHours(24, 0, 0, 0);
+		d.setDate(1);
+		return d;
+	}, this);
 };
 /**
  * Extend rows of the calendar.
@@ -48,12 +56,18 @@ CalendarViewModel.prototype.extendMonth = function (time) {
 	var fromDate = new Date(time);
 	fromDate.setHours(0, 0, 0, 0);
 	this.extendTo(fromDate);
-	// (to) first day in next month
+	// (to) last day in this month
 	var toDate = new Date(time);
 	toDate.setHours(0, 0, 0, 0);
 	toDate.setMonth(toDate.getMonth() + 1);
-	toDate.setDate(1);
+	toDate.setDate(0);
 	this.extendTo(toDate);
+};
+/**
+ * Extend rows to next month.
+ */
+CalendarViewModel.prototype.extendToNextMonth = function () {
+	this.extendMonth(this.nextMonth().getTime());
 };
 /**
  * @constructor {@link CalendarDayViewModel}
@@ -62,11 +76,6 @@ CalendarViewModel.prototype.extendMonth = function (time) {
  */
 var CalendarDayViewModel = function (date, taskdata) {
 	var self = this;
-	this.tasks = ko.computed(function() {
-		return $.grep(taskdata.tasks(), function (task) {
-			return task.due() && task.due().getTime() == self.time();
-		});
-	}, this);
 	this.date = ko.observable(date);
 	this.time = ko.computed(function () {
 		return this.date().getTime();
@@ -79,6 +88,11 @@ var CalendarDayViewModel = function (date, taskdata) {
 	}, this);
 	this.weekday = ko.computed(function () {
 		return $.resource('key-weekday' + this.date().getDay()).text();
+	}, this);
+	this.tasks = ko.computed(function() {
+		return $.grep(taskdata.tasks(), function (task) {
+			return task.due() && task.due().getTime() == self.time();
+		});
 	}, this);
 };
 /**

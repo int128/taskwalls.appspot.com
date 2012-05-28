@@ -152,8 +152,10 @@ Task Wallはベータ版です。
 </div>
 </div>
 </section>
-<div class="calendar-next">
-<a href="#next-month"><span class="year"></span>年<span class="month"></span>月を表示</a>
+<div data-bind="with: calendar" class="calendar-next">
+<a data-bind="click: extendToNextMonth">
+<span data-bind="text: nextMonth().getFullYear()"></span>年<span data-bind="text: nextMonth().getMonth()+1"></span>月を表示
+</a>
 </div>
 </div>
 
