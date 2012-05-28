@@ -104,7 +104,7 @@ TaskdataViewModel.prototype.load = function () {
 				if (tasklist.id() == defaultTasklistID) {
 					// fix tasks in the default tasklist
 					$.each(self.tasks(), function (i2, task) {
-						if (!task.tasklist()) {
+						if (task.tasklist().id() == '@default') {
 							task.tasklist(tasklist);
 						}
 					});
@@ -122,8 +122,10 @@ TaskdataViewModel.prototype.load = function () {
 	// load tasks in the default tasklist
 	Tasks.get('@default', function (tasks) {
 		if (tasks.length > 0) {
+			// assign temporary view model
+			var defaultTasklist = new TasklistViewModel({id: '@default'});
 			self.tasks($.map(tasks, function (task) {
-				return new TaskViewModel(task);
+				return new TaskViewModel(task, defaultTasklist);
 			}));
 			// extract tasklist ID from URL
 			var p = new String(tasks[0].selfLink).split('/');
