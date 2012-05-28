@@ -30,7 +30,7 @@ var CalendarViewModel = function (taskdata) {
 };
 /**
  * Extend rows of the calendar.
- * @param {Number} or {Date} time time to extend
+ * @param {Date} time time to extend (also accepts {Number})
  */
 CalendarViewModel.prototype.extendTo = function (time) {
 	var normalizedTime = DateUtil.normalize(time).getTime();
@@ -58,7 +58,7 @@ CalendarViewModel.prototype.extendTo = function (time) {
 };
 /**
  * Extend rows of the calendar.
- * @param {Number} or {Date} time time to extend
+ * @param {Date} time time to extend (also accepts {Number})
  */
 CalendarViewModel.prototype.extendMonth = function (time) {
 	// (from) this day
@@ -186,12 +186,21 @@ TaskdataViewModel.prototype.load = function () {
 		}
 	});
 };
+/**
+ * Tasklist view model.
+ * @param {Tasklist} tasklist
+ */
 var TasklistViewModel = function (tasklist) {
 	var self = this;
 	$.each(['id', 'title', 'colorID'], function () {
 		self[this] = ko.observable(tasklist[this]);
 	});
 };
+/**
+ * Task view model.
+ * @param {Object} task
+ * @param {TasklistViewModel} tasklist
+ */
 var TaskViewModel = function (task, tasklist) {
 	var self = this;
 	$.each(['completed', 'notes', 'status', 'title', 'updated'], function () {
