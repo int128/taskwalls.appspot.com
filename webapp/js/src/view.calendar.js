@@ -110,8 +110,8 @@ TaskdataViewModel.prototype.load = function () {
 					});
 				} else {
 					// merge tasks in other tasklists
-					Tasks.get(tasklist.id(), function (tasks) {
-						self.tasks($.merge(self.tasks(), $.map(tasks, function (task) {
+					Tasks.get(tasklist.id(), function (items) {
+						self.tasks($.merge(self.tasks(), $.map(items, function (task) {
 							return new TaskViewModel(task, tasklist);
 						})));
 					});
@@ -120,24 +120,24 @@ TaskdataViewModel.prototype.load = function () {
 		}
 	};
 	// load tasks in the default tasklist
-	Tasks.get('@default', function (tasks) {
-		if (tasks.length > 0) {
+	Tasks.get('@default', function (items) {
+		if (items.length > 0) {
 			// assign temporary view model
 			var defaultTasklist = new TasklistViewModel({id: '@default'});
-			self.tasks($.map(tasks, function (task) {
-				return new TaskViewModel(task, defaultTasklist);
+			self.tasks($.map(items, function (item) {
+				return new TaskViewModel(item, defaultTasklist);
 			}));
 			// extract tasklist ID from URL
-			var p = new String(tasks[0].selfLink).split('/');
+			var p = new String(items[0].selfLink).split('/');
 			defaultTasklistID = p[p.length - 3];
 			loadAllTasklists();
 		}
 	});
 	// load list of tasklists
-	Tasklists.get(function (tasklists) {
-		if (tasklists.length > 0) {
-			self.tasklists($.map(tasklists, function (tasklist) {
-				return new TasklistViewModel(tasklist);
+	Tasklists.get(function (items) {
+		if (items.length > 0) {
+			self.tasklists($.map(items, function (item) {
+				return new TasklistViewModel(item);
 			}));
 			tasklistsLoaded = true;
 			loadAllTasklists();
