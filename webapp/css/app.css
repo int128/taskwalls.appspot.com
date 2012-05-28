@@ -498,7 +498,7 @@ tr.past {
 	background-color: #eee;
 }
 
-tr.past>td.task-column .task.task-status-needsAction {
+tr.past .task[data-status='needsAction'] {
 	color: #f00;
 }
 
