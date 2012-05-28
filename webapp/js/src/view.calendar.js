@@ -4,12 +4,12 @@
  */
 var CalendarViewModel = function (taskdata) {
 	this.taskdata = taskdata;
-	this.days = ko.observableArray();
 
 	// initialize rows
-	var today = DateUtil.normalize(new Date()).getTime();
-	this.earliestTime = ko.observable(today);
-	this.latestTime = ko.observable(today);
+	var today = DateUtil.normalize(new Date());
+	this.days = ko.observableArray([new CalendarDayViewModel(today, taskdata)]);
+	this.earliestTime = ko.observable(today.getTime());
+	this.latestTime = ko.observable(today.getTime());
 	this.extendMonth(today);
 
 	this.nextMonth = ko.computed(function () {
