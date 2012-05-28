@@ -36,16 +36,14 @@ DateUtil.futureOrPast = function (date, future, today, past) {
  * Returns true if the day is in this week.
  * This function assumes a week begins from Monday.
  * @param {Date} date
- * @param {Date} current current time (for test purpose)
  * @returns {Boolean}
  */
-DateUtil.isThisWeek = function (date, current) {
+DateUtil.isThisWeek = function (time) {
 	var today = new Date();
 	today.setHours(0, 0, 0, 0);
 	var first = today.getTime() - ((today.getDay() + 6) % 7) * 24 * 3600 * 1000;
 	var next = first + 7 * 24 * 3600 * 1000;
-	var dateTime = date.getTime();
-	return first <= dateTime && dateTime < next;
+	return first <= time && time < next;
 };
 /**
  * Get time or zero if null.

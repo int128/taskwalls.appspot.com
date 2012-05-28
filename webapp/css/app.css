@@ -443,7 +443,7 @@ td.task-column {
 }
 
 /* first day of month, first row */
-tr.d1>td.month-column,tr:FIRST-CHILD>td.month-column {
+tr[data-day="1"]>td.month-column,tr:FIRST-CHILD>td.month-column {
 	position: relative;
 }
 
@@ -451,7 +451,7 @@ td.month-column>div {
 	display: none;
 }
 
-tr.d1>td.month-column>div,tr:FIRST-CHILD>td.month-column>div {
+tr[data-day="1"]>td.month-column>div,tr:FIRST-CHILD>td.month-column>div {
 	display: block;
 	position: absolute;
 	top: 5px;
@@ -470,22 +470,22 @@ tr.d1>td.month-column>div,tr:FIRST-CHILD>td.month-column>div {
 	color: #000;
 }
 
-tr.d1>td {
+tr[data-day="1"]>td {
 	border-top: solid 1px #888;
 }
 
 /* Sunday */
-tr.w0>td.weekday-column,tr.w0>td.date-column {
+tr[data-weekday="0"]>td.weekday-column,tr[data-weekday="0"]>td.date-column {
 	color: #f00;
 }
 
 /* Saturday */
-tr.w6>td.weekday-column,tr.w6>td.date-column {
+tr[data-weekday="6"]>td.weekday-column,tr[data-weekday="6"]>td.date-column {
 	color: #11d;
 }
 
 /* Monday */
-tr.w1>td.border-columns {
+tr[data-weekday="1"]>td.border-columns {
 	border-top: solid 1px #888;
 }
 

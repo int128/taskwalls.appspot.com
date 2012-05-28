@@ -96,7 +96,19 @@ var CalendarDayViewModel = function (date, taskdata) {
 		return this.date().getDate();
 	}, this);
 	this.weekday = ko.computed(function () {
-		return $.resource('key-weekday' + this.date().getDay()).text();
+		return this.date().getDay();
+	}, this);
+	this.weekdayName = ko.computed(function () {
+		return $.resource('key-weekday' + this.weekday()).text();
+	}, this);
+	this.past = ko.computed(function () {
+		return this.time() < DateUtil.normalize(new Date());
+	}, this);
+	this.today = ko.computed(function () {
+		return this.time() == DateUtil.normalize(new Date());
+	}, this);
+	this.thisweek = ko.computed(function () {
+		return DateUtil.isThisWeek(this.time());
 	}, this);
 	this.tasks = ko.computed(function() {
 		return $.grep(taskdata.tasks(), function (task) {

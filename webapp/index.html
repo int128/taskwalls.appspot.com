@@ -123,10 +123,17 @@ Task Wallはベータ版です。
 <section id="calendar">
 <table>
 <tbody data-bind="foreach: calendar.days">
-<tr>
+<tr data-bind="css: {
+	past: past,
+	today: today,
+	thisweek: thisweek
+}, attr: {
+	'data-day': day,
+	'data-weekday': weekday
+}">
 <td class="month-column"><div data-bind="text: month"></div></td>
 <td class="border-columns date-column"><div data-bind="text: day"></div></td>
-<td class="border-columns weekday-column"><div data-bind="text: weekday"></div></td>
+<td class="border-columns weekday-column"><div data-bind="text: weekdayName"></div></td>
 <td class="border-columns task-column">
 <div data-bind="foreach: tasks">
 <div data-bind="attr: {'data-status': status, 'data-tasklistcolor': tasklist().colorID}" class="task">
