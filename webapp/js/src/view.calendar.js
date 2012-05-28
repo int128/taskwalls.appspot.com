@@ -18,6 +18,15 @@ var CalendarViewModel = function (taskdata) {
 		d.setDate(1);
 		return d;
 	}, this);
+
+	// extend rows to cover tasks
+	this.taskdata.tasks.subscribe(function (newvalue) {
+		var dues = $.map(newvalue, function (task) {
+			return task.due();
+		});
+		this.extendTo(Math.min.apply(null, dues));
+		this.extendTo(Math.max.apply(null, dues));
+	}, this);
 };
 /**
  * Extend rows of the calendar.
