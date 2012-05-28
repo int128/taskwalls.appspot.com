@@ -87,7 +87,7 @@ Task Wallはベータ版です。
 <h1 class="stack">Task Wall<span style="color: gold;">*</span></h1>
 <div class="stack" style="text-align: center; font-weight: bold; margin-top: -5px; color: #888;">BETA</div>
 <div class="stack">
-<div data-bind="foreach: tasklists" id="tasklists">
+<div data-bind="foreach: taskdata.tasklists" id="tasklists">
 <div data-bind="attr: {'data-tasklistcolor': colorID}" class="tasklist-legend">
 <div class="setting"><div></div></div>
 <div data-bind="text: title" class="title"></div>
@@ -129,8 +129,7 @@ Task Wallはベータ版です。
 <td class="border-columns weekday-column"><div data-bind="text: weekday"></div></td>
 <td class="border-columns task-column">
 <div data-bind="foreach: tasks">
-<!--div data-bind="attr: {status: status, tasklist: tasklist.id}" class="task"-->
-<div class="task">
+<div data-bind="attr: {'data-status': status, 'data-tasklistcolor': tasklist().colorID}" class="task">
 <input data-bind="checked: completed" type="checkbox" />
 <span data-bind="text: title" class="title"></span>
 <div data-bind="text: notes" class="notes"></div>

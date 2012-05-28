@@ -1,8 +1,8 @@
 /**
  * @constructor {@link CalendarViewModel}
+ * @param {TaskdataViewModel} taskdata
  */
-var CalendarViewModel = function () {
-	var self = this;
+var CalendarViewModel = function (taskdata) {
 	this.days = ko.observableArray();
 	this.earliestTime = ko.observable();
 	this.latestTime = ko.observable();
@@ -17,7 +17,7 @@ var CalendarViewModel = function () {
 			var a = [];
 			var i = 0;
 			for (var t = this.latestTime() + 86400000; t <= normalizedTime; t += 86400000) {
-				a[i++] = new CalendarDayViewModel(new Date(t));
+				a[i++] = new CalendarDayViewModel(new Date(t), taskdata);
 			}
 			this.days(this.days().concat(a));
 			this.latestTime(normalizedTime);
@@ -28,7 +28,7 @@ var CalendarViewModel = function () {
 			var i = 0;
 			var e = this.earliestTime();
 			for (var t = normalizedTime; t < e; t += 86400000) {
-				a[i++] = new CalendarDayViewModel(new Date(t));
+				a[i++] = new CalendarDayViewModel(new Date(t), taskdata);
 			}
 			this.days(a.concat(this.days()));
 			this.earliestTime(normalizedTime);
@@ -51,27 +51,7 @@ var CalendarViewModel = function () {
 		toDate.setDate(1);
 		this.extendTo(toDate);
 	};
-	/**
-	 * Add tasks into the calendar.
-	 * @param {Array} tasks
-	 */
-	this.addTasks = function (tasks) {
-		var dueMap = {};
-		$.each(tasks, function (i, task) {
-			var due = DateUtil.getTimeOrZero(task.due());
-			if (!$.isArray(dueMap[due])) {
-				dueMap[due] = [];
-			}
-			dueMap[due].push(task);
-			self.extendTo(due);
-		});
-		$.each(this.days(), function (i, dayvm) {
-			var due = dayvm.time();
-			if ($.isArray(dueMap[due])) {
-				dayvm.addTasks(dueMap[due]);
-			}
-		});
-	};
+	// TODO: track and extend rows
 	// extend rows within this month
 	(function (time) {
 		this.earliestTime(time);
@@ -81,10 +61,16 @@ var CalendarViewModel = function () {
 };
 /**
  * @constructor {@link CalendarDayViewModel}
- * @param {Date} day of the row
+ * @param {Date} date day of the row
+ * @param {TaskdataViewModel} taskdata
  */
-var CalendarDayViewModel = function (date) {
-	this.tasks = ko.observableArray();
+var CalendarDayViewModel = function (date, taskdata) {
+	var self = this;
+	this.tasks = ko.computed(function() {
+		return $.grep(taskdata.tasks(), function (task) {
+			return task.due() && task.due().getTime() == self.time();
+		});
+	}, this);
 	this.date = ko.observable(date);
 	this.time = ko.computed(function () {
 		return this.date().getTime();
@@ -98,13 +84,64 @@ var CalendarDayViewModel = function (date) {
 	this.weekday = ko.computed(function () {
 		return $.resource('key-weekday' + this.date().getDay()).text();
 	}, this);
-	/**
-	 * Add tasks on this day.
-	 * @param {Array} tasks
-	 */
-	this.addTasks = function (tasks) {
-		this.tasks($.merge(this.tasks(), tasks));
+};
+/**
+ * @constructor {@link TaskdataViewModel}
+ */
+var TaskdataViewModel = function () {
+	this.tasks = ko.observableArray();
+	this.tasklists = ko.observableArray();
+};
+/**
+ * Load tasklists and tasks.
+ */
+TaskdataViewModel.prototype.load = function () {
+	var self = this;
+	var defaultTasklistID = null;
+	var tasklistsLoaded = false;
+	var loadAllTasklists = function () {
+		if (defaultTasklistID && tasklistsLoaded) {
+			$.each(self.tasklists(), function (i, tasklist) {
+				if (tasklist.id() == defaultTasklistID) {
+					// fix tasks in the default tasklist
+					$.each(self.tasks(), function (i2, task) {
+						if (!task.tasklist()) {
+							task.tasklist(tasklist);
+						}
+					});
+				} else {
+					// merge tasks in other tasklists
+					Tasks.get(tasklist.id(), function (tasks) {
+						self.tasks($.merge(self.tasks(), $.map(tasks, function (task) {
+							return new TaskViewModel(task, tasklist);
+						})));
+					});
+				}
+			});
+		}
 	};
+	// load tasks in the default tasklist
+	Tasks.get('@default', function (tasks) {
+		if (tasks.length > 0) {
+			self.tasks($.map(tasks, function (task) {
+				return new TaskViewModel(task);
+			}));
+			// extract tasklist ID from URL
+			var p = new String(tasks[0].selfLink).split('/');
+			defaultTasklistID = p[p.length - 3];
+			loadAllTasklists();
+		}
+	});
+	// load list of tasklists
+	Tasklists.get(function (tasklists) {
+		if (tasklists.length > 0) {
+			self.tasklists($.map(tasklists, function (tasklist) {
+				return new TasklistViewModel(tasklist);
+			}));
+			tasklistsLoaded = true;
+			loadAllTasklists();
+		}
+	});
 };
 var TasklistViewModel = function (tasklist) {
 	var self = this;

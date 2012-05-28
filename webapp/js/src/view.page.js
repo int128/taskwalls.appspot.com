@@ -1,50 +1,12 @@
 var PageViewModel = function () {
 	var self = this;
 
-	// calendar
-	this.calendar = new CalendarViewModel();
-
 	// tasks
-	this.tasklists = ko.observableArray();
-	this.loadTasks = function () {
-		var defaultTasklistID = null;
-		var tasklistsLoaded = false;
-		var loadAllTasklists = function () {
-			if (defaultTasklistID && tasklistsLoaded) {
-				$.each(self.tasklists(), function (i, tasklist) {
-					if (tasklist.id() != defaultTasklistID) {
-						Tasks.get(tasklist.id(), function (tasks) {
-							// FIXME: infinite loop?
-//							self.calendar.addTasks($.map(tasks, function (task) {
-//								return new TaskViewModel(task);
-//							}));
-						});
-					}
-				});
-			}
-		};
-		Tasks.get('@default', function (tasks) {
-			if (tasks.length > 0) {
-				self.calendar.addTasks($.map(tasks, function (task) {
-					return new TaskViewModel(task);
-				}));
-				// extract tasklist ID from URL
-				var p = new String(tasks[0].selfLink).split('/');
-				defaultTasklistID = p[p.length - 3];
-				loadAllTasklists();
-			}
-		});
-		Tasklists.get(function (tasklists) {
-			if (tasklists.length > 0) {
-				self.tasklists($.map(tasklists, function (tasklist) {
-					return new TasklistViewModel(tasklist);
-				}));
-				tasklistsLoaded = true;
-				loadAllTasklists();
-			}
-		});
-	};
+	this.taskdata = new TaskdataViewModel();
 
+	// calendar
+	this.calendar = new CalendarViewModel(this.taskdata);
+	
 	// offline
 	this.offline = ko.computed({
 		read: function () {
@@ -64,7 +26,7 @@ var PageViewModel = function () {
 	new OAuth2Session(function () {
 		this.onAuthorized = function () {
 			self.oauth2authorized(true);
-			self.loadTasks();
+			self.taskdata.load();
 		};
 		this.onAuthorizing = function () {
 			self.oauth2authorizing(true);
