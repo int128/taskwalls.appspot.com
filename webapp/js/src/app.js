@@ -11,7 +11,7 @@ $(function () {
 		}
 	});
 });
-// front controller
+// indicators
 $(function () {
 	// global error handler
 	var _window_onerror_handling = false;
@@ -40,7 +40,7 @@ $(function () {
 		$('.development').hide().show();
 	}
 });
-// data binding
+// initialize page
 $(function () {
 	var vm = new PageViewModel();
 	ko.applyBindings(vm);
