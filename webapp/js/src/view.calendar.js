@@ -115,6 +115,16 @@ var CalendarDayViewModel = function (date, taskdata) {
 			return task.due() && task.due().getTime() == self.time();
 		});
 	}, this);
+	this.tasklists = ko.computed(function () {
+		// group by tasklist
+		return $.map(taskdata.tasklists(), function (tasklist) {
+			return {
+				tasks: $.grep(self.tasks(), function (task) {
+					return task.tasklist().id() == tasklist.id();
+				})
+			};
+		});
+	}, this);
 };
 /**
  * @constructor {@link TaskdataViewModel}

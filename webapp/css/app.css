@@ -442,6 +442,10 @@ td.task-column {
 	border-left: solid 1px #888;
 }
 
+td.task-column .tasklist {
+	float: left;
+}
+
 /* first day of month, first row */
 tr[data-day="1"]>td.month-column,tr:FIRST-CHILD>td.month-column {
 	position: relative;
@@ -643,13 +647,6 @@ tr.thisweek.w0>td.border-columns {
 	color: #ccc;
 	font-size: 130%;
 	cursor: default;
-}
-
-/*
- * Tasks group.
- */
-.taskgroup {
-	float: left;
 }
 
 /*
