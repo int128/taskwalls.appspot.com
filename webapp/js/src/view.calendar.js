@@ -3,61 +3,60 @@
  * @param {TaskdataViewModel} taskdata
  */
 var CalendarViewModel = function (taskdata) {
+	this.taskdata = taskdata;
 	this.days = ko.observableArray();
 	this.earliestTime = ko.observable();
 	this.latestTime = ko.observable();
-	/**
-	 * Extend rows of the calendar.
-	 * @param {Number} or {Date} time time to extend
-	 */
-	this.extendTo = function (time) {
-		var normalizedTime = DateUtil.normalize(time).getTime();
-		if (normalizedTime > this.latestTime()) {
-			// append rows
-			var a = [];
-			var i = 0;
-			for (var t = this.latestTime() + 86400000; t <= normalizedTime; t += 86400000) {
-				a[i++] = new CalendarDayViewModel(new Date(t), taskdata);
-			}
-			this.days(this.days().concat(a));
-			this.latestTime(normalizedTime);
+	// initialize rows
+	var today = DateUtil.normalize(new Date()).getTime();
+	this.earliestTime(today);
+	this.latestTime(today);
+	this.extendMonth(today);
+};
+/**
+ * Extend rows of the calendar.
+ * @param {Number} or {Date} time time to extend
+ */
+CalendarViewModel.prototype.extendTo = function (time) {
+	var normalizedTime = DateUtil.normalize(time).getTime();
+	if (normalizedTime > this.latestTime()) {
+		// append rows
+		var a = [];
+		var i = 0;
+		for (var t = this.latestTime() + 86400000; t <= normalizedTime; t += 86400000) {
+			a[i++] = new CalendarDayViewModel(new Date(t), this.taskdata);
 		}
-		if (normalizedTime < this.earliestTime()) {
-			// prepend rows
-			var a = [];
-			var i = 0;
-			var e = this.earliestTime();
-			for (var t = normalizedTime; t < e; t += 86400000) {
-				a[i++] = new CalendarDayViewModel(new Date(t), taskdata);
-			}
-			this.days(a.concat(this.days()));
-			this.earliestTime(normalizedTime);
+		this.days(this.days().concat(a));
+		this.latestTime(normalizedTime);
+	}
+	if (normalizedTime < this.earliestTime()) {
+		// prepend rows
+		var a = [];
+		var i = 0;
+		var e = this.earliestTime();
+		for (var t = normalizedTime; t < e; t += 86400000) {
+			a[i++] = new CalendarDayViewModel(new Date(t), this.taskdata);
 		}
-	};
-	/**
-	 * Extend rows of the calendar.
-	 * @param {Number} or {Date} time time to extend
-	 */
-	this.extendMonth = function (time) {
-		// (from) first day in this month
-		var fromDate = new Date(time);
-		fromDate.setHours(0, 0, 0, 0);
-		fromDate.setDate(1);
-		this.extendTo(fromDate);
-		// (to) first day in next month
-		var toDate = new Date(time);
-		toDate.setHours(0, 0, 0, 0);
-		toDate.setMonth(toDate.getMonth() + 1);
-		toDate.setDate(1);
-		this.extendTo(toDate);
-	};
-	// TODO: track and extend rows
-	// extend rows within this month
-	(function (time) {
-		this.earliestTime(time);
-		this.latestTime(time);
-		this.extendMonth(time);
-	}).call(this, DateUtil.normalize(new Date()).getTime());
+		this.days(a.concat(this.days()));
+		this.earliestTime(normalizedTime);
+	}
+};
+/**
+ * Extend rows of the calendar.
+ * @param {Number} or {Date} time time to extend
+ */
+CalendarViewModel.prototype.extendMonth = function (time) {
+	// (from) first day in this month
+	var fromDate = new Date(time);
+	fromDate.setHours(0, 0, 0, 0);
+	fromDate.setDate(1);
+	this.extendTo(fromDate);
+	// (to) first day in next month
+	var toDate = new Date(time);
+	toDate.setHours(0, 0, 0, 0);
+	toDate.setMonth(toDate.getMonth() + 1);
+	toDate.setDate(1);
+	this.extendTo(toDate);
 };
 /**
  * @constructor {@link CalendarDayViewModel}
