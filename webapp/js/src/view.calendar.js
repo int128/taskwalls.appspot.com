@@ -5,12 +5,10 @@
 var CalendarViewModel = function (taskdata) {
 	this.taskdata = taskdata;
 	this.days = ko.observableArray();
-	this.earliestTime = ko.observable();
-	this.latestTime = ko.observable();
 	// initialize rows
 	var today = DateUtil.normalize(new Date()).getTime();
-	this.earliestTime(today);
-	this.latestTime(today);
+	this.earliestTime = ko.observable(today);
+	this.latestTime = ko.observable(today);
 	this.extendMonth(today);
 };
 /**
@@ -46,10 +44,9 @@ CalendarViewModel.prototype.extendTo = function (time) {
  * @param {Number} or {Date} time time to extend
  */
 CalendarViewModel.prototype.extendMonth = function (time) {
-	// (from) first day in this month
+	// (from) this day
 	var fromDate = new Date(time);
 	fromDate.setHours(0, 0, 0, 0);
-	fromDate.setDate(1);
 	this.extendTo(fromDate);
 	// (to) first day in next month
 	var toDate = new Date(time);
