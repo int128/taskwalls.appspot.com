@@ -124,7 +124,7 @@ Task Wallはベータ版です。
 <div class="calendar-operations-tab">
 <a href="#clear-completed-tasks">完了したタスクを消す</a>
 </div>
-<section id="calendar">
+<section class="calendar">
 <table>
 <tbody data-bind="foreach: calendar.days">
 <tr data-bind="css: {
@@ -135,10 +135,10 @@ Task Wallはベータ版です。
 	'data-day': day,
 	'data-weekday': weekday
 }">
-<td class="month-column"><div data-bind="text: month"></div></td>
-<td class="border-columns date-column"><div data-bind="text: day"></div></td>
-<td class="border-columns weekday-column"><div data-bind="text: weekdayName"></div></td>
-<td class="border-columns task-column">
+<td class="month"><div data-bind="text: month"></div></td>
+<td class="border day"><div data-bind="text: day"></div></td>
+<td class="border weekday"><div data-bind="text: weekdayName"></div></td>
+<td class="border tasks">
 <div data-bind="foreach: tasklists">
 <div data-bind="foreach: tasks" class="tasklist">
 <div data-bind="attr: {'data-status': status, 'data-tasklistcolor': tasklist().colorID}" class="task">
@@ -148,7 +148,7 @@ Task Wallはベータ版です。
 </div>
 </div>
 </div>
-<div class="create-task-button">
+<div class="create-task">
 <div class="balloon-tip">新しいタスクを作成する</div>
 <a href="#create-task"></a>
 </div>
@@ -160,8 +160,9 @@ Task Wallはベータ版です。
 <section id="planner" class="t0">
 <div class="task-column">
 <div class="description">計画中のタスク</div>
-<div class="create-task-button">
-<div class="balloon-tip">新しいタスクを作成する</div><a href="#create-task"></a>
+<div class="create-task">
+<div class="balloon-tip">新しいタスクを作成する</div>
+<a href="#create-task"></a>
 </div>
 </div>
 </section>

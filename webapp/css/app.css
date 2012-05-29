@@ -401,29 +401,29 @@ body {
 /*
  * Calendar.
  */
-#calendar {
+.calendar {
 	margin-right: 240px;
 }
 
-#calendar>table {
+.calendar table {
 	border-collapse: collapse;
 	table-layout: fixed;
 	width: 100%;
 }
 
-#calendar>table>tbody>tr.hover {
+.calendar tr.hover {
 	background: #ddd;
 }
 
-td.border-columns {
+.calendar td.border {
 	border-top: solid 1px #ccc;
 }
 
-td.month-column {
+.calendar td.month {
 	width: 150px;
 }
 
-td.weekday-column {
+.calendar td.weekday {
 	width: 40px;
 	padding-right: 5px;
 	text-align: center;
@@ -431,7 +431,7 @@ td.weekday-column {
 	text-shadow: #ccc 1px 1px 1px;
 }
 
-td.date-column {
+.calendar td.day {
 	width: 40px;
 	padding-left: 20px;
 	text-align: center;
@@ -439,26 +439,28 @@ td.date-column {
 	text-shadow: #ccc 1px 1px 1px;
 }
 
-td.task-column {
+.calendar td.tasks {
 	width: auto;
 	padding-left: 5px;
 	border-left: solid 1px #888;
 }
 
-td.task-column .tasklist {
+.calendar td.tasks .tasklist {
 	float: left;
 }
 
 /* first day of month, first row */
-tr[data-day="1"]>td.month-column,tr:FIRST-CHILD>td.month-column {
+.calendar tr[data-day="1"]>td.month,
+.calendar tr:FIRST-CHILD>td.month {
 	position: relative;
 }
 
-td.month-column>div {
+.calendar td.month>div {
 	display: none;
 }
 
-tr[data-day="1"]>td.month-column>div,tr:FIRST-CHILD>td.month-column>div {
+.calendar tr[data-day="1"]>td.month>div,
+.calendar tr:FIRST-CHILD>td.month>div {
 	display: block;
 	position: absolute;
 	top: 5px;
@@ -477,70 +479,63 @@ tr[data-day="1"]>td.month-column>div,tr:FIRST-CHILD>td.month-column>div {
 	color: #000;
 }
 
-tr[data-day="1"]>td {
+.calendar tr[data-day="1"]>td {
 	border-top: solid 1px #888;
 }
 
 /* Sunday */
-tr[data-weekday="0"]>td.weekday-column,tr[data-weekday="0"]>td.date-column {
+.calendar tr[data-weekday="0"]>td.weekday,
+.calendar tr[data-weekday="0"]>td.day {
 	color: #f00;
 }
 
 /* Saturday */
-tr[data-weekday="6"]>td.weekday-column,tr[data-weekday="6"]>td.date-column {
+.calendar tr[data-weekday="6"]>td.weekday,
+.calendar tr[data-weekday="6"]>td.day {
 	color: #11d;
 }
 
 /* Monday */
-tr[data-weekday="1"]>td.border-columns {
+.calendar tr[data-weekday="1"]>td.border {
 	border-top: solid 1px #888;
 }
 
 /* past tasks */
-tr.past {
+.calendar tr.past {
 	background-color: #eee;
 }
 
-tr.past .task[data-status='needsAction'] {
+.calendar tr.past .task[data-status='needsAction'] {
 	color: #f00;
 }
 
 /* today tasks */
-tr.today>td.weekday-column,tr.today>td.date-column {
+.calendar tr.today>td.weekday,
+.calendar tr.today>td.day {
 	font-weight: bold;
 	font-size: 130%;
 }
 
-tr.today>td.border-columns {
+.calendar tr.today>td.border {
 	border-top: solid 1px #f00;
 }
 
 /* this week's tasks */
-tr.thisweek>td.date-column {
+.calendar tr.thisweek>td.day {
 	border-left: solid 1px #666;
 }
 
-tr.thisweek>td.task-column {
+.calendar tr.thisweek>td.tasks {
 	border-right: solid 1px #ccc;
 }
 
-tr.thisweek.w1>td.border-columns {
-	border-top: solid 1px #666;
-}
-
-tr.thisweek.w0>td.border-columns {
-	border-bottom: solid 1px #666;
-}
-
-/*
- * Calendar misc.
- */
-.task-column>.create-task-button {
+/* buttons */
+.calendar .create-task {
 	float: right;
 	margin: 10px;
 }
 
-.task-column>.create-task-button a {
+.calendar .create-task a {
 	display: inline-block;
 	background: url('/css/lightning.png') no-repeat center;
 	width: 48px;
@@ -548,20 +543,23 @@ tr.thisweek.w0>td.border-columns {
 	opacity: 0.3;
 }
 
-.task-column>.create-task-button:HOVER a {
+.calendar .create-task:HOVER a {
 	opacity: 1.0;
 }
 
-.task-column>.create-task-button>.balloon-tip {
+.calendar .create-task>.balloon-tip {
 	position: absolute;
 	margin-left: 48px;
 	margin-top: 4px;
 }
 
-.task-column>.create-task-button:HOVER>.balloon-tip {
+.calendar .create-task:HOVER>.balloon-tip {
 	display: block;
 }
 
+/*
+ * Calendar misc.
+ */
 .calendar-cached-date {
 	position: fixed;
 	bottom: 0;
