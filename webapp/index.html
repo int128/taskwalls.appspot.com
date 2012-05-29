@@ -83,39 +83,35 @@ Task Wallはベータ版です。
 </div>
 
 <div data-bind="if: oauth2authorized">
-<section id="myheader">
-<h1 class="stack">Task Wall<span style="color: gold;">*</span></h1>
-<div class="stack" style="text-align: center; font-weight: bold; margin-top: -5px; color: #888;">BETA</div>
-<div class="stack">
-<div data-bind="foreach: taskdata.tasklists" id="tasklists">
-<div data-bind="attr: {'data-tasklistcolor': colorID}" class="tasklist-legend">
+<section class="header">
+<h1>Task Wall<span style="color: gold;">*</span></h1>
+<div style="text-align: center; font-weight: bold; margin-top: -5px; color: #888;">BETA</div>
+<div class="toggle">
+<div data-bind="foreach: taskdata.tasklists">
+<div data-bind="attr: {'data-tasklistcolor': colorID}" class="tasklist">
 <div class="setting"><div></div></div>
 <div data-bind="text: title" class="title"></div>
 </div>
 </div>
-<div class="icons"><a href="#create-tasklist"><span class="myicon-create-tasklist" title="新しいタスクリスト"></span></a></div>
+<div><a href="#"><span class="myicon-create-tasklist" title="新しいタスクリスト"></span></a></div>
 </div>
-<div class="stack">
-<div class="toggle-tasks-description">this week's</div>
-<div class="toggle-tasks">
-<a href="#" title="完了したタスクの表示を切り替える">completed<br/>
-<span data-bind="text: completedCount" class="count"></span>
-</a>
+<div class="toggle">
+<div class="description">this week's</div>
+<div class="kind">
+<a href="#" title="完了したタスクの表示を切り替える">completed<br/><span data-bind="text: completedCount" class="count"></span></a>
 </div>
-<div class="toggle-tasks">
-<a href="#" title="未完了タスクの表示を切り替える">needs action<br/>
-<span data-bind="text: needsActionCount" class="count"></span>
-</a>
+<div class="kind">
+<a href="#" title="未完了タスクの表示を切り替える">needs action<br/><span data-bind="text: needsActionCount" class="count"></span></a>
 </div>
 </div>
-<div class="stack icons">
+<div>
 <div><a href="/logout" class="session-logout"><span class="myicon-logout" title="ログアウト"></span></a></div>
 <div><a href="#help"><span class="myicon-help" title="ヘルプ"></span></a></div>
 </div>
-<div class="stack development">
+<div class="development">
 <label class="checkbox"><input data-bind="checked: offline" type="checkbox" class="checkbox"/>オフライン</label>
 </div>
-<p class="stack footer">&copy; hidetake.org, 2011-2012.</p>
+<p class="footer">&copy; hidetake.org, 2011-2012.</p>
 </section>
 <div data-bind="if: offline">
 <div data-bind="with: lastCached" class="calendar-cached-date">
