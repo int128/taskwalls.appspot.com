@@ -20,6 +20,10 @@ var PageViewModel = function() {
 	// calendar
 	this.calendar = new CalendarViewModel(this.taskdata);
 
+	this.createTask = function () {
+		// TODO: open dialog
+	};
+
 	// offline
 	this.offline = ko.computed({
 		read : function() {

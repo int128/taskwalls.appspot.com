@@ -124,9 +124,9 @@ Task Wallはベータ版です。
 <div class="calendar-operations-tab">
 <a href="#clear-completed-tasks">完了したタスクを消す</a>
 </div>
-<section class="calendar">
+<section data-bind="with: calendar" class="calendar">
 <table>
-<tbody data-bind="foreach: calendar.days">
+<tbody data-bind="foreach: days">
 <tr data-bind="css: {
 	past: past,
 	today: today,
@@ -148,10 +148,7 @@ Task Wallはベータ版です。
 </div>
 </div>
 </div>
-<div class="create-task">
-<div class="balloon-tip">新しいタスクを作成する</div>
-<a href="#create-task"></a>
-</div>
+<div class="create"><a data-bind="click: $root.createTask" href="#" title="新しいタスクを作成する"></a></div>
 </td>
 </tr>
 </tbody>

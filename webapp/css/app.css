@@ -530,31 +530,21 @@ body {
 }
 
 /* buttons */
-.calendar .create-task {
+.calendar td.tasks .create {
 	float: right;
 	margin: 10px;
 }
 
-.calendar .create-task a {
+.calendar td.tasks .create a {
 	display: inline-block;
-	background: url('/css/lightning.png') no-repeat center;
+	background: url('/img/plus24.png') no-repeat center;
 	width: 48px;
-	height: 32px;
+	height: 24px;
 	opacity: 0.3;
 }
 
-.calendar .create-task:HOVER a {
+.calendar td.tasks .create a:HOVER {
 	opacity: 1.0;
-}
-
-.calendar .create-task>.balloon-tip {
-	position: absolute;
-	margin-left: 48px;
-	margin-top: 4px;
-}
-
-.calendar .create-task:HOVER>.balloon-tip {
-	display: block;
 }
 
 /*
