@@ -17,7 +17,7 @@
 </head>
 <body>
 
-<div data-bind="if: oauth2unauthorized">
+<!-- ko if: oauth2unauthorized -->
 <section id="welcome-content">
 <h1>Task Wall<span style="color: gold;">*</span></h1>
 <div style="text-align: center; font-weight: bold; margin-top: -1em; color: #888;">BETA</div>
@@ -32,7 +32,7 @@ Task Wallはベータ版です。
 </p>
 <footer>Task Wall &copy; hidetake.org, 2011-2012.</footer>
 </section>
-</div>
+<!-- /ko -->
 
 <section id="help-template" class="help resource">
 <div class="tasklists left">
@@ -70,7 +70,7 @@ Task Wallはベータ版です。
 </div>
 </section>
 
-<div data-bind="if: oauth2authorizing">
+<!-- ko if: oauth2authorizing -->
 <section id="authorizing-content">
 <h1>Task Wall<span style="color: gold;">*</span></h1>
 <div style="text-align: center; font-weight: bold; margin-top: -1em; color: #888;">BETA</div>
@@ -80,9 +80,9 @@ Task Wallはベータ版です。
 <span class="myicon-oauth2" title="OAuth 2.0"></span>
 </p>
 </section>
-</div>
+<!-- /ko -->
 
-<div data-bind="if: oauth2authorized">
+<!-- ko if: oauth2authorized -->
 <section class="header">
 <h1>Task Wall<span style="color: gold;">*</span></h1>
 <div style="text-align: center; font-weight: bold; margin-top: -5px; color: #888;">BETA</div>
@@ -113,14 +113,14 @@ Task Wallはベータ版です。
 </div>
 <p class="footer">&copy; hidetake.org, 2011-2012.</p>
 </section>
-<div data-bind="if: offline">
+<!-- ko if: offline -->
 <div data-bind="with: lastCached" class="calendar-cached-date">
 オフラインモードです。最後にタスクリストを読み込んだのは
 <span data-bind="text: getMonth()+1"></span>月<span data-bind="text: getDate()"></span>日
 <span data-bind="text: getHours()"></span>:<span data-bind="text: getMinutes()"></span>
 です。
 </div>
-</div>
+<!-- /ko -->
 <div class="calendar-operations-tab">
 <a href="#clear-completed-tasks">完了したタスクを消す</a>
 </div>
@@ -170,7 +170,7 @@ Task Wallはベータ版です。
 <span data-bind="text: nextMonth().getFullYear()"></span>年<span data-bind="text: nextMonth().getMonth()+1"></span>月を表示
 </a>
 </div>
-</div>
+<!-- /ko -->
 
 <div id="create-tasklist-template" class="create-tasklist popup-dialog resource">
 <form action="/tasklists/create" method="post">
