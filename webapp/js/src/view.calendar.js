@@ -228,6 +228,7 @@ var Dialog = function () {
  */
 var CreateTaskDialog = function () {
 	var self = this;
+	this.top = ko.observable();
 	this.due = ko.observable();
 	this.title = ko.observable();
 	this.notes = ko.observable();
@@ -237,9 +238,12 @@ var CreateTaskDialog = function () {
 	/**
 	 * Open the dialog.
 	 * @param {CalendarDayViewModel} dayvm
+	 * @param {Event} event
 	 */
-	this.open = function (dayvm) {
+	this.open = function (dayvm, event) {
+		console.info(event);
 		self.visible(true);
+		self.top(event.pageY + 'px');
 		self.due(dayvm.date());
 	};
 };

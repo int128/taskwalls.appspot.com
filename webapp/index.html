@@ -236,8 +236,8 @@ Task Wallはベータ版です。
 </form>
 </div>
 
-<div data-bind="with: createTaskDialog" class="create-task popup-dialog">
-<div data-bind="visible: visible">
+<!-- ko with: createTaskDialog -->
+<div data-bind="visible: visible, style: {top: top}" class="create-task popup-dialog">
 <div data-bind="with: due" class="due">
 <span data-bind="text: getFullYear()"></span>年
 <span data-bind="text: getMonth()+1"></span>月
@@ -250,7 +250,7 @@ Task Wallはベータ版です。
 <div><button class="btn">タスクを作成</button></div>
 </form>
 </div>
-</div>
+<!-- /ko -->
 
 <div id="update-task-template" class="update-task popup-dialog resource">
 <div class="forms">
