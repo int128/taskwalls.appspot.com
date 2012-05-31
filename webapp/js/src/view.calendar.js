@@ -221,7 +221,14 @@ var TaskViewModel = function (task, tasklist) {
  * @class abstract dialog class
  */
 var Dialog = function () {
+	var self = this;
 	this.visible = ko.observable(false);
+	/**
+	 * Close the dialog.
+	 */
+	this.close = function () {
+		self.visible(false);
+	};
 };
 /**
  * Creating task dialog.
@@ -241,7 +248,6 @@ var CreateTaskDialog = function () {
 	 * @param {Event} event
 	 */
 	this.open = function (dayvm, event) {
-		console.info(event);
 		self.visible(true);
 		self.top(event.pageY + 'px');
 		self.due(dayvm.date());

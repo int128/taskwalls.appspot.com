@@ -331,7 +331,7 @@ body {
 /*
  * Tasklist manipulation forms.
  */
-.popup-dialog.create-tasklist {
+.dialog.create-tasklist {
 	position: fixed;
 	top: 30%;
 	left: 50%;
@@ -362,7 +362,7 @@ body {
 	border-right: 15px solid white;
 }
 
-.update-tasklist>.popup-dialog.body {
+.update-tasklist>.dialog.body {
 	position: relative;
 	top: -100px;
 	left: 20px;
@@ -694,7 +694,7 @@ body {
 	background: transparent;
 }
 
-.popup-dialog.create-task {
+.dialog.create-task {
 	position: absolute;
 	right: 40px;
 }
@@ -714,7 +714,7 @@ body {
 	height: 100px;
 }
 
-.popup-dialog.update-task {
+.dialog.update-task {
 	position: absolute;
 	right: 40px;
 }
@@ -775,7 +775,7 @@ body {
 /*
  * Helpers.
  */
-.popup-dialog {
+.dialog {
 	z-index: 400;
 	padding: 10px;
 	border-radius: 5px;
@@ -784,7 +784,7 @@ body {
 	box-shadow: 0 0 10px 3px rgba(0, 0, 0, 0.4);
 }
 
-.popup-overlay {
+.dialog-background {
 	position: fixed;
 	top: 0;
 	left: 0;

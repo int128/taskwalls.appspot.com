@@ -174,7 +174,7 @@ Task Wallはベータ版です。
 </div>
 <!-- /ko -->
 
-<div id="create-tasklist-template" class="create-tasklist popup-dialog resource">
+<div id="create-tasklist-template" class="create-tasklist dialog resource">
 <form action="/tasklists/create" method="post">
 <div>新しいタスクリストを作成します。</div>
 <div><input type="text" name="title" /></div>
@@ -184,7 +184,7 @@ Task Wallはベータ版です。
 
 <div id="update-tasklist-template" class="update-tasklist resource">
 <div class="head"></div>
-<div class="body popup-dialog">
+<div class="body dialog">
 <div class="default">デフォルトのタスクリスト</div>
 <div><a href="#toggle">表示を切り替える</a></div>
 <form class="tasklist" action="/tasklists/update" method="post">
@@ -239,7 +239,8 @@ Task Wallはベータ版です。
 </div>
 
 <!-- ko with: createTaskDialog -->
-<div data-bind="visible: visible, style: {top: top}" class="create-task popup-dialog">
+<!-- ko if: visible -->
+<div data-bind="style: {top: top}" class="create-task dialog">
 <div data-bind="with: due" class="due">
 <span data-bind="text: getFullYear()"></span>年
 <span data-bind="text: getMonth()+1"></span>月
@@ -252,9 +253,11 @@ Task Wallはベータ版です。
 <div><button class="btn">タスクを作成</button></div>
 </form>
 </div>
+<div data-bind="click: close" class="dialog-background"></div>
+<!-- /ko -->
 <!-- /ko -->
 
-<div id="update-task-template" class="update-task popup-dialog resource">
+<div id="update-task-template" class="update-task dialog resource">
 <div class="forms">
 <form class="update" action="/tasks/update" method="post">
 <div class="due"><span class="year"></span>年<span class="month"></span>月<span class="day"></span>日</div>
@@ -290,7 +293,7 @@ Task Wallはベータ版です。
 </div>
 </div>
 
-<div id="popup-overlay-template" class="popup-overlay resource"></div>
+<div id="popup-overlay-template" class="dialog-background resource"></div>
 <div id="transparent-overlay-template" class="transparent-overlay resource"></div>
 
 <div id="loading"></div>
