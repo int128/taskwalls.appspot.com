@@ -217,6 +217,33 @@ var TaskViewModel = function (task, tasklist) {
 	this.tasklist = ko.observable(tasklist);
 };
 
+/**
+ * @class abstract dialog class
+ */
+var Dialog = function () {
+	this.visible = ko.observable(false);
+};
+/**
+ * Creating task dialog.
+ */
+var CreateTaskDialog = function () {
+	var self = this;
+	this.due = ko.observable();
+	this.title = ko.observable();
+	this.notes = ko.observable();
+	this.save = function () {
+		// TODO: implement this
+	};
+	/**
+	 * Open the dialog.
+	 * @param {CalendarDayViewModel} dayvm
+	 */
+	this.open = function (dayvm) {
+		self.visible(true);
+		self.due(dayvm.date());
+	};
+};
+CreateTaskDialog.prototype = new Dialog();
 
 // FIXME: remove below
 /**

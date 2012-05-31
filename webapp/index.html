@@ -148,7 +148,9 @@ Task Wallはベータ版です。
 </div>
 </div>
 </div>
-<div class="create"><a data-bind="click: $root.createTask" href="#" title="新しいタスクを作成する"></a></div>
+<div class="create">
+<a data-bind="click: $root.createTaskDialog.open" href="#" title="新しいタスクを作成する"></a>
+</div>
 </td>
 </tr>
 </tbody>
@@ -234,15 +236,20 @@ Task Wallはベータ版です。
 </form>
 </div>
 
-<div id="create-task-template" class="create-task popup-dialog resource">
-<form action="/tasks/create" method="post">
-<div class="due"><span class="year"></span>年<span class="month"></span>月<span class="day"></span>日</div>
-<div><input type="text" name="title" /></div>
-<div><textarea name="notes"></textarea></div>
-<div><input type="hidden" name="dueTime" /></div>
+<div data-bind="with: createTaskDialog" class="create-task popup-dialog">
+<div data-bind="visible: visible">
+<div data-bind="with: due" class="due">
+<span data-bind="text: getFullYear()"></span>年
+<span data-bind="text: getMonth()+1"></span>月
+<span data-bind="text: getDate()"></span>日
+</div>
+<form data-bind="submit: save">
+<div><input data-bind="value: title" type="text" /></div>
+<div><textarea data-bind="value: notes"></textarea></div>
 <div class="tasklists selection"></div>
 <div><button class="btn">タスクを作成</button></div>
 </form>
+</div>
 </div>
 
 <div id="update-task-template" class="update-task popup-dialog resource">
