@@ -116,9 +116,10 @@ Task Wallはベータ版です。
 <!-- ko if: offline -->
 <div data-bind="with: lastCached" class="calendar-cached-date">
 オフラインモードです。最後にタスクリストを読み込んだのは
-<span data-bind="text: getMonth()+1"></span>月<span data-bind="text: getDate()"></span>日
-<span data-bind="text: getHours()"></span>:<span data-bind="text: getMinutes()"></span>
-です。
+<span data-bind="text: getMonth()+1"></span>月
+<span data-bind="text: getDate()"></span>日
+<span data-bind="text: getHours()"></span>時
+<span data-bind="text: getMinutes()"></span>分です。
 </div>
 <!-- /ko -->
 <div class="calendar-operations-tab">
@@ -167,7 +168,8 @@ Task Wallはベータ版です。
 </section>
 <div data-bind="with: calendar" class="calendar-next">
 <a data-bind="click: extendToNextMonth" href="#">
-<span data-bind="text: nextMonth().getFullYear()"></span>年<span data-bind="text: nextMonth().getMonth()+1"></span>月を表示
+<span data-bind="text: nextMonth().getFullYear()"></span>年
+<span data-bind="text: nextMonth().getMonth()+1"></span>月を表示
 </a>
 </div>
 <!-- /ko -->
