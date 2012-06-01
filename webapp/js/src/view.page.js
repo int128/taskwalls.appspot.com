@@ -22,6 +22,7 @@ var PageViewModel = function() {
 
 	// dialogs
 	this.createTaskDialog = new CreateTaskDialog(this.taskdata);
+	this.updateTaskDialog = new UpdateTaskDialog(this.taskdata);
 
 	// offline
 	this.offline = ko.computed({

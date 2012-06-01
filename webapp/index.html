@@ -142,7 +142,10 @@ Task Wallはベータ版です。
 <td class="border tasks">
 <div data-bind="foreach: tasklists">
 <div data-bind="foreach: tasks" class="tasklist">
-<div data-bind="attr: {'data-status': status, 'data-tasklistcolor': tasklist().colorID}" class="task">
+<div data-bind="click: $root.updateTaskDialog.open, attr: {
+	'data-status': status,
+	'data-tasklistcolor': tasklist().colorID
+}" class="task">
 <input data-bind="checked: completed" type="checkbox" />
 <span data-bind="text: title" class="title"></span>
 <div data-bind="text: notes" class="notes"></div>
@@ -263,41 +266,47 @@ Task Wallはベータ版です。
 <!-- /ko -->
 <!-- /ko -->
 
-<div id="update-task-template" class="update-task dialog resource">
-<div class="forms">
-<form class="update" action="/tasks/update" method="post">
-<div class="due"><span class="year"></span>年<span class="month"></span>月<span class="day"></span>日</div>
-<div><input type="text" name="title" /></div>
-<div><textarea name="notes"></textarea></div>
-<div><button class="btn">タスクを更新</button></div>
-<div>
-<input type="hidden" name="dueTime" />
-<input type="hidden" name="id" />
-<input type="hidden" name="tasklistID" />
+<!-- ko with: updateTaskDialog -->
+<!-- ko if: visible -->
+<div data-bind="style: {top: top}" class="update-task dialog">
+<form data-bind="submit: save">
+<div><input data-bind="value: title" type="text" placeholder="タスクの件名" /></div>
+<div><textarea data-bind="value: notes" placeholder="備考"></textarea></div>
+<div data-bind="with: due" class="due">
+<span data-bind="text: getFullYear()"></span>年
+<span data-bind="text: getMonth()+1"></span>月
+<span data-bind="text: getDate()"></span>日
+<a href="#">期限を変更する...</a>
 </div>
+<div class="datepicker"><!-- TODO: bind this --></div>
+<button type="submit" class="btn">タスクを更新</button>
 </form>
-<div class="due-selection"><div class="datepicker"></div></div>
-<form class="move" action="/tasks/update/tasklist" method="post">
-<div class="tasklists selection"></div>
-<div><button class="btn">別のタスクリストに移動</button></div>
-<div>
-<input type="hidden" name="id" />
-<input type="hidden" name="tasklistID" />
+<hr/>
+<form data-bind="submit: move">
+<div data-bind="foreach: tasklists" class="tasklists">
+<span data-bind="text: title,
+	attr: {'data-tasklistcolor': colorID},
+	css: {selected: id() == $parent.selectedTasklistID()},
+	click: $parent.selectTasklist"
+	class="tasklist"></span>
 </div>
+<button data-bind="disable: selectedTasklistID() == originalTasklistID()" type="submit" class="btn">
+別のタスクリストに移動
+</button>
 </form>
-<form class="delete" action="/tasks/delete" method="post">
-<div><a href="#delete">タスクを削除する...</a></div>
-<div class="confirm">
-<div>本当に削除しますか？</div>
-<div><button class="btn">タスクを削除する</button></div>
-</div>
-<div>
-<input type="hidden" name="id" />
-<input type="hidden" name="tasklistID" />
-</div>
+<hr/>
+<form data-bind="submit: remove">
+<!-- ko ifnot: removeConfirmed -->
+<a data-bind="click: confirmRemove" href="#">タスクを削除する...</a>
+<!-- /ko -->
+<!-- ko if: removeConfirmed -->
+<button type="submit" class="btn">タスクを削除する</button>
+<!-- /ko -->
 </form>
 </div>
-</div>
+<div data-bind="click: close" class="dialog-background"></div>
+<!-- /ko -->
+<!-- /ko -->
 
 <div id="popup-overlay-template" class="dialog-background resource"></div>
 <div id="transparent-overlay-template" class="transparent-overlay resource"></div>

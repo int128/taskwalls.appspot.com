@@ -683,6 +683,14 @@ body {
 	box-shadow: 0px 3px 10px 3px rgba(0, 0, 0, 0.4);
 }
 
+.update-task-title textarea[name="title"] {
+	width: 100%;
+	padding: 0;
+	min-height: 3em;
+	border: none;
+	background: transparent;
+}
+
 /*
  * Dialogs.
  */
@@ -705,25 +713,19 @@ body {
 	background: rgba(0, 0, 0, 0.2);
 }
 
-.update-task-title textarea[name="title"] {
-	width: 100%;
-	padding: 0;
-	min-height: 3em;
-	border: none;
-	background: transparent;
-}
-
 .create-task.dialog,
 .update-task.dialog {
 	position: absolute;
 	right: 40px;
 }
 
-.create-task.dialog.due-tbd .due {
+.create-task.dialog.due-tbd .due,
+.update-task.dialog.due-tbd .due {
 	display: none;
 }
 
-.create-task.dialog .due {
+.create-task.dialog .due,
+.update-task.dialog .due {
 	margin-bottom: 5px;
 }
 
@@ -736,30 +738,6 @@ body {
 .update-task.dialog textarea {
 	width: 300px;
 	height: 100px;
-}
-
-.update-task.dialog form.update {
-	float: left;
-	margin-bottom: 10px;
-}
-
-.update-task.dialog form.delete,
-.update-task.dialog form.move {
-	clear: both;
-	margin-top: 10px;
-	padding-top: 10px;
-	border-top: inset 1px #ccc;
-}
-
-.update-task.dialog .due-selection {
-	float: left;
-	margin-left: 10px;
-	margin-bottom: 10px;
-}
-
-.update-task.dialog.due-tbd .due-selection,
-.update-task.dialog.due-tbd .due {
-	display: none;
 }
 
 .create-task.dialog .tasklists,
