@@ -214,6 +214,15 @@ var TaskViewModel = function (task, tasklist) {
 		}
 		return null;
 	})());
+	this.isCompleted = ko.computed({
+		read: function () {
+			return this.status() == 'completed';
+		},
+		write: function (value) {
+			this.status(value ? 'completed' : 'needsAction');
+		},
+		owner: this
+	});
 	this.tasklist = ko.observable(tasklist);
 };
 
