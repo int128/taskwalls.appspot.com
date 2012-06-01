@@ -684,96 +684,7 @@ body {
 }
 
 /*
- * Task manipulation forms.
- */
-.update-task-title textarea[name="title"] {
-	width: 100%;
-	padding: 0;
-	min-height: 3em;
-	border: none;
-	background: transparent;
-}
-
-.dialog.create-task {
-	position: absolute;
-	right: 40px;
-}
-
-.create-task.due-tbd .due {
-	display: none;
-}
-
-.create-task input[type="text"],.update-task input[type="text"] {
-	width: 300px;
-	margin-top: 5px;
-}
-
-.create-task textarea,.update-task textarea {
-	width: 300px;
-	margin-top: 5px;
-	height: 100px;
-}
-
-.dialog.update-task {
-	position: absolute;
-	right: 40px;
-}
-
-.update-task form.update {
-	float: left;
-	margin-bottom: 10px;
-}
-
-.update-task form.delete,.update-task form.move {
-	clear: both;
-	margin-top: 10px;
-	padding-top: 10px;
-	border-top: inset 1px #ccc;
-}
-
-.update-task .due-selection {
-	float: left;
-	margin-left: 10px;
-	margin-bottom: 10px;
-}
-
-.update-task.due-tbd .due-selection,.update-task.due-tbd .due {
-	display: none;
-}
-
-.tasklists.selection {
-	margin-top: 5px;
-	margin-bottom: 5px;
-}
-
-.tasklists.selection>input[type="radio"] {
-	display: none;
-}
-
-.tasklists.selection>.tasklist {
-	margin-right: 5px;
-	padding: 5px;
-	border-style: solid;
-	border-top-color: #ddd;
-	border-bottom-color: #ddd;
-	border-right-color: #ddd;
-	border-width: 1px;
-	border-left-width: 5px;
-	border-radius: 3px;
-	-moz-border-radius: 3px;
-}
-
-.tasklists.selection>.tasklist:not(.selected) {
-	border-left-width: 1px;
-	border-left-color: #ddd;
-}
-
-.tasklists.selection>.tasklist.selected {
-	font-weight: bold;
-}
-
-/*
- * Helpers.
+ * Dialogs.
  */
 .dialog {
 	z-index: 400;
@@ -794,6 +705,97 @@ body {
 	background: rgba(0, 0, 0, 0.2);
 }
 
+.update-task-title textarea[name="title"] {
+	width: 100%;
+	padding: 0;
+	min-height: 3em;
+	border: none;
+	background: transparent;
+}
+
+.create-task.dialog,
+.update-task.dialog {
+	position: absolute;
+	right: 40px;
+}
+
+.create-task.dialog.due-tbd .due {
+	display: none;
+}
+
+.create-task.dialog .due {
+	margin-bottom: 5px;
+}
+
+.create-task.dialog input[type="text"],
+.update-task.dialog input[type="text"] {
+	width: 300px;
+}
+
+.create-task.dialog textarea,
+.update-task.dialog textarea {
+	width: 300px;
+	height: 100px;
+}
+
+.update-task.dialog form.update {
+	float: left;
+	margin-bottom: 10px;
+}
+
+.update-task.dialog form.delete,
+.update-task.dialog form.move {
+	clear: both;
+	margin-top: 10px;
+	padding-top: 10px;
+	border-top: inset 1px #ccc;
+}
+
+.update-task.dialog .due-selection {
+	float: left;
+	margin-left: 10px;
+	margin-bottom: 10px;
+}
+
+.update-task.dialog.due-tbd .due-selection,
+.update-task.dialog.due-tbd .due {
+	display: none;
+}
+
+.create-task.dialog .tasklists,
+.update-task.dialog .tasklists {
+	margin-top: 5px;
+	margin-bottom: 15px;
+}
+
+.create-task.dialog .tasklists .tasklist,
+.update-task.dialog .tasklists .tasklist {
+	margin-right: 3px;
+	padding: 5px;
+	border-style: solid;
+	border-top-color: #ddd;
+	border-bottom-color: #ddd;
+	border-right-color: #ddd;
+	border-width: 1px;
+	border-left-width: 5px;
+	border-radius: 3px;
+	-moz-border-radius: 3px;
+}
+
+.create-task.dialog .tasklists .tasklist:not(.selected),
+.update-task.dialog .tasklists .tasklist:not(.selected) {
+	border-left-width: 1px;
+	border-left-color: #ddd;
+}
+
+.create-task.dialog .tasklists .tasklist.selected,
+.update-task.dialog .tasklists .tasklist.selected {
+	font-weight: bold;
+}
+
+/*
+ * Helpers.
+ */
 .transparent-overlay {
 	position: fixed;
 	top: 0;

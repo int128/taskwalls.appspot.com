@@ -240,20 +240,26 @@ Task Wallはベータ版です。
 
 <!-- ko with: createTaskDialog -->
 <!-- ko if: visible -->
+<form data-bind="submit: save">
 <div data-bind="style: {top: top}" class="create-task dialog">
 <div data-bind="with: due" class="due">
 <span data-bind="text: getFullYear()"></span>年
 <span data-bind="text: getMonth()+1"></span>月
 <span data-bind="text: getDate()"></span>日
 </div>
-<form data-bind="submit: save">
-<div><input data-bind="value: title" type="text" /></div>
-<div><textarea data-bind="value: notes"></textarea></div>
-<div class="tasklists selection"></div>
-<div><button class="btn">タスクを作成</button></div>
-</form>
+<div><input data-bind="value: title" type="text" placeholder="タスクの件名" /></div>
+<div><textarea data-bind="value: notes" placeholder="備考"></textarea></div>
+<div data-bind="foreach: tasklists" class="tasklists">
+<span data-bind="text: title,
+	attr: {'data-tasklistcolor': colorID},
+	css: {selected: id() == $parent.selectedTasklistID()},
+	click: $parent.selectTasklist"
+	class="tasklist"></span>
+</div>
+<button type="submit" class="btn">タスクを作成</button>
 </div>
 <div data-bind="click: close" class="dialog-background"></div>
+</form>
 <!-- /ko -->
 <!-- /ko -->
 

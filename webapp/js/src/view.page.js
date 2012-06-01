@@ -21,7 +21,7 @@ var PageViewModel = function() {
 	this.calendar = new CalendarViewModel(this.taskdata);
 
 	// dialogs
-	this.createTaskDialog = new CreateTaskDialog();
+	this.createTaskDialog = new CreateTaskDialog(this.taskdata);
 
 	// offline
 	this.offline = ko.computed({

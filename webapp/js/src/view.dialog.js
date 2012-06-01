@@ -13,15 +13,22 @@ var Dialog = function () {
 };
 /**
  * Creating task dialog.
+ * @param {TaskdataViewModel} taskdata
  */
-var CreateTaskDialog = function () {
+var CreateTaskDialog = function (taskdata) {
 	var self = this;
 	this.top = ko.observable();
 	this.due = ko.observable();
 	this.title = ko.observable();
 	this.notes = ko.observable();
-	this.save = function () {
-		// TODO: implement this
+	this.tasklists = taskdata.tasklists;  // observable array
+	this.selectedTasklistID = ko.observable();
+	/**
+	 * Select the tasklist.
+	 * @param {TasklistViewModel} tasklist
+	 */
+	this.selectTasklist = function (tasklist) {
+		self.selectedTasklistID(tasklist.id());
 	};
 	/**
 	 * Open the dialog.
@@ -29,9 +36,14 @@ var CreateTaskDialog = function () {
 	 * @param {Event} event
 	 */
 	this.open = function (dayvm, event) {
-		self.visible(true);
+		// select first item of tasklists
+		self.selectedTasklistID(self.tasklists()[0].id());
 		self.top(event.pageY + 'px');
 		self.due(dayvm.date());
+		self.visible(true);
+	};
+	this.save = function () {
+		// TODO: implement this
 	};
 };
 CreateTaskDialog.prototype = new Dialog();
