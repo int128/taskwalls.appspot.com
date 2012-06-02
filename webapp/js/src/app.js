@@ -6,8 +6,13 @@
 // extensions
 $(function () {
 	$.extend({
+		/**
+		 * Get resource from document.
+		 * @param {String} key
+		 * @returns {String}
+		 */
 		resource: function (key) {
-			return $('#' + key).clone().removeClass('resource').removeAttr('id');
+			return $('#resources>[data-key="' + key + '"]').text();
 		}
 	});
 });

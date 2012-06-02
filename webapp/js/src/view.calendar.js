@@ -99,7 +99,7 @@ var CalendarDayViewModel = function (date, taskdata) {
 		return this.date().getDay();
 	}, this);
 	this.weekdayName = ko.computed(function () {
-		return $.resource('key-weekday' + this.weekday()).text();
+		return $.resource('weekday' + this.weekday());
 	}, this);
 	this.past = ko.computed(function () {
 		return this.time() < DateUtil.normalize(new Date());

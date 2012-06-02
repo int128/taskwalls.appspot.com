@@ -15,10 +15,14 @@ body {
 	display: none;
 }
 
+/* TODO: remove */
 .resource {
 	display: none;
 }
 
+/*
+ * Utilities.
+ */
 #loading {
 	display: none;
 	z-index: 1000;
@@ -53,6 +57,10 @@ body {
 	color: white;
 	text-align: center;
 	padding: 1em;
+}
+
+#resources {
+	display: none;
 }
 
 /*
