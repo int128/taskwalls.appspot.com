@@ -108,9 +108,9 @@ Task Wallはベータ版です。
 <div><a href="/logout" class="session-logout"><span class="myicon-logout" title="ログアウト"></span></a></div>
 <div><a href="#help"><span class="myicon-help" title="ヘルプ"></span></a></div>
 </div>
-<div class="development">
+<!-- ko if: $root.development -->
 <label class="checkbox"><input data-bind="checked: offline" type="checkbox" class="checkbox"/>オフライン</label>
-</div>
+<!-- /ko -->
 <p class="footer">&copy; hidetake.org, 2011-2012.</p>
 </section>
 <!-- ko if: offline -->

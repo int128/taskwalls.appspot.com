@@ -35,6 +35,9 @@ var PageViewModel = function() {
 	});
 	this.lastCached = ko.observable(AppSettings.getCachedDate('Tasklists.get'));
 
+	// development only
+	this.development = ko.observable(window.location.hostname == 'localhost');
+
 	// handle OAuth2 session
 	this.oauth2authorized = ko.observable(false);
 	this.oauth2authorizing = ko.observable(false);

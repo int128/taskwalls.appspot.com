@@ -35,10 +35,6 @@ $(function () {
 	$(document).ajaxStop(function (event, xhr) {
 		$('#loading').fadeOut();
 	});
-	// development only
-	if (window.location.hostname == 'localhost') {
-		$('.development').hide().show();
-	}
 });
 // initialize page
 $(function () {
