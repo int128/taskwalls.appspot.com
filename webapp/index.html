@@ -142,11 +142,11 @@ Task Wallはベータ版です。
 <td class="border tasks">
 <div data-bind="foreach: tasklists">
 <div data-bind="foreach: tasks" class="tasklist">
-<div data-bind="click: $root.updateTaskDialog.open, attr: {
+<div data-bind="overlappedClick: $root.updateTaskDialog.open, attr: {
 	'data-status': status,
 	'data-tasklistcolor': tasklist().colorID
 }" class="task">
-<input data-bind="checked: isCompleted" type="checkbox" />
+<input data-bind="checked: isCompleted" type="checkbox" class="intercept-click" />
 <span data-bind="text: title" class="title"></span>
 <div data-bind="text: notes" class="notes"></div>
 </div>

@@ -98,10 +98,6 @@ var UpdateTaskDialog = function (taskdata) {
 	 * @param {Event} event
 	 */
 	this.open = function (task, event) {
-		// FIXME: should not depend on the view
-		if (!$(event.target).hasClass('task')) {
-			return true;
-		}
 		// select first item of tasklists
 		self.selectedTasklistID(task.tasklist().id());
 		self.originalTasklistID(task.tasklist().id());
