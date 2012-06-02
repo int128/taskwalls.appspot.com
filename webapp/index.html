@@ -34,42 +34,6 @@ Task Wallはベータ版です。
 </section>
 <!-- /ko -->
 
-<section id="help-template" class="help resource">
-<div class="tasklists left">
-<div class="head"></div>
-<div class="body">
-<h3>タスクリスト</h3>
-<p>場所や優先度に応じてタスクを分類します。</p>
-</div>
-</div>
-<div class="calendar">
-<div class="body">
-<h3>カレンダー</h3>
-<p>
-タスクをドラッグして自主期限（ベースライン）を決めます。<br/>
-タイトルをクリックすると編集できます。<br/>
-空白をクリックすると詳細を編集できます。
-</p>
-</div>
-</div>
-<div class="thisweek left">
-<div class="head"></div>
-<div class="body">
-<h3>今週の件数</h3>
-<p>
-消化したタスクと残っているタスクの数が表示されます。<br/>
-数をクリックすると表示が切り替わります。
-</p>
-</div>
-</div>
-<div class="planner">
-<div class="body">
-<h3>計画中のタスク</h3>
-<p>近い将来にやるタスクを追加します。</p>
-</div>
-</div>
-</section>
-
 <!-- ko if: oauth2authorizing -->
 <section id="authorizing-content">
 <h1>Task Wall<span style="color: gold;">*</span></h1>
@@ -176,6 +140,42 @@ Task Wallはベータ版です。
 </a>
 </div>
 <!-- /ko -->
+
+<section id="help-template" class="help resource">
+<div class="tasklists left">
+<div class="head"></div>
+<div class="body">
+<h3>タスクリスト</h3>
+<p>場所や優先度に応じてタスクを分類します。</p>
+</div>
+</div>
+<div class="calendar">
+<div class="body">
+<h3>カレンダー</h3>
+<p>
+タスクをドラッグして自主期限（ベースライン）を決めます。<br/>
+タイトルをクリックすると編集できます。<br/>
+空白をクリックすると詳細を編集できます。
+</p>
+</div>
+</div>
+<div class="thisweek left">
+<div class="head"></div>
+<div class="body">
+<h3>今週の件数</h3>
+<p>
+消化したタスクと残っているタスクの数が表示されます。<br/>
+数をクリックすると表示が切り替わります。
+</p>
+</div>
+</div>
+<div class="planner">
+<div class="body">
+<h3>計画中のタスク</h3>
+<p>近い将来にやるタスクを追加します。</p>
+</div>
+</div>
+</section>
 
 <div id="create-tasklist-template" class="create-tasklist dialog resource">
 <form action="/tasklists/create" method="post">
@@ -307,9 +307,6 @@ Task Wallはベータ版です。
 <div data-bind="click: close" class="dialog-background"></div>
 <!-- /ko -->
 <!-- /ko -->
-
-<div id="popup-overlay-template" class="dialog-background resource"></div>
-<div id="transparent-overlay-template" class="transparent-overlay resource"></div>
 
 <div id="loading"></div>
 <div id="global-error-message">エラーです。もう一度試してみてください。</div>
