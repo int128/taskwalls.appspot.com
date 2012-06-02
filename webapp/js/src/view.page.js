@@ -1,9 +1,4 @@
-/**
- * @class PageViewModel
- */
-var PageViewModel = function() {
-	var self = this;
-
+var AuthorizedPageViewModel = function() {
 	// tasks
 	this.taskdata = new TaskdataViewModel();
 	this.completedCount = ko.computed(function () {
@@ -38,24 +33,6 @@ var PageViewModel = function() {
 	// development only
 	this.development = ko.observable(window.location.hostname == 'localhost');
 
-	// handle OAuth2 session
-	this.oauth2authorized = ko.observable(false);
-	this.oauth2authorizing = ko.observable(false);
-	this.oauth2unauthorized = ko.observable(false);
-	this.oauth2authorizationURL = ko.observable();
-	new OAuth2Session(function() {
-		this.onAuthorized = function() {
-			self.oauth2authorized(true);
-			self.taskdata.load();
-		};
-		this.onAuthorizing = function() {
-			self.oauth2authorizing(true);
-			// clean up cache
-			localStorage.clear();
-		};
-		this.onUnauthorized = function() {
-			self.oauth2unauthorized(true);
-			self.oauth2authorizationURL(this.getAuthorizationURL());
-		};
-	}).handle();
+	// load tasks
+	this.taskdata.load();
 };

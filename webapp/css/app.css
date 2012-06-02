@@ -13,6 +13,26 @@ body {
 }
 
 /*
+ * Page state management.
+ */
+#loading {
+	z-index: 1000;
+	width: 100px;
+	height: 100px;
+	position: fixed;
+	top: 50%;
+	left: 50%;
+	margin-top: -50px;
+	margin-left: -50px;
+	background-color: rgba(0, 0, 0, 0.8);
+	background-image: url('/css/loading2.gif');
+	background-repeat: no-repeat;
+	background-position: center;
+	border-radius: 5px;
+	-moz-border-radius: 5px;
+}
+
+/*
  * Welcome content.
  */
 #welcome-content {
@@ -661,26 +681,7 @@ body {
 /*
  * Utilities.
  */
-#loading {
-	display: none;
-	z-index: 1000;
-	width: 100px;
-	height: 100px;
-	position: fixed;
-	top: 50%;
-	left: 50%;
-	margin-top: -50px;
-	margin-left: -50px;
-	background-color: rgba(0, 0, 0, 0.8);
-	background-image: url('/css/loading2.gif');
-	background-repeat: no-repeat;
-	background-position: center;
-	border-radius: 5px;
-	-moz-border-radius: 5px;
-}
-
-#global-error-message {
-	display: none;
+#global-errors {
 	z-index: 990;
 	width: 400px;
 	height: auto;
@@ -695,10 +696,6 @@ body {
 	color: white;
 	text-align: center;
 	padding: 1em;
-}
-
-#resources {
-	display: none;
 }
 
 /*
