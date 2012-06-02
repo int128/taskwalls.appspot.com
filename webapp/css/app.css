@@ -7,59 +7,8 @@ body {
 	font-family: 'trebuchet ms', arial, sans-serif;
 }
 
-.oauth2state.authorized,.oauth2state.authorizing,.oauth2state.unauthorized {
-	display: none;
-}
-
-.development {
-	display: none;
-}
-
 /* TODO: remove */
 .resource {
-	display: none;
-}
-
-/*
- * Utilities.
- */
-#loading {
-	display: none;
-	z-index: 1000;
-	width: 100px;
-	height: 100px;
-	position: fixed;
-	top: 50%;
-	left: 50%;
-	margin-top: -50px;
-	margin-left: -50px;
-	background-color: rgba(0, 0, 0, 0.8);
-	background-image: url('/css/loading2.gif');
-	background-repeat: no-repeat;
-	background-position: center;
-	border-radius: 5px;
-	-moz-border-radius: 5px;
-}
-
-#global-error-message {
-	display: none;
-	z-index: 990;
-	width: 400px;
-	height: auto;
-	position: fixed;
-	top: 50%;
-	left: 50%;
-	margin-top: -20px;
-	margin-left: -200px;
-	background-color: rgba(0, 0, 0, 0.8);
-	border-radius: 5px;
-	-moz-border-radius: 5px;
-	color: white;
-	text-align: center;
-	padding: 1em;
-}
-
-#resources {
 	display: none;
 }
 
@@ -264,76 +213,6 @@ body {
 
 .header>.toggle .tasklist .setting>div:HOVER {
 	opacity: 0.6;
-}
-
-/*
- * Help template.
- */
-.help {
-	color: #fff;
-}
-
-.help p {
-	margin-top: auto;
-	margin-bottom: auto;
-}
-
-.help h3 {
-	margin-top: auto;
-	margin-bottom: .5em;
-	font-weight: normal;
-	font-size: 130%;
-	color: #ddd;
-}
-
-.help>.left>.head {
-	content: '';
-	position: relative;
-	z-index: 401;
-	width: 0;
-	height: 0;
-	border-top: 15px solid transparent;
-	border-bottom: 15px solid transparent;
-	border-right: 15px solid rgba(0, 0, 0, 0.85);
-}
-
-.help>.left>.body {
-	position: relative;
-	top: -45px;
-	left: 15px;
-}
-
-.help .body {
-	z-index: 401;
-	width: 300px;
-	background: rgba(0, 0, 0, 0.85);
-	padding: 10px;
-	border-radius: 5px;
-	-moz-border-radius: 5px;
-}
-
-.help>.tasklists {
-	position: fixed;
-	top: 160px;
-	left: 110px;
-}
-
-.help>.calendar {
-	position: fixed;
-	top: 50px;
-	left: 40%;
-}
-
-.help>.thisweek {
-	position: fixed;
-	top: 350px;
-	left: 110px;
-}
-
-.help>.planner {
-	position: fixed;
-	top: 50px;
-	right: 50px;
 }
 
 /*
@@ -780,32 +659,46 @@ body {
 }
 
 /*
- * Helpers.
+ * Utilities.
  */
-.transparent-overlay {
-	position: fixed;
-	top: 0;
-	left: 0;
-	width: 100%;
-	height: 100%;
-	z-index: 300;
-}
-
-.balloon-tip {
+#loading {
 	display: none;
-	z-index: 300;
-	padding-left: 10px;
-	padding-right: 10px;
-	padding-top: 1px;
-	padding-bottom: 1px;
-	border-radius: 10px;
-	-moz-border-radius: 10px;
-	background: rgba(0, 0, 0, 0.6);
-	color: #fff;
+	z-index: 1000;
+	width: 100px;
+	height: 100px;
+	position: fixed;
+	top: 50%;
+	left: 50%;
+	margin-top: -50px;
+	margin-left: -50px;
+	background-color: rgba(0, 0, 0, 0.8);
+	background-image: url('/css/loading2.gif');
+	background-repeat: no-repeat;
+	background-position: center;
+	border-radius: 5px;
+	-moz-border-radius: 5px;
 }
 
-.ajax-in-progress {
-	opacity: 0.5;
+#global-error-message {
+	display: none;
+	z-index: 990;
+	width: 400px;
+	height: auto;
+	position: fixed;
+	top: 50%;
+	left: 50%;
+	margin-top: -20px;
+	margin-left: -200px;
+	background-color: rgba(0, 0, 0, 0.8);
+	border-radius: 5px;
+	-moz-border-radius: 5px;
+	color: white;
+	text-align: center;
+	padding: 1em;
+}
+
+#resources {
+	display: none;
 }
 
 /*
