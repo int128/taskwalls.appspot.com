@@ -14,8 +14,7 @@ $(function () {
 		this.onUnauthorized = function () {
 			$('.oauth2state:not(.unauthorized)').remove();
 			$('.oauth2state').show();
-			// TODO: need to bind?
-			$('.session-login').attr('href', this.getAuthorizationURL());
+			$('.login a').attr('href', this.getAuthorizationURL());
 		};
 	}).handle();
 });
