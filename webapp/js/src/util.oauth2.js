@@ -12,35 +12,32 @@ function OAuth2Session (initializer) {
  * Handle current request.
  */
 OAuth2Session.prototype.handle = function () {
-	var context = this;
+	var self = this;
 	var params = RequestUtil.getQueryParameters();
 	if (params['code']) {
 		// step2: received authorization code
-		if (this.onAuthorizing() === false) {
-			return;
+		if (this.onAuthorizing() !== false) {
+			$.ajax({
+				url: '/oauth2',
+				type: 'POST',
+				data: {
+					code: params['code']
+				},
+				success: function () {
+					window.location.replace(window.location.pathname);
+				},
+				error: function () {
+					// step2-1: authorization error
+					window.location.replace('/logout');
+				}
+			});
 		}
-		$.ajax({
-			url: '/oauth2',
-			type: 'POST',
-			data: {
-				code: params['code']
-			},
-			success: function () {
-				window.location.replace(window.location.pathname);
-			},
-			error: function () {
-				// step2-1: authorization error
-				window.location.replace('/logout');
-			}
-		});
-		return;
 	}
-	if (params['error']) {
+	else if (params['error']) {
 		// step2-2: authorization denied
 		window.location.replace('/logout');
-		return;
 	}
-	if ($.cookie('s')) {
+	else if ($.cookie('s')) {
 		// step3: authorized
 		/**
 		 * Add token to request header.
@@ -54,20 +51,19 @@ OAuth2Session.prototype.handle = function () {
 		 */
 		$(document).ajaxError(function (event, xhr, settings, e) {
 			if (xhr.status == 403) {
-				// session expired
-				context.authorize();
+				// session has been expired
+				$('#global-errors').hide();
+				window.location.replace(self.getAuthorizationURL());
 			}
 			else {
 				throw e;
 			}
 		});
 		this.onAuthorized();
-		return;
 	}
 	else {
 		// step1: unauthorized
 		this.onUnauthorized();
-		return;
 	}
 };
 /**
@@ -82,13 +78,6 @@ OAuth2Session.prototype.getAuthorizationURL = function () {
 		+ '&access_type=offline'
 		+ '&approval_prompt=force'
 		+ '&client_id=965159379100.apps.googleusercontent.com';
-};
-/**
- * Authorize.
- */
-OAuth2Session.prototype.authorize = function () {
-	$('#global-error-message').hide();
-	window.location.replace(this.getAuthorizationURL());
 };
 /**
  * Event handler for authorization in progress.
