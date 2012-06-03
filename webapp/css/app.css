@@ -329,7 +329,7 @@ body {
 }
 
 .calendar td.month {
-	width: 150px;
+	width: 130px;
 }
 
 .calendar td.weekday {
@@ -364,32 +364,26 @@ body {
 	position: relative;
 }
 
-.calendar td.month>div {
-	display: none;
-}
-
 .calendar tr[data-day="1"]>td.month>div,
 .calendar tr:FIRST-CHILD>td.month>div {
 	display: block;
 	position: absolute;
-	top: 5px;
-	right: -10px;
-	min-width: 30px;
-	min-height: 30px;
-	font-size: 200%;
-	text-shadow: #888 1px 1px 1px;
-	padding: 7px;
-	border-radius: 20px;
-	-moz-border-radius: 20px;
-	background: #888;
-	background: -webkit-gradient(linear, left top, left bottom, from(#aaa), to(#888) );
-	background: -moz-linear-gradient(top, #aaa, #888);
-	text-align: center;
-	color: #000;
+	top: 10px;
+	left: 130px;
+	min-width: 40px;
+	text-shadow: #ccc 1px 1px 1px;
+}
+
+.calendar td.month>div>span:FIRST-CHILD {
+	font-size: 130%;
+}
+
+.calendar td.month>div {
+	display: none;
 }
 
 .calendar tr[data-day="1"]>td {
-	border-top: solid 1px #888;
+	border-top: solid 1px #ccc;
 }
 
 /* Sunday */
@@ -430,12 +424,8 @@ body {
 }
 
 /* this week's tasks */
-.calendar tr.thisweek>td.day {
-	border-left: solid 1px #666;
-}
-
 .calendar tr.thisweek>td.tasks {
-	border-right: solid 1px #ccc;
+	border-left: solid 1px #f00;
 }
 
 /* buttons */
