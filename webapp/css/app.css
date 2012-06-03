@@ -86,11 +86,11 @@ body {
 	text-align: center;
 }
 
-/* 
+/*
  * Authorizing.
  */
-#authorizing-content {
-	margin-top: 3em;
+.oauth2state.authorizing {
+	margin-top: 30px;
 	text-align: center;
 }
 
@@ -707,18 +707,6 @@ body {
 [class*=' myicon-'] {
 	display: inline-block;
 	background-repeat: no-repeat;
-}
-
-.myicon-google-api {
-	background-image: url('/css/google_g_logo_webtreatsetc.png');
-	height: 128px;
-	width: 128px;
-}
-
-.myicon-oauth2 {
-	background-image: url('/css/oauth-2-sm.png');
-	height: 128px;
-	width: 128px;
 }
 
 .myicon-logout {

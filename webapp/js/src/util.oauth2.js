@@ -16,7 +16,9 @@ OAuth2Session.prototype.handle = function () {
 	var params = RequestUtil.getQueryParameters();
 	if (params['code']) {
 		// step2: received authorization code
-		this.onAuthorizing();
+		if (this.onAuthorizing() === false) {
+			return;
+		}
 		$.ajax({
 			url: '/oauth2',
 			type: 'POST',
@@ -90,6 +92,7 @@ OAuth2Session.prototype.authorize = function () {
 };
 /**
  * Event handler for authorization in progress.
+ * @returns {Boolean} false if do not continue
  */
 OAuth2Session.prototype.onAuthorizing = function () {};
 /**
