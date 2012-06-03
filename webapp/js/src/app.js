@@ -1,19 +1,16 @@
 $(function () {
 	new OAuth2Session(function () {
 		this.onAuthorized = function () {
-			$('.oauth2state:not(.authorized)').remove();
-			$('.oauth2state').show();
+			$('.oauth2state.authorized').show();
 			ko.applyBindings(window.taskwallsPageVM = new AuthorizedPageViewModel());
 		};
 		this.onAuthorizing = function () {
-			$('.oauth2state:not(.authorizing)').remove();
-			$('.oauth2state').show();
+			$('.oauth2state.authorizing').show();
 			// clean up cache
 			localStorage.clear();
 		};
 		this.onUnauthorized = function () {
-			$('.oauth2state:not(.unauthorized)').remove();
-			$('.oauth2state').show();
+			$('.oauth2state.unauthorized').show();
 			$('.login a').attr('href', this.getAuthorizationURL());
 		};
 	}).handle();
