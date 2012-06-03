@@ -1,4 +1,56 @@
 /**
+ * Application settings.
+ */
+function AppSettings () {
+};
+AppSettings.tasklistColors = 24;
+/**
+ * Generates array of color IDs.
+ * @returns {Array} array of number
+ */
+AppSettings.tasklistColorIDs = function () {
+	var IDs = [];
+	for (var colorID = 0; colorID < this.tasklistColors; colorID++) {
+		IDs.push(colorID);
+	}
+	return IDs;
+};
+/**
+ * Is offline mode?
+ * @returns {Boolean}
+ */
+AppSettings.isOffline = function () {
+	return sessionStorage['session-offline'] == 'true';
+};
+/**
+ * Set offline mode.
+ * @param {Boolean} enabled
+ */
+AppSettings.setOffline = function (enabled) {
+	if (enabled) {
+		sessionStorage['session-offline'] = true;
+	}
+	else {
+		sessionStorage.removeItem('session-offline');
+	}
+};
+/**
+ * Set last cached date.
+ * @param {String} key
+ * @param {Date} date
+ */
+AppSettings.setCachedDate = function (key, date) {
+	localStorage[key + '#cached'] = date.getTime();
+};
+/**
+ * Get last cached date.
+ * @param {String} key
+ * @returns {Date}
+ */
+AppSettings.getCachedDate = function (key) {
+	return new Date(parseInt(localStorage[key + '#cached']));
+};
+/**
  * @class Date utility.
  */
 var DateUtil = function () {};
