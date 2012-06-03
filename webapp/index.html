@@ -62,20 +62,22 @@ Task WallはGoogleタスクと連携するタスク管理アプリです。<br/>
 <div><a href="/logout" class="session-logout"><span class="myicon-logout" title="ログアウト"></span></a></div>
 <div><a href="#help"><span class="myicon-help" title="ヘルプ"></span></a></div>
 </div>
-<!-- ko if: $root.development -->
-<label class="checkbox"><input data-bind="checked: offline" type="checkbox" class="checkbox"/>オフライン</label>
-<!-- /ko -->
 <p class="footer">&copy; hidetake.org, 2011-2012.</p>
 </section>
 
+<!-- ko if: $root.development -->
+<section class="cache-status">
+<label class="checkbox"><input data-bind="checked: offline" type="checkbox"/>オフライン</label>
 <!-- ko if: offline -->
-<div data-bind="with: lastCached" class="calendar-cached-date">
-オフラインモードです。最後にタスクリストを読み込んだのは
+<span data-bind="with: lastCached">
+最後の読み込みは
 <span data-bind="text: getMonth()+1"></span>月
 <span data-bind="text: getDate()"></span>日
 <span data-bind="text: getHours()"></span>時
 <span data-bind="text: getMinutes()"></span>分です。
-</div>
+</span>
+<!-- /ko -->
+</section>
 <!-- /ko -->
 
 <div class="calendar-operations-tab">

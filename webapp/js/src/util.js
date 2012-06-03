@@ -36,19 +36,17 @@ AppSettings.setOffline = function (enabled) {
 };
 /**
  * Set last cached date.
- * @param {String} key
  * @param {Date} date
  */
-AppSettings.setCachedDate = function (key, date) {
-	localStorage[key + '#cached'] = date.getTime();
+AppSettings.setCachedDate = function (date) {
+	localStorage['cachedDate'] = date.getTime();
 };
 /**
  * Get last cached date.
- * @param {String} key
  * @returns {Date}
  */
-AppSettings.getCachedDate = function (key) {
-	return new Date(parseInt(localStorage[key + '#cached']));
+AppSettings.getCachedDate = function () {
+	return new Date(parseInt(localStorage['cachedDate']));
 };
 /**
  * @class Date utility.

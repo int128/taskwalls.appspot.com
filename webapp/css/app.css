@@ -459,7 +459,7 @@ body {
 /*
  * Calendar misc.
  */
-.calendar-cached-date {
+.cache-status {
 	position: fixed;
 	bottom: 0;
 	right: 0;

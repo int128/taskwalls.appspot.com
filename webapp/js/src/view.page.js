@@ -21,14 +21,14 @@ var AuthorizedPageViewModel = function() {
 
 	// offline
 	this.offline = ko.computed({
-		read : function() {
+		read: function () {
 			return AppSettings.isOffline();
 		},
-		write : function(value) {
+		write: function (value) {
 			AppSettings.setOffline(value);
 		}
 	});
-	this.lastCached = ko.observable(AppSettings.getCachedDate('Tasklists.get'));
+	this.lastCached = ko.observable(AppSettings.getCachedDate());
 
 	// development only
 	this.development = ko.observable(window.location.hostname == 'localhost');
