@@ -34,7 +34,7 @@
 	$('#loading').hide();
 })();
 $(function () {
-	window.AppSettings = new AppSettingsViewModel();
+	AppSettings = new AppSettingsViewModel();
 	new OAuth2Session(function () {
 		this.onAuthorized = function () {
 			$('.oauth2state.authorized').show();
@@ -51,3 +51,7 @@ $(function () {
 		};
 	}).handle();
 });
+/**
+ * @type {AppSettingsViewModel}
+ */
+var AppSettings;

@@ -8,6 +8,33 @@ function AppSettingsViewModel () {
 	this.today = ko.computed(function () {
 		return DateUtil.normalize(new Date());
 	});
+	/**
+	 * Last cached date.
+	 */
+	this.lastCached = ko.computed({
+		read: function () {
+			return new Date(parseInt(localStorage['cachedDate']));
+		},
+		write: function (value) {
+			localStorage['cachedDate'] = value.getTime();
+		}
+	});
+	/**
+	 * Offline mode.
+	 */
+	this.offline = ko.computed({
+		read: function () {
+			return sessionStorage['session-offline'] == 'true';
+		},
+		write: function (value) {
+			if (value) {
+				sessionStorage['session-offline'] = true;
+			}
+			else {
+				sessionStorage.removeItem('session-offline');
+			}
+		}
+	});
 };
 AppSettingsViewModel.prototype.tasklistColors = 24;
 /**
@@ -20,39 +47,6 @@ AppSettingsViewModel.prototype.tasklistColorIDs = function () {
 		IDs.push(colorID);
 	}
 	return IDs;
-};
-/**
- * Is offline mode?
- * @returns {Boolean}
- */
-AppSettingsViewModel.prototype.isOffline = function () {
-	return sessionStorage['session-offline'] == 'true';
-};
-/**
- * Set offline mode.
- * @param {Boolean} enabled
- */
-AppSettingsViewModel.prototype.setOffline = function (enabled) {
-	if (enabled) {
-		sessionStorage['session-offline'] = true;
-	}
-	else {
-		sessionStorage.removeItem('session-offline');
-	}
-};
-/**
- * Set last cached date.
- * @param {Date} date
- */
-AppSettingsViewModel.prototype.setCachedDate = function (date) {
-	localStorage['cachedDate'] = date.getTime();
-};
-/**
- * Get last cached date.
- * @returns {Date}
- */
-AppSettingsViewModel.prototype.getCachedDate = function () {
-	return new Date(parseInt(localStorage['cachedDate']));
 };
 /**
  * @class Date utility.

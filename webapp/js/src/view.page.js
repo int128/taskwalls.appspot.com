@@ -20,15 +20,8 @@ var AuthorizedPageViewModel = function() {
 	this.updateTaskDialog = new UpdateTaskDialog(this.taskdata);
 
 	// offline
-	this.offline = ko.computed({
-		read: function () {
-			return AppSettings.isOffline();
-		},
-		write: function (value) {
-			AppSettings.setOffline(value);
-		}
-	});
-	this.lastCached = ko.observable(AppSettings.getCachedDate());
+	this.offline = AppSettings.offline;
+	this.lastCached = AppSettings.lastCached;
 
 	// development only
 	this.development = ko.observable(window.location.hostname == 'localhost');

@@ -11,7 +11,7 @@ Tasklists.get = function (callback) {
 	if (!$.isFunction(callback)) {
 		throw new Error('callback is not function');
 	}
-	if (AppSettings.isOffline()) {
+	if (AppSettings.offline()) {
 		var response = $.parseJSON(localStorage.getItem('Tasklists.get'));
 		if (response) {
 			callback($.map(response.items, function (item) {
@@ -83,7 +83,7 @@ Tasks.get = function (tasklistID, callback) {
 	if (!$.isFunction(callback)) {
 		throw new Error('callback is not function');
 	}
-	if (AppSettings.isOffline()) {
+	if (AppSettings.offline()) {
 		var response = $.parseJSON(localStorage['Tasks.get.' + tasklistID]);
 		if (response) {
 			callback(response.items);
