@@ -412,17 +412,6 @@ body {
 	color: #f00;
 }
 
-/* today tasks */
-.calendar tr.today>td.weekday,
-.calendar tr.today>td.day {
-	font-weight: bold;
-	font-size: 130%;
-}
-
-.calendar tr.today>td.border {
-	border-top: solid 1px #f00;
-}
-
 /* this week's tasks */
 .calendar tr.thisweek>td.tasks {
 	border-left: solid 1px #f00;

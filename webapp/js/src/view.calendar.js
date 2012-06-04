@@ -104,9 +104,6 @@ var CalendarDayViewModel = function (date, taskdata) {
 	this.past = ko.computed(function () {
 		return this.time() < AppSettings.today().getTime();
 	}, this);
-	this.today = ko.computed(function () {
-		return this.time() == AppSettings.today().getTime();
-	}, this);
 	this.thisweek = ko.computed(function () {
 		return DateUtil.isThisWeek(this.time());
 	}, this);
