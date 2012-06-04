@@ -43,8 +43,9 @@ Task WallはGoogleタスクと連携するタスク管理アプリです。<br/>
 <div class="toggle">
 <div data-bind="foreach: taskdata.tasklists">
 <div data-bind="overlappedClick: toggleVisibility,
-css: {visible: visible},
-attr: {'data-tasklistcolor': colorID}" class="tasklist">
+	css: {visible: visible},
+	attr: {'data-tasklistcolor': colorID}"
+	class="tasklist">
 <div class="setting">
 <div data-bind="click: $root.updateTasklistDialog.open" class="intercept-click"></div>
 </div>
@@ -92,12 +93,12 @@ attr: {'data-tasklistcolor': colorID}" class="tasklist">
 <table>
 <tbody data-bind="foreach: days">
 <tr data-bind="css: {
-	past: past,
-	thisweek: thisweek
-}, attr: {
-	'data-day': day,
-	'data-weekday': weekday
-}">
+		past: past,
+		thisweek: thisweek
+	}, attr: {
+		'data-day': day,
+		'data-weekday': weekday
+	}">
 <td class="month"><div><span data-bind="text: month"></span>月</div></td>
 <td class="border day"><div data-bind="text: day"></div></td>
 <td class="border weekday"><div data-bind="text: weekdayName"></div></td>
@@ -105,11 +106,12 @@ attr: {'data-tasklistcolor': colorID}" class="tasklist">
 <div data-bind="foreach: tasklists">
 <div data-bind="foreach: tasks" class="tasklist">
 <div data-bind="overlappedClick: $root.updateTaskDialog.open,
-visible: visible,
-attr: {
-	'data-status': status,
-	'data-tasklistcolor': tasklist().colorID
-}" class="task">
+	visible: visible,
+	attr: {
+		'data-status': status,
+		'data-tasklistcolor': tasklist().colorID
+	}"
+	class="task">
 <input data-bind="checked: isCompleted" type="checkbox" class="intercept-click" />
 <span data-bind="text: title" class="title"></span>
 <div data-bind="text: notes" class="notes"></div>
@@ -141,42 +143,6 @@ attr: {
 <span data-bind="text: nextMonth().getMonth()+1"></span>月を表示
 </a>
 </div>
-
-<section id="help-template" class="help resource">
-<div class="tasklists left">
-<div class="head"></div>
-<div class="body">
-<h3>タスクリスト</h3>
-<p>場所や優先度に応じてタスクを分類します。</p>
-</div>
-</div>
-<div class="calendar">
-<div class="body">
-<h3>カレンダー</h3>
-<p>
-タスクをドラッグして自主期限（ベースライン）を決めます。<br/>
-タイトルをクリックすると編集できます。<br/>
-空白をクリックすると詳細を編集できます。
-</p>
-</div>
-</div>
-<div class="thisweek left">
-<div class="head"></div>
-<div class="body">
-<h3>今週の件数</h3>
-<p>
-消化したタスクと残っているタスクの数が表示されます。<br/>
-数をクリックすると表示が切り替わります。
-</p>
-</div>
-</div>
-<div class="planner">
-<div class="body">
-<h3>計画中のタスク</h3>
-<p>近い将来にやるタスクを追加します。</p>
-</div>
-</div>
-</section>
 
 <div id="create-tasklist-template" class="create-tasklist dialog resource">
 <form action="/tasklists/create" method="post">
@@ -308,6 +274,42 @@ attr: {
 <div data-bind="click: close" class="dialog-background"></div>
 <!-- /ko -->
 <!-- /ko -->
+
+<section id="help-template" class="help resource">
+<div class="tasklists left">
+<div class="head"></div>
+<div class="body">
+<h3>タスクリスト</h3>
+<p>場所や優先度に応じてタスクを分類します。</p>
+</div>
+</div>
+<div class="calendar">
+<div class="body">
+<h3>カレンダー</h3>
+<p>
+タスクをドラッグして自主期限（ベースライン）を決めます。<br/>
+タイトルをクリックすると編集できます。<br/>
+空白をクリックすると詳細を編集できます。
+</p>
+</div>
+</div>
+<div class="thisweek left">
+<div class="head"></div>
+<div class="body">
+<h3>今週の件数</h3>
+<p>
+消化したタスクと残っているタスクの数が表示されます。<br/>
+数をクリックすると表示が切り替わります。
+</p>
+</div>
+</div>
+<div class="planner">
+<div class="body">
+<h3>計画中のタスク</h3>
+<p>近い将来にやるタスクを追加します。</p>
+</div>
+</div>
+</section>
 </article>
 
 <div id="resources" style="display: none;">
