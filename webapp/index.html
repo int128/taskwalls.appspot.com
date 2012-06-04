@@ -42,8 +42,12 @@ Task WallはGoogleタスクと連携するタスク管理アプリです。<br/>
 <div style="text-align: center; font-weight: bold; margin-top: -5px; color: #888;">BETA</div>
 <div class="toggle">
 <div data-bind="foreach: taskdata.tasklists">
-<div data-bind="attr: {'data-tasklistcolor': colorID}" class="tasklist">
-<div class="setting"><div></div></div>
+<div data-bind="overlappedClick: toggleVisibility,
+css: {visible: visible},
+attr: {'data-tasklistcolor': colorID}" class="tasklist">
+<div class="setting">
+<div data-bind="click: $root.updateTasklistDialog.open" class="intercept-click"></div>
+</div>
 <div data-bind="text: title" class="title"></div>
 </div>
 </div>
@@ -100,7 +104,9 @@ Task WallはGoogleタスクと連携するタスク管理アプリです。<br/>
 <td class="border tasks">
 <div data-bind="foreach: tasklists">
 <div data-bind="foreach: tasks" class="tasklist">
-<div data-bind="overlappedClick: $root.updateTaskDialog.open, attr: {
+<div data-bind="overlappedClick: $root.updateTaskDialog.open,
+visible: visible,
+attr: {
 	'data-status': status,
 	'data-tasklistcolor': tasklist().colorID
 }" class="task">

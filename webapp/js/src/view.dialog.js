@@ -110,3 +110,16 @@ var UpdateTaskDialog = function (taskdata) {
 	};
 };
 UpdateTaskDialog.prototype = new Dialog();
+/**
+ * Updating the tasklist dialog.
+ * @constructor {@link UpdateTasklistDialog}
+ */
+var UpdateTasklistDialog = function () {
+	/**
+	 * Open the dialog.
+	 * @param {TasklistViewModel} tasklistvm
+	 */
+	this.open = function (tasklistvm) {
+		// TODO: show
+	};
+};

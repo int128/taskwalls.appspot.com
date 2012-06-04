@@ -18,6 +18,7 @@ var AuthorizedPageViewModel = function() {
 	// dialogs
 	this.createTaskDialog = new CreateTaskDialog(this.taskdata);
 	this.updateTaskDialog = new UpdateTaskDialog(this.taskdata);
+	this.updateTasklistDialog = new UpdateTasklistDialog();
 
 	// offline
 	this.offline = AppSettings.offline;

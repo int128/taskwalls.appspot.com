@@ -195,7 +195,7 @@ body {
 	margin-bottom: 5px;
 	border-style: solid;
 	border-width: 1px;
-	border-left-width: 5px;
+	padding-left: 4px;
 	border-top-color: #ddd;
 	border-bottom-color: #ddd;
 	border-right-color: #ddd;
@@ -211,9 +211,9 @@ body {
 	border-right-color: #888;
 }
 
-.header>.toggle .tasklist.hidden {
-	border-left-width: 1px;
-	padding-left: 4px;
+.header>.toggle .tasklist.visible {
+	border-left-width: 5px;
+	padding-left: 0;
 }
 
 .header>.toggle .tasklist .title {

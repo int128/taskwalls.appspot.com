@@ -192,6 +192,13 @@ var TasklistViewModel = function (tasklist) {
 	$.each(['id', 'title', 'colorID'], function () {
 		self[this] = ko.observable(tasklist[this]);
 	});
+	this.visible = ko.observable(true);
+	/**
+	 * Toggle visibility of tasks in the tasklist.
+	 */
+	this.toggleVisibility = function () {
+		this.visible(!this.visible());
+	};
 };
 /**
  * Task view model.
@@ -221,4 +228,7 @@ var TaskViewModel = function (task, tasklist) {
 		owner: this
 	});
 	this.tasklist = ko.observable(tasklist);
+	this.visible = ko.computed(function () {
+		return this.tasklist().visible();
+	}, this);
 };
