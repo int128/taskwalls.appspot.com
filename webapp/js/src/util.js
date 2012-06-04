@@ -1,14 +1,20 @@
 /**
  * Application settings.
  */
-function AppSettings () {
+function AppSettingsViewModel () {
+	/**
+	 * Normalized date of today.
+	 */
+	this.today = ko.computed(function () {
+		return DateUtil.normalize(new Date());
+	});
 };
-AppSettings.tasklistColors = 24;
+AppSettingsViewModel.prototype.tasklistColors = 24;
 /**
  * Generates array of color IDs.
  * @returns {Array} array of number
  */
-AppSettings.tasklistColorIDs = function () {
+AppSettingsViewModel.prototype.tasklistColorIDs = function () {
 	var IDs = [];
 	for (var colorID = 0; colorID < this.tasklistColors; colorID++) {
 		IDs.push(colorID);
@@ -19,14 +25,14 @@ AppSettings.tasklistColorIDs = function () {
  * Is offline mode?
  * @returns {Boolean}
  */
-AppSettings.isOffline = function () {
+AppSettingsViewModel.prototype.isOffline = function () {
 	return sessionStorage['session-offline'] == 'true';
 };
 /**
  * Set offline mode.
  * @param {Boolean} enabled
  */
-AppSettings.setOffline = function (enabled) {
+AppSettingsViewModel.prototype.setOffline = function (enabled) {
 	if (enabled) {
 		sessionStorage['session-offline'] = true;
 	}
@@ -38,14 +44,14 @@ AppSettings.setOffline = function (enabled) {
  * Set last cached date.
  * @param {Date} date
  */
-AppSettings.setCachedDate = function (date) {
+AppSettingsViewModel.prototype.setCachedDate = function (date) {
 	localStorage['cachedDate'] = date.getTime();
 };
 /**
  * Get last cached date.
  * @returns {Date}
  */
-AppSettings.getCachedDate = function () {
+AppSettingsViewModel.prototype.getCachedDate = function () {
 	return new Date(parseInt(localStorage['cachedDate']));
 };
 /**

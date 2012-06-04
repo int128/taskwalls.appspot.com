@@ -6,7 +6,7 @@ var CalendarViewModel = function (taskdata) {
 	this.taskdata = taskdata;
 
 	// initialize rows
-	var today = DateUtil.normalize(new Date());
+	var today = AppSettings.today();
 	this.days = ko.observableArray([new CalendarDayViewModel(today, taskdata)]);
 	this.earliestTime = ko.observable(today.getTime());
 	this.latestTime = ko.observable(today.getTime());
@@ -102,10 +102,10 @@ var CalendarDayViewModel = function (date, taskdata) {
 		return $.resource('weekday' + this.weekday());
 	}, this);
 	this.past = ko.computed(function () {
-		return this.time() < DateUtil.normalize(new Date()).getTime();
+		return this.time() < AppSettings.today().getTime();
 	}, this);
 	this.today = ko.computed(function () {
-		return this.time() == DateUtil.normalize(new Date()).getTime();
+		return this.time() == AppSettings.today().getTime();
 	}, this);
 	this.thisweek = ko.computed(function () {
 		return DateUtil.isThisWeek(this.time());
