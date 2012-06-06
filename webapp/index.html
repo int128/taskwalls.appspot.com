@@ -152,31 +152,26 @@ Task WallはGoogleタスクと連携するタスク管理アプリです。<br/>
 </form>
 </div>
 
-<div id="update-tasklist-template" class="update-tasklist resource">
-<div class="head"></div>
-<div class="body dialog">
-<div class="default">デフォルトのタスクリスト</div>
-<div><a href="#toggle">表示を切り替える</a></div>
-<form class="tasklist" action="/tasklists/update" method="post">
-<div><input type="hidden" name="id" /></div>
-<div><input type="text" name="title" /></div>
-</form>
-<form class="options" action="/tasklists/options/update" method="post">
-<div><input type="hidden" name="id" /></div>
-<div><input type="hidden" name="colorID" /></div>
-<div class="change-color"></div>
+<!-- ko with: updateTasklistDialog -->
+<!-- ko if: visible -->
+<div data-bind="style: {top: top}" class="update-tasklist dialog">
+<input data-bind="value: title, event: {blur: saveTitle}" type="text" placeholder="タスクリストの名前" />
+<div data-bind="foreach: colors">
+<div data-bind="css: {selected: $data==$parent.selectedColor()}" class="color">
+<div data-bind="attr: {'data-tasklistcolor': $data}, click: $parent.selectColor"></div>
+</div>
+</div>
 <div style="clear: both;"></div>
-</form>
-<form class="delete" action="/tasklists/delete" method="post">
-<div><input type="hidden" name="id" /></div>
-<div><a href="#delete">タスクリストを削除する...</a></div>
-<div class="confirm">
-<div><strong>警告：</strong>タスクリストに含まれるすべてのタスクも削除されます。</div>
-<div><button class="btn">タスクリストを削除する</button></div>
-</div>
-</form>
+<hr/>
+<a data-bind="visible: !removeConfirmed(), click: confirmRemove" href="#">タスクリストを削除する...</a>
+<div data-bind="visible: removeConfirmed">
+<p><strong>警告:</strong> タスクリストに含まれるすべてのタスクも削除されます。</p>
+<button data-bind="click: remove" class="btn btn-danger">タスクリストを削除する</button>
 </div>
 </div>
+<div data-bind="click: close" class="dialog-background"></div>
+<!-- /ko -->
+<!-- /ko -->
 
 <div id="update-task-title-template" class="update-task-title resource">
 <form action="/tasks/update" method="post">

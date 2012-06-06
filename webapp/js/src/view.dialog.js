@@ -115,11 +115,52 @@ UpdateTaskDialog.prototype = new Dialog();
  * @constructor {@link UpdateTasklistDialog}
  */
 var UpdateTasklistDialog = function () {
+	var self = this;
+	this.top = ko.observable();
+	this.tasklist = ko.observable();
+
+	// edit
+	this.title = ko.observable();
+	this.saveTitle = function () {
+		// TODO: persist
+	};
+
+	// change color
+	this.colors = AppSettings.tasklistColorIDs();
+	this.selectedColor = ko.observable();
+	this.selectColor = function (id) {
+		// TODO: persist
+		self.selectedColor(id);
+		self.tasklist().colorID(id);
+	};
+
+	// remove
+	this.removeConfirmed = ko.observable();
+	/**
+	 * Confirm to remove the tasklist.
+	 */
+	this.confirmRemove = function () {
+		self.removeConfirmed(true);
+	};
+	/**
+	 * Remove the tasklist.
+	 */
+	this.remove = function () {
+		// TODO: implement this
+	};
+
 	/**
 	 * Open the dialog.
 	 * @param {TasklistViewModel} tasklistvm
+	 * @param {Event} event
 	 */
-	this.open = function (tasklistvm) {
-		// TODO: show
+	this.open = function (tasklistvm, event) {
+		self.tasklist(tasklistvm);
+		self.title(tasklistvm.title());
+		self.selectedColor(tasklistvm.colorID());
+		self.top(event.clientY + 'px');
+		self.removeConfirmed(false);
+		self.visible(true);
 	};
 };
+UpdateTasklistDialog.prototype = new Dialog();

@@ -253,60 +253,6 @@ body {
 	margin-bottom: 5px;
 }
 
-.update-tasklist {
-	position: fixed;
-	left: 120px;
-}
-
-.update-tasklist>.head {
-	content: '';
-	position: relative;
-	z-index: 401;
-	top: 25px;
-	left: 5px;
-	width: 0;
-	height: 0;
-	border-top: 15px solid transparent;
-	border-bottom: 15px solid transparent;
-	border-right: 15px solid white;
-}
-
-.update-tasklist>.dialog.body {
-	position: relative;
-	top: -100px;
-	left: 20px;
-}
-
-.update-tasklist form {
-	margin-top: 10px;
-}
-
-.update-tasklist input[type="text"] {
-	width: 180px;
-}
-
-.update-tasklist .change-color {
-	width: 180px;
-	margin-top: -10px;
-	margin-left: 10px;
-}
-
-.tasklist-mark {
-	float: left;
-	margin-right: 10px;
-	margin-top: 10px;
-	height: 20px;
-	opacity: 0.8;
-	border-left: solid 19px #ddd;
-	border-radius: 5px;
-	-moz-border-radius: 5px;
-	cursor: pointer;
-}
-
-.tasklist-mark:HOVER {
-	opacity: 1.0;
-}
-
 /*
  * Calendar.
  */
@@ -657,6 +603,42 @@ body {
 .create-task.dialog .tasklists .tasklist.selected,
 .update-task.dialog .tasklists .tasklist.selected {
 	font-weight: bold;
+}
+
+.update-tasklist.dialog {
+	position: fixed;
+	left: 120px;
+	width: 180px;
+}
+
+.update-tasklist.dialog input[type="text"] {
+	width: 170px;
+}
+
+.update-tasklist.dialog .color {
+	float: left;
+	margin-right: 9px;
+	margin-top: 9px;
+	border-radius: 5px;
+	-moz-border-radius: 5px;
+	border: 1px solid transparent;
+}
+
+.update-tasklist.dialog .color.selected {
+	border: 1px solid #000;
+}
+
+.update-tasklist.dialog .color:HOVER {
+	border: 1px solid #888;
+}
+
+.update-tasklist.dialog .color>div {
+	height: 20px;
+	border-left-style: solid;
+	border-left-width: 19px;
+	border-radius: 5px;
+	-moz-border-radius: 5px;
+	cursor: pointer;
 }
 
 /*
