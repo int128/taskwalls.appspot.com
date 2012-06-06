@@ -40,27 +40,26 @@ Task WallはGoogleタスクと連携するタスク管理アプリです。<br/>
 <section class="header">
 <h1>Task Wall<span style="color: gold;">*</span></h1>
 <div style="text-align: center; font-weight: bold; margin-top: -5px; color: #888;">BETA</div>
-<div class="toggle">
-<div data-bind="foreach: taskdata.tasklists">
+<div data-bind="foreach: taskdata.tasklists" class="toggle tasklists">
 <div data-bind="overlappedClick: toggleVisibility,
 	css: {visible: visible},
 	attr: {'data-tasklistcolor': colorID}"
 	class="tasklist">
-<div class="setting">
-<div data-bind="click: $root.updateTasklistDialog.open" class="intercept-click"></div>
-</div>
+<div class="setting"><div data-bind="click: $root.updateTasklistDialog.open" class="intercept-click"></div></div>
 <div data-bind="text: title" class="title"></div>
 </div>
 </div>
-<div><a href="#"><span class="myicon-create-tasklist" title="新しいタスクリスト"></span></a></div>
-</div>
-<div class="toggle">
+<a data-bind="click: $root.createTasklistDialog.open" href="#"
+	title="新しいタスクリストを作成する" class="create tasklist"></a>
+<div class="toggle kinds">
 <div class="description">this week's</div>
-<div class="kind">
-<a href="#" title="完了したタスクの表示を切り替える">completed<br/><span data-bind="text: completedCount" class="count"></span></a>
+<div>
+<a href="#" title="完了したタスクの表示を切り替える" class="kind">completed<br/>
+<span data-bind="text: completedCount" class="count"></span></a>
 </div>
-<div class="kind">
-<a href="#" title="未完了タスクの表示を切り替える">needs action<br/><span data-bind="text: needsActionCount" class="count"></span></a>
+<div>
+<a href="#" title="未完了タスクの表示を切り替える" class="kind">needs action<br/>
+<span data-bind="text: needsActionCount" class="count"></span></a>
 </div>
 </div>
 <div>
@@ -144,13 +143,17 @@ Task WallはGoogleタスクと連携するタスク管理アプリです。<br/>
 </a>
 </div>
 
-<div id="create-tasklist-template" class="create-tasklist dialog resource">
-<form action="/tasklists/create" method="post">
-<div>新しいタスクリストを作成します。</div>
-<div><input type="text" name="title" /></div>
-<div><button class="btn">タスクリストを作成</button></div>
-</form>
+<!-- ko with: createTasklistDialog -->
+<!-- ko if: visible -->
+<form data-bind="submit: save">
+<div class="create-tasklist dialog">
+<div><input data-bind="value: title, hasfocus: true" type="text" placeholder="タスクリストの名前" /></div>
+<div><button data-bind="enable: title" type="submit" class="btn">タスクリストを作成</button></div>
 </div>
+</form>
+<div data-bind="click: close" class="dialog-background"></div>
+<!-- /ko -->
+<!-- /ko -->
 
 <!-- ko with: updateTasklistDialog -->
 <!-- ko if: visible -->

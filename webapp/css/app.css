@@ -150,13 +150,13 @@ body {
 	text-decoration: none;
 }
 
-.header>.toggle>.description {
+.header .toggle .description {
 	margin-bottom: 5px;
 	text-align: center;
 	color: #888;
 }
 
-.header>.toggle>.kind a {
+.header .toggle.kinds .kind {
 	display: block;
 	margin-bottom: 5px;
 	padding-top: 5px;
@@ -172,23 +172,23 @@ body {
 	color: #fff;
 }
 
-.header>.toggle>.kind a.hidden {
+.header .toggle.kinds .kind.hidden {
 	background: #ccc;
 	background: -webkit-gradient(linear, left top, left bottom, from(#eee), to(#ccc) );
 	background: -moz-linear-gradient(top, #eee, #ccc);
 }
 
-.header>.toggle>.kind a:HOVER {
+.header .toggle.kinds .kind:HOVER {
 	background: #333;
 	background: -webkit-gradient(linear, left top, left bottom, from(#666), to(#333) );
 	background: -moz-linear-gradient(top, #666, #333);
 }
 
-.header>.toggle>.kind .count {
+.header .toggle.kinds .count {
 	font-size: 24pt;
 }
 
-.header>.toggle .tasklist {
+.header .toggle.tasklists .tasklist {
 	z-index: 500;
 	min-height: 32px;
 	overflow: hidden;
@@ -205,52 +205,48 @@ body {
 	text-align: left;
 }
 
-.header>.toggle .tasklist:HOVER {
+.header .toggle.tasklists .tasklist:HOVER {
 	border-top-color: #888;
 	border-bottom-color: #888;
 	border-right-color: #888;
 }
 
-.header>.toggle .tasklist.visible {
+.header .toggle.tasklists .tasklist.visible {
 	border-left-width: 5px;
 	padding-left: 0;
 }
 
-.header>.toggle .tasklist .title {
+.header .toggle.tasklists .tasklist .title {
 	padding: 5px;
 }
 
-.header>.toggle .tasklist .setting {
+.header .toggle.tasklists .tasklist .setting {
 	position: relative;
 }
 
-.header>.toggle .tasklist .setting>div {
+.header .toggle.tasklists .tasklist .setting>div {
 	position: absolute;
 	right: 0;
 	width: 32px;
 	height: 32px;
-	background: url('/css/gear.png') no-repeat right;
+	background: url('/css/gear.png') no-repeat center;
 	opacity: 0.1;
 }
 
-.header>.toggle .tasklist .setting>div:HOVER {
+.header .toggle.tasklists .tasklist .setting>div:HOVER {
 	opacity: 0.6;
 }
 
-/*
- * Tasklist manipulation forms.
- */
-.dialog.create-tasklist {
-	position: fixed;
-	top: 30%;
-	left: 50%;
-	margin-left: -160px;
+.header .create.tasklist {
+	display: inline-block;
+	width: 32px;
+	height: 32px;
+	background: url('/img/plus24.png') no-repeat center;
+	opacity: 0.1;
 }
 
-.create-tasklist input[type="text"] {
-	width: 300px;
-	margin-top: 5px;
-	margin-bottom: 5px;
+.header .create.tasklist:HOVER {
+	opacity: 0.6;
 }
 
 /*
@@ -605,6 +601,18 @@ body {
 	font-weight: bold;
 }
 
+.create-tasklist.dialog {
+	position: fixed;
+	top: 30%;
+	left: 50%;
+	margin-left: -160px;
+}
+
+.create-tasklist.dialog input[type="text"] {
+	width: 300px;
+	margin-bottom: 5px;
+}
+
 .update-tasklist.dialog {
 	position: fixed;
 	left: 120px;
@@ -680,12 +688,6 @@ body {
 	background-image: url('/css/gom.png');
 	height: 32px;
 	width: 32px;
-}
-
-.myicon-create-tasklist {
-	width: 32px;
-	height: 32px;
-	background: url('/css/3d_design_alt.png') no-repeat;
 }
 
 /*

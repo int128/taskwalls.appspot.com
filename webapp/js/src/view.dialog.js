@@ -111,6 +111,22 @@ var UpdateTaskDialog = function (taskdata) {
 };
 UpdateTaskDialog.prototype = new Dialog();
 /**
+ * Dialog to create a tasklist.
+ * @class CreateTasklistDialog
+ */
+var CreateTasklistDialog = function () {
+	var self = this;
+	this.title = ko.observable();
+	this.open = function () {
+		self.title(null);
+		self.visible(true);
+	};
+	this.save = function () {
+		// TODO: persist
+	};
+};
+CreateTasklistDialog.prototype = new Dialog();
+/**
  * Updating the tasklist dialog.
  * @constructor {@link UpdateTasklistDialog}
  */
