@@ -1,5 +1,5 @@
 /**
- * Creating task dialog.
+ * @class Dialog to create a task.
  * @param {CalendarDayViewModel} dayvm
  * @param {Event} event
  * @param {TaskdataViewModel} taskdata
@@ -23,7 +23,7 @@ var CreateTaskDialog = function (dayvm, event, taskdata) {
 	};
 };
 /**
- * Updating task dialog.
+ * @class Dialog to update the task.
  * @param {TaskViewModel} taskvm
  * @param {Event} event
  * @param {TaskdataViewModel} taskdata
@@ -61,8 +61,7 @@ var UpdateTaskDialog = function (taskvm, event, taskdata) {
 	};
 };
 /**
- * Dialog to create a tasklist.
- * @class CreateTasklistDialog
+ * @class Dialog to create a tasklist.
  */
 var CreateTasklistDialog = function () {
 	this.title = ko.observable();
@@ -71,8 +70,7 @@ var CreateTasklistDialog = function () {
 	};
 };
 /**
- * Updating the tasklist dialog.
- * @constructor {@link UpdateTasklistDialog}
+ * @class Dialog to update the tasklist.
  * @param {TasklistViewModel} tasklistvm
  * @param {Event} event
  */

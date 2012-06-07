@@ -1,3 +1,6 @@
+/**
+ * @class View model for authorized page. 
+ */
 var AuthorizedPageViewModel = function() {
 	// tasks
 	this.taskdata = new TaskdataViewModel();

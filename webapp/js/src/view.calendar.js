@@ -1,5 +1,5 @@
 /**
- * @constructor {@link CalendarViewModel}
+ * @class Calendar.
  * @param {TaskdataViewModel} taskdata
  */
 var CalendarViewModel = function (taskdata) {
@@ -79,7 +79,7 @@ CalendarViewModel.prototype.extendToNextMonth = function () {
 	this.extendMonth(this.nextMonth().getTime());
 };
 /**
- * @constructor {@link CalendarDayViewModel}
+ * @class Daily row of the calendar.
  * @param {Date} date day of the row
  * @param {TaskdataViewModel} taskdata
  */
