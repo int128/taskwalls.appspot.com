@@ -124,6 +124,17 @@ var CalendarDayViewModel = function (date, taskdata) {
 	}, this);
 };
 /**
+ * @class Planner view model.
+ * @param {TaskdataViewModel} taskdata
+ */
+var PlannerViewModel = function (taskdata) {
+	this.tasks = ko.computed(function() {
+		return $.grep(taskdata.tasks(), function (task) {
+			return !task.due();
+		});
+	}, this);
+};
+/**
  * @class View model that contains tasklists and tasks.
  */
 var TaskdataViewModel = function () {

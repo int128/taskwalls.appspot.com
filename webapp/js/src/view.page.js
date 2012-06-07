@@ -17,6 +17,7 @@ var AuthorizedPageViewModel = function() {
 
 	// calendar
 	this.calendar = new CalendarViewModel(this.taskdata);
+	this.planner = new PlannerViewModel(this.taskdata);
 
 	// dialogs
 	this.createTaskDialog = ko.disposableObservable(function (dayvm, event) {
