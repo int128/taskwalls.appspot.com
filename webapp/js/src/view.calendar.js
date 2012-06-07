@@ -108,12 +108,16 @@ function CalendarDayViewModel (date, taskdata) {
 		return DateUtil.isThisWeek(this.time());
 	}, this);
 	this.tasks = ko.computed(function() {
+		// TODO: model?
 		return $.grep(taskdata.tasks(), function (task) {
 			return task.due() && task.due().getTime() == self.time();
 		});
 	}, this);
+	/**
+	 * Group by belonging tasklist.
+	 * TODO: model?
+	 */
 	this.tasklists = ko.computed(function () {
-		// group by tasklist
 		return $.map(taskdata.tasklists(), function (tasklist) {
 			return {
 				tasks: $.grep(self.tasks(), function (task) {
@@ -129,6 +133,7 @@ function CalendarDayViewModel (date, taskdata) {
  */
 function PlannerViewModel (taskdata) {
 	this.tasks = ko.computed(function() {
+		// TODO: model?
 		return $.grep(taskdata.tasks(), function (task) {
 			return !task.due();
 		});
@@ -143,6 +148,7 @@ function TaskdataViewModel () {
 };
 /**
  * Load tasklists and tasks.
+ * TODO: model?
  */
 TaskdataViewModel.prototype.load = function () {
 	var self = this;
@@ -212,16 +218,20 @@ function TasklistViewModel (tasklist) {
  */
 function TaskViewModel (task, tasklist) {
 	ko.mapObservables(task, this);
+	// TODO: model?
 	this.tasklist = ko.observable(tasklist);
+	// TODO: model?
 	if (this.notes === undefined) {
 		this.notes = ko.observable();
 	}
+	// TODO: model?
 	if (this.due) {
 		// normalize for current timezone
 		this.due(DateUtil.normalize(this.due()));
 	} else {
 		this.due = ko.observable();
 	}
+	// TODO: model?
 	this.isCompleted = ko.computed({
 		read: function () {
 			return this.status() == 'completed';

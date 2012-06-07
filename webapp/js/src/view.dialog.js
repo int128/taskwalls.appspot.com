@@ -19,7 +19,7 @@ function CreateTaskDialog (due, event, taskdata) {
 	};
 
 	this.save = function () {
-		// TODO: implement this
+		// TODO: persist
 	};
 };
 /**
@@ -41,7 +41,7 @@ function UpdateTaskDialog (taskvm, event, taskdata) {
 	this.removeConfirmed = ko.observable(false);
 
 	this.save = function () {
-		// TODO: implement this
+		// TODO: persist
 	};
 
 	this.selectTasklist = function (tasklist) {
@@ -49,7 +49,7 @@ function UpdateTaskDialog (taskvm, event, taskdata) {
 	};
 
 	this.move = function () {
-		// TODO: implement this
+		// TODO: persist
 	};
 
 	this.confirmRemove = function () {
@@ -57,7 +57,7 @@ function UpdateTaskDialog (taskvm, event, taskdata) {
 	};
 
 	this.remove = function () {
-		// TODO: implement this
+		// TODO: persist
 	};
 };
 /**
@@ -105,6 +105,6 @@ function UpdateTasklistDialog (tasklistvm, event) {
 		self.removeConfirmed(true);
 	};
 	this.remove = function () {
-		// TODO: implement this
+		// TODO: persist
 	};
 };
