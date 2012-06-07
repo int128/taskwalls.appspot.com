@@ -63,26 +63,6 @@ DateUtil.normalize = function (time) {
 	return normalized;
 };
 /**
- * @param {Date} date
- * @param future
- * @param today
- * @param past
- * @returns future, today or past
- */
-DateUtil.futureOrPast = function (date, future, today, past) {
-	var normalizedDate = new Date(date);
-	var normalizedToday = new Date();
-	normalizedDate.setHours(0, 0, 0, 0);
-	normalizedToday.setHours(0, 0, 0, 0);
-	if (normalizedDate > normalizedToday) {
-		return future;
-	}
-	else if (normalizedDate < normalizedToday) {
-		return past;
-	}
-	return today;
-};
-/**
  * Returns true if the day is in this week.
  * This function assumes a week begins from Monday.
  * @param {Date} date
@@ -94,24 +74,6 @@ DateUtil.isThisWeek = function (time) {
 	var first = today.getTime() - ((today.getDay() + 6) % 7) * 24 * 3600 * 1000;
 	var next = first + 7 * 24 * 3600 * 1000;
 	return first <= time && time < next;
-};
-/**
- * Get time or zero if null.
- * @param {Date} date
- * @returns {Number}
- */
-DateUtil.getTimeOrZero = function (date) {
-	if (date && date.getTime) {
-		return date.getTime();
-	}
-	return 0;
-};
-/**
- * Get time-stamp in UTC.
- * @returns {Number} time in UTC
- */
-Date.prototype.getUTCTime = function () {
-	return this.getTime() - this.getTimezoneOffset() * 60 * 1000;
 };
 /**
  * Get hash code of {@link String}.
