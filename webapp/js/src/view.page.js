@@ -1,7 +1,7 @@
 /**
  * @class View model for authorized page. 
  */
-var AuthorizedPageViewModel = function() {
+function AuthorizedPageViewModel () {
 	// tasks
 	this.taskdata = new TaskdataViewModel();
 	this.completedCount = ko.computed(function () {

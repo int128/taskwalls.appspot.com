@@ -4,7 +4,7 @@
  * @param {Event} event
  * @param {TaskdataViewModel} taskdata
  */
-var CreateTaskDialog = function (due, event, taskdata) {
+function CreateTaskDialog (due, event, taskdata) {
 	var self = this;
 	this.top = event.pageY + 'px';
 	this.tasklists = taskdata.tasklists;  // observable array
@@ -28,7 +28,7 @@ var CreateTaskDialog = function (due, event, taskdata) {
  * @param {Event} event
  * @param {TaskdataViewModel} taskdata
  */
-var UpdateTaskDialog = function (taskvm, event, taskdata) {
+function UpdateTaskDialog (taskvm, event, taskdata) {
 	var self = this;
 	this.top = event.pageY + 'px';
 	this.tasklists = taskdata.tasklists;  // observable array
@@ -63,7 +63,7 @@ var UpdateTaskDialog = function (taskvm, event, taskdata) {
 /**
  * @class Dialog to create a tasklist.
  */
-var CreateTasklistDialog = function () {
+function CreateTasklistDialog () {
 	this.title = ko.observable();
 	this.save = function () {
 		// TODO: persist
@@ -74,7 +74,7 @@ var CreateTasklistDialog = function () {
  * @param {TasklistViewModel} tasklistvm
  * @param {Event} event
  */
-var UpdateTasklistDialog = function (tasklistvm, event) {
+function UpdateTasklistDialog (tasklistvm, event) {
 	var self = this;
 	this.top = event.clientY + 'px';
 	this.tasklist = tasklistvm;

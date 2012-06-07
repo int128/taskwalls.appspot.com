@@ -34,22 +34,22 @@
 	$('#loading').hide();
 })();
 $(function () {
-	AppSettings = new AppSettingsViewModel();
-	new OAuth2Session(function () {
-		this.onAuthorized = function () {
-			$('.oauth2state.authorized').show();
-			ko.applyBindings(window.taskwallsPageVM = new AuthorizedPageViewModel());
-		};
-		this.onAuthorizing = function () {
-			$('.oauth2state.authorizing').show();
-			// clean up cache
-			localStorage.clear();
-		};
-		this.onUnauthorized = function () {
-			$('.oauth2state.unauthorized').show();
-			$('.login a').attr('href', this.getAuthorizationURL());
-		};
-	}).handle();
+	window.AppSettings = new AppSettingsViewModel();
+	var session = new OAuth2Session();
+	session.onAuthorized = function () {
+		$('.oauth2state.authorized').show();
+		ko.applyBindings(window.taskwallsPageVM = new AuthorizedPageViewModel());
+	};
+	session.onAuthorizing = function () {
+		$('.oauth2state.authorizing').show();
+		// clean up cache
+		localStorage.clear();
+	};
+	session.onUnauthorized = function () {
+		$('.oauth2state.unauthorized').show();
+		$('.login a').attr('href', this.getAuthorizationURL());
+	};
+	session.handle();
 });
 /**
  * @type {AppSettingsViewModel}

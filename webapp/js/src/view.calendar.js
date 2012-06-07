@@ -2,7 +2,7 @@
  * @class Calendar.
  * @param {TaskdataViewModel} taskdata
  */
-var CalendarViewModel = function (taskdata) {
+function CalendarViewModel (taskdata) {
 	this.taskdata = taskdata;
 
 	// initialize rows
@@ -83,7 +83,7 @@ CalendarViewModel.prototype.extendToNextMonth = function () {
  * @param {Date} date day of the row
  * @param {TaskdataViewModel} taskdata
  */
-var CalendarDayViewModel = function (date, taskdata) {
+function CalendarDayViewModel (date, taskdata) {
 	var self = this;
 	this.date = ko.observable(date);
 	this.time = ko.computed(function () {
@@ -127,7 +127,7 @@ var CalendarDayViewModel = function (date, taskdata) {
  * @class Planner view model.
  * @param {TaskdataViewModel} taskdata
  */
-var PlannerViewModel = function (taskdata) {
+function PlannerViewModel (taskdata) {
 	this.tasks = ko.computed(function() {
 		return $.grep(taskdata.tasks(), function (task) {
 			return !task.due();
@@ -137,7 +137,7 @@ var PlannerViewModel = function (taskdata) {
 /**
  * @class View model that contains tasklists and tasks.
  */
-var TaskdataViewModel = function () {
+function TaskdataViewModel () {
 	this.tasks = ko.observableArray();
 	this.tasklists = ko.observableArray();
 };
@@ -198,7 +198,7 @@ TaskdataViewModel.prototype.load = function () {
  * @class Tasklist view model.
  * @param {Tasklist} tasklist
  */
-var TasklistViewModel = function (tasklist) {
+function TasklistViewModel (tasklist) {
 	ko.mapObservables(tasklist, this);
 	this.visible = ko.observable(true);
 	this.toggleVisibility = function () {
@@ -210,7 +210,7 @@ var TasklistViewModel = function (tasklist) {
  * @param {Object} task
  * @param {TasklistViewModel} tasklist
  */
-var TaskViewModel = function (task, tasklist) {
+function TaskViewModel (task, tasklist) {
 	ko.mapObservables(task, this);
 	this.tasklist = ko.observable(tasklist);
 	if (this.notes === undefined) {

@@ -1,5 +1,5 @@
 /**
- * Application settings.
+ * @class Application settings.
  */
 function AppSettingsViewModel () {
 	/**
@@ -36,6 +36,9 @@ function AppSettingsViewModel () {
 		}
 	});
 };
+/**
+ * Number of colors.
+ */
 AppSettingsViewModel.prototype.tasklistColors = 24;
 /**
  * Generates array of color IDs.
@@ -51,7 +54,8 @@ AppSettingsViewModel.prototype.tasklistColorIDs = function () {
 /**
  * @class Date utility.
  */
-var DateUtil = function () {};
+function DateUtil () {
+};
 /**
  * Normalize date. Hours, minutes and seconds will be 0.
  * @param {Number} or {Date} time
@@ -105,10 +109,10 @@ NullStorage.prototype.setItem = function () {};
 NullStorage.prototype.removeItem = function () {};
 NullStorage.prototype.clear = function () {};
 if (typeof localStorage === undefined) {
-	localStorage = new NullStorage();
+	window.localStorage = new NullStorage();
 }
 if (typeof sessionStorage === undefined) {
-	sessionStorage = new NullStorage();
+	window.sessionStorage = new NullStorage();
 }
 /**
  * @class Request utility.
