@@ -78,9 +78,16 @@ function UpdateTasklistDialog (tasklistvm, event) {
 	var self = this;
 	this.top = event.clientY + 'px';
 	this.tasklist = tasklistvm;
+	this.colors = (function () {
+		// generate color code array
+		var a = [];
+		for (var i = 0; i < AppSettings.tasklistColors; i++) {
+			a[i] = i;
+		}
+		return a;
+	})();
 
 	this.title = ko.observable(tasklistvm.title());
-	this.colors = AppSettings.tasklistColorIDs();
 	this.selectedColor = ko.observable(tasklistvm.colorCode());
 	this.removeConfirmed = ko.observable(false);
 

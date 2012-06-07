@@ -41,17 +41,6 @@ function AppSettingsViewModel () {
  */
 AppSettingsViewModel.prototype.tasklistColors = 24;
 /**
- * Generates array of color IDs.
- * @returns {Array} array of number
- */
-AppSettingsViewModel.prototype.tasklistColorIDs = function () {
-	var IDs = [];
-	for (var colorID = 0; colorID < this.tasklistColors; colorID++) {
-		IDs.push(colorID);
-	}
-	return IDs;
-};
-/**
  * @class Date utility.
  */
 function DateUtil () {
