@@ -19,16 +19,16 @@ var AuthorizedPageViewModel = function() {
 	this.calendar = new CalendarViewModel(this.taskdata);
 
 	// dialogs
-	this.createTaskDialog = disposableObservable(function (dayvm, event) {
+	this.createTaskDialog = ko.disposableObservable(function (dayvm, event) {
 		return new CreateTaskDialog(dayvm, event, this.taskdata);
 	}, this);
-	this.updateTaskDialog = disposableObservable(function (taskvm, event) {
+	this.updateTaskDialog = ko.disposableObservable(function (taskvm, event) {
 		return new UpdateTaskDialog(taskvm, event, this.taskdata);
 	}, this);
-	this.createTasklistDialog = disposableObservable(function () {
+	this.createTasklistDialog = ko.disposableObservable(function () {
 		return new CreateTasklistDialog();
 	});
-	this.updateTasklistDialog = disposableObservable(function (tasklistvm, event) {
+	this.updateTasklistDialog = ko.disposableObservable(function (tasklistvm, event) {
 		return new UpdateTasklistDialog(tasklistvm, event);
 	});
 

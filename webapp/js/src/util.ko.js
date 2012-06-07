@@ -34,7 +34,7 @@ ko.bindingHandlers.overlappedClick = {
  * @param {Object} thisArg this object that will be passed to constructor
  * @returns {Object} <code>ko.observable()</code> instance
  */
-function disposableObservable(constructor, thisArg) {
+ko.disposableObservable = function (constructor, thisArg) {
 	var observable = ko.observable();
 	observable.create = function () {
 		observable(constructor.apply(thisArg, arguments));
