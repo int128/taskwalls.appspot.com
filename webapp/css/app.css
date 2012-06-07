@@ -488,37 +488,26 @@ body {
 	box-shadow: 0px 3px 10px 3px rgba(0, 0, 0, 0.2);
 }
 
-.task-column>.task {
-	float: left;
-}
-
 .task:HOVER {
 	border-top-color: #888;
 	border-bottom-color: #888;
 	border-right-color: #888;
 }
 
-.task.task-status-completed {
+.task[data-status='completed'] {
 	color: dimgray;
 }
 
-.task>.notes {
+.task .notes {
 	max-height: 3em;
 	font-size: 90%;
 	color: dimgray;
 }
 
+/* TODO: drag and drop */
 .task.ui-draggable-dragging {
 	z-index: 130;
 	box-shadow: 0px 3px 10px 3px rgba(0, 0, 0, 0.4);
-}
-
-.update-task-title textarea[name="title"] {
-	width: 100%;
-	padding: 0;
-	min-height: 3em;
-	border: none;
-	background: transparent;
 }
 
 /*

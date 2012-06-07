@@ -129,10 +129,6 @@ Task WallはGoogleタスクと連携するタスク管理アプリです。<br/>
 <section id="planner" class="t0">
 <div class="task-column">
 <div class="description">計画中のタスク</div>
-<div class="create-task">
-<div class="balloon-tip">新しいタスクを作成する</div>
-<a href="#create-task"></a>
-</div>
 </div>
 </section>
 
@@ -175,36 +171,6 @@ Task WallはGoogleタスクと連携するタスク管理アプリです。<br/>
 <!-- /ko -->
 <div data-bind="click: updateTasklistDialog.dispose" class="dialog-background"></div>
 <!-- /ko -->
-
-<div id="update-task-title-template" class="update-task-title resource">
-<form action="/tasks/update" method="post">
-<div><textarea name="title"></textarea></div>
-<div>
-<input type="hidden" name="id" />
-<input type="hidden" name="tasklistID" />
-</div>
-</form>
-</div>
-
-<div id="update-task-due-template" class="update-task-due resource">
-<form action="/tasks/update" method="post">
-<div>
-<input type="hidden" name="id" />
-<input type="hidden" name="tasklistID" />
-<input type="hidden" name="dueTime" />
-</div>
-</form>
-</div>
-
-<div id="update-task-status-template" class="update-task-status resource">
-<form action="/tasks/update" method="post">
-<div>
-<input type="hidden" name="id" />
-<input type="hidden" name="tasklistID" />
-<input type="hidden" name="status" />
-</div>
-</form>
-</div>
 
 <!-- ko if: createTaskDialog -->
 <!-- ko with: createTaskDialog -->
@@ -271,7 +237,7 @@ Task WallはGoogleタスクと連携するタスク管理アプリです。<br/>
 <div data-bind="click: updateTaskDialog.dispose" class="dialog-background"></div>
 <!-- /ko -->
 
-<section id="help-template" class="help resource">
+<section class="help" style="display: none;">
 <div class="tasklists left">
 <div class="head"></div>
 <div class="body">
