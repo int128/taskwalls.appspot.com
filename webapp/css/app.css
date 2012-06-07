@@ -495,7 +495,8 @@ body {
 }
 
 .task[data-status='completed'] {
-	color: dimgray;
+	background: none;
+	box-shadow: none;
 }
 
 .task .notes {
