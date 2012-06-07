@@ -1,15 +1,15 @@
 /**
  * @class Dialog to create a task.
- * @param {CalendarDayViewModel} dayvm
+ * @param {Date} due
  * @param {Event} event
  * @param {TaskdataViewModel} taskdata
  */
-var CreateTaskDialog = function (dayvm, event, taskdata) {
+var CreateTaskDialog = function (due, event, taskdata) {
 	var self = this;
 	this.top = event.pageY + 'px';
 	this.tasklists = taskdata.tasklists;  // observable array
 
-	this.due = ko.observable(dayvm.date());
+	this.due = ko.observable(due);
 	this.title = ko.observable();
 	this.notes = ko.observable();
 	this.selectedTasklistID = ko.observable(this.tasklists()[0].id());  // select first item

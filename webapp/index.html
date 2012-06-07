@@ -127,7 +127,10 @@ Task WallはGoogleタスクと連携するタスク管理アプリです。<br/>
 </section>
 
 <section data-bind="with: planner" class="planner">
-<div class="description">計画中のタスク</div>
+<h2>計画中のタスク</h2>
+<div class="create">
+<a data-bind="click: $root.createTaskDialog.create" href="#" title="新しいタスクを作成する"></a>
+</div>
 <div data-bind="foreach: tasks" class="tasks">
 <div data-bind="overlappedClick: $root.updateTaskDialog.create,
 	visible: visible,

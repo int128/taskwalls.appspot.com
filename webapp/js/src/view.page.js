@@ -20,8 +20,14 @@ var AuthorizedPageViewModel = function() {
 	this.planner = new PlannerViewModel(this.taskdata);
 
 	// dialogs
-	this.createTaskDialog = ko.disposableObservable(function (dayvm, event) {
-		return new CreateTaskDialog(dayvm, event, this.taskdata);
+	this.createTaskDialog = ko.disposableObservable(function (context, event) {
+		if (context.date) {
+			// context may be CalendarDayViewModel
+			return new CreateTaskDialog(context.date(), event, this.taskdata);
+		} else {
+			// context may be PlannerViewModel
+			return new CreateTaskDialog(null, event, this.taskdata);
+		}
 	}, this);
 	this.updateTaskDialog = ko.disposableObservable(function (taskvm, event) {
 		return new UpdateTaskDialog(taskvm, event, this.taskdata);
