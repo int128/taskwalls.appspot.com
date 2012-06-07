@@ -1,5 +1,5 @@
 /**
- * @constructor {@link Tasklists}
+ * @class set of tasklist
  */
 function Tasklists () {
 };
@@ -42,7 +42,7 @@ Tasklists.get = function (callback) {
 	}
 };
 /**
- * @constructor {@link Tasklist}
+ * @class the tasklist
  * @param {Object} item JSON objct
  */
 function Tasklist (item) {
@@ -70,7 +70,7 @@ Tasklist.prototype.clearCompleted = function (success, error) {
 	});
 };
 /**
- * @constructor {@link Tasks}
+ * @class set of task
  */
 function Tasks () {
 };
