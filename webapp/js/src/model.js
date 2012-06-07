@@ -47,7 +47,7 @@ Tasklists.get = function (callback) {
  */
 function Tasklist (item) {
 	$.extend(this, item);
-	this.colorID = Math.abs(new String(this.id).hashCode()) % AppSettings.tasklistColors;
+	this.colorCode = Math.abs(new String(this.id).hashCode()) % AppSettings.tasklistColors;
 }
 /**
  * Clear completed tasks in the tasklist.

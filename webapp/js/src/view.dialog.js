@@ -81,7 +81,7 @@ function UpdateTasklistDialog (tasklistvm, event) {
 
 	this.title = ko.observable(tasklistvm.title());
 	this.colors = AppSettings.tasklistColorIDs();
-	this.selectedColor = ko.observable(tasklistvm.colorID());
+	this.selectedColor = ko.observable(tasklistvm.colorCode());
 	this.removeConfirmed = ko.observable(false);
 
 	this.saveTitle = function () {
@@ -91,7 +91,7 @@ function UpdateTasklistDialog (tasklistvm, event) {
 	this.selectColor = function (id) {
 		// TODO: persist
 		self.selectedColor(id);
-		self.tasklist.colorID(id);
+		self.tasklist.colorCode(id);
 	};
 
 	this.confirmRemove = function () {
