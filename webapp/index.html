@@ -181,7 +181,7 @@ Task WallはGoogleタスクと連携するタスク管理アプリです。<br/>
 <span data-bind="text: getMonth()+1"></span>月
 <span data-bind="text: getDate()"></span>日
 </div>
-<div><input data-bind="value: title" type="text" placeholder="タスクの件名" /></div>
+<div><input data-bind="value: title, hasfocus: true" type="text" placeholder="タスクの件名" /></div>
 <div><textarea data-bind="value: notes" placeholder="備考"></textarea></div>
 <div data-bind="foreach: tasklists" class="tasklists">
 <span data-bind="text: title,
@@ -201,7 +201,7 @@ Task WallはGoogleタスクと連携するタスク管理アプリです。<br/>
 <!-- ko with: updateTaskDialog -->
 <div data-bind="style: {top: top}" class="update-task dialog">
 <form data-bind="submit: save">
-<div><input data-bind="value: title" type="text" placeholder="タスクの件名" /></div>
+<div><input data-bind="value: title, hasfocus: true" type="text" placeholder="タスクの件名" /></div>
 <div><textarea data-bind="value: notes" placeholder="備考"></textarea></div>
 <div data-bind="with: due" class="due">
 <span data-bind="text: getFullYear()"></span>年
