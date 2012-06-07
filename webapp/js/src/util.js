@@ -104,10 +104,10 @@ NullStorage.prototype.getItem = function () {};
 NullStorage.prototype.setItem = function () {};
 NullStorage.prototype.removeItem = function () {};
 NullStorage.prototype.clear = function () {};
-if (typeof localStorage == undefined) {
+if (typeof localStorage === undefined) {
 	localStorage = new NullStorage();
 }
-if (typeof sessionStorage == undefined) {
+if (typeof sessionStorage === undefined) {
 	sessionStorage = new NullStorage();
 }
 /**
