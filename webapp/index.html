@@ -45,11 +45,11 @@ Task WallはGoogleタスクと連携するタスク管理アプリです。<br/>
 	css: {visible: visible},
 	attr: {'data-tasklistcolor': colorID}"
 	class="tasklist">
-<div class="setting"><div data-bind="click: $root.updateTasklistDialog.open" class="intercept-click"></div></div>
+<div class="setting"><div data-bind="click: $root.updateTasklistDialog.create" class="intercept-click"></div></div>
 <div data-bind="text: title" class="title"></div>
 </div>
 </div>
-<a data-bind="click: $root.createTasklistDialog.open" href="#"
+<a data-bind="click: $root.createTasklistDialog.create" href="#"
 	title="新しいタスクリストを作成する" class="create tasklist"></a>
 <div class="toggle kinds">
 <div class="description">this week's</div>
@@ -104,7 +104,7 @@ Task WallはGoogleタスクと連携するタスク管理アプリです。<br/>
 <td class="border tasks">
 <div data-bind="foreach: tasklists">
 <div data-bind="foreach: tasks" class="tasklist">
-<div data-bind="overlappedClick: $root.updateTaskDialog.open,
+<div data-bind="overlappedClick: $root.updateTaskDialog.create,
 	visible: visible,
 	attr: {
 		'data-status': status,
@@ -118,7 +118,7 @@ Task WallはGoogleタスクと連携するタスク管理アプリです。<br/>
 </div>
 </div>
 <div class="create">
-<a data-bind="click: $root.createTaskDialog.open" href="#" title="新しいタスクを作成する"></a>
+<a data-bind="click: $root.createTaskDialog.create" href="#" title="新しいタスクを作成する"></a>
 </div>
 </td>
 </tr>
@@ -143,20 +143,20 @@ Task WallはGoogleタスクと連携するタスク管理アプリです。<br/>
 </a>
 </div>
 
+<!-- ko if: createTasklistDialog -->
 <!-- ko with: createTasklistDialog -->
-<!-- ko if: visible -->
 <form data-bind="submit: save">
 <div class="create-tasklist dialog">
 <div><input data-bind="value: title, hasfocus: true" type="text" placeholder="タスクリストの名前" /></div>
 <div><button data-bind="enable: title" type="submit" class="btn">タスクリストを作成</button></div>
 </div>
 </form>
-<div data-bind="click: close" class="dialog-background"></div>
 <!-- /ko -->
+<div data-bind="click: createTasklistDialog.dispose" class="dialog-background"></div>
 <!-- /ko -->
 
+<!-- ko if: updateTasklistDialog -->
 <!-- ko with: updateTasklistDialog -->
-<!-- ko if: visible -->
 <div data-bind="style: {top: top}" class="update-tasklist dialog">
 <input data-bind="value: title, event: {blur: saveTitle}" type="text" placeholder="タスクリストの名前" />
 <div data-bind="foreach: colors">
@@ -172,8 +172,8 @@ Task WallはGoogleタスクと連携するタスク管理アプリです。<br/>
 <button data-bind="click: remove" class="btn btn-danger">タスクリストを削除する</button>
 </div>
 </div>
-<div data-bind="click: close" class="dialog-background"></div>
 <!-- /ko -->
+<div data-bind="click: updateTasklistDialog.dispose" class="dialog-background"></div>
 <!-- /ko -->
 
 <div id="update-task-title-template" class="update-task-title resource">
@@ -206,8 +206,8 @@ Task WallはGoogleタスクと連携するタスク管理アプリです。<br/>
 </form>
 </div>
 
+<!-- ko if: createTaskDialog -->
 <!-- ko with: createTaskDialog -->
-<!-- ko if: visible -->
 <form data-bind="submit: save">
 <div data-bind="style: {top: top}" class="create-task dialog">
 <div data-bind="with: due" class="due">
@@ -226,13 +226,13 @@ Task WallはGoogleタスクと連携するタスク管理アプリです。<br/>
 </div>
 <button type="submit" class="btn">タスクを作成</button>
 </div>
-<div data-bind="click: close" class="dialog-background"></div>
 </form>
 <!-- /ko -->
+<div data-bind="click: createTaskDialog.dispose" class="dialog-background"></div>
 <!-- /ko -->
 
+<!-- ko if: updateTaskDialog -->
 <!-- ko with: updateTaskDialog -->
-<!-- ko if: visible -->
 <div data-bind="style: {top: top}" class="update-task dialog">
 <form data-bind="submit: save">
 <div><input data-bind="value: title" type="text" placeholder="タスクの件名" /></div>
@@ -269,8 +269,8 @@ Task WallはGoogleタスクと連携するタスク管理アプリです。<br/>
 <!-- /ko -->
 </form>
 </div>
-<div data-bind="click: close" class="dialog-background"></div>
 <!-- /ko -->
+<div data-bind="click: updateTaskDialog.dispose" class="dialog-background"></div>
 <!-- /ko -->
 
 <section id="help-template" class="help resource">
