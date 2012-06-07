@@ -44,3 +44,13 @@ function disposableObservable(constructor, thisArg) {
 	};
 	return observable;
 };
+/**
+ * Map properties of the model into the viewmodel.
+ * @param {Object} model source
+ * @param {Object} viewmodel target
+ */
+ko.mapObservables = function (model, viewmodel) {
+	$.each(model, function (k, v) {
+		viewmodel[k] = ko.observable(v);
+	});
+};

@@ -3,12 +3,12 @@ var AuthorizedPageViewModel = function() {
 	this.taskdata = new TaskdataViewModel();
 	this.completedCount = ko.computed(function () {
 		return $.grep(this.taskdata.tasks(), function (task) {
-			return DateUtil.isThisWeek(task.due()) && task.completed();
+			return DateUtil.isThisWeek(task.due()) && task.isCompleted();
 		}).length;
 	}, this);
 	this.needsActionCount = ko.computed(function () {
 		return $.grep(this.taskdata.tasks(), function (task) {
-			return DateUtil.isThisWeek(task.due()) && !task.completed();
+			return DateUtil.isThisWeek(task.due()) && !task.isCompleted();
 		}).length;
 	}, this);
 

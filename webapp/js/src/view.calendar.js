@@ -124,7 +124,7 @@ var CalendarDayViewModel = function (date, taskdata) {
 	}, this);
 };
 /**
- * @constructor {@link TaskdataViewModel}
+ * @class View model that contains tasklists and tasks.
  */
 var TaskdataViewModel = function () {
 	this.tasks = ko.observableArray();
@@ -184,40 +184,33 @@ TaskdataViewModel.prototype.load = function () {
 	});
 };
 /**
- * Tasklist view model.
+ * @class Tasklist view model.
  * @param {Tasklist} tasklist
  */
 var TasklistViewModel = function (tasklist) {
-	var self = this;
-	$.each(['id', 'title', 'colorID'], function () {
-		self[this] = ko.observable(tasklist[this]);
-	});
+	ko.mapObservables(tasklist, this);
 	this.visible = ko.observable(true);
-	/**
-	 * Toggle visibility of tasks in the tasklist.
-	 */
 	this.toggleVisibility = function () {
 		this.visible(!this.visible());
 	};
 };
 /**
- * Task view model.
+ * @class Task view model.
  * @param {Object} task
  * @param {TasklistViewModel} tasklist
  */
 var TaskViewModel = function (task, tasklist) {
-	var self = this;
-	$.each(['completed', 'notes', 'status', 'title', 'updated'], function () {
-		self[this] = ko.observable(task[this]);
-	});
-	this.due = ko.observable((function () {
-		if (task.due) {
-			var d = new Date(task.due);
-			d.setHours(0, 0, 0, 0);
-			return d;
-		}
-		return null;
-	})());
+	ko.mapObservables(task, this);
+	this.tasklist = ko.observable(tasklist);
+	if (this.notes === undefined) {
+		this.notes = ko.observable();
+	}
+	if (this.due) {
+		// normalize for current timezone
+		this.due(DateUtil.normalize(this.due()));
+	} else {
+		this.due = ko.observable();
+	}
 	this.isCompleted = ko.computed({
 		read: function () {
 			return this.status() == 'completed';
@@ -227,7 +220,6 @@ var TaskViewModel = function (task, tasklist) {
 		},
 		owner: this
 	});
-	this.tasklist = ko.observable(tasklist);
 	this.visible = ko.computed(function () {
 		return this.tasklist().visible();
 	}, this);
