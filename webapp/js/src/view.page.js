@@ -2,35 +2,39 @@
  * @class View model for authorized page. 
  */
 function AuthorizedPageViewModel () {
-	// tasks
-	this.taskdata = new TaskdataViewModel();
+	// task data
+	var taskdata = new Taskdata();
+	var taskdatavm = new TaskdataViewModel(taskdata);
+
+	// toggle
+	this.tasklists = taskdatavm.tasklists;
 	this.completedCount = ko.computed(function () {
-		return $.grep(this.taskdata.tasks(), function (task) {
+		return $.grep(taskdatavm.tasks(), function (task) {
 			return DateUtil.isThisWeek(task.due()) && task.isCompleted();
 		}).length;
 	}, this);
 	this.needsActionCount = ko.computed(function () {
-		return $.grep(this.taskdata.tasks(), function (task) {
+		return $.grep(taskdatavm.tasks(), function (task) {
 			return DateUtil.isThisWeek(task.due()) && !task.isCompleted();
 		}).length;
 	}, this);
 
 	// calendar
-	this.calendar = new CalendarViewModel(this.taskdata);
-	this.planner = new PlannerViewModel(this.taskdata);
+	this.calendar = new CalendarViewModel(taskdatavm);
+	this.planner = new PlannerViewModel(taskdatavm);
 
 	// dialogs
 	this.createTaskDialog = ko.disposableObservable(function (context, event) {
 		if (context.date) {
 			// context may be CalendarDayViewModel
-			return new CreateTaskDialog(context.date(), event, this.taskdata);
+			return new CreateTaskDialog(context.date(), event, taskdatavm.tasklists());
 		} else {
 			// context may be PlannerViewModel
-			return new CreateTaskDialog(null, event, this.taskdata);
+			return new CreateTaskDialog(null, event, taskdatavm.tasklists());
 		}
 	}, this);
 	this.updateTaskDialog = ko.disposableObservable(function (taskvm, event) {
-		return new UpdateTaskDialog(taskvm, event, this.taskdata);
+		return new UpdateTaskDialog(taskvm, event, taskdatavm.tasklists());
 	}, this);
 	this.createTasklistDialog = ko.disposableObservable(function () {
 		return new CreateTasklistDialog();
@@ -46,6 +50,6 @@ function AuthorizedPageViewModel () {
 	// development only
 	this.development = ko.observable(window.location.hostname == 'localhost');
 
-	// load tasks
-	this.taskdata.load();
+	// asynchronously load
+	taskdata.load();
 };

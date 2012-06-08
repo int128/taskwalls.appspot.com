@@ -129,7 +129,7 @@ function CalendarDayViewModel (date, taskdata) {
 };
 /**
  * @class Planner view model.
- * @param {TaskdataViewModel} taskdata
+ * @param {Taskdata} taskdata
  */
 function PlannerViewModel (taskdata) {
 	this.tasks = ko.computed(function() {
@@ -140,64 +140,18 @@ function PlannerViewModel (taskdata) {
 	}, this);
 };
 /**
- * @class View model that contains tasklists and tasks.
+ * @class View model of {@link Taskdata}.
  */
-function TaskdataViewModel () {
-	this.tasks = ko.observableArray();
-	this.tasklists = ko.observableArray();
-};
-/**
- * Load tasklists and tasks.
- * TODO: model?
- */
-TaskdataViewModel.prototype.load = function () {
-	var self = this;
-	var defaultTasklistID = null;
-	var tasklistsLoaded = false;
-	var loadAllTasklists = function () {
-		if (defaultTasklistID && tasklistsLoaded) {
-			$.each(self.tasklists(), function (i, tasklist) {
-				if (tasklist.id() == defaultTasklistID) {
-					// fix tasks in the default tasklist
-					$.each(self.tasks(), function (i2, task) {
-						if (task.tasklist().id() == '@default') {
-							task.tasklist(tasklist);
-						}
-					});
-				} else {
-					// merge tasks in other tasklists
-					Tasks.get(tasklist.id(), function (items) {
-						self.tasks($.merge(self.tasks(), $.map(items, function (task) {
-							return new TaskViewModel(task, tasklist);
-						})));
-					});
-				}
-			});
-		}
-	};
-	// load tasks in the default tasklist
-	Tasks.get('@default', function (items) {
-		if (items.length > 0) {
-			// assign temporary view model
-			var defaultTasklist = new TasklistViewModel({id: '@default'});
-			self.tasks($.map(items, function (item) {
-				return new TaskViewModel(item, defaultTasklist);
-			}));
-			// extract tasklist ID from URL
-			var p = new String(items[0].selfLink).split('/');
-			defaultTasklistID = p[p.length - 3];
-			loadAllTasklists();
-		}
+function TaskdataViewModel (taskdata) {
+	this.tasks = ko.computed(function () {
+		return $.map(taskdata.tasks(), function (task) {
+			return new TaskViewModel(task);
+		});
 	});
-	// load list of tasklists
-	Tasklists.get(function (items) {
-		if (items.length > 0) {
-			self.tasklists($.map(items, function (item) {
-				return new TasklistViewModel(item);
-			}));
-			tasklistsLoaded = true;
-			loadAllTasklists();
-		}
+	this.tasklists = ko.computed(function () {
+		return $.map(taskdata.tasklists(), function (tasklist) {
+			return new TasklistViewModel(tasklist);
+		});
 	});
 };
 /**
@@ -205,7 +159,7 @@ TaskdataViewModel.prototype.load = function () {
  * @param {Tasklist} tasklist
  */
 function TasklistViewModel (tasklist) {
-	ko.mapObservables(tasklist, this);
+	$.extend(this, tasklist);
 	this.visible = ko.observable(true);
 	this.toggleVisibility = function () {
 		this.visible(!this.visible());
@@ -213,35 +167,10 @@ function TasklistViewModel (tasklist) {
 };
 /**
  * @class Task view model.
- * @param {Object} task
- * @param {TasklistViewModel} tasklist
+ * @param {Task} task
  */
-function TaskViewModel (task, tasklist) {
-	ko.mapObservables(task, this);
-	// TODO: model?
-	this.tasklist = ko.observable(tasklist);
-	// TODO: model?
-	if (this.notes === undefined) {
-		this.notes = ko.observable();
-	}
-	// TODO: model?
-	if (this.due) {
-		// normalize for current timezone
-		this.due(DateUtil.normalize(this.due()));
-	} else {
-		this.due = ko.observable();
-	}
-	// TODO: model?
-	this.isCompleted = ko.computed({
-		read: function () {
-			return this.status() == 'completed';
-		},
-		write: function (value) {
-			this.status(value ? 'completed' : 'needsAction');
-		},
-		owner: this
-	});
-	this.visible = ko.computed(function () {
-		return this.tasklist().visible();
-	}, this);
+function TaskViewModel (task) {
+	$.extend(this, task);
+	// FIXME: not work
+	this.visible = ko.observable(true);
 };

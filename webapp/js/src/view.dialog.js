@@ -2,17 +2,17 @@
  * @class Dialog to create a task.
  * @param {Date} due
  * @param {Event} event
- * @param {TaskdataViewModel} taskdata
+ * @param {Array} tasklists pass as array (not ko.observableArray)
  */
-function CreateTaskDialog (due, event, taskdata) {
+function CreateTaskDialog (due, event, tasklists) {
 	var self = this;
 	this.top = event.pageY + 'px';
-	this.tasklists = taskdata.tasklists;  // observable array
+	this.tasklists = tasklists;
 
 	this.due = ko.observable(due);
 	this.title = ko.observable();
 	this.notes = ko.observable();
-	this.selectedTasklistID = ko.observable(this.tasklists()[0].id());  // select first item
+	this.selectedTasklistID = ko.observable(this.tasklists[0].id());  // select first item
 
 	this.selectTasklist = function (tasklist) {
 		self.selectedTasklistID(tasklist.id());
@@ -26,12 +26,12 @@ function CreateTaskDialog (due, event, taskdata) {
  * @class Dialog to update the task.
  * @param {TaskViewModel} taskvm
  * @param {Event} event
- * @param {TaskdataViewModel} taskdata
+ * @param {Array} tasklists pass as array (not ko.observableArray)
  */
-function UpdateTaskDialog (taskvm, event, taskdata) {
+function UpdateTaskDialog (taskvm, event, tasklists) {
 	var self = this;
 	this.top = event.pageY + 'px';
-	this.tasklists = taskdata.tasklists;  // observable array
+	this.tasklists = tasklists;
 
 	this.due = ko.observable(taskvm.due());
 	this.title = ko.observable(taskvm.title());

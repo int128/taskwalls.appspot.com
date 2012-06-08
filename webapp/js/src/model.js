@@ -1,11 +1,74 @@
 /**
+ * @class tasklists and tasks
+ */
+function Taskdata () {
+	this.tasks = ko.observableArray();
+	this.tasklists = ko.observableArray();
+};
+/**
+ * Asynchronously load task data from server.
+ */
+Taskdata.prototype.load = function () {
+	var self = this;
+
+	var defaultTasklistID = null;
+	var tasklistsLoaded = false;
+
+	// step3: executed after step1 and step2
+	var loadAllTasklists = function () {
+		if (defaultTasklistID && tasklistsLoaded) {
+			$.each(self.tasklists(), function (i, tasklist) {
+				if (tasklist.id() == defaultTasklistID) {
+					// fix tasks in the default tasklist
+					$.each(self.tasks(), function (i2, task) {
+						if (task.tasklist().id() == '@default') {
+							task.tasklist(tasklist);
+						}
+					});
+				} else {
+					// merge tasks in other tasklists
+					Tasks.get(tasklist.id(), function (tasks) {
+						$.each(tasks, function (i3, task) {
+							task.tasklist(tasklist);
+						});
+						self.tasks($.merge(self.tasks(), tasks));
+					});
+				}
+			});
+		}
+	};
+	// step1: asynchronously load tasks in the default tasklist
+	Tasks.get('@default', function (tasks) {
+		if (tasks.length > 0) {
+			// assign to provisional default tasklist
+			var defaultTasklist = new Tasklist({id: '@default'});
+			$.each(tasks, function (i, task) {
+				task.tasklist(defaultTasklist);
+			});
+			self.tasks(tasks);
+			// extract tasklist ID from URL
+			var p = new String(tasks[0].selfLink()).split('/');
+			defaultTasklistID = p[p.length - 3];
+			loadAllTasklists();
+		}
+	});
+	// step2: asynchronously load list of tasklists
+	Tasklists.get(function (tasklists) {
+		if (tasklists.length > 0) {
+			self.tasklists(tasklists);
+			tasklistsLoaded = true;
+			loadAllTasklists();
+		}
+	});
+};
+/**
  * @class set of tasklist
  */
 function Tasklists () {
 };
 /**
- * Get tasklists from server.
- * @param {Function} callback async callback function
+ * Asynchronously get tasklists from server.
+ * @param {Function} callback function (array of tasklist object)
  */
 Tasklists.get = function (callback) {
 	if (!$.isFunction(callback)) {
@@ -43,11 +106,16 @@ Tasklists.get = function (callback) {
 };
 /**
  * @class the tasklist
- * @param {Object} item JSON objct
+ * @param {Object} object
  */
-function Tasklist (item) {
-	$.extend(this, item);
-	this.colorCode = Math.abs(new String(this.id).hashCode()) % AppSettings.tasklistColors;
+function Tasklist (object) {
+	ko.mapObservables(object, this);
+	// FIXME: fix server-side model (colorID -> colorCode)
+	if (object.colorID) {
+		this.colorCode = ko.observable(object.colorID);
+	} else {
+		this.colorCode = ko.observable(Math.abs(this.id().hashCode()) % AppSettings.tasklistColors);
+	}
 }
 /**
  * Clear completed tasks in the tasklist.
@@ -75,9 +143,9 @@ Tasklist.prototype.clearCompleted = function (success, error) {
 function Tasks () {
 };
 /**
- * Get tasks from server.
+ * Asynchronously get tasks from server.
  * @param {String} tasklistID task list ID
- * @param {Function} callback async callback function
+ * @param {Function} callback function (array of task object)
  */
 Tasks.get = function (tasklistID, callback) {
 	if (!$.isFunction(callback)) {
@@ -86,7 +154,9 @@ Tasks.get = function (tasklistID, callback) {
 	if (AppSettings.offline()) {
 		var response = $.parseJSON(localStorage['Tasks.get.' + tasklistID]);
 		if (response) {
-			callback(response.items);
+			callback($.map(response.items, function (item) {
+				return new Task(item);
+			}));
 		}
 	}
 	else {
@@ -105,9 +175,37 @@ Tasks.get = function (tasklistID, callback) {
 			success: function (response, status, xhr) {
 				if (response) {
 					localStorage['Tasks.get.' + tasklistID] = xhr.responseText;
-					callback(response.items);
+					callback($.map(response.items, function (item) {
+						return new Task(item);
+					}));
 				}
 			}
 		});
 	}
+};
+/**
+ * @class the task
+ * @param object {Object} object
+ */
+function Task (object) {
+	ko.mapObservables(object, this);
+	this.tasklist = ko.observable();
+	if (this.notes === undefined) {
+		this.notes = ko.observable();
+	}
+	if (this.due) {
+		// normalize for current timezone
+		this.due(DateUtil.normalize(this.due()));
+	} else {
+		this.due = ko.observable();
+	}
+	this.isCompleted = ko.computed({
+		read: function () {
+			return this.status() == 'completed';
+		},
+		write: function (value) {
+			this.status(value ? 'completed' : 'needsAction');
+		},
+		owner: this
+	});
 };
