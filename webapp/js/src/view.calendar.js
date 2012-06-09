@@ -4,8 +4,6 @@
  */
 function CalendarViewModel (taskdata) {
 	var calendar = new Calendar();
-
-	// extend days
 	(function (d) {
 		d.setHours(0, 0, 0, 0);
 		d.setDate(1);
@@ -20,19 +18,8 @@ function CalendarViewModel (taskdata) {
 			return new CalendarDayViewModel(day);
 		});
 	});
-	/**
-	 * Last day of next month.
-	 */
-	this.nextMonth = ko.computed(function () {
-		var d = new Date(calendar.latestTime());
-		d.setDate(0);
-		d.setMonth(d.getMonth() + 2);
-		return d;
-	});
-	this.extendToNextMonth = function () {
-		calendar.extendTo(this.nextMonth());
-	};
 
+	// extend rows to show all tasks
 	ko.computed(function () {
 		var dues = taskdata.dueMap().days();
 		window.setTimeout(function () {
@@ -42,6 +29,7 @@ function CalendarViewModel (taskdata) {
 		});
 	});
 
+	// arrange tasks by each due date and tasklist
 	ko.computed(function () {
 		$.each(this.days(), function (i, day) {
 			var tasksInDay = taskdata.dueMap().get(day.date());
@@ -52,6 +40,19 @@ function CalendarViewModel (taskdata) {
 			}));
 		});
 	}, this);
+
+	/**
+	 * Last day of next month.
+	 */
+	this.nextMonth = ko.computed(function () {
+		var d = new Date(calendar.latestTime());
+		d.setDate(0);  // yesterday
+		d.setMonth(d.getMonth() + 2);
+		return d;
+	});
+	this.extendToNextMonth = function () {
+		calendar.extendTo(this.nextMonth());
+	};
 };
 /**
  * @class Daily row of the calendar.
