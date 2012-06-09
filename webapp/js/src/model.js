@@ -55,6 +55,7 @@ Taskdata.prototype.load = function () {
 	var defaultTasklistID = null;
 	var tasklistsLoaded = false;
 
+	// TODO: use $.Deferred()
 	// step3: executed after step1 and step2
 	var loadAllTasklists = function () {
 		if (defaultTasklistID && tasklistsLoaded) {
