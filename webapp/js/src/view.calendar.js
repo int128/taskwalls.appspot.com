@@ -5,17 +5,15 @@
 function CalendarViewModel (taskdata) {
 	var calendar = new Calendar();
 
-	// (from) this day
-	var fromDate = new Date();
-	fromDate.setHours(0, 0, 0, 0);
-	fromDate.setDate(1);
-	calendar.extendTo(fromDate);
-	// (to) last day in this month
-	var toDate = new Date();
-	toDate.setHours(0, 0, 0, 0);
-	toDate.setMonth(toDate.getMonth() + 1);
-	toDate.setDate(0);
-	calendar.extendTo(toDate);
+	// extend days
+	(function (d) {
+		d.setHours(0, 0, 0, 0);
+		d.setDate(1);
+		calendar.extendTo(d);
+		d.setMonth(d.getMonth() + 1);
+		d.setDate(0);
+		calendar.extendTo(d);
+	})(new Date());
 
 	this.days = ko.computed(function () {
 		return $.map(calendar.days(), function (day) {
