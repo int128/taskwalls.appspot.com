@@ -34,6 +34,15 @@ function CalendarViewModel (taskdata) {
 	};
 
 	ko.computed(function () {
+		var dues = taskdata.dueMap().days();
+		window.setTimeout(function () {
+			// lazy execution in order to prevent infinite loop
+			calendar.extendTo(Math.min.apply(null, dues));
+			calendar.extendTo(Math.max.apply(null, dues));
+		});
+	});
+
+	ko.computed(function () {
 		$.each(this.days(), function (i, day) {
 			var tasksInDay = taskdata.dueMap().get(day.date());
 			day.tasklists($.map(Tasks.groupByTasklist(tasksInDay), function (tasks) {
@@ -43,16 +52,6 @@ function CalendarViewModel (taskdata) {
 			}));
 		});
 	}, this);
-
-	// FIXME: need to extend rows
-//	ko.computed(function () {
-//		// extend rows to cover tasks
-//		var dues = $.map(taskdata.tasks(), function (task) {
-//			return task.due();
-//		});
-//		calendar.extendTo(Math.min.apply(null, dues));
-//		calendar.extendTo(Math.max.apply(null, dues));
-//	});
 };
 /**
  * @class Daily row of the calendar.
