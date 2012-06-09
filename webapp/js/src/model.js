@@ -42,7 +42,7 @@ function Taskdata () {
 	this.tasks = ko.observableArray();
 	this.tasklists = ko.observableArray();
 	this.dueMap = ko.computed(function () {
-		return new TaskDueMap(this.tasks());
+		return Tasks.groupByDue(this.tasks());
 	}, this);
 };
 /**
@@ -100,51 +100,6 @@ Taskdata.prototype.load = function () {
 			loadAllTasklists();
 		}
 	});
-};
-/**
- * @class map of due date and tasks
- * @param {Array} tasks array of tasks or undefined
- */
-function TaskDueMap (tasks) {
-	var self = this;
-	if ($.isArray(tasks)) {
-		$.each(tasks, function (i, task) {
-			self.add(task);
-		});
-	}
-};
-/**
- * Get tasks of which due is the date.
- * @param {Date} date
- * @returns {Array} array of tasks or undefined
- */
-TaskDueMap.prototype.get = function (date) {
-	var tasks = this[date.getTime()];
-	return tasks ? tasks : [];
-};
-/**
- * Returns tasks of which due date is unknown.
- * @returns {Array}
- */
-TaskDueMap.prototype.getToBeDetermined = function () {
-	var tasks = this[0];
-	return tasks ? tasks : [];
-};
-/**
- * Add the task.
- * @param {Task} task
- */
-TaskDueMap.prototype.add = function (task) {
-	var due = task.due();
-	var key = 0;
-	if (due) {
-		key = due.getTime();
-	}
-	if ($.isArray(this[key])) {
-		this[key].push(task);
-	} else {
-		this[key] = [task];
-	}
 };
 /**
  * @class set of tasklist
@@ -227,6 +182,7 @@ Tasklist.prototype.clearCompleted = function (success, error) {
  */
 function Tasks () {
 };
+Tasks.prototype = {};
 /**
  * Asynchronously get tasks from server.
  * @param {String} tasklistID task list ID
@@ -285,6 +241,62 @@ Tasks.groupByTasklist = function (tasks) {
 		});
 	}
 	return map;
+};
+/**
+ * Returns map of due date and tasks.
+ * @param {Array} tasks array of tasks or undefined
+ * @returns {Tasks.DueMap} map of due date and tasks
+ */
+Tasks.groupByDue = function (tasks) {
+	var map = {};
+	if ($.isArray(tasks)) {
+		$.each(tasks, function (i, task) {
+			var due = task.due();
+			var key = 0;
+			if (due) {
+				key = due.getTime();
+			}
+			if ($.isArray(map[key])) {
+				map[key].push(task);
+			} else {
+				map[key] = [task];
+			}
+		});
+	}
+	return new Tasks.DueMap(map);
+};
+/**
+ * @class map of due date and tasks
+ * @param {Object} map
+ */
+Tasks.DueMap = function (map) {
+	this.map = map;
+};
+/**
+ * Get tasks of which due is the date.
+ * @param {Date} date
+ * @returns {Array} array of tasks or undefined
+ */
+Tasks.DueMap.prototype.get = function (date) {
+	var tasks = this.map[date.getTime()];
+	return tasks ? tasks : [];
+};
+/**
+ * Returns tasks of which due date is unknown.
+ * @returns {Array}
+ */
+Tasks.DueMap.prototype.getToBeDetermined = function () {
+	var tasks = this.map[0];
+	return tasks ? tasks : [];
+};
+/**
+ * Returns days.
+ * @returns {Array} array of time {@link Number}
+ */
+Tasks.DueMap.prototype.days = function () {
+	return $.map(this.map, function (v, k) {
+		return k > 0 ? k : undefined;
+	});
 };
 /**
  * @class the task
