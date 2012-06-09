@@ -9,6 +9,7 @@ function Calendar () {
 };
 /**
  * Extend rows of the calendar.
+ * TODO: Do not use this function in ko.computed() scope.
  * @param {Date} time time to extend (also accepts {Number})
  */
 Calendar.prototype.extendTo = function (time) {
