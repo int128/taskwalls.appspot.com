@@ -1,90 +1,66 @@
 /**
  * @class Calendar.
- * @param {TaskdataViewModel} taskdata
+ * @param {Taskdata} taskdata
  */
 function CalendarViewModel (taskdata) {
-	this.taskdata = taskdata;
+	var calendar = new Calendar();
 
-	// initialize rows
-	var today = AppSettings.today();
-	this.days = ko.observableArray([new CalendarDayViewModel(today, taskdata)]);
-	this.earliestTime = ko.observable(today.getTime());
-	this.latestTime = ko.observable(today.getTime());
-	this.extendMonth(today);
-
-	this.nextMonth = ko.computed(function () {
-		var d = new Date(this.latestTime());
-		d.setHours(24, 0, 0, 0);
-		d.setDate(1);
-		return d;
-	}, this);
-
-	// extend rows to cover tasks
-	this.taskdata.tasks.subscribe(function (newvalue) {
-		var dues = $.map(newvalue, function (task) {
-			return task.due();
-		});
-		this.extendTo(Math.min.apply(null, dues));
-		this.extendTo(Math.max.apply(null, dues));
-	}, this);
-};
-/**
- * Extend rows of the calendar.
- * @param {Date} time time to extend (also accepts {Number})
- */
-CalendarViewModel.prototype.extendTo = function (time) {
-	var normalizedTime = DateUtil.normalize(time).getTime();
-	if (normalizedTime > this.latestTime()) {
-		// append rows
-		var a = [];
-		var i = 0;
-		for (var t = this.latestTime() + 86400000; t <= normalizedTime; t += 86400000) {
-			a[i++] = new CalendarDayViewModel(new Date(t), this.taskdata);
-		}
-		this.days(this.days().concat(a));
-		this.latestTime(normalizedTime);
-	}
-	if (normalizedTime < this.earliestTime()) {
-		// prepend rows
-		var a = [];
-		var i = 0;
-		var e = this.earliestTime();
-		for (var t = normalizedTime; t < e; t += 86400000) {
-			a[i++] = new CalendarDayViewModel(new Date(t), this.taskdata);
-		}
-		this.days(a.concat(this.days()));
-		this.earliestTime(normalizedTime);
-	}
-};
-/**
- * Extend rows of the calendar.
- * @param {Date} time time to extend (also accepts {Number})
- */
-CalendarViewModel.prototype.extendMonth = function (time) {
 	// (from) this day
-	var fromDate = new Date(time);
+	var fromDate = new Date();
 	fromDate.setHours(0, 0, 0, 0);
-	this.extendTo(fromDate);
+	fromDate.setDate(1);
+	calendar.extendTo(fromDate);
 	// (to) last day in this month
-	var toDate = new Date(time);
+	var toDate = new Date();
 	toDate.setHours(0, 0, 0, 0);
 	toDate.setMonth(toDate.getMonth() + 1);
 	toDate.setDate(0);
-	this.extendTo(toDate);
-};
-/**
- * Extend rows to next month.
- */
-CalendarViewModel.prototype.extendToNextMonth = function () {
-	this.extendMonth(this.nextMonth().getTime());
+	calendar.extendTo(toDate);
+
+	this.days = ko.computed(function () {
+		return $.map(calendar.days(), function (day) {
+			return new CalendarDayViewModel(day);
+		});
+	});
+	/**
+	 * Last day of next month.
+	 */
+	this.nextMonth = ko.computed(function () {
+		var d = new Date(calendar.latestTime());
+		d.setDate(0);
+		d.setMonth(d.getMonth() + 2);
+		return d;
+	});
+	this.extendToNextMonth = function () {
+		calendar.extendTo(this.nextMonth());
+	};
+
+	ko.computed(function () {
+		$.each(this.days(), function (i, day) {
+			var tasksInDay = taskdata.dueMap().get(day.date());
+			day.tasklists($.map(Tasks.groupByTasklist(tasksInDay), function (tasks) {
+				return {
+					tasks: TaskViewModel.map(tasks)
+				};
+			}));
+		});
+	}, this);
+
+	// FIXME: need to extend rows
+//	ko.computed(function () {
+//		// extend rows to cover tasks
+//		var dues = $.map(taskdata.tasks(), function (task) {
+//			return task.due();
+//		});
+//		calendar.extendTo(Math.min.apply(null, dues));
+//		calendar.extendTo(Math.max.apply(null, dues));
+//	});
 };
 /**
  * @class Daily row of the calendar.
  * @param {Date} date day of the row
- * @param {TaskdataViewModel} taskdata
  */
-function CalendarDayViewModel (date, taskdata) {
-	var self = this;
+function CalendarDayViewModel (date) {
 	this.date = ko.observable(date);
 	this.time = ko.computed(function () {
 		return this.date().getTime();
@@ -107,25 +83,7 @@ function CalendarDayViewModel (date, taskdata) {
 	this.thisweek = ko.computed(function () {
 		return DateUtil.isThisWeek(this.time());
 	}, this);
-	this.tasks = ko.computed(function() {
-		// TODO: model?
-		return $.grep(taskdata.tasks(), function (task) {
-			return task.due() && task.due().getTime() == self.time();
-		});
-	}, this);
-	/**
-	 * Group by belonging tasklist.
-	 * TODO: model?
-	 */
-	this.tasklists = ko.computed(function () {
-		return $.map(taskdata.tasklists(), function (tasklist) {
-			return {
-				tasks: $.grep(self.tasks(), function (task) {
-					return task.tasklist().id() == tasklist.id();
-				})
-			};
-		});
-	}, this);
+	this.tasklists = ko.observableArray();
 };
 /**
  * @class Planner view model.
@@ -133,26 +91,8 @@ function CalendarDayViewModel (date, taskdata) {
  */
 function PlannerViewModel (taskdata) {
 	this.tasks = ko.computed(function() {
-		// TODO: model?
-		return $.grep(taskdata.tasks(), function (task) {
-			return !task.due();
-		});
+		return TaskViewModel.map(taskdata.dueMap().getToBeDetermined());
 	}, this);
-};
-/**
- * @class View model of {@link Taskdata}.
- */
-function TaskdataViewModel (taskdata) {
-	this.tasks = ko.computed(function () {
-		return $.map(taskdata.tasks(), function (task) {
-			return new TaskViewModel(task);
-		});
-	});
-	this.tasklists = ko.computed(function () {
-		return $.map(taskdata.tasklists(), function (tasklist) {
-			return new TasklistViewModel(tasklist);
-		});
-	});
 };
 /**
  * @class Tasklist view model.
@@ -166,6 +106,15 @@ function TasklistViewModel (tasklist) {
 	};
 };
 /**
+ * Map {@link Tasklist} to {@link TasklistViewModel}.
+ * @param {Array} tasklists
+ */
+TasklistViewModel.map = function (tasklists) {
+	return $.map(tasklists, function (tasklist) {
+		return new TasklistViewModel(tasklist);
+	});
+};
+/**
  * @class Task view model.
  * @param {Task} task
  */
@@ -173,4 +122,13 @@ function TaskViewModel (task) {
 	$.extend(this, task);
 	// FIXME: not work
 	this.visible = ko.observable(true);
+};
+/**
+ * Map {@link Task} to {@link TaskViewModel}.
+ * @param {Array} tasks
+ */
+TaskViewModel.map = function (tasks) {
+	return $.map(tasks, function (task) {
+		return new TaskViewModel(task);
+	});
 };

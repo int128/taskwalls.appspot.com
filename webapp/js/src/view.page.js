@@ -2,39 +2,39 @@
  * @class View model for authorized page. 
  */
 function AuthorizedPageViewModel () {
-	// task data
 	var taskdata = new Taskdata();
-	var taskdatavm = new TaskdataViewModel(taskdata);
 
 	// toggle
-	this.tasklists = taskdatavm.tasklists;
+	this.tasklists = ko.computed(function () {
+		return TasklistViewModel.map(taskdata.tasklists());
+	});
 	this.completedCount = ko.computed(function () {
-		return $.grep(taskdatavm.tasks(), function (task) {
+		return $.grep(taskdata.tasks(), function (task) {
 			return DateUtil.isThisWeek(task.due()) && task.isCompleted();
 		}).length;
 	}, this);
 	this.needsActionCount = ko.computed(function () {
-		return $.grep(taskdatavm.tasks(), function (task) {
+		return $.grep(taskdata.tasks(), function (task) {
 			return DateUtil.isThisWeek(task.due()) && !task.isCompleted();
 		}).length;
 	}, this);
 
 	// calendar
-	this.calendar = new CalendarViewModel(taskdatavm);
-	this.planner = new PlannerViewModel(taskdatavm);
+	this.calendar = new CalendarViewModel(taskdata);
+	this.planner = new PlannerViewModel(taskdata);
 
 	// dialogs
 	this.createTaskDialog = ko.disposableObservable(function (context, event) {
 		if (context.date) {
 			// context may be CalendarDayViewModel
-			return new CreateTaskDialog(context.date(), event, taskdatavm.tasklists());
+			return new CreateTaskDialog(context.date(), event, taskdata.tasklists());
 		} else {
 			// context may be PlannerViewModel
-			return new CreateTaskDialog(null, event, taskdatavm.tasklists());
+			return new CreateTaskDialog(null, event, taskdata.tasklists());
 		}
 	}, this);
 	this.updateTaskDialog = ko.disposableObservable(function (taskvm, event) {
-		return new UpdateTaskDialog(taskvm, event, taskdatavm.tasklists());
+		return new UpdateTaskDialog(taskvm, event, taskdata.tasklists());
 	}, this);
 	this.createTasklistDialog = ko.disposableObservable(function () {
 		return new CreateTasklistDialog();

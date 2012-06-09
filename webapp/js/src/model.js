@@ -1,9 +1,49 @@
 /**
+ * @class calendar
+ */
+function Calendar () {
+	var today = AppSettings.today();
+	this.days = ko.observableArray([today]);
+	this.earliestTime = ko.observable(today.getTime());
+	this.latestTime = ko.observable(today.getTime());
+};
+/**
+ * Extend rows of the calendar.
+ * @param {Date} time time to extend (also accepts {Number})
+ */
+Calendar.prototype.extendTo = function (time) {
+	var normalizedTime = DateUtil.normalize(time).getTime();
+	if (normalizedTime > this.latestTime()) {
+		// append rows
+		var a = [];
+		var i = 0;
+		for (var t = this.latestTime() + 86400000; t <= normalizedTime; t += 86400000) {
+			a[i++] = new Date(t);
+		}
+		this.days(this.days().concat(a));
+		this.latestTime(normalizedTime);
+	}
+	if (normalizedTime < this.earliestTime()) {
+		// prepend rows
+		var a = [];
+		var i = 0;
+		var e = this.earliestTime();
+		for (var t = normalizedTime; t < e; t += 86400000) {
+			a[i++] = new Date(t);
+		}
+		this.days(a.concat(this.days()));
+		this.earliestTime(normalizedTime);
+	}
+};
+/**
  * @class tasklists and tasks
  */
 function Taskdata () {
 	this.tasks = ko.observableArray();
 	this.tasklists = ko.observableArray();
+	this.dueMap = ko.computed(function () {
+		return new TaskDueMap(this.tasks());
+	}, this);
 };
 /**
  * Asynchronously load task data from server.
@@ -60,6 +100,51 @@ Taskdata.prototype.load = function () {
 			loadAllTasklists();
 		}
 	});
+};
+/**
+ * @class map of due date and tasks
+ * @param {Array} tasks array of tasks or undefined
+ */
+function TaskDueMap (tasks) {
+	var self = this;
+	if ($.isArray(tasks)) {
+		$.each(tasks, function (i, task) {
+			self.add(task);
+		});
+	}
+};
+/**
+ * Get tasks of which due is the date.
+ * @param {Date} date
+ * @returns {Array} array of tasks or undefined
+ */
+TaskDueMap.prototype.get = function (date) {
+	var tasks = this[date.getTime()];
+	return tasks ? tasks : [];
+};
+/**
+ * Returns tasks of which due date is unknown.
+ * @returns {Array}
+ */
+TaskDueMap.prototype.getToBeDetermined = function () {
+	var tasks = this[0];
+	return tasks ? tasks : [];
+};
+/**
+ * Add the task.
+ * @param {Task} task
+ */
+TaskDueMap.prototype.add = function (task) {
+	var due = task.due();
+	var key = 0;
+	if (due) {
+		key = due.getTime();
+	}
+	if ($.isArray(this[key])) {
+		this[key].push(task);
+	} else {
+		this[key] = [task];
+	}
 };
 /**
  * @class set of tasklist
@@ -182,6 +267,24 @@ Tasks.get = function (tasklistID, callback) {
 			}
 		});
 	}
+};
+/**
+ * Returns map of tasklist and tasks.
+ * @param {Array} tasks array of tasks or undefined
+ */
+Tasks.groupByTasklist = function (tasks) {
+	var map = {};
+	if ($.isArray(tasks)) {
+		$.each(tasks, function (i, task) {
+			var key = task.tasklist().id();
+			if ($.isArray(map[key])) {
+				map[key].push(task);
+			} else {
+				map[key] = [task];
+			}
+		});
+	}
+	return map;
 };
 /**
  * @class the task
