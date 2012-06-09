@@ -65,17 +65,8 @@ function CalendarDayViewModel (date) {
 	this.time = ko.computed(function () {
 		return this.date().getTime();
 	}, this);
-	this.month = ko.computed(function () {
-		return this.date().getMonth() + 1;
-	}, this);
-	this.day = ko.computed(function () {
-		return this.date().getDate();
-	}, this);
-	this.weekday = ko.computed(function () {
-		return this.date().getDay();
-	}, this);
 	this.weekdayName = ko.computed(function () {
-		return $.resource('weekday' + this.weekday());
+		return $.resource('weekday' + this.date().getDay());
 	}, this);
 	this.past = ko.computed(function () {
 		return this.time() < AppSettings.today().getTime();
