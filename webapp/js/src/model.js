@@ -51,56 +51,48 @@ function Taskdata () {
  */
 Taskdata.prototype.load = function () {
 	var self = this;
-
-	var defaultTasklistID = null;
-	var tasklistsLoaded = false;
-
-	// TODO: use $.Deferred()
-	// step3: executed after step1 and step2
-	var loadAllTasklists = function () {
-		if (defaultTasklistID && tasklistsLoaded) {
-			$.each(self.tasklists(), function (i, tasklist) {
-				if (tasklist.id() == defaultTasklistID) {
-					// fix tasks in the default tasklist
-					$.each(self.tasks(), function (i2, task) {
-						if (task.tasklist().id() == '@default') {
-							task.tasklist(tasklist);
-						}
+	$.when(
+		// asynchronously load tasks in the default tasklist
+		$.Deferred(function (deferred) {
+			Tasks.get('@default').done(function (tasks) {
+				var defaultTasklistId = undefined;
+				if (tasks.length > 0) {
+					// assign to provisional default tasklist
+					var provisionalDefaultTasklist = new Tasklist({id: '@default'});
+					$.each(tasks, function (i, task) {
+						task.tasklist(provisionalDefaultTasklist);
 					});
-				} else {
-					// merge tasks in other tasklists
-					Tasks.get(tasklist.id()).done(function (tasks) {
-						$.each(tasks, function (i3, task) {
-							task.tasklist(tasklist);
-						});
-						self.tasks($.merge(self.tasks(), tasks));
-					});
+					self.tasks(tasks);
+					// extract tasklist ID from URL
+					var p = new String(tasks[0].selfLink()).split('/');
+					defaultTasklistId = p[p.length - 3];
 				}
+				deferred.resolve(defaultTasklistId);
 			});
-		}
-	};
-	// step1: asynchronously load tasks in the default tasklist
-	Tasks.get('@default').done(function (tasks) {
-		if (tasks.length > 0) {
-			// assign to provisional default tasklist
-			var defaultTasklist = new Tasklist({id: '@default'});
-			$.each(tasks, function (i, task) {
-				task.tasklist(defaultTasklist);
-			});
-			self.tasks(tasks);
-			// extract tasklist ID from URL
-			var p = new String(tasks[0].selfLink()).split('/');
-			defaultTasklistID = p[p.length - 3];
-			loadAllTasklists();
-		}
-	});
-	// step2: asynchronously load list of tasklists
-	Tasklists.get().done(function (tasklists) {
-		if (tasklists.length > 0) {
+		}),
+		// asynchronously load list of tasklists
+		Tasklists.get().done(function (tasklists) {
 			self.tasklists(tasklists);
-			tasklistsLoaded = true;
-			loadAllTasklists();
-		}
+		})
+	).done(function (defaultTasklistID) {
+		$.each(self.tasklists(), function (i, tasklist) {
+			if (tasklist.id() == defaultTasklistID) {
+				// fix tasks in the default tasklist
+				$.each(self.tasks(), function (i2, task) {
+					if (task.tasklist().id() == '@default') {
+						task.tasklist(tasklist);
+					}
+				});
+			} else {
+				// merge tasks in other tasklists
+				Tasks.get(tasklist.id()).done(function (tasks) {
+					$.each(tasks, function (i3, task) {
+						task.tasklist(tasklist);
+					});
+					self.tasks($.merge(self.tasks(), tasks));
+				});
+			}
+		});
 	});
 };
 /**
