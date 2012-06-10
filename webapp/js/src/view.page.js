@@ -5,9 +5,6 @@ function AuthorizedPageViewModel () {
 	var taskdata = new Taskdata();
 
 	// toggle
-	this.tasklists = ko.computed(function () {
-		return TasklistViewModel.map(taskdata.tasklists());
-	});
 	this.completedCount = ko.computed(function () {
 		return $.grep(taskdata.tasks(), function (task) {
 			return DateUtil.isThisWeek(task.due()) && task.isCompleted();
