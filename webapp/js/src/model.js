@@ -54,10 +54,7 @@ Taskdata.prototype.load = function () {
 	var defaultTasklist = new Tasklist({id: '@default'});
 	$.when(
 		// asynchronously load tasks in the default tasklist
-		Tasks.get('@default').done(function (tasks) {
-			$.each(tasks, function (i, task) {
-				task.tasklist(defaultTasklist);
-			});
+		Tasks.get(defaultTasklist).done(function (tasks) {
 			self.tasks(tasks);
 		}),
 		// asynchronously load list of tasklists
@@ -78,10 +75,7 @@ Taskdata.prototype.load = function () {
 				$.extend(defaultTasklist, tasklist);
 			} else {
 				// merge tasks in other tasklists
-				Tasks.get(tasklist.id()).done(function (tasks) {
-					$.each(tasks, function (i3, task) {
-						task.tasklist(tasklist);
-					});
+				Tasks.get(tasklist).done(function (tasks) {
 					self.tasks($.merge(self.tasks(), tasks));
 				});
 			}
@@ -166,22 +160,23 @@ function Tasks () {
 Tasks.prototype = {};
 /**
  * Asynchronously get tasks from server.
- * @param {String} tasklistID task list ID
+ * @param {Tasklist}
  * @returns {Deferred}
  */
-Tasks.get = function (tasklistID) {
+Tasks.get = function (tasklist) {
+	var tasklistID = tasklist.id();
 	var deferred = $.Deferred();
 	if (AppSettings.offline()) {
 		var response = $.parseJSON(localStorage['Tasks.get.' + tasklistID]);
 		if (response) {
-			deferred.resolve(Tasks.map(response.items));
+			deferred.resolve(Tasks.map(response.items, tasklist));
 		}
 	}
 	else {
 		$.getJSON('/tasks/list', {tasklistID: tasklistID}).then(function (response, status, xhr) {
 			if (response) {
 				localStorage['Tasks.get.' + tasklistID] = xhr.responseText;
-				deferred.resolve(Tasks.map(response.items));
+				deferred.resolve(Tasks.map(response.items, tasklist));
 			}
 		});
 	}
@@ -190,11 +185,12 @@ Tasks.get = function (tasklistID) {
 /**
  * Map JSON to {@link Task}.
  * @param {Array} items
+ * @param {Tasklist} tasklist belonged tasklist or undefined
  * @returns {Array}
  */
-Tasks.map = function (items) {
+Tasks.map = function (items, tasklist) {
 	return $.map(items, function (item) {
-		return new Task(item);
+		return new Task(item, tasklist);
 	});
 };
 /**
@@ -274,11 +270,12 @@ Tasks.DueMap.prototype.days = function () {
 };
 /**
  * @class the task
- * @param object {Object} object
+ * @param {Object} object
+ * @param {Tasklist} tasklist belonged tasklist or undefined
  */
-function Task (object) {
+function Task (object, tasklist) {
 	ko.mapObservables(object, this);
-	this.tasklist = ko.observable();
+	this.tasklist = ko.observable(tasklist);
 	if (this.notes === undefined) {
 		this.notes = ko.observable();
 	}
