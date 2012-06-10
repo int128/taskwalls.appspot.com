@@ -41,7 +41,7 @@ public class UpdateController extends ControllerBase {
 		TasklistOptionsMeta m = TasklistOptionsMeta.get();
 		TasklistOptions tasklistOptions = new TasklistOptions();
 		tasklistOptions.setKey(TasklistOptions.createKey(asString("id")));
-		tasklistOptions.setColorID(asInteger(m.colorID));
+		tasklistOptions.setColorCode(asInteger(m.colorCode));
 		TasklistOptionsService.put(tasklistOptions);
 		return null;
 	}
@@ -50,7 +50,7 @@ public class UpdateController extends ControllerBase {
 		TasklistOptionsMeta m = TasklistOptionsMeta.get();
 		Validators v = new Validators(request);
 		v.add("id", v.required());
-		v.add(m.colorID, v.required(), v.integerType());
+		v.add(m.colorCode, v.required(), v.integerType());
 		return v.validate();
 	}
 

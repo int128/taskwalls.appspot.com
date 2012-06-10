@@ -19,12 +19,12 @@ public class TasklistOptionsServiceTest extends AppEngineTestCase {
 	public void put() throws Exception {
 		TasklistOptions tasklistOptions = new TasklistOptions();
 		tasklistOptions.setKey(TasklistOptions.createKey("hogeKey"));
-		tasklistOptions.setColorID(3);
+		tasklistOptions.setColorCode(3);
 		TasklistOptionsService.put(tasklistOptions);
 
 		TasklistOptions actual = Datastore.get(TasklistOptions.class,
 				TasklistOptions.createKey("hogeKey"));
-		assertThat(actual.getColorID(), is(3));
+		assertThat(actual.getColorCode(), is(3));
 	}
 
 }

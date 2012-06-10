@@ -95,10 +95,9 @@ function UpdateTasklistDialog (tasklistvm, event) {
 		// TODO: persist
 	};
 
-	this.selectColor = function (id) {
-		// TODO: persist
-		self.selectedColor(id);
-		self.tasklist.colorCode(id);
+	this.selectColor = function (colorCode) {
+		self.selectedColor(colorCode);
+		self.tasklist.colorCode(colorCode);
 	};
 
 	this.confirmRemove = function () {

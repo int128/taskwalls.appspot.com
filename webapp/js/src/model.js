@@ -152,10 +152,8 @@ Tasklists.get = function (callback) {
  */
 function Tasklist (object) {
 	ko.mapObservables(object, this);
-	// FIXME: fix server-side model (colorID -> colorCode)
-	if (object.colorID) {
-		this.colorCode = ko.observable(object.colorID);
-	} else {
+	if (object.colorCode === undefined) {
+		// auto generate
 		this.colorCode = ko.observable(Math.abs(this.id().hashCode()) % AppSettings.tasklistColors);
 	}
 }

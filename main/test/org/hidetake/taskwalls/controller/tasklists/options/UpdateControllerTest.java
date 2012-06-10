@@ -46,14 +46,14 @@ public class UpdateControllerTest extends ControllerTestCase {
 		RequestTestUtil.setXHR(tester);
 		TasklistOptionsMeta m = TasklistOptionsMeta.get();
 		tester.param("id", "hogeId");
-		tester.param(m.colorID, "5");
+		tester.param(m.colorCode, "5");
 		tester.start("/tasklists/options/update");
 		UpdateController controller = tester.getController();
 		assertThat(controller, is(notNullValue()));
 		assertThat(tester.isRedirect(), is(false));
 		assertThat(tester.getDestinationPath(), is(nullValue()));
 		TasklistOptions actual = Datastore.get(m, TasklistOptions.createKey("hogeId"));
-		assertThat(actual.getColorID(), is(5));
+		assertThat(actual.getColorCode(), is(5));
 	}
 
 }
