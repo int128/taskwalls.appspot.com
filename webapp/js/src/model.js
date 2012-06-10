@@ -69,7 +69,7 @@ Taskdata.prototype.load = function () {
 					});
 				} else {
 					// merge tasks in other tasklists
-					Tasks.get(tasklist.id(), function (tasks) {
+					Tasks.get(tasklist.id()).done(function (tasks) {
 						$.each(tasks, function (i3, task) {
 							task.tasklist(tasklist);
 						});
@@ -80,7 +80,7 @@ Taskdata.prototype.load = function () {
 		}
 	};
 	// step1: asynchronously load tasks in the default tasklist
-	Tasks.get('@default', function (tasks) {
+	Tasks.get('@default').done(function (tasks) {
 		if (tasks.length > 0) {
 			// assign to provisional default tasklist
 			var defaultTasklist = new Tasklist({id: '@default'});
@@ -95,7 +95,7 @@ Taskdata.prototype.load = function () {
 		}
 	});
 	// step2: asynchronously load list of tasklists
-	Tasklists.get(function (tasklists) {
+	Tasklists.get().done(function (tasklists) {
 		if (tasklists.length > 0) {
 			self.tasklists(tasklists);
 			tasklistsLoaded = true;
@@ -108,43 +108,39 @@ Taskdata.prototype.load = function () {
  */
 function Tasklists () {
 };
+Tasklists.prototype = {};
 /**
  * Asynchronously get tasklists from server.
- * @param {Function} callback function (array of tasklist object)
+ * @returns {Deferred}
  */
-Tasklists.get = function (callback) {
-	if (!$.isFunction(callback)) {
-		throw new Error('callback is not function');
-	}
+Tasklists.get = function () {
+	var deferred = $.Deferred();
 	if (AppSettings.offline()) {
 		var response = $.parseJSON(localStorage.getItem('Tasklists.get'));
 		if (response) {
-			callback($.map(response.items, function (item) {
-				return new Tasklist(item);
-			}));
+			deferred.resolve(Tasklists.map(response.items));
 		}
 	}
 	else {
-		$.ajax({
-			url: '/tasklists/list',
-			dataType: 'json',
-			/**
-			 * Handler.
-			 * @param response
-			 * @param {String} status
-			 * @param {XMLHttpRequest} xhr
-			 */
-			success: function (response, status, xhr) {
-				if (response) {
-					localStorage.setItem('Tasklists.get', xhr.responseText);
-					AppSettings.lastCached(new Date());
-					callback($.map(response.items, function (item) {
-						return new Tasklist(item);
-					}));
-				}
+		$.getJSON('/tasklists/list').then(function (response, status, xhr) {
+			if (response) {
+				localStorage.setItem('Tasklists.get', xhr.responseText);
+				AppSettings.lastCached(new Date());
+				deferred.resolve(Tasklists.map(response.items));
 			}
 		});
 	}
+	return deferred;
+};
+/**
+ * Map JSON to {@link Tasklist}.
+ * @param {Array} items
+ * @returns {Array}
+ */
+Tasklists.map = function (items) {
+	return $.map(items, function (item) {
+		return new Tasklist(item);
+	});
 };
 /**
  * @class the tasklist
@@ -186,43 +182,35 @@ Tasks.prototype = {};
 /**
  * Asynchronously get tasks from server.
  * @param {String} tasklistID task list ID
- * @param {Function} callback function (array of task object)
+ * @returns {Deferred}
  */
-Tasks.get = function (tasklistID, callback) {
-	if (!$.isFunction(callback)) {
-		throw new Error('callback is not function');
-	}
+Tasks.get = function (tasklistID) {
+	var deferred = $.Deferred();
 	if (AppSettings.offline()) {
 		var response = $.parseJSON(localStorage['Tasks.get.' + tasklistID]);
 		if (response) {
-			callback($.map(response.items, function (item) {
-				return new Task(item);
-			}));
+			deferred.resolve(Tasks.map(response.items));
 		}
 	}
 	else {
-		$.ajax({
-			url: '/tasks/list',
-			data: {
-				tasklistID: tasklistID
-			},
-			dataType: 'json',
-			/**
-			 * Handler.
-			 * @param response
-			 * @param {String} status
-			 * @param {XMLHttpRequest} xhr
-			 */
-			success: function (response, status, xhr) {
-				if (response) {
-					localStorage['Tasks.get.' + tasklistID] = xhr.responseText;
-					callback($.map(response.items, function (item) {
-						return new Task(item);
-					}));
-				}
+		$.getJSON('/tasks/list', {tasklistID: tasklistID}).then(function (response, status, xhr) {
+			if (response) {
+				localStorage['Tasks.get.' + tasklistID] = xhr.responseText;
+				deferred.resolve(Tasks.map(response.items));
 			}
 		});
 	}
+	return deferred;
+};
+/**
+ * Map JSON to {@link Task}.
+ * @param {Array} items
+ * @returns {Array}
+ */
+Tasks.map = function (items) {
+	return $.map(items, function (item) {
+		return new Task(item);
+	});
 };
 /**
  * Returns map of tasklist and tasks.
