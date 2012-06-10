@@ -51,12 +51,12 @@ function Taskdata () {
  */
 Taskdata.prototype.load = function () {
 	var self = this;
+	var defaultTasklist = new Tasklist({id: '@default'});
 	$.when(
 		// asynchronously load tasks in the default tasklist
 		Tasks.get('@default').done(function (tasks) {
-			var provisionalDefaultTasklist = new Tasklist({id: '@default'});
 			$.each(tasks, function (i, task) {
-				task.tasklist(provisionalDefaultTasklist);
+				task.tasklist(defaultTasklist);
 			});
 			self.tasks(tasks);
 		}),
@@ -74,12 +74,8 @@ Taskdata.prototype.load = function () {
 		// load remaining tasklists
 		$.each(tasklists, function (i, tasklist) {
 			if (tasklist.id() == defaultTasklistID) {
-				// fix tasks in the default tasklist
-				$.each(tasksInDefaultTasklist, function (i2, task) {
-					if (task.tasklist().id() == '@default') {
-						task.tasklist(tasklist);
-					}
-				});
+				// fix the default tasklist
+				$.extend(defaultTasklist, tasklist);
 			} else {
 				// merge tasks in other tasklists
 				Tasks.get(tasklist.id()).done(function (tasks) {
