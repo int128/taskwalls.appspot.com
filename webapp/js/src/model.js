@@ -53,32 +53,29 @@ Taskdata.prototype.load = function () {
 	var self = this;
 	$.when(
 		// asynchronously load tasks in the default tasklist
-		$.Deferred(function (deferred) {
-			Tasks.get('@default').done(function (tasks) {
-				var defaultTasklistId = undefined;
-				if (tasks.length > 0) {
-					// assign to provisional default tasklist
-					var provisionalDefaultTasklist = new Tasklist({id: '@default'});
-					$.each(tasks, function (i, task) {
-						task.tasklist(provisionalDefaultTasklist);
-					});
-					self.tasks(tasks);
-					// extract tasklist ID from URL
-					var p = new String(tasks[0].selfLink()).split('/');
-					defaultTasklistId = p[p.length - 3];
-				}
-				deferred.resolve(defaultTasklistId);
+		Tasks.get('@default').done(function (tasks) {
+			var provisionalDefaultTasklist = new Tasklist({id: '@default'});
+			$.each(tasks, function (i, task) {
+				task.tasklist(provisionalDefaultTasklist);
 			});
+			self.tasks(tasks);
 		}),
 		// asynchronously load list of tasklists
 		Tasklists.get().done(function (tasklists) {
 			self.tasklists(tasklists);
 		})
-	).done(function (defaultTasklistID) {
-		$.each(self.tasklists(), function (i, tasklist) {
+	).done(function (tasksInDefaultTasklist, tasklists) {
+		// extract ID of the default tasklist
+		var defaultTasklistID = undefined;
+		if (tasksInDefaultTasklist.length > 0) {
+			var p = tasksInDefaultTasklist[0].selfLink().split('/');
+			defaultTasklistID = p[p.length - 3];
+		}
+		// load remaining tasklists
+		$.each(tasklists, function (i, tasklist) {
 			if (tasklist.id() == defaultTasklistID) {
 				// fix tasks in the default tasklist
-				$.each(self.tasks(), function (i2, task) {
+				$.each(tasksInDefaultTasklist, function (i2, task) {
 					if (task.tasklist().id() == '@default') {
 						task.tasklist(tasklist);
 					}
