@@ -3,8 +3,6 @@
  * @param {Taskdata} taskdata
  */
 function CalendarViewModel (taskdata) {
-	var self = this;
-
 	var calendar = new Calendar();
 	(function (d) {
 		d.setHours(0, 0, 0, 0);
@@ -35,20 +33,17 @@ function CalendarViewModel (taskdata) {
 		return TasklistViewModel.map(taskdata.tasklists());
 	});
 
-	this.tasklistsIdMap = ko.computed(function () {
-		var map = {};
-		$.each(this.tasklists(), function (i, tasklist) {
-			map[tasklist.id()] = tasklist;
-		});
-		return map;
-	}, this);
-
 	// arrange tasks by each due date and tasklist
 	ko.computed(function () {
+		var tasklistIdMap = {};
+		$.each(this.tasklists(), function (i, tasklist) {
+			tasklistIdMap[tasklist.id()] = tasklist;
+		});
+
 		$.each(this.days(), function (i, day) {
 			var tasksInDay = taskdata.dueMap().get(day.date());
 			day.tasklists($.map(Tasks.groupByTasklist(tasksInDay), function (tasks, tasklistId) {
-				var tasklistvm = self.tasklistsIdMap()[tasklistId];
+				var tasklistvm = tasklistIdMap[tasklistId];
 				return {
 					visible: tasklistvm ? tasklistvm.visible() : true,  // always true while initializing
 					tasks: TaskViewModel.map(tasks)
@@ -66,6 +61,7 @@ function CalendarViewModel (taskdata) {
 		d.setMonth(d.getMonth() + 2);
 		return d;
 	});
+
 	this.extendToNextMonth = function () {
 		calendar.extendTo(this.nextMonth());
 	};
