@@ -229,6 +229,7 @@ Tasks.get = function (tasklistID, callback) {
 /**
  * Returns map of tasklist and tasks.
  * @param {Array} tasks array of tasks or undefined
+ * @returns {Object} map of tasklist id and tasks
  */
 Tasks.groupByTasklist = function (tasks) {
 	var map = {};
