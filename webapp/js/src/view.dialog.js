@@ -5,7 +5,6 @@ function CreateTaskDialog (due, event, tasklists) {
 	this.initialize.apply(this, arguments);
 };
 /**
- * @constructor {@link CreateTaskDialog}
  * @param {Date} due
  * @param {Event} event
  * @param {Array} tasklists pass as array (not ko.observableArray)
@@ -35,7 +34,6 @@ function UpdateTaskDialog (taskvm, event, tasklists) {
 	this.initialize.apply(this, arguments);
 };
 /**
- * @constructor {@link UpdateTaskDialog}
  * @param {TaskViewModel} taskvm
  * @param {Event} event
  * @param {Array} tasklists pass as array (not ko.observableArray)
@@ -79,7 +77,6 @@ function CreateTasklistDialog () {
 	this.initialize.apply(this, arguments);
 };
 /**
- * @constructor {@link CreateTasklistDialog}
  */
 CreateTasklistDialog.prototype.initialize = function () {
 	this.title = ko.observable();
@@ -94,7 +91,6 @@ function UpdateTasklistDialog (tasklistvm, event) {
 	this.initialize.apply(this, arguments);
 };
 /**
- * @constructor {@link UpdateTasklistDialog}
  * @param {TasklistViewModel} tasklistvm
  * @param {Event} event
  */

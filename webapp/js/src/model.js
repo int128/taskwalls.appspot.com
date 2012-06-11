@@ -5,7 +5,6 @@ function Calendar () {
 	this.initialize.apply(this, arguments);
 };
 /**
- * @constructor {@link Calendar}
  */
 Calendar.prototype.initialize = function () {
 	var today = AppSettings.today();
@@ -49,7 +48,6 @@ function Taskdata () {
 	this.initialize.apply(this, arguments);
 };
 /**
- * @constructor {@link Taskdata}
  */
 Taskdata.prototype.initialize = function () {
 	this.tasks = ko.observableArray();
@@ -140,7 +138,6 @@ function Tasklist (object) {
 	this.initialize.apply(this, arguments);
 }
 /**
- * @constructor {@link Tasklist}
  * @param {Object} object
  */
 Tasklist.prototype.initialize = function (object) {
@@ -294,7 +291,6 @@ function Task (object, tasklist) {
 	this.initialize.apply(this, arguments);
 };
 /**
- * @constructor {@link Task}
  * @param {Object} object
  * @param {Tasklist} tasklist belonged tasklist or undefined
  */

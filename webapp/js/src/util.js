@@ -5,7 +5,6 @@ function AppSettingsViewModel () {
 	this.initialize.apply(this, arguments);
 }
 /**
- * @constructor {@link AppSettingsViewModel}
  */
 AppSettingsViewModel.prototype.initialize = function () {
 	/**

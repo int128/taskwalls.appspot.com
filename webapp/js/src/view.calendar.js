@@ -6,7 +6,6 @@ function CalendarViewModel (taskdata) {
 	this.initialize.apply(this, arguments);
 };
 /**
- * @constructor {@link CalendarViewModel}
  * @param {Taskdata} taskdata
  */
 CalendarViewModel.prototype.initialize = function (taskdata) {
@@ -81,7 +80,6 @@ function CalendarDayViewModel (date) {
 	this.initialize.apply(this, arguments);
 };
 /**
- * @constructor {@link CalendarDayViewModel}
  * @param {Date} date day of the row
  */
 CalendarDayViewModel.prototype.initialize = function (date) {
@@ -108,7 +106,6 @@ function PlannerViewModel (taskdata) {
 	this.initialize.apply(this, arguments);
 };
 /**
- * @constructor {@link PlannerViewModel}
  * @param {Taskdata} taskdata
  */
 PlannerViewModel.prototype.initialize = function (taskdata) {
@@ -124,7 +121,6 @@ function TasklistViewModel (tasklist) {
 	this.initialize.apply(this, arguments);
 };
 /**
- * @constructor {@link TasklistViewModel}
  * @param {Tasklist} tasklist
  */
 TasklistViewModel.prototype.initialize = function (tasklist) {
@@ -151,7 +147,6 @@ function TaskViewModel (task) {
 	this.initialize.apply(this, arguments);
 };
 /**
- * @constructor {@link TaskViewModel}
  * @param {Task} task
  */
 TaskViewModel.prototype.initialize = function (task) {
