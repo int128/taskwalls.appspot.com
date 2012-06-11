@@ -2,6 +2,12 @@
  * @class Application settings.
  */
 function AppSettingsViewModel () {
+	this.initialize.apply(this, arguments);
+}
+/**
+ * @constructor {@link AppSettingsViewModel}
+ */
+AppSettingsViewModel.prototype.initialize = function () {
 	/**
 	 * Normalized date of today.
 	 */

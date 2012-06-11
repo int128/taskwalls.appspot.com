@@ -1,8 +1,15 @@
 /**
- * @class Calendar.
+ * @class calendar
  * @param {Taskdata} taskdata
  */
 function CalendarViewModel (taskdata) {
+	this.initialize.apply(this, arguments);
+};
+/**
+ * @constructor {@link CalendarViewModel}
+ * @param {Taskdata} taskdata
+ */
+CalendarViewModel.prototype.initialize = function (taskdata) {
 	var calendar = new Calendar();
 	(function (d) {
 		d.setHours(0, 0, 0, 0);
@@ -71,6 +78,13 @@ function CalendarViewModel (taskdata) {
  * @param {Date} date day of the row
  */
 function CalendarDayViewModel (date) {
+	this.initialize.apply(this, arguments);
+};
+/**
+ * @constructor {@link CalendarDayViewModel}
+ * @param {Date} date day of the row
+ */
+CalendarDayViewModel.prototype.initialize = function (date) {
 	this.date = ko.observable(date);
 	this.time = ko.computed(function () {
 		return this.date().getTime();
@@ -91,6 +105,13 @@ function CalendarDayViewModel (date) {
  * @param {Taskdata} taskdata
  */
 function PlannerViewModel (taskdata) {
+	this.initialize.apply(this, arguments);
+};
+/**
+ * @constructor {@link PlannerViewModel}
+ * @param {Taskdata} taskdata
+ */
+PlannerViewModel.prototype.initialize = function (taskdata) {
 	this.tasks = ko.computed(function() {
 		return TaskViewModel.map(taskdata.dueMap().getToBeDetermined());
 	}, this);
@@ -100,6 +121,13 @@ function PlannerViewModel (taskdata) {
  * @param {Tasklist} tasklist
  */
 function TasklistViewModel (tasklist) {
+	this.initialize.apply(this, arguments);
+};
+/**
+ * @constructor {@link TasklistViewModel}
+ * @param {Tasklist} tasklist
+ */
+TasklistViewModel.prototype.initialize = function (tasklist) {
 	$.extend(this, tasklist);
 	this.visible = ko.observable(true);
 	this.toggleVisibility = function () {
@@ -120,6 +148,13 @@ TasklistViewModel.map = function (tasklists) {
  * @param {Task} task
  */
 function TaskViewModel (task) {
+	this.initialize.apply(this, arguments);
+};
+/**
+ * @constructor {@link TaskViewModel}
+ * @param {Task} task
+ */
+TaskViewModel.prototype.initialize = function (task) {
 	$.extend(this, task);
 };
 /**

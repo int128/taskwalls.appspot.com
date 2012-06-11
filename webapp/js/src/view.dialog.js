@@ -1,34 +1,46 @@
 /**
  * @class Dialog to create a task.
+ */
+function CreateTaskDialog (due, event, tasklists) {
+	this.initialize.apply(this, arguments);
+};
+/**
+ * @constructor {@link CreateTaskDialog}
  * @param {Date} due
  * @param {Event} event
  * @param {Array} tasklists pass as array (not ko.observableArray)
  */
-function CreateTaskDialog (due, event, tasklists) {
+CreateTaskDialog.prototype.initialize = function (due, event, tasklists) {
 	var self = this;
 	this.top = event.pageY + 'px';
 	this.tasklists = tasklists;
-
+	
 	this.due = ko.observable(due);
 	this.title = ko.observable();
 	this.notes = ko.observable();
 	this.selectedTasklistID = ko.observable(this.tasklists[0].id());  // select first item
-
+	
 	this.selectTasklist = function (tasklist) {
 		self.selectedTasklistID(tasklist.id());
 	};
-
+	
 	this.save = function () {
 		// TODO: persist
 	};
 };
 /**
  * @class Dialog to update the task.
+ */
+function UpdateTaskDialog (taskvm, event, tasklists) {
+	this.initialize.apply(this, arguments);
+};
+/**
+ * @constructor {@link UpdateTaskDialog}
  * @param {TaskViewModel} taskvm
  * @param {Event} event
  * @param {Array} tasklists pass as array (not ko.observableArray)
  */
-function UpdateTaskDialog (taskvm, event, tasklists) {
+UpdateTaskDialog.prototype.initialize = function (taskvm, event, tasklists) {
 	var self = this;
 	this.top = event.pageY + 'px';
 	this.tasklists = tasklists;
@@ -64,6 +76,12 @@ function UpdateTaskDialog (taskvm, event, tasklists) {
  * @class Dialog to create a tasklist.
  */
 function CreateTasklistDialog () {
+	this.initialize.apply(this, arguments);
+};
+/**
+ * @constructor {@link CreateTasklistDialog}
+ */
+CreateTasklistDialog.prototype.initialize = function () {
 	this.title = ko.observable();
 	this.save = function () {
 		// TODO: persist
@@ -71,10 +89,16 @@ function CreateTasklistDialog () {
 };
 /**
  * @class Dialog to update the tasklist.
+ */
+function UpdateTasklistDialog (tasklistvm, event) {
+	this.initialize.apply(this, arguments);
+};
+/**
+ * @constructor {@link UpdateTasklistDialog}
  * @param {TasklistViewModel} tasklistvm
  * @param {Event} event
  */
-function UpdateTasklistDialog (tasklistvm, event) {
+UpdateTasklistDialog.prototype.initialize = function (tasklistvm, event) {
 	var self = this;
 	this.top = event.clientY + 'px';
 	this.tasklist = tasklistvm;

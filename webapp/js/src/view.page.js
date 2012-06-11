@@ -2,6 +2,12 @@
  * @class View model for authorized page. 
  */
 function AuthorizedPageViewModel () {
+	this.initialize.apply(this, arguments);
+};
+/**
+ * @constructor {@link AuthorizedPageViewModel}
+ */
+AuthorizedPageViewModel.prototype.initialize = function () {
 	var taskdata = new Taskdata();
 
 	// toggle

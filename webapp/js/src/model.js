@@ -2,6 +2,12 @@
  * @class calendar
  */
 function Calendar () {
+	this.initialize.apply(this, arguments);
+};
+/**
+ * @constructor {@link Calendar}
+ */
+Calendar.prototype.initialize = function () {
 	var today = AppSettings.today();
 	this.days = ko.observableArray([today]);
 	this.earliestTime = ko.observable(today.getTime());
@@ -40,6 +46,12 @@ Calendar.prototype.extendTo = function (time) {
  * @class tasklists and tasks
  */
 function Taskdata () {
+	this.initialize.apply(this, arguments);
+};
+/**
+ * @constructor {@link Taskdata}
+ */
+Taskdata.prototype.initialize = function () {
 	this.tasks = ko.observableArray();
 	this.tasklists = ko.observableArray();
 	this.dueMap = ko.computed(function () {
@@ -87,7 +99,6 @@ Taskdata.prototype.load = function () {
  */
 function Tasklists () {
 };
-Tasklists.prototype = {};
 /**
  * Asynchronously get tasklists from server.
  * @returns {Deferred}
@@ -126,12 +137,19 @@ Tasklists.map = function (items) {
  * @param {Object} object
  */
 function Tasklist (object) {
+	this.initialize.apply(this, arguments);
+}
+/**
+ * @constructor {@link Tasklist}
+ * @param {Object} object
+ */
+Tasklist.prototype.initialize = function (object) {
 	ko.mapObservables(object, this);
 	if (object.colorCode === undefined) {
 		// auto generate
 		this.colorCode = ko.observable(Math.abs(this.id().hashCode()) % AppSettings.tasklistColors);
 	}
-}
+};
 /**
  * Clear completed tasks in the tasklist.
  * @param {Function} success
@@ -157,7 +175,6 @@ Tasklist.prototype.clearCompleted = function (success, error) {
  */
 function Tasks () {
 };
-Tasks.prototype = {};
 /**
  * Asynchronously get tasks from server.
  * @param {Tasklist}
@@ -274,6 +291,14 @@ Tasks.DueMap.prototype.days = function () {
  * @param {Tasklist} tasklist belonged tasklist or undefined
  */
 function Task (object, tasklist) {
+	this.initialize.apply(this, arguments);
+};
+/**
+ * @constructor {@link Task}
+ * @param {Object} object
+ * @param {Tasklist} tasklist belonged tasklist or undefined
+ */
+Task.prototype.initialize = function (object, tasklist) {
 	ko.mapObservables(object, this);
 	this.tasklist = ko.observable(tasklist);
 	if (this.notes === undefined) {
