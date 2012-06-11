@@ -12,20 +12,14 @@ OAuth2Session.prototype.handle = function () {
 	if (params['code']) {
 		// step2: received authorization code
 		if (this.onAuthorizing() !== false) {
-			$.ajax({
-				url: '/oauth2',
-				type: 'POST',
-				data: {
-					code: params['code']
-				},
-				success: function () {
+			$.post('/oauth2', {code: params['code']})
+				.done(function  () {
 					window.location.replace(window.location.pathname);
-				},
-				error: function () {
+				})
+				.fail(function () {
 					// step2-1: authorization error
 					window.location.replace('/logout');
-				}
-			});
+				});
 		}
 	}
 	else if (params['error']) {
