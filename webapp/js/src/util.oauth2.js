@@ -8,7 +8,7 @@ function OAuth2Session () {
  */
 OAuth2Session.prototype.handle = function () {
 	var self = this;
-	var params = RequestUtil.getQueryParameters();
+	var params = $.queryParameters();
 	if (params['code']) {
 		// step2: received authorization code
 		if (this.onAuthorizing() !== false) {

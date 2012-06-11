@@ -74,23 +74,3 @@ DateUtil.isThisWeek = function (time) {
 	var next = first + 7 * 24 * 3600 * 1000;
 	return first <= time && time < next;
 };
-/**
- * @class Request utility.
- */
-function RequestUtil () {
-};
-/**
- * Parse query string.
- * @returns hash of query parameters
- * @see http://code.google.com/intl/ja/apis/accounts/docs/OAuth2UserAgent.html
- */
-RequestUtil.getQueryParameters = function () {
-	var params = {};
-	var queryString = window.location.search.substring(1);
-	var regex = /([^&=]+)=([^&]*)/g;
-	var m;
-	while (m = regex.exec(queryString)) {
-		params[decodeURIComponent(m[1])] = decodeURIComponent(m[2]);
-	}
-	return params;
-};

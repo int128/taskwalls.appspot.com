@@ -62,3 +62,20 @@ if (!Array.prototype.reduce) {
     return curr;
   };
 }
+$.extend({
+	/**
+	 * Parse query string.
+	 * @returns hash of query parameters
+	 * @see http://code.google.com/intl/ja/apis/accounts/docs/OAuth2UserAgent.html
+	 */
+	queryParameters: function () {
+		var params = {};
+		var queryString = window.location.search.substring(1);
+		var regex = /([^&=]+)=([^&]*)/g;
+		var m;
+		while (m = regex.exec(queryString)) {
+			params[decodeURIComponent(m[1])] = decodeURIComponent(m[2]);
+		}
+		return params;
+	}
+});
