@@ -73,15 +73,24 @@ UpdateTaskDialog.prototype.initialize = function (taskvm, event, tasklists) {
 /**
  * @class Dialog to create a tasklist.
  */
-function CreateTasklistDialog () {
+function CreateTasklistDialog (taskdata) {
 	this.initialize.apply(this, arguments);
 };
 /**
+ * @param {Taskdata} taskdata
  */
-CreateTasklistDialog.prototype.initialize = function () {
+CreateTasklistDialog.prototype.initialize = function (taskdata) {
+	var self = this;
 	this.title = ko.observable();
 	this.save = function () {
-		// TODO: persist
+		if (self.title()) {
+			Tasklist.create({
+				title: self.title()
+			}).done(function (tasklist) {
+				// FIXME: sync to tasklists in the header
+				taskdata.tasklists().push(tasklist);
+			});
+		}
 	};
 };
 /**

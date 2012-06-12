@@ -202,6 +202,29 @@ Tasklist.prototype.clearCompleted = function (success, error) {
 	});
 };
 /**
+ * Create a tasklist.
+ * @param {Object} data
+ * @returns {Deferred} call with new instance of {@link Tasklist}
+ */
+Tasklist.create = function (data) {
+	var deferred = $.Deferred();
+	if (!AppSettings.offline()) {
+		$.post('/tasklists/create', data)
+			.done(function (object) {
+				deferred.resolve(new Tasklist(object));
+			})
+			.fail(function () {
+				deferred.fail();
+			});
+	} else {
+		// TODO: offline
+		deferred.resolve(new Tasklist($.extend({
+			id: 'tasklist__' + $.now()
+		}, data)));
+	}
+	return deferred;
+};
+/**
  * @class set of task
  */
 function Tasks () {
