@@ -45,12 +45,6 @@ ko.disposableObservable = function (constructor, thisArg) {
 	return observable;
 };
 /**
- * TODO: migrate to ko.extendObservables()
- */
-ko.mapObservables = function (source, destination) {
-	return ko.extendObservables(destination, source);
-};
-/**
  * Copy or update properties in the source into the destination.
  * This function behaves like <code>$.extend()</code>.
  * @param {Object} destination

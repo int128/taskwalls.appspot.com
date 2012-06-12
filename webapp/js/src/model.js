@@ -141,7 +141,7 @@ function Tasklist (object) {
  * @param {Object} object
  */
 Tasklist.prototype.initialize = function (object) {
-	ko.mapObservables(object, this);
+	ko.extendObservables(this, object);
 	if (object.colorCode === undefined) {
 		// auto generate
 		this.colorCode = ko.observable(Math.abs(this.id().hashCode()) % AppSettings.tasklistColors);
@@ -329,7 +329,7 @@ function Task (object, tasklist) {
  * @param {Tasklist} tasklist belonged tasklist or undefined
  */
 Task.prototype.initialize = function (object, tasklist) {
-	ko.mapObservables(object, this);
+	ko.extendObservables(this, object);
 	this.tasklist = ko.observable(tasklist);
 	if (this.notes === undefined) {
 		this.notes = ko.observable();
