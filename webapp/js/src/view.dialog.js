@@ -88,10 +88,15 @@ CreateTasklistDialog.prototype.initialize = function (taskdata) {
 				title: self.title()
 			}).done(function (tasklist) {
 				taskdata.tasklists.push(tasklist);
+				self.dispose();
 			});
 		}
 	};
 };
+/**
+ * This method will be injected by <code>ko.disposableObservable()</code>.
+ */
+CreateTasklistDialog.prototype.dispose = function () {};
 /**
  * @class Dialog to update the tasklist.
  */
@@ -122,6 +127,7 @@ UpdateTasklistDialog.prototype.initialize = function (taskdata, tasklistvm, even
 			self.tasklist.update({
 				title: self.title
 			});
+			self.dispose();
 		}
 	};
 
@@ -140,6 +146,11 @@ UpdateTasklistDialog.prototype.initialize = function (taskdata, tasklistvm, even
 	this.remove = function () {
 		self.tasklist.remove().done(function () {
 			taskdata.removeTasklist(self.tasklist);
+			self.dispose();
 		});
 	};
 };
+/**
+ * This method will be injected by <code>ko.disposableObservable()</code>.
+ */
+UpdateTasklistDialog.prototype.dispose = function () {};

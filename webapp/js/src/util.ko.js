@@ -30,6 +30,7 @@ ko.bindingHandlers.overlappedClick = {
 };
 /**
  * Create a <code>ko.observable()</code> with constructor and disposer.
+ * Managed instance has <code>dispose()</code> method to dispose itself.
  * @param {Function} constructor function that returns new instance
  * @param {Object} thisArg this object that will be passed to constructor
  * @returns {Object} <code>ko.observable()</code> instance
@@ -37,7 +38,12 @@ ko.bindingHandlers.overlappedClick = {
 ko.disposableObservable = function (constructor, thisArg) {
 	var observable = ko.observable();
 	observable.create = function () {
-		observable(constructor.apply(thisArg, arguments));
+		var instance = constructor.apply(thisArg, arguments);
+		// inject method
+		instance.dispose = function () {
+			observable(null);
+		};
+		observable(instance);
 	};
 	observable.dispose = function () {
 		observable(null);
