@@ -95,14 +95,15 @@ CreateTasklistDialog.prototype.initialize = function (taskdata) {
 /**
  * @class Dialog to update the tasklist.
  */
-function UpdateTasklistDialog (tasklistvm, event) {
+function UpdateTasklistDialog (taskdata, tasklistvm, event) {
 	this.initialize.apply(this, arguments);
 };
 /**
+ * @param {Taskdata} taskdata
  * @param {TasklistViewModel} tasklistvm
  * @param {Event} event
  */
-UpdateTasklistDialog.prototype.initialize = function (tasklistvm, event) {
+UpdateTasklistDialog.prototype.initialize = function (taskdata, tasklistvm, event) {
 	var self = this;
 	this.top = event.clientY + 'px';
 	this.tasklist = tasklistvm;
@@ -137,8 +138,8 @@ UpdateTasklistDialog.prototype.initialize = function (tasklistvm, event) {
 		self.removeConfirmed(true);
 	};
 	this.remove = function () {
-		// TODO: sync model and view
-//		self.tasklist.remove().done(function () {
-//		});
+		self.tasklist.remove().done(function () {
+			taskdata.removeTasklist(self.tasklist);
+		});
 	};
 };

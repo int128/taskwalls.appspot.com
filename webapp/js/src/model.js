@@ -93,6 +93,18 @@ Taskdata.prototype.load = function () {
 	});
 };
 /**
+ * Remove the tasklist and belonged tasks.
+ * @param {Tasklist} tasklist
+ */
+Taskdata.prototype.removeTasklist = function (tasklist) {
+	this.tasks.remove(function (item) {
+		return item.tasklist().id() == tasklist.id();
+	});
+	this.tasklists.remove(function (item) {
+		return item.id() == tasklist.id();
+	});
+};
+/**
  * @class set of tasklist
  */
 function Tasklists () {
@@ -277,6 +289,7 @@ Tasks.get = function (tasklist) {
 	}
 	else {
 		$.getJSON('/tasks/list', {tasklistID: tasklistID}).then(function (response, status, xhr) {
+			// FIXME: check response.items
 			if (response) {
 				var items = response.items;
 				if ($.isArray(items)) {

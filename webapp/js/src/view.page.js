@@ -42,7 +42,7 @@ AuthorizedPageViewModel.prototype.initialize = function () {
 		return new CreateTasklistDialog(taskdata);
 	});
 	this.updateTasklistDialog = ko.disposableObservable(function (tasklistvm, event) {
-		return new UpdateTasklistDialog(tasklistvm, event);
+		return new UpdateTasklistDialog(taskdata, tasklistvm, event);
 	});
 
 	// offline
