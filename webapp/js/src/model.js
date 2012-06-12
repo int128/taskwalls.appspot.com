@@ -106,15 +106,21 @@ Tasklists.get = function () {
 	if (AppSettings.offline()) {
 		var response = $.parseJSON(localStorage.getItem('Tasklists.get'));
 		if (response) {
-			deferred.resolve(Tasklists.map(response.items));
+			var items = response.items;
+			if ($.isArray(items)) {
+				deferred.resolve(Tasklists.map(items));
+			}
 		}
 	}
 	else {
 		$.getJSON('/tasklists/list').then(function (response, status, xhr) {
 			if (response) {
-				localStorage.setItem('Tasklists.get', xhr.responseText);
-				AppSettings.lastCached(new Date());
-				deferred.resolve(Tasklists.map(response.items));
+				var items = response.items;
+				if ($.isArray(items)) {
+					localStorage.setItem('Tasklists.get', xhr.responseText);
+					AppSettings.lastCached(new Date());
+					deferred.resolve(Tasklists.map(items));
+				}
 			}
 		});
 	}
@@ -263,14 +269,20 @@ Tasks.get = function (tasklist) {
 	if (AppSettings.offline()) {
 		var response = $.parseJSON(localStorage['Tasks.get.' + tasklistID]);
 		if (response) {
-			deferred.resolve(Tasks.map(response.items, tasklist));
+			var items = response.items;
+			if ($.isArray(items)) {
+				deferred.resolve(Tasks.map(items, tasklist));
+			}
 		}
 	}
 	else {
 		$.getJSON('/tasks/list', {tasklistID: tasklistID}).then(function (response, status, xhr) {
 			if (response) {
-				localStorage['Tasks.get.' + tasklistID] = xhr.responseText;
-				deferred.resolve(Tasks.map(response.items, tasklist));
+				var items = response.items;
+				if ($.isArray(items)) {
+					localStorage['Tasks.get.' + tasklistID] = xhr.responseText;
+					deferred.resolve(Tasks.map(items, tasklist));
+				}
 			}
 		});
 	}
