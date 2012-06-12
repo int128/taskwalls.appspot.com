@@ -148,38 +148,61 @@ Tasklist.prototype.initialize = function (object) {
 	}
 };
 /**
- * Save and update this if succeeded.
+ * Save and update myself if succeeded.
  * @param {Object} data
  */
 Tasklist.prototype.update = function (data) {
 	var self = this;
-	return $.post('/tasklists/update', $.extend({id: this.id()}, data))
-		.done(function () {
-			ko.extendObservables(self, data);
-		})
-		.fail(function () {
-			ko.extendObservables(data, self);
-		});
+	if (!AppSettings.offline()) {
+		return $.post('/tasklists/update', $.extend({id: this.id()}, data))
+			.done(function () {
+				ko.extendObservables(self, data);
+			})
+			.fail(function () {
+				ko.extendObservables(data, self);
+			});
+	} else {
+		// TODO: offline
+		return $.Deferred()
+			.done(function () {
+				ko.extendObservables(self, data);
+			})
+			.resolve();
+	}
 };
 /**
- * Save and update this if succeeded.
+ * Save and update myself if succeeded.
  * @param {Object} data
  */
 Tasklist.prototype.updateMetadata = function (data) {
 	var self = this;
-	return $.post('/tasklists/options/update', $.extend({id: this.id()}, data))
-		.done(function () {
-			ko.extendObservables(self, data);
-		})
-		.fail(function () {
-			ko.extendObservables(data, self);
-		});
+	if (!AppSettings.offline()) {
+		return $.post('/tasklists/options/update', $.extend({id: this.id()}, data))
+			.done(function () {
+				ko.extendObservables(self, data);
+			})
+			.fail(function () {
+				ko.extendObservables(data, self);
+			});
+	} else {
+		// TODO: offline
+		return $.Deferred()
+			.done(function () {
+				ko.extendObservables(self, data);
+			})
+			.resolve();
+	}
 };
 /**
- * Remove this.
+ * Remove myself.
  */
 Tasklist.prototype.remove = function () {
-	return $.post('/tasklists/delete', {id: this.id()});
+	if (!AppSettings.offline()) {
+		return $.post('/tasklists/delete', {id: this.id()});
+	} else {
+		// TODO: offline
+		return $.Deferred().resolve();
+	}
 };
 /**
  * Clear completed tasks in the tasklist.
