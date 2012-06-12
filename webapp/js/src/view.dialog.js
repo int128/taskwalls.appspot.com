@@ -100,18 +100,18 @@ CreateTasklistDialog.prototype.dispose = function () {};
 /**
  * @class Dialog to update the tasklist.
  */
-function UpdateTasklistDialog (taskdata, tasklistvm, event) {
+function UpdateTasklistDialog (taskdata, tasklist, event) {
 	this.initialize.apply(this, arguments);
 };
 /**
  * @param {Taskdata} taskdata
- * @param {TasklistViewModel} tasklistvm
+ * @param {Tasklist} tasklist
  * @param {Event} event
  */
-UpdateTasklistDialog.prototype.initialize = function (taskdata, tasklistvm, event) {
+UpdateTasklistDialog.prototype.initialize = function (taskdata, tasklist, event) {
 	var self = this;
 	this.top = event.clientY + 'px';
-	this.tasklist = tasklistvm;
+	this.tasklist = tasklist;
 	this.colors = (function () {
 		// generate color code array
 		var a = [];
