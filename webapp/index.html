@@ -166,7 +166,9 @@ Task WallはGoogleタスクと連携するタスク管理アプリです。<br/>
 <!-- ko if: updateTasklistDialog -->
 <!-- ko with: updateTasklistDialog -->
 <div data-bind="style: {top: top}" class="update-tasklist dialog">
-<input data-bind="value: title, event: {blur: saveTitle}" type="text" placeholder="タスクリストの名前" />
+<form data-bind="submit: saveTitle">
+<input data-bind="value: title" type="text" placeholder="タスクリストの名前" />
+</form>
 <div data-bind="foreach: colors">
 <div data-bind="css: {selected: $data==$parent.selectedColor()}" class="color">
 <div data-bind="attr: {'data-tasklistcolor': $data}, click: $parent.selectColor"></div>

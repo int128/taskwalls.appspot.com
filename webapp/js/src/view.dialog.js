@@ -107,23 +107,30 @@ UpdateTasklistDialog.prototype.initialize = function (tasklistvm, event) {
 		return a;
 	})();
 
-	this.title = ko.observable(tasklistvm.title());
-	this.selectedColor = ko.observable(tasklistvm.colorCode());
-	this.removeConfirmed = ko.observable(false);
-
+	this.title = ko.observable(this.tasklist.title());
 	this.saveTitle = function () {
-		// TODO: persist
+		if (self.title()) {
+			self.tasklist.update({
+				title: self.title
+			});
+		}
 	};
 
+	this.selectedColor = ko.observable(this.tasklist.colorCode());
 	this.selectColor = function (colorCode) {
 		self.selectedColor(colorCode);
-		self.tasklist.colorCode(colorCode);
+		self.tasklist.updateMetadata({
+			colorCode: self.selectedColor
+		});
 	};
 
+	this.removeConfirmed = ko.observable(false);
 	this.confirmRemove = function () {
 		self.removeConfirmed(true);
 	};
 	this.remove = function () {
-		// TODO: persist
+		// TODO: sync model and view
+//		self.tasklist.remove().done(function () {
+//		});
 	};
 };

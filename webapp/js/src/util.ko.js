@@ -45,12 +45,33 @@ ko.disposableObservable = function (constructor, thisArg) {
 	return observable;
 };
 /**
- * Map properties of the model into the viewmodel.
- * @param {Object} model source
- * @param {Object} viewmodel target
+ * TODO: migrate to ko.extendObservables()
  */
-ko.mapObservables = function (model, viewmodel) {
-	$.each(model, function (k, v) {
-		viewmodel[k] = ko.observable(v);
+ko.mapObservables = function (source, destination) {
+	return ko.extendObservables(destination, source);
+};
+/**
+ * Copy or update properties in the source into the destination.
+ * This function behaves like <code>$.extend()</code>.
+ * @param {Object} destination
+ * @param {Object} source
+ */
+ko.extendObservables = function (destination, source) {
+	$.each(source, function (key, value) {
+		(function (k, v) {
+			// update value
+			if (ko.isObservable(destination[k])) {
+				destination[k](v);
+			} else {
+				destination[k] = ko.observable(v);
+			}
+		})(key, (function (v) {
+			// unwrap if needed
+			if (ko.isObservable(v)) {
+				return v();
+			} else {
+				return v;
+			}
+		})(value));
 	});
 };

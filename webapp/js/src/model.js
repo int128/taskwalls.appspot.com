@@ -148,6 +148,40 @@ Tasklist.prototype.initialize = function (object) {
 	}
 };
 /**
+ * Save and update this if succeeded.
+ * @param {Object} data
+ */
+Tasklist.prototype.update = function (data) {
+	var self = this;
+	return $.post('/tasklists/update', $.extend({id: this.id()}, data))
+		.done(function () {
+			ko.extendObservables(self, data);
+		})
+		.fail(function () {
+			ko.extendObservables(data, self);
+		});
+};
+/**
+ * Save and update this if succeeded.
+ * @param {Object} data
+ */
+Tasklist.prototype.updateMetadata = function (data) {
+	var self = this;
+	return $.post('/tasklists/options/update', $.extend({id: this.id()}, data))
+		.done(function () {
+			ko.extendObservables(self, data);
+		})
+		.fail(function () {
+			ko.extendObservables(data, self);
+		});
+};
+/**
+ * Remove this.
+ */
+Tasklist.prototype.remove = function () {
+	return $.post('/tasklists/delete', {id: this.id()});
+};
+/**
  * Clear completed tasks in the tasklist.
  * @param {Function} success
  * @param {Function} error
