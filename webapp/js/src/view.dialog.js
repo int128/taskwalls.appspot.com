@@ -87,8 +87,7 @@ CreateTasklistDialog.prototype.initialize = function (taskdata) {
 			Tasklist.create({
 				title: self.title()
 			}).done(function (tasklist) {
-				// FIXME: sync to tasklists in the header
-				taskdata.tasklists().push(tasklist);
+				taskdata.tasklists.push(tasklist);
 			});
 		}
 	};
