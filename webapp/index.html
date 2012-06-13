@@ -200,7 +200,7 @@ Task WallはGoogleタスクと連携するタスク管理アプリです。<br/>
 <div data-bind="foreach: tasklists" class="tasklists">
 <span data-bind="text: title,
 	attr: {'data-tasklistcolor': colorCode},
-	css: {selected: id() == $parent.selectedTasklist().id()},
+	css: {selected: $data == $parent.selectedTasklist()},
 	click: $parent.selectTasklist"
 	class="tasklist"></span>
 </div>
