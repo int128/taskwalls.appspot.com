@@ -29,10 +29,10 @@ AuthorizedPageViewModel.prototype.initialize = function () {
 	this.createTaskDialog = ko.disposableObservable(function (context, event) {
 		if (context.date) {
 			// context may be CalendarDayViewModel
-			return new CreateTaskDialog(context.date(), event, taskdata.tasklists());
+			return new CreateTaskDialog(taskdata, context.date(), event);
 		} else {
 			// context may be PlannerViewModel
-			return new CreateTaskDialog(null, event, taskdata.tasklists());
+			return new CreateTaskDialog(taskdata, null, event);
 		}
 	}, this);
 	this.updateTaskDialog = ko.disposableObservable(function (taskvm, event) {

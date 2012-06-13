@@ -5,28 +5,41 @@ function CreateTaskDialog (due, event, tasklists) {
 	this.initialize.apply(this, arguments);
 };
 /**
+ * @param {Taskdata} taskdata
  * @param {Date} due
  * @param {Event} event
- * @param {Array} tasklists pass as array (not ko.observableArray)
  */
-CreateTaskDialog.prototype.initialize = function (due, event, tasklists) {
+CreateTaskDialog.prototype.initialize = function (taskdata, due, event) {
 	var self = this;
 	this.top = event.pageY + 'px';
-	this.tasklists = tasklists;
-	
+
 	this.due = ko.observable(due);
 	this.title = ko.observable();
 	this.notes = ko.observable();
-	this.selectedTasklistID = ko.observable(this.tasklists[0].id());  // select first item
-	
+
+	this.tasklists = taskdata.tasklists();
+	this.selectedTasklist = ko.observable(this.tasklists[0]);  // select first item
 	this.selectTasklist = function (tasklist) {
-		self.selectedTasklistID(tasklist.id());
+		self.selectedTasklist(tasklist);
 	};
-	
+
 	this.save = function () {
-		// TODO: persist
+		Task.create({
+			tasklistID: self.selectedTasklist().id(),
+			dueTime: self.due().getTime(),  // TODO: rename
+			title: self.title(),
+			notes: self.notes()
+		}).done(function (task) {
+			task.tasklist(self.selectedTasklist());
+			taskdata.tasks.push(task);
+			self.dispose();
+		});
 	};
 };
+/**
+ * This method will be injected by <code>ko.disposableObservable()</code>.
+ */
+CreateTaskDialog.prototype.dispose = function () {};
 /**
  * @class Dialog to update the task.
  */

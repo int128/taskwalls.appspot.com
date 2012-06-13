@@ -421,3 +421,28 @@ Task.prototype.initialize = function (object, tasklist) {
 		owner: this
 	});
 };
+/**
+ * Create a task.
+ * @param {Object} data
+ * @returns {Deferred} call with new instance of {@link Task}
+ */
+Task.create = function (data) {
+	var deferred = $.Deferred();
+	if (!AppSettings.offline()) {
+		$.post('/tasks/create', data)
+			.done(function (object) {
+				deferred.resolve(new Task(object));
+			})
+			.fail(function () {
+				deferred.fail();
+			});
+	} else {
+		// TODO: offline
+		deferred.resolve(new Task($.extend({
+			id: 'task__' + $.now(),
+			status: 'needsAction',
+			due: data.dueTime  // TODO: rename model property to due
+		}, data)));
+	}
+	return deferred;
+};
