@@ -297,7 +297,6 @@ Tasks.get = function (tasklist) {
 	}
 	else {
 		$.getJSON('/tasks/list', {tasklistID: tasklistID}).then(function (response, status, xhr) {
-			// FIXME: check response.items
 			if (response) {
 				var items = response.items;
 				if ($.isArray(items)) {
