@@ -1,4 +1,4 @@
-package org.hidetake.taskwalls.controller.tasks.update;
+package org.hidetake.taskwalls.controller.tasks;
 
 import java.util.logging.Logger;
 
@@ -15,9 +15,9 @@ import com.google.api.services.tasks.model.Task;
  * 
  * @author hidetake.org
  */
-public class TasklistController extends ControllerBase {
+public class MoveController extends ControllerBase {
 
-	private static final Logger logger = Logger.getLogger(TasklistController.class.getName());
+	private static final Logger logger = Logger.getLogger(MoveController.class.getName());
 
 	@Override
 	public Navigation run() throws Exception {

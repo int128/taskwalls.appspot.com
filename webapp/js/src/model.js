@@ -464,7 +464,7 @@ Task.prototype.update = function (data) {
 Task.prototype.move = function (tasklist) {
 	var self = this;
 	if (!AppSettings.offline()) {
-		return $.post('/tasks/update/tasklist', {  // TODO: rename path
+		return $.post('/tasks/move', {
 				id: this.id(),
 				tasklistID: this.tasklist().id(),
 				destinationTasklistID: tasklist.id()
