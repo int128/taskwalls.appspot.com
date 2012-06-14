@@ -10,36 +10,21 @@ AppSettingsViewModel.prototype.initialize = function () {
 	/**
 	 * Normalized date of today.
 	 */
-	this.today = ko.computed(function () {
-		return DateUtil.normalize(new Date());
-	});
+	this.today = ko.observable(DateUtil.normalize(new Date()));
 	/**
 	 * Last cached date.
 	 */
-	this.lastCached = ko.computed({
-		read: function () {
-			return new Date(parseInt(localStorage['cachedDate']));
-		},
-		write: function (value) {
-			localStorage['cachedDate'] = value.getTime();
-		}
-	});
+	this.lastCached = ko.observable(new Date(parseInt(localStorage['cachedDate'])));
+	ko.computed(function () {
+		localStorage['cachedDate'] = this.lastCached().getTime();
+	}, this);
 	/**
 	 * Offline mode.
 	 */
-	this.offline = ko.computed({
-		read: function () {
-			return sessionStorage['session-offline'] == 'true';
-		},
-		write: function (value) {
-			if (value) {
-				sessionStorage['session-offline'] = true;
-			}
-			else {
-				sessionStorage.removeItem('session-offline');
-			}
-		}
-	});
+	this.offline = ko.observable(sessionStorage['offline'] == 'true');
+	ko.computed(function () {
+		sessionStorage['offline'] = this.offline();
+	}, this);
 };
 /**
  * Number of colors.
