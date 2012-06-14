@@ -47,42 +47,57 @@ function UpdateTaskDialog (taskvm, event, tasklists) {
 	this.initialize.apply(this, arguments);
 };
 /**
- * @param {TaskViewModel} taskvm
+ * @param {Taskdata} taskdata
+ * @param {Task} task
  * @param {Event} event
- * @param {Array} tasklists pass as array (not ko.observableArray)
  */
-UpdateTaskDialog.prototype.initialize = function (taskvm, event, tasklists) {
+UpdateTaskDialog.prototype.initialize = function (taskdata, task, event) {
 	var self = this;
 	this.top = event.pageY + 'px';
-	this.tasklists = tasklists;
+	this.task = task;
 
-	this.due = ko.observable(taskvm.due());
-	this.title = ko.observable(taskvm.title());
-	this.notes = ko.observable(taskvm.notes());
-	this.selectedTasklistID = ko.observable(taskvm.tasklist().id());
-	this.originalTasklistID = ko.observable(taskvm.tasklist().id());
-	this.removeConfirmed = ko.observable(false);
-
+	this.due = ko.observable(this.task.due());
+	this.title = ko.observable(this.task.title());
+	this.notes = ko.observable(this.task.notes());
 	this.save = function () {
-		// TODO: persist
+		if (self.title) {
+			task.update({
+				dueTime: self.due().getTime(),  // TODO: rename
+				title: self.title(),
+				notes: self.notes()
+			}).done(function () {
+				self.dispose();
+			});
+		}
 	};
 
+	this.tasklists = taskdata.tasklists();
+	this.selectedTasklist = ko.observable(this.task.tasklist());
+	this.originalTasklist = ko.observable(this.task.tasklist());
 	this.selectTasklist = function (tasklist) {
-		self.selectedTasklistID(tasklist.id());
+		self.selectedTasklist(tasklist);
 	};
-
 	this.move = function () {
-		// TODO: persist
+		self.task.move(self.selectedTasklist()).done(function () {
+			self.dispose();
+		});
 	};
 
+	this.removeConfirmed = ko.observable(false);
 	this.confirmRemove = function () {
 		self.removeConfirmed(true);
 	};
-
 	this.remove = function () {
-		// TODO: persist
+		self.task.remove().done(function () {
+			taskdata.removeTask(self.task);
+			self.dispose();
+		});
 	};
 };
+/**
+ * This method will be injected by <code>ko.disposableObservable()</code>.
+ */
+UpdateTaskDialog.prototype.dispose = function () {};
 /**
  * @class Dialog to create a tasklist.
  */

@@ -92,6 +92,11 @@ Taskdata.prototype.load = function () {
 		});
 	});
 };
+Taskdata.prototype.removeTask = function (task) {
+	this.tasks.remove(function (item) {
+		return item.id() == task.id();
+	});
+};
 /**
  * Remove the tasklist and belonged tasks.
  * @param {Tasklist} tasklist
@@ -168,6 +173,7 @@ Tasklist.prototype.initialize = function (object) {
 /**
  * Save and update myself if succeeded.
  * @param {Object} data
+ * @returns {Deferred}
  */
 Tasklist.prototype.update = function (data) {
 	var self = this;
@@ -191,6 +197,7 @@ Tasklist.prototype.update = function (data) {
 /**
  * Save and update myself if succeeded.
  * @param {Object} data
+ * @returns {Deferred}
  */
 Tasklist.prototype.updateMetadata = function (data) {
 	var self = this;
@@ -213,6 +220,7 @@ Tasklist.prototype.updateMetadata = function (data) {
 };
 /**
  * Remove myself.
+ * @returns {Deferred}
  */
 Tasklist.prototype.remove = function () {
 	if (!AppSettings.offline()) {
@@ -420,6 +428,73 @@ Task.prototype.initialize = function (object, tasklist) {
 		},
 		owner: this
 	});
+};
+/**
+ * Save and update myself if succeeded.
+ * @param {Object} data
+ * @returns {Deferred}
+ */
+Task.prototype.update = function (data) {
+	var self = this;
+	if (!AppSettings.offline()) {
+		return $.post('/tasks/update', $.extend({
+				id: this.id(),
+				tasklistID: this.tasklist().id()
+			}, data))
+			.done(function () {
+				ko.extendObservables(self, data);
+			})
+			.fail(function () {
+				// TODO: view model should do this...
+				ko.extendObservables(data, self);
+			});
+	} else {
+		// TODO: offline
+		return $.Deferred()
+			.done(function () {
+				ko.extendObservables(self, data);
+			})
+			.resolve();
+	}
+};
+/**
+ * Move the task to another tasklist.
+ * @param {Tasklist} tasklist destination
+ * @returns {Deferred}
+ */
+Task.prototype.move = function (tasklist) {
+	var self = this;
+	if (!AppSettings.offline()) {
+		return $.post('/tasks/update/tasklist', {  // TODO: rename path
+				id: this.id(),
+				tasklistID: tasklist.id()
+			})
+			.done(function () {
+				self.tasklist(tasklist);
+			});
+	} else {
+		// TODO: offline
+		return $.Deferred()
+			.done(function () {
+				self.tasklist(tasklist);
+			})
+			.resolve();
+	}
+};
+/**
+ * Remove the task.
+ * @returns {Deferred}
+ */
+Task.prototype.remove = function () {
+	if (!AppSettings.offline()) {
+		return $.post('/tasks/delete', {
+			id: this.id(),
+			tasklistID: this.tasklist().id()
+		});
+	} else {
+		// TODO: offline
+		return $.Deferred().resolve();
+	}
 };
 /**
  * Create a task.
