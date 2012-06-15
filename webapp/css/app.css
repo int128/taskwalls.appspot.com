@@ -25,7 +25,7 @@ body {
 	margin-top: -50px;
 	margin-left: -50px;
 	background-color: rgba(0, 0, 0, 0.8);
-	background-image: url('/css/loading2.gif');
+	background-image: url('/img/loading2.gif');
 	background-repeat: no-repeat;
 	background-position: center;
 	border-radius: 5px;
@@ -74,7 +74,7 @@ body {
 	height: 300px;
 	margin-left: auto;
 	margin-right: auto;
-	background: url('/css/screenshot.20111229.png') no-repeat #fff;
+	background: url('/img/screenshot.20111229.png') no-repeat #fff;
 	border: solid 1px #ccc;
 	border-radius: 5px;
 	-moz-border-radius: 5px;
@@ -229,7 +229,7 @@ body {
 	right: 0;
 	width: 32px;
 	height: 32px;
-	background: url('/css/gear.png') no-repeat center;
+	background: url('/img/gear.png') no-repeat center;
 	opacity: 0.1;
 }
 
@@ -687,13 +687,13 @@ body {
 }
 
 .myicon-logout {
-	background-image: url('/css/power.png');
+	background-image: url('/img/power.png');
 	height: 32px;
 	width: 32px;
 }
 
 .myicon-help {
-	background-image: url('/css/gom.png');
+	background-image: url('/img/lightning.png');
 	height: 32px;
 	width: 32px;
 }
