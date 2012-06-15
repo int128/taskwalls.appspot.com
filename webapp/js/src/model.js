@@ -71,20 +71,20 @@ Taskdata.prototype.load = function () {
 		Tasklists.get().done(function (tasklists) {
 			self.tasklists(tasklists);
 		})
-	).done(function (tasksInDefaultTasklist, tasklists) {
-		// extract ID of the default tasklist
+	).done(function () {
+		// extract ID of the default tasklist if possible
 		var defaultTasklistID = undefined;
-		if (tasksInDefaultTasklist.length > 0) {
-			var p = tasksInDefaultTasklist[0].selfLink().split('/');
+		if (self.tasks().length > 0) {
+			var p = self.tasks()[0].selfLink().split('/');
 			defaultTasklistID = p[p.length - 3];
 		}
-		// load remaining tasklists
-		$.each(tasklists, function (i, tasklist) {
+		$.each(self.tasklists(), function (i, tasklist) {
 			if (tasklist.id() == defaultTasklistID) {
-				// fix the default tasklist
+				// replace instance of the default tasklist
 				$.extend(defaultTasklist, tasklist);
+				self.tasklists()[i] = defaultTasklist;
 			} else {
-				// merge tasks in other tasklists
+				// load remaining tasklists
 				Tasks.get(tasklist).done(function (tasks) {
 					self.tasks($.merge(self.tasks(), tasks));
 				});
