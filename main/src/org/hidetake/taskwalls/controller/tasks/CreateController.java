@@ -37,11 +37,11 @@ public class CreateController extends ControllerBase {
 		Task task = new Task();
 		task.setTitle(asString("title"));
 		task.setNotes(asString("notes"));
-		if (asLong("dueTime") == 0L) {
+		if (asLong("due") == 0L) {
 			task.setDue(Data.NULL_DATE_TIME);
 		}
 		else {
-			task.setDue(new DateTime(asLong("dueTime"), 0));
+			task.setDue(new DateTime(asLong("due"), 0));
 		}
 
 		Task created = tasksService.tasks().insert(asString("tasklistID"), task).execute();
@@ -53,7 +53,7 @@ public class CreateController extends ControllerBase {
 		v.add("tasklistID", v.required());
 		v.add("title", v.required());
 		v.add("notes");
-		v.add("dueTime", v.required(), v.longType());
+		v.add("due", v.required(), v.longType());
 		return v.validate();
 	}
 

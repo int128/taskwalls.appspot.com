@@ -434,7 +434,7 @@ Task.prototype.update = function (data) {
 		return $.post('/tasks/update', $.extend({}, data, {
 				id: this.id(),
 				tasklistID: this.tasklist().id(),
-				dueTime: data.due.getUTCTime()  // TODO: rename model property to due
+				due: data.due.getUTCTime()
 			}))
 			.done(function () {
 				ko.extendObservables(self, data);
@@ -500,7 +500,7 @@ Task.prototype.remove = function () {
 Task.create = function (data) {
 	if (!AppSettings.offline()) {
 		return $.post('/tasks/create', $.extend({}, data, {
-			dueTime: data.due.getUTCTime()  // TODO: rename model property to due
+			due: data.due.getUTCTime()
 		})).pipe(function (object) {
 			return new Task(object);
 		});

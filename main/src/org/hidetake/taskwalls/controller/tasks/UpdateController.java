@@ -41,14 +41,14 @@ public class UpdateController extends ControllerBase {
 		// optional parameters (may be null)
 		task.setTitle(asString("title"));
 		task.setNotes(asString("notes"));
-		if (asLong("dueTime") == null) {
+		if (asLong("due") == null) {
 			// leave as null
 		}
-		else if (asLong("dueTime") == 0L) {
+		else if (asLong("due") == 0L) {
 			task.setDue(Data.NULL_DATE_TIME);
 		}
 		else {
-			task.setDue(new DateTime(asLong("dueTime"), 0));
+			task.setDue(new DateTime(asLong("due"), 0));
 		}
 		task.setStatus(asString("status"));
 		if ("needsAction".equals(asString("status"))) {
@@ -66,7 +66,7 @@ public class UpdateController extends ControllerBase {
 		v.add("id", v.required());
 		v.add("title");
 		v.add("notes");
-		v.add("dueTime", v.longType());
+		v.add("due", v.longType());
 		v.add("status", v.regexp("completed|needsAction"));
 		return v.validate();
 	}
