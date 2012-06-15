@@ -119,29 +119,30 @@ function Tasklists () {
  * @returns {Deferred}
  */
 Tasklists.get = function () {
-	var deferred = $.Deferred();
-	if (AppSettings.offline()) {
-		var response = $.parseJSON(localStorage.getItem('Tasklists.get'));
-		if (response) {
-			var items = response.items;
-			if ($.isArray(items)) {
-				deferred.resolve(Tasklists.map(items));
-			}
-		}
-	}
-	else {
-		$.getJSON('/tasklists/list').then(function (response, status, xhr) {
+	if (!AppSettings.offline()) {
+		return $.getJSON('/tasklists/list').pipe(function (response, status, xhr) {
 			if (response) {
 				var items = response.items;
 				if ($.isArray(items)) {
 					localStorage.setItem('Tasklists.get', xhr.responseText);
 					AppSettings.lastCached(new Date());
-					deferred.resolve(Tasklists.map(items));
+					return Tasklists.map(items);
 				}
 			}
+			// ignore bad data
+			return [];
 		});
 	}
-	return deferred;
+	else {
+		var response = $.parseJSON(localStorage.getItem('Tasklists.get'));
+		if (response) {
+			var items = response.items;
+			if ($.isArray(items)) {
+				return $.Deferred().resolve(Tasklists.map(items));
+			}
+		}
+		throw 'cache of tasks corrupted';  // should not happen
+	}
 };
 /**
  * Map JSON to {@link Tasklist}.
@@ -256,22 +257,16 @@ Tasklist.prototype.clearCompleted = function (success, error) {
  * @returns {Deferred} call with new instance of {@link Tasklist}
  */
 Tasklist.create = function (data) {
-	var deferred = $.Deferred();
 	if (!AppSettings.offline()) {
-		$.post('/tasklists/create', data)
-			.done(function (object) {
-				deferred.resolve(new Tasklist(object));
-			})
-			.fail(function () {
-				deferred.fail();
-			});
+		$.post('/tasklists/create', data).pipe(function (object) {
+			return new Tasklist(object);
+		});
 	} else {
 		// TODO: offline
-		deferred.resolve(new Tasklist($.extend({
+		return $.Deferred().resolve(new Tasklist($.extend({
 			id: 'tasklist__' + $.now()
 		}, data)));
 	}
-	return deferred;
 };
 /**
  * @class set of task
@@ -284,29 +279,29 @@ function Tasks () {
  * @returns {Deferred}
  */
 Tasks.get = function (tasklist) {
-	var tasklistID = tasklist.id();
-	var deferred = $.Deferred();
-	if (AppSettings.offline()) {
-		var response = $.parseJSON(localStorage['Tasks.get.' + tasklistID]);
-		if (response) {
-			var items = response.items;
-			if ($.isArray(items)) {
-				deferred.resolve(Tasks.map(items, tasklist));
-			}
-		}
-	}
-	else {
-		$.getJSON('/tasks/list', {tasklistID: tasklistID}).then(function (response, status, xhr) {
+	if (!AppSettings.offline()) {
+		return $.getJSON('/tasks/list', {tasklistID: tasklist.id()}).pipe(function (response, status, xhr) {
 			if (response) {
 				var items = response.items;
 				if ($.isArray(items)) {
-					localStorage['Tasks.get.' + tasklistID] = xhr.responseText;
-					deferred.resolve(Tasks.map(items, tasklist));
+					localStorage['Tasks.get.' + tasklist.id()] = xhr.responseText;
+					return Tasks.map(items, tasklist);
 				}
 			}
+			// ignore bad data
+			return [];
 		});
 	}
-	return deferred;
+	else {
+		var response = $.parseJSON(localStorage['Tasks.get.' + tasklist.id()]);
+		if (response) {
+			var items = response.items;
+			if ($.isArray(items)) {
+				return $.Deferred().resolve(Tasks.map(items, tasklist));
+			}
+		}
+		throw 'cache of tasks corrupted';  // should not happen
+	}
 };
 /**
  * Map JSON to {@link Task}.
@@ -502,22 +497,16 @@ Task.prototype.remove = function () {
  * @returns {Deferred} call with new instance of {@link Task}
  */
 Task.create = function (data) {
-	var deferred = $.Deferred();
 	if (!AppSettings.offline()) {
-		$.post('/tasks/create', data)
-			.done(function (object) {
-				deferred.resolve(new Task(object));
-			})
-			.fail(function () {
-				deferred.fail();
-			});
+		return $.post('/tasks/create', data).pipe(function (object) {
+			return new Task(object);
+		});
 	} else {
 		// TODO: offline
-		deferred.resolve(new Task($.extend({
+		return $.Deferred().resolve(new Task($.extend({
 			id: 'task__' + $.now(),
 			status: 'needsAction',
 			due: data.dueTime  // TODO: rename model property to due
 		}, data)));
 	}
-	return deferred;
 };
