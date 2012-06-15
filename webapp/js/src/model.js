@@ -431,10 +431,11 @@ Task.prototype.initialize = function (object, tasklist) {
 Task.prototype.update = function (data) {
 	var self = this;
 	if (!AppSettings.offline()) {
-		return $.post('/tasks/update', $.extend({
+		return $.post('/tasks/update', $.extend({}, data, {
 				id: this.id(),
-				tasklistID: this.tasklist().id()
-			}, data))
+				tasklistID: this.tasklist().id(),
+				dueTime: data.due.getUTCTime()  // TODO: rename model property to due
+			}))
 			.done(function () {
 				ko.extendObservables(self, data);
 			})
@@ -498,15 +499,16 @@ Task.prototype.remove = function () {
  */
 Task.create = function (data) {
 	if (!AppSettings.offline()) {
-		return $.post('/tasks/create', data).pipe(function (object) {
+		return $.post('/tasks/create', $.extend({}, data, {
+			dueTime: data.due.getUTCTime()  // TODO: rename model property to due
+		})).pipe(function (object) {
 			return new Task(object);
 		});
 	} else {
 		// TODO: offline
 		return $.Deferred().resolve(new Task($.extend({
 			id: 'task__' + $.now(),
-			status: 'needsAction',
-			due: data.dueTime  // TODO: rename model property to due
+			status: 'needsAction'
 		}, data)));
 	}
 };

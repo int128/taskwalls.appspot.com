@@ -26,7 +26,7 @@ CreateTaskDialog.prototype.initialize = function (taskdata, due, event) {
 	this.save = function () {
 		Task.create({
 			tasklistID: self.selectedTasklist().id(),
-			dueTime: self.due().getTime(),  // TODO: rename
+			due: self.due(),
 			title: self.title(),
 			notes: self.notes()
 		}).done(function (task) {
@@ -62,7 +62,7 @@ UpdateTaskDialog.prototype.initialize = function (taskdata, task, event) {
 	this.save = function () {
 		if (self.title) {
 			task.update({
-				dueTime: self.due().getTime(),  // TODO: rename
+				due: self.due(),
 				title: self.title(),
 				notes: self.notes()
 			}).done(function () {

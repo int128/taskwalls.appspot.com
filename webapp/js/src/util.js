@@ -58,3 +58,10 @@ DateUtil.isThisWeek = function (time) {
 	var next = first + 7 * 24 * 3600 * 1000;
 	return first <= time && time < next;
 };
+/**
+ * Get time-stamp in UTC.
+ * @returns {Number} time in UTC
+ */
+Date.prototype.getUTCTime = function () {
+	return this.getTime() - this.getTimezoneOffset() * 60 * 1000;
+};
