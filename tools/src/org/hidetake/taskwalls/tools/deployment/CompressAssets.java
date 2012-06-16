@@ -53,7 +53,7 @@ public class CompressAssets {
 			}
 			Writer writer = new BufferedWriter(new OutputStreamWriter(destination));
 			for (File file : sources) {
-				logger.info("Compressing " + file.getName());
+				logger.info(String.format("Compressing %s (%,d bytes)", file.getName(), file.length()));
 				new CssCompressor(new FileReader(file)).compress(writer, -1);
 			}
 			writer.close();
@@ -75,19 +75,21 @@ public class CompressAssets {
 				sources.add(new File(WEBAPP_BASE + line));
 			}
 
+			int sourceStreamsSize = 0;
 			List<InputStream> sourceStreams = new ArrayList<InputStream>();
 			sourceStreams.add(CompressAssets.class.getResourceAsStream("compress-header"));
 			for (File file : sources) {
 				if (file.getName().endsWith(".min.js")) {
-					logger.info("Copying " + file.getName());
+					logger.info(String.format("Copying %s (%,d bytes)", file.getName(), file.length()));
 					FileUtils.copyFile(file, destination);
 				} else {
 					sourceStreams.add(FileUtils.openInputStream(file));
+					sourceStreamsSize += file.length();
 				}
 			}
 			sourceStreams.add(CompressAssets.class.getResourceAsStream("compress-footer"));
 
-			logger.info("Compressing");
+			logger.info(String.format("Compressing (%,d bytes)", sourceStreamsSize));
 			SequenceInputStream sourceStream = new SequenceInputStream(Collections.enumeration(sourceStreams));
 			try {
 				// compress
