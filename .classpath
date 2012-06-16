@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <classpath>
 	<classpathentry kind="src" path="main/src"/>
+	<classpathentry kind="src" output="www-test/WEB-INF/tools-classes" path="tools/src"/>
 	<classpathentry kind="src" output="www-test/WEB-INF/classes" path="main/test"/>
 	<classpathentry kind="src" path=".apt_generated">
 		<attributes>
