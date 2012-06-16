@@ -19,7 +19,7 @@ public class JsController extends Controller {
 	@Override
 	public Navigation run() throws Exception {
 		response.setCharacterEncoding("UTF-8");
-		response.setContentType("text/css");
+		response.setContentType("text/javascript");
 		if (isDevelopment()) {
 			runOnDevelopment();
 		}
