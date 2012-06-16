@@ -46,8 +46,8 @@ AuthorizedPageViewModel.prototype.initialize = function () {
 	});
 
 	// offline
-	this.offline = AppSettings.offline;
-	this.lastCached = AppSettings.lastCached;
+	this.offline = taskwalls.settings.offline;
+	this.lastCached = taskwalls.settings.lastCached;
 
 	// development only
 	this.development = ko.observable(window.location.hostname == 'localhost');

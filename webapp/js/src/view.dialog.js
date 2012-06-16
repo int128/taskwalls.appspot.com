@@ -143,7 +143,7 @@ UpdateTasklistDialog.prototype.initialize = function (taskdata, tasklist, event)
 	this.colors = (function () {
 		// generate color code array
 		var a = [];
-		for (var i = 0; i < AppSettings.tasklistColors; i++) {
+		for (var i = 0; i < taskwalls.settings.tasklistColors; i++) {
 			a[i] = i;
 		}
 		return a;

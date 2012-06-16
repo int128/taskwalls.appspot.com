@@ -1,12 +1,12 @@
 /**
  * @class Application settings.
  */
-function AppSettingsViewModel () {
+function AppSettings () {
 	this.initialize.apply(this, arguments);
 }
 /**
  */
-AppSettingsViewModel.prototype.initialize = function () {
+AppSettings.prototype.initialize = function () {
 	/**
 	 * Normalized date of today.
 	 */
@@ -29,7 +29,7 @@ AppSettingsViewModel.prototype.initialize = function () {
 /**
  * Number of colors.
  */
-AppSettingsViewModel.prototype.tasklistColors = 24;
+AppSettings.prototype.tasklistColors = 24;
 /**
  * @class Date utility.
  */

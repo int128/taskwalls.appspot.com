@@ -91,7 +91,7 @@ CalendarDayViewModel.prototype.initialize = function (date) {
 		return $.resource('weekday' + this.date().getDay());
 	}, this);
 	this.past = ko.computed(function () {
-		return this.time() < AppSettings.today().getTime();
+		return this.time() < taskwalls.settings.today().getTime();
 	}, this);
 	this.thisweek = ko.computed(function () {
 		return DateUtil.isThisWeek(this.time());

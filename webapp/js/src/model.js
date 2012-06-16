@@ -7,7 +7,7 @@ function Calendar () {
 /**
  */
 Calendar.prototype.initialize = function () {
-	var today = AppSettings.today();
+	var today = taskwalls.settings.today();
 	this.days = ko.observableArray([today]);
 	this.earliestTime = ko.observable(today.getTime());
 	this.latestTime = ko.observable(today.getTime());
@@ -119,13 +119,13 @@ function Tasklists () {
  * @returns {Deferred}
  */
 Tasklists.get = function () {
-	if (!AppSettings.offline()) {
+	if (!taskwalls.settings.offline()) {
 		return $.getJSON('/tasklists/list').pipe(function (response, status, xhr) {
 			if (response) {
 				var items = response.items;
 				if ($.isArray(items)) {
 					localStorage.setItem('Tasklists.get', xhr.responseText);
-					AppSettings.lastCached(new Date());
+					taskwalls.settings.lastCached(new Date());
 					return Tasklists.map(items);
 				}
 			}
@@ -168,7 +168,7 @@ Tasklist.prototype.initialize = function (object) {
 	ko.extendObservables(this, object);
 	if (object.colorCode === undefined) {
 		// auto generate
-		this.colorCode = ko.observable(Math.abs(this.id().hashCode()) % AppSettings.tasklistColors);
+		this.colorCode = ko.observable(Math.abs(this.id().hashCode()) % taskwalls.settings.tasklistColors);
 	}
 };
 /**
@@ -178,7 +178,7 @@ Tasklist.prototype.initialize = function (object) {
  */
 Tasklist.prototype.update = function (data) {
 	var self = this;
-	if (!AppSettings.offline()) {
+	if (!taskwalls.settings.offline()) {
 		return $.post('/tasklists/update', $.extend({id: this.id()}, data))
 			.done(function () {
 				ko.extendObservables(self, data);
@@ -202,7 +202,7 @@ Tasklist.prototype.update = function (data) {
  */
 Tasklist.prototype.updateMetadata = function (data) {
 	var self = this;
-	if (!AppSettings.offline()) {
+	if (!taskwalls.settings.offline()) {
 		return $.post('/tasklists/options/update', $.extend({id: this.id()}, data))
 			.done(function () {
 				ko.extendObservables(self, data);
@@ -224,7 +224,7 @@ Tasklist.prototype.updateMetadata = function (data) {
  * @returns {Deferred}
  */
 Tasklist.prototype.remove = function () {
-	if (!AppSettings.offline()) {
+	if (!taskwalls.settings.offline()) {
 		return $.post('/tasklists/delete', {id: this.id()});
 	} else {
 		// TODO: offline
@@ -257,7 +257,7 @@ Tasklist.prototype.clearCompleted = function (success, error) {
  * @returns {Deferred} call with new instance of {@link Tasklist}
  */
 Tasklist.create = function (data) {
-	if (!AppSettings.offline()) {
+	if (!taskwalls.settings.offline()) {
 		$.post('/tasklists/create', data).pipe(function (object) {
 			return new Tasklist(object);
 		});
@@ -279,7 +279,7 @@ function Tasks () {
  * @returns {Deferred}
  */
 Tasks.get = function (tasklist) {
-	if (!AppSettings.offline()) {
+	if (!taskwalls.settings.offline()) {
 		return $.getJSON('/tasks/list', {tasklistID: tasklist.id()}).pipe(function (response, status, xhr) {
 			if (response) {
 				var items = response.items;
@@ -430,7 +430,7 @@ Task.prototype.initialize = function (object, tasklist) {
  */
 Task.prototype.update = function (data) {
 	var self = this;
-	if (!AppSettings.offline()) {
+	if (!taskwalls.settings.offline()) {
 		return $.post('/tasks/update', $.extend({}, data, {
 				id: this.id(),
 				tasklistID: this.tasklist().id(),
@@ -459,7 +459,7 @@ Task.prototype.update = function (data) {
  */
 Task.prototype.move = function (tasklist) {
 	var self = this;
-	if (!AppSettings.offline()) {
+	if (!taskwalls.settings.offline()) {
 		return $.post('/tasks/move', {
 				id: this.id(),
 				tasklistID: this.tasklist().id(),
@@ -482,7 +482,7 @@ Task.prototype.move = function (tasklist) {
  * @returns {Deferred}
  */
 Task.prototype.remove = function () {
-	if (!AppSettings.offline()) {
+	if (!taskwalls.settings.offline()) {
 		return $.post('/tasks/delete', {
 			id: this.id(),
 			tasklistID: this.tasklist().id()
@@ -498,7 +498,7 @@ Task.prototype.remove = function () {
  * @returns {Deferred} call with new instance of {@link Task}
  */
 Task.create = function (data) {
-	if (!AppSettings.offline()) {
+	if (!taskwalls.settings.offline()) {
 		return $.post('/tasks/create', $.extend({}, data, {
 			due: data.due.getUTCTime()
 		})).pipe(function (object) {

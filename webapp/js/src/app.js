@@ -37,7 +37,7 @@ $(function () {
 	var session = new OAuth2Session();
 	session.onAuthorized = function () {
 		$('.oauth2state.authorized').show();
-		ko.applyBindings(window.taskwallsPageVM = new AuthorizedPageViewModel());
+		ko.applyBindings(taskwalls.pagevm = new AuthorizedPageViewModel());
 	};
 	session.onAuthorizing = function () {
 		$('.oauth2state.authorizing').show();
@@ -50,4 +50,4 @@ $(function () {
 	};
 	session.handle();
 });
-var AppSettings = new AppSettingsViewModel();
+var taskwalls = {settings: new AppSettings()};
