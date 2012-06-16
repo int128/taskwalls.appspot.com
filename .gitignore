@@ -3,3 +3,5 @@
 /webapp/WEB-INF/lib
 /webapp/WEB-INF/classes
 /webapp/WEB-INF/appengine-generated
+/webapp/min.js
+/webapp/min.css

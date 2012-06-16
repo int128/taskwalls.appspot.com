@@ -1,16 +1,17 @@
-package org.hidetake.taskwalls.controller.js;
+package org.hidetake.taskwalls.controller.assets;
 
 import org.slim3.tester.ControllerTestCase;
+import org.hidetake.taskwalls.controller.assets.JsController;
 import org.junit.Test;
 import static org.junit.Assert.*;
 import static org.hamcrest.CoreMatchers.*;
 
-public class LoadControllerTest extends ControllerTestCase {
+public class JsControllerTest extends ControllerTestCase {
 
 	@Test
 	public void run() throws Exception {
-		tester.start("/js/load");
-		LoadController controller = tester.getController();
+		tester.start("/assets/js");
+		JsController controller = tester.getController();
 		assertThat(controller, is(notNullValue()));
 		assertThat(tester.isRedirect(), is(false));
 		assertThat(tester.getDestinationPath(), is(nullValue()));

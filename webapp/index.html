@@ -12,8 +12,9 @@
 <![endif]-->
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
 <title>Task Wall</title>
-<link rel="stylesheet" href="/css/bootstrap.min.css"/>
-<link rel="stylesheet" href="/css/app.css" />
+<script>
+(function(s){document.write('<link rel="stylesheet" href="'+s+'"/>')})(location.hostname=='localhost'?'/assets/css':'/min.css');
+</script>
 </head>
 <body>
 <div id="loading"></div>
@@ -298,7 +299,7 @@ Task WallはGoogleタスクと連携するタスク管理アプリです。<br/>
 </div>
 
 <script>
-(function(s){document.write('<'+'script src="'+s+'"></'+'script>')})(location.hostname=='localhost'?'/js/load':'/js/min.js');
+(function(s){document.write('<'+'script src="'+s+'"></'+'script>')})(location.hostname=='localhost'?'/assets/js':'/min.js');
 </script>
 <script>
 var _gaq=_gaq||[];_gaq.push(["_setAccount","UA-3232369-8"]);_gaq.push(["_trackPageview"]);
