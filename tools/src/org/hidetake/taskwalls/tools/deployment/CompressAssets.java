@@ -76,6 +76,7 @@ public class CompressAssets {
 			}
 
 			List<InputStream> sourceStreams = new ArrayList<InputStream>();
+			sourceStreams.add(CompressAssets.class.getResourceAsStream("compress-header"));
 			for (File file : sources) {
 				if (file.getName().endsWith(".min.js")) {
 					logger.info("Copying " + file.getName());
@@ -84,6 +85,7 @@ public class CompressAssets {
 					sourceStreams.add(FileUtils.openInputStream(file));
 				}
 			}
+			sourceStreams.add(CompressAssets.class.getResourceAsStream("compress-footer"));
 
 			logger.info("Compressing");
 			SequenceInputStream sourceStream = new SequenceInputStream(Collections.enumeration(sourceStreams));
