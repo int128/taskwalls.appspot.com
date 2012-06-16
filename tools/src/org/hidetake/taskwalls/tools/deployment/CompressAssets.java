@@ -3,10 +3,14 @@ package org.hidetake.taskwalls.tools.deployment;
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileReader;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
+import java.io.SequenceInputStream;
 import java.io.Writer;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.logging.Logger;
 
@@ -64,27 +68,34 @@ public class CompressAssets {
 	private static void compressJs() throws Exception {
 		OutputStream destination = FileUtils.openOutputStream(new File(DESTINATION_JS));
 		try {
-			List<File> asisFiles = new ArrayList<File>();
+			List<File> sources = new ArrayList<File>();
 
 			File conf = new File(ASSETS_CONF_JS);
 			for (String line : FileUtils.readLines(conf)) {
-				asisFiles.add(new File(WEBAPP_BASE + line));
+				sources.add(new File(WEBAPP_BASE + line));
 			}
 
-			ErrorReporter errorReporter = new YUICompressorErrorReporter();
-			for (File file : asisFiles) {
-				logger.info("Compressing " + file.getName());
+			List<InputStream> sourceStreams = new ArrayList<InputStream>();
+			for (File file : sources) {
 				if (file.getName().endsWith(".min.js")) {
-					// copy as-is
+					logger.info("Copying " + file.getName());
 					FileUtils.copyFile(file, destination);
-					destination.flush();
 				} else {
-					// compress
-					Writer writer = new BufferedWriter(new OutputStreamWriter(destination));
-					new JavaScriptCompressor(new FileReader(file), errorReporter).compress(
-							writer, -1, true, true, false, false);
-					writer.flush();
+					sourceStreams.add(FileUtils.openInputStream(file));
 				}
+			}
+
+			logger.info("Compressing");
+			SequenceInputStream sourceStream = new SequenceInputStream(Collections.enumeration(sourceStreams));
+			try {
+				// compress
+				ErrorReporter errorReporter = new YUICompressorErrorReporter();
+				Writer writer = new BufferedWriter(new OutputStreamWriter(destination));
+				new JavaScriptCompressor(new InputStreamReader(sourceStream), errorReporter).compress(
+						writer, -1, true, true, false, false);
+				writer.flush();
+			} finally {
+				sourceStream.close();
 			}
 		} finally {
 			destination.close();
