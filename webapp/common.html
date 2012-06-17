@@ -42,7 +42,7 @@
 <div id="loading"></div>
 <div id="global-errors" style="display: none;"></div>
 
-<article class="oauth2state unauthorized" style="display: none;">
+<article class="oauth2state unauthorized" id="taskwalls-fastinit" style="display: none;">
 <p class="screenshot"></p>
 <h1>Task Wall</h1>
 <div class="lead">Manage your tasks by way like agile.</div>
@@ -325,9 +325,14 @@ Task WallはGoogleタスクと連携するタスク管理アプリです。<br/>
 (function (s) {
 	document.write('<'+'script src="'+s+'"></'+'script>')
 })(location.hostname == 'localhost' ? '/assets/js' : '/min.js');
-/* initialize session */
+/* show "unauthorize" page before initializing */
 (function () {
-	
+	if (location.search == '' && localStorage['session'] === undefined) {
+		var element = document.getElementById('taskwalls-fastinit');
+		if (element) {
+			element.removeAttribute('style');  /* show */
+		}
+	}
 })();
 </script>
 <script>
