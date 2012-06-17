@@ -102,4 +102,9 @@
 		<mime-type>text/css</mime-type>
 	</mime-mapping>
 
+	<welcome-file-list>
+		<welcome-file>min.html</welcome-file>
+		<welcome-file>common.html</welcome-file>
+	</welcome-file-list>
+
 </web-app>

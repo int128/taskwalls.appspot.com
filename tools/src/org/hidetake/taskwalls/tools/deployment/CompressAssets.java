@@ -17,6 +17,7 @@ import java.util.logging.Logger;
 import org.apache.commons.io.FileUtils;
 import org.mozilla.javascript.ErrorReporter;
 
+import com.googlecode.htmlcompressor.compressor.HtmlCompressor;
 import com.yahoo.platform.yui.compressor.CssCompressor;
 import com.yahoo.platform.yui.compressor.JavaScriptCompressor;
 
@@ -30,14 +31,36 @@ public class CompressAssets {
 	private static final String WEBAPP_BASE = "webapp/";
 	private static final String ASSETS_CONF_CSS = "webapp/WEB-INF/assets.css.conf";
 	private static final String ASSETS_CONF_JS = "webapp/WEB-INF/assets.js.conf";
+	private static final String ASSETS_HTML = "webapp/common.html";
+
 	private static final String DESTINATION_CSS = "webapp/min.css";
 	private static final String DESTINATION_JS = "webapp/min.js";
+	private static final String DESTINATION_HTML = "webapp/min.html";
 
 	private static final Logger logger = Logger.getLogger(CompressAssets.class.getName());
 
 	public static void main(String[] args) throws Exception {
+		compressHtml();
 		compressCss();
 		compressJs();
+	}
+
+	/**
+	 * Compress HTML source(s).
+	 */
+	private static void compressHtml() throws Exception {
+		HtmlCompressor compressor = new HtmlCompressor();
+		compressor.setRemoveComments(false);
+		compressor.setCompressCss(true);
+		compressor.setCompressJavaScript(true);
+
+		File sourceFile = new File(ASSETS_HTML);
+		String source = FileUtils.readFileToString(sourceFile);
+		String result = compressor.compress(source);
+		File resultFile = new File(DESTINATION_HTML);
+		FileUtils.writeStringToFile(resultFile, result);
+		logger.info(String.format("Compressed HTML (%,d bytes -> %,d bytes)",
+				sourceFile.length(), resultFile.length()));
 	}
 
 	/**

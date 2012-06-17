@@ -33,6 +33,7 @@
 		<dependency org="commons-io" name="commons-io" rev="2.3" />
 
 		<dependency org="com.yahoo.platform.yui" name="yuicompressor" rev="2.4.6" conf="compile->default" />
+		<dependency org="com.googlecode.htmlcompressor" name="htmlcompressor" rev="1.5.2" conf="compile->default" />
 	</dependencies>
 
 </ivy-module>
