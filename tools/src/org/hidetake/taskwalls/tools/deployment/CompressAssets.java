@@ -53,6 +53,7 @@ public class CompressAssets {
 		compressor.setRemoveComments(false);
 		compressor.setCompressCss(true);
 		compressor.setCompressJavaScript(true);
+		compressor.setYuiErrorReporter(new YUICompressorErrorReporter());
 
 		File sourceFile = new File(ASSETS_HTML);
 		String source = FileUtils.readFileToString(sourceFile);
