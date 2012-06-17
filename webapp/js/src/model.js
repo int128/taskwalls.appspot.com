@@ -124,7 +124,7 @@ Tasklists.get = function () {
 			if (response) {
 				var items = response.items;
 				if ($.isArray(items)) {
-					localStorage.setItem('Tasklists.get', xhr.responseText);
+					localStorage['Tasklists.get'] = xhr.responseText;
 					taskwalls.settings.lastCached(new Date());
 					return Tasklists.map(items);
 				}
@@ -134,7 +134,7 @@ Tasklists.get = function () {
 		});
 	}
 	else {
-		var response = $.parseJSON(localStorage.getItem('Tasklists.get'));
+		var response = $.parseJSON(localStorage['Tasklists.get']);
 		if (response) {
 			var items = response.items;
 			if ($.isArray(items)) {
