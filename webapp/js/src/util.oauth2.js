@@ -11,29 +11,34 @@ OAuth2Session.prototype.handle = function () {
 	var params = $.queryParameters();
 	if (params['code']) {
 		// step2: received authorization code
+		localStorage.clear();
 		if (this.onAuthorizing() !== false) {
 			$.post('/oauth2', {code: params['code']})
-				.done(function  () {
+				/**
+				 * @param {XMLHttpRequest} xhr
+				 */
+				.done(function (data, status, xhr) {
+					localStorage['session'] = xhr.getResponseHeader('X-TaskWall-Session');
 					window.location.replace(window.location.pathname);
 				})
 				.fail(function () {
 					// step2-1: authorization error
-					window.location.replace('/logout');
+					self.logout();
 				});
 		}
 	}
 	else if (params['error']) {
 		// step2-2: authorization denied
-		window.location.replace('/logout');
+		self.logout();
 	}
-	else if ($.cookie('s')) {
+	else if (localStorage['session']) {
 		// step3: authorized
 		/**
 		 * Add token to request header.
 		 * @param {XMLHttpRequest} xhr
 		 */
 		$(document).ajaxSend(function (event, xhr) {
-			xhr.setRequestHeader('X-TaskWall-Session', $.cookie('s'));
+			xhr.setRequestHeader('X-TaskWall-Session', localStorage['session']);
 		});
 		/**
 		 * @param {XMLHttpRequest} xhr
@@ -67,6 +72,16 @@ OAuth2Session.prototype.getAuthorizationURL = function () {
 		+ '&access_type=offline'
 		+ '&approval_prompt=force'
 		+ '&client_id=965159379100.apps.googleusercontent.com';
+};
+/**
+ * Log out the session.
+ * Clean up the local cache and server session.
+ */
+OAuth2Session.prototype.logout = function () {
+	localStorage.clear();
+	$.get('/logout').done(function () {
+		window.location.reload();
+	});
 };
 /**
  * Event handler for authorization in progress.

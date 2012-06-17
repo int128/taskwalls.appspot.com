@@ -49,6 +49,9 @@ AuthorizedPageViewModel.prototype.initialize = function () {
 	this.offline = taskwalls.settings.offline;
 	this.lastCached = taskwalls.settings.lastCached;
 
+	// session
+	this.logout = taskwalls.session.logout;
+
 	// development only
 	this.development = ko.observable(window.location.hostname == 'localhost');
 

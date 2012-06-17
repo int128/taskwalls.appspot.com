@@ -34,20 +34,20 @@
 	$('#loading').hide();
 })();
 $(function () {
-	var session = new OAuth2Session();
-	session.onAuthorized = function () {
+	taskwalls.session.onAuthorized = function () {
 		$('.oauth2state.authorized').show();
 		ko.applyBindings(taskwalls.pagevm = new AuthorizedPageViewModel());
 	};
-	session.onAuthorizing = function () {
+	taskwalls.session.onAuthorizing = function () {
 		$('.oauth2state.authorizing').show();
-		// clean up cache
-		localStorage.clear();
 	};
-	session.onUnauthorized = function () {
+	taskwalls.session.onUnauthorized = function () {
 		$('.oauth2state.unauthorized').show();
 		$('.login a').attr('href', this.getAuthorizationURL());
 	};
-	session.handle();
+	taskwalls.session.handle();
 });
-var taskwalls = {settings: new AppSettings()};
+var taskwalls = {
+		settings: new AppSettings(),
+		session: new OAuth2Session()
+};

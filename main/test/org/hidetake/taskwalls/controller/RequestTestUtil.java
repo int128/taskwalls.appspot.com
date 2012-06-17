@@ -3,8 +3,6 @@ package org.hidetake.taskwalls.controller;
 import java.util.Date;
 import java.util.UUID;
 
-import javax.servlet.http.Cookie;
-
 import org.hidetake.taskwalls.Constants;
 import org.hidetake.taskwalls.model.Session;
 import org.hidetake.taskwalls.model.oauth2.CachedToken;
@@ -14,6 +12,7 @@ import org.slim3.tester.ControllerTester;
 
 /**
  * Request utility class for tests.
+ * 
  * @author hidetake.org
  */
 public class RequestTestUtil {
@@ -33,7 +32,6 @@ public class RequestTestUtil {
 		session.setKey(Session.createKey(sessionID));
 		session.setToken(cachedToken);
 		SessionService.put(session);
-		tester.request.addCookie(new Cookie(Constants.COOKIE_SESSION_ID, sessionID));
 		tester.request.setHeader(Constants.HEADER_SESSION_ID, sessionID);
 		return sessionID;
 	}

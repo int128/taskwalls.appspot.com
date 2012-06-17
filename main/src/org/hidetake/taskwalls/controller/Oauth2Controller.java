@@ -4,8 +4,6 @@ import java.net.URI;
 import java.util.UUID;
 import java.util.logging.Logger;
 
-import javax.servlet.http.Cookie;
-
 import org.hidetake.taskwalls.Constants;
 import org.hidetake.taskwalls.model.Session;
 import org.hidetake.taskwalls.model.oauth2.CachedToken;
@@ -69,9 +67,8 @@ public class Oauth2Controller extends Controller {
 		session.setToken(token);
 		SessionService.put(session);
 
-		Cookie cookie = new Cookie(Constants.COOKIE_SESSION_ID, sessionID);
-		cookie.setMaxAge(Constants.SESSION_EXPIRATION);
-		response.addCookie(cookie);
+		// return session ID as header
+		response.setHeader(Constants.HEADER_SESSION_ID, sessionID);
 		return null;
 	}
 

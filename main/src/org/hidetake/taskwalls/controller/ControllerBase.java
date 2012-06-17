@@ -3,8 +3,6 @@ package org.hidetake.taskwalls.controller;
 import java.io.IOException;
 import java.util.logging.Logger;
 
-import javax.servlet.http.Cookie;
-
 import org.hidetake.taskwalls.Constants;
 import org.hidetake.taskwalls.model.Session;
 import org.hidetake.taskwalls.model.oauth2.CachedToken;
@@ -100,11 +98,6 @@ public abstract class ControllerBase extends Controller {
 			token = oauth2Service.refresh(token);
 			session.setToken(token);
 			SessionService.put(session);
-
-			// extends cookie life time
-			Cookie cookie = new Cookie(Constants.COOKIE_SESSION_ID, sessionID);
-			cookie.setMaxAge(Constants.SESSION_EXPIRATION);
-			response.addCookie(cookie);
 		}
 
 		// instantiate service
