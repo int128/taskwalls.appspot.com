@@ -129,19 +129,22 @@ Tasklists.get = function () {
 					return Tasklists.map(items);
 				}
 			}
-			// ignore bad data
+			// ignore empty or bad data
 			return [];
 		});
 	}
 	else {
-		var response = $.parseJSON(localStorage['Tasklists.get']);
-		if (response) {
-			var items = response.items;
-			if ($.isArray(items)) {
-				return $.Deferred().resolve(Tasklists.map(items));
+		return $.Deferred().resolve((function () {
+			var response = $.parseJSON(localStorage['Tasklists.get']);
+			if (response) {
+				var items = response.items;
+				if ($.isArray(items)) {
+					return Tasklists.map(items);
+				}
 			}
-		}
-		throw 'cache of tasks corrupted';  // should not happen
+			// ignore empty or bad data
+			return [];
+		})());
 	}
 };
 /**
@@ -288,19 +291,22 @@ Tasks.get = function (tasklist) {
 					return Tasks.map(items, tasklist);
 				}
 			}
-			// ignore bad data
+			// ignore empty or bad data
 			return [];
 		});
 	}
 	else {
-		var response = $.parseJSON(localStorage['Tasks.get.' + tasklist.id()]);
-		if (response) {
-			var items = response.items;
-			if ($.isArray(items)) {
-				return $.Deferred().resolve(Tasks.map(items, tasklist));
+		return $.Deferred().resolve((function () {
+			var response = $.parseJSON(localStorage['Tasks.get.' + tasklist.id()]);
+			if (response) {
+				var items = response.items;
+				if ($.isArray(items)) {
+					return Tasks.map(items, tasklist);
+				}
 			}
-		}
-		throw 'cache of tasks corrupted';  // should not happen
+			// ignore empty or bad data
+			return [];
+		})());
 	}
 };
 /**
