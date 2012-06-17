@@ -12,6 +12,7 @@ OAuth2Session.prototype.handle = function () {
 	if (params['code']) {
 		// step2: received authorization code
 		localStorage.clear();
+		sessionStorage.clear();
 		if (this.onAuthorizing() !== false) {
 			$.post('/oauth2', {code: params['code']})
 				/**
@@ -79,6 +80,7 @@ OAuth2Session.prototype.getAuthorizationURL = function () {
  */
 OAuth2Session.prototype.logout = function () {
 	localStorage.clear();
+	sessionStorage.clear();
 	$.get('/logout').done(function () {
 		window.location.reload();
 	});
