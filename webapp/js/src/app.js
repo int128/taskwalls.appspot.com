@@ -35,14 +35,17 @@
 })();
 $(function () {
 	taskwalls.session.onAuthorized = function () {
-		$('.oauth2state.authorized').show();
+		$('.oauth2state:not(.authorized)').remove();
+		$('.oauth2state').show();
 		ko.applyBindings(taskwalls.pagevm = new AuthorizedPageViewModel());
 	};
 	taskwalls.session.onAuthorizing = function () {
-		$('.oauth2state.authorizing').show();
+		$('.oauth2state:not(.authorizing)').remove();
+		$('.oauth2state').show();
 	};
 	taskwalls.session.onUnauthorized = function () {
-		$('.oauth2state.unauthorized').show();
+		$('.oauth2state:not(.unauthorized)').remove();
+		$('.oauth2state').show();
 		$('.login a').attr('href', this.getAuthorizationURL());
 	};
 	taskwalls.session.handle();
