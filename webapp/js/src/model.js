@@ -169,9 +169,12 @@ function Tasklist (object) {
  */
 Tasklist.prototype.initialize = function (object) {
 	ko.extendObservables(this, object);
-	if (object.colorCode === undefined) {
+	if ($.isNumeric(object.colorCode)) {
+		this.colorCode = ko.observable(object.colorCode % taskwalls.settings.tasklistColors);
+	} else {
 		// auto generate
-		this.colorCode = ko.observable(Math.abs(this.id().hashCode()) % taskwalls.settings.tasklistColors);
+		this.colorCode = ko.observable(Math.abs(new String(object.id).hashCode())
+				% taskwalls.settings.tasklistColors);
 	}
 };
 /**

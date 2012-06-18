@@ -24,7 +24,7 @@ public class TasklistOptions implements Serializable {
 
 	@Attribute(primaryKey = true)
 	private Key key;
-	private int colorCode;
+	private Integer colorCode;
 
 	/**
 	 * Merge {@link TasklistOptions} to given {@link TaskList}.
@@ -77,21 +77,22 @@ public class TasklistOptions implements Serializable {
 	}
 
 	/**
-	 * Returns the tasklist color ID.
+	 * Returns the tasklist color Code.
+	 * This may be null.
 	 * 
 	 * @return
 	 */
-	public int getColorCode() {
+	public Integer getColorCode() {
 		return colorCode;
 	}
 
 	/**
-	 * Sets the tasklist color ID.
+	 * Sets the tasklist color Code.
 	 * 
 	 * @param colorCode
 	 */
-	public void setColorCode(int colorID) {
-		this.colorCode = colorID;
+	public void setColorCode(Integer colorCode) {
+		this.colorCode = colorCode;
 	}
 
 }
