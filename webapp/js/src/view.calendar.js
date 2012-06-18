@@ -145,6 +145,13 @@ TasklistViewModel.map = function (tasklists) {
  */
 function TaskViewModel (task) {
 	this.initialize.apply(this, arguments);
+	var self = this;
+	this.saveStatus = function () {
+		self.update({
+			status: self.status()
+		});
+		return true;  // enables bubbling
+	};
 };
 /**
  * @param {Task} task
