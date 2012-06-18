@@ -158,7 +158,7 @@ Task WallはGoogleタスクと連携するタスク管理アプリです。<br/>
 		'data-tasklistcolor': tasklist().colorCode
 	}"
 	class="task">
-<input data-bind="checked: isCompleted" type="checkbox" class="intercept-click" />
+<input data-bind="checked: isCompleted, click: saveStatus" type="checkbox" data-intercept="click" />
 <span data-bind="text: title" class="title"></span>
 <div data-bind="text: notes" class="notes"></div>
 </div>
