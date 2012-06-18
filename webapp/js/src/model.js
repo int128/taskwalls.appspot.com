@@ -443,7 +443,9 @@ Task.prototype.update = function (data) {
 		return $.post('/tasks/update', $.extend({}, data, {
 				id: this.id(),
 				tasklistID: this.tasklist().id(),
-				due: data.due.getUTCTime()
+			}, data.due === undefined ? {} : {
+				// specify zero for to-be-determined
+				due: data.due ? data.due.getUTCTime() : 0
 			}))
 			.done(function () {
 				ko.extendObservables(self, data);
@@ -509,7 +511,8 @@ Task.prototype.remove = function () {
 Task.create = function (data) {
 	if (!taskwalls.settings.offline()) {
 		return $.post('/tasks/create', $.extend({}, data, {
-			due: data.due.getUTCTime()
+			// specify zero for to-be-determined
+			due: data.due ? data.due.getUTCTime() : 0
 		})).pipe(function (object) {
 			return new Task(object);
 		});
