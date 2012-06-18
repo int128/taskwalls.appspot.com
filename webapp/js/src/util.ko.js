@@ -1,6 +1,6 @@
 /**
  * バインドした要素がクリックされるとハンドラを実行する。
- * ただし、intercept-clickクラスを持つ子要素がクリックされた場合は、
+ * ただし、data-intercept属性でclickを指定された子要素がクリックされた場合は、
  * イベントを無視する。
  */
 ko.bindingHandlers.overlappedClick = {
@@ -15,7 +15,7 @@ ko.bindingHandlers.overlappedClick = {
 		init: function (element, valueAccessor, allBindingsAccessor, viewModel) {
 			var originalHandler = valueAccessor();
 			var wrappedHandler = function (context, event) {
-				if ($(event.target).hasClass('intercept-click')) {
+				if ($(event.target).data('intercept') == 'click') {
 					return true;
 				} else {
 					return originalHandler.apply(this, arguments);
