@@ -99,7 +99,7 @@ public class CompressAssets {
 				sources.add(new File(WEBAPP_BASE + line));
 			}
 
-			int sourceStreamsSize = 0;
+			long sourceStreamsSize = 0L;
 			List<InputStream> sourceStreams = new ArrayList<InputStream>();
 			sourceStreams.add(CompressAssets.class.getResourceAsStream("compress-header"));
 			for (File file : sources) {
