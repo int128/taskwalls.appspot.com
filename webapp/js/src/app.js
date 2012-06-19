@@ -54,3 +54,8 @@ var taskwalls = {
 		settings: new AppSettings(),
 		session: new OAuth2Session()
 };
+$(function () {
+	$(document).tooltip({
+		selector: '.with-tooltip'
+	});
+});

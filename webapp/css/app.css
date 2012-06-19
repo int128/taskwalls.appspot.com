@@ -199,7 +199,7 @@ body {
 	position: relative;
 }
 
-.header .toggle.tasklists .tasklist .setting>div {
+.header .toggle.tasklists .tasklist .setting>a {
 	position: absolute;
 	right: 0;
 	width: 32px;
@@ -208,7 +208,7 @@ body {
 	opacity: 0.1;
 }
 
-.header .toggle.tasklists .tasklist .setting>div:HOVER {
+.header .toggle.tasklists .tasklist .setting>a:HOVER {
 	opacity: 0.6;
 }
 

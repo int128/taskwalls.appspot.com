@@ -68,26 +68,33 @@ Task WallはGoogleタスクと連携するタスク管理アプリです。<br/>
 	css: {visible: visible},
 	attr: {'data-tasklistcolor': colorCode}"
 	class="tasklist">
-<div class="setting"><div data-bind="click: $root.updateTasklistDialog.create" data-intercept="click"></div></div>
+<div class="setting"><a data-bind="click: $root.updateTasklistDialog.create"
+	href="#" data-intercept="click" class="with-tooltip"
+	data-placement="right" title="タスクリストのプロパティを開く"></a></div>
 <div data-bind="text: title" class="title"></div>
 </div>
 </div>
-<a data-bind="click: $root.createTasklistDialog.create" href="#"
-	title="新しいタスクリストを作成する" class="create tasklist"></a>
+<a data-bind="click: $root.createTasklistDialog.create"
+	href="#" class="create tasklist with-tooltip"
+	data-placement="right" title="新しいタスクリストを作成する"></a>
 <div class="toggle kinds">
 <div class="description">this week's</div>
 <div>
-<a href="#" title="完了したタスクの表示を切り替える" class="kind">completed<br/>
+<a href="#" class="kind with-tooltip"
+	data-placement="right" title="完了したタスクの表示を切り替える">completed<br/>
 <span data-bind="text: completedCount" class="count"></span></a>
 </div>
 <div>
-<a href="#" title="未完了タスクの表示を切り替える" class="kind">needs action<br/>
+<a href="#" class="kind with-tooltip"
+	data-placement="right" title="未完了タスクの表示を切り替える">needs action<br/>
 <span data-bind="text: needsActionCount" class="count"></span></a>
 </div>
 </div>
 <div>
-<div><a data-bind="click: logout" href="#"><span class="myicon-logout" title="ログアウト"></span></a></div>
-<div><a href="#help"><span class="myicon-help" title="ヘルプ"></span></a></div>
+<div><a data-bind="click: logout" href="#" class="myicon-logout with-tooltip"
+	data-placement="right" title="ログアウト"></a></div>
+<div><a href="#" class="myicon-help with-tooltip"
+	data-placement="right" title="ヘルプ"></a></div>
 </div>
 <p class="footer">&copy; hidetake.org, 2011-2012.</p>
 </section>
@@ -138,7 +145,9 @@ Task WallはGoogleタスクと連携するタスク管理アプリです。<br/>
 </div>
 </div>
 <div class="create">
-<a data-bind="click: $root.createTaskDialog.create" href="#" title="新しいタスクを作成する"></a>
+<a data-bind="click: $root.createTaskDialog.create"
+	href="#" class="with-tooltip"
+	data-placement="left" title="新しいタスクを作成する"></a>
 </div>
 </td>
 </tr>
@@ -149,7 +158,9 @@ Task WallはGoogleタスクと連携するタスク管理アプリです。<br/>
 <section data-bind="with: planner" class="planner">
 <h2>計画中のタスク</h2>
 <div class="create">
-<a data-bind="click: $root.createTaskDialog.create" href="#" title="新しいタスクを作成する"></a>
+<a data-bind="click: $root.createTaskDialog.create"
+	href="#" class="with-tooltip"
+	data-placement="left" title="新しいタスクを作成する"></a>
 </div>
 <div data-bind="foreach: tasks" class="tasks">
 <div data-bind="overlappedClick: $root.updateTaskDialog.create,
