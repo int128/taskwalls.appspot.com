@@ -532,11 +532,6 @@ body {
 	right: 40px;
 }
 
-.create-task.dialog.due-tbd .due,
-.update-task.dialog.due-tbd .due {
-	display: none;
-}
-
 .create-task.dialog .due,
 .update-task.dialog .due {
 	margin-bottom: 5px;
