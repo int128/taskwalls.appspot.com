@@ -150,7 +150,7 @@ function TaskViewModel (task) {
 		self.update({
 			status: self.status()
 		});
-		return true;  // enables bubbling
+		return true;  // bubbling event for checkbox
 	};
 };
 /**
