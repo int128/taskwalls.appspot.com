@@ -25,18 +25,18 @@ CalendarViewModel.prototype.initialize = function (taskdata) {
 		});
 	});
 
-	// extend rows to show all tasks
-	ko.computed(function () {
-		var dues = Tasks.days(taskdata.tasks());
-		window.setTimeout(function () {
-			// lazy execution in order to prevent infinite loop
-			calendar.extendTo(Math.min.apply(null, dues));
-			calendar.extendTo(Math.max.apply(null, dues));
-		});
-	});
-
 	this.tasklists = ko.computed(function () {
 		return TasklistViewModel.map(taskdata.tasklists());
+	});
+
+	// extend rows to show all tasks
+	ko.computed(function () {
+		var days = Tasks.days(taskdata.tasks());
+		window.setTimeout(function () {
+			// lazy execution in order to prevent infinite loop
+			calendar.extendTo(Math.min.apply(null, days));
+			calendar.extendTo(Math.max.apply(null, days));
+		});
 	});
 
 	// arrange tasks by each due date and tasklist
