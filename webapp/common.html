@@ -227,14 +227,14 @@ Task WallはGoogleタスクと連携するタスク管理アプリです。<br/>
 <span data-bind="text: getMonth()+1"></span>月
 <span data-bind="text: getDate()"></span>日
 </div>
-<div><input data-bind="value: title, hasfocus: true" type="text" placeholder="タスクの件名" /></div>
+<div><input data-bind="value: title, hasfocus: titleFocus" type="text" placeholder="タスクの件名" /></div>
 <div><textarea data-bind="value: notes" placeholder="備考"></textarea></div>
 <div data-bind="foreach: tasklists" class="tasklists">
-<span data-bind="text: title,
+<a data-bind="text: title,
 	attr: {'data-tasklistcolor': colorCode},
 	css: {selected: $data == $parent.selectedTasklist()},
 	click: $parent.selectTasklist"
-	class="tasklist"></span>
+	href="#" class="tasklist"></a>
 </div>
 <button type="submit" class="btn">タスクを作成</button>
 </div>
@@ -261,11 +261,11 @@ Task WallはGoogleタスクと連携するタスク管理アプリです。<br/>
 <hr/>
 <form data-bind="submit: move">
 <div data-bind="foreach: tasklists" class="tasklists">
-<span data-bind="text: title,
+<a data-bind="text: title,
 	attr: {'data-tasklistcolor': colorCode},
 	css: {selected: $data == $parent.selectedTasklist()},
 	click: $parent.selectTasklist"
-	class="tasklist"></span>
+	href="#" class="tasklist"></a>
 </div>
 <button data-bind="disable: selectedTasklist() == originalTasklist()" type="submit" class="btn">
 別のタスクリストに移動

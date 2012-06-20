@@ -566,6 +566,8 @@ body {
 	border-left-width: 5px;
 	border-radius: 3px;
 	-moz-border-radius: 3px;
+	color: #000;
+	text-decoration: none;
 }
 
 .create-task.dialog .tasklists .tasklist:not(.selected),

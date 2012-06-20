@@ -17,10 +17,12 @@ CreateTaskDialog.prototype.initialize = function (taskdata, due, event) {
 	this.title = ko.observable();
 	this.notes = ko.observable();
 
+	this.titleFocus = ko.observable(true);
 	this.tasklists = taskdata.tasklists();
 	this.selectedTasklist = ko.observable(this.tasklists[0]);  // select first item
 	this.selectTasklist = function (tasklist) {
 		self.selectedTasklist(tasklist);
+		self.titleFocus(true);
 	};
 
 	this.save = function () {
