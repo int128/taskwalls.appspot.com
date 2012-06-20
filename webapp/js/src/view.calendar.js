@@ -27,7 +27,7 @@ CalendarViewModel.prototype.initialize = function (taskdata) {
 
 	// extend rows to show all tasks
 	ko.computed(function () {
-		var dues = taskdata.dueMap().days();
+		var dues = Tasks.days(taskdata.tasks());
 		window.setTimeout(function () {
 			// lazy execution in order to prevent infinite loop
 			calendar.extendTo(Math.min.apply(null, dues));

@@ -324,6 +324,17 @@ Tasks.map = function (items, tasklist) {
 	});
 };
 /**
+ * Returns days.
+ * @param {Array} tasks array of tasks
+ * @returns {Array} array of time {@link Number}
+ */
+Tasks.days = function (tasks) {
+	return $.map(tasks, function (task) {
+		var due = task.due();
+		return due > 0 ? due : undefined;
+	});
+};
+/**
  * Returns map of tasklist and tasks.
  * @param {Array} tasks array of tasks or undefined
  * @returns {Object} map of tasklist id and tasks
@@ -388,15 +399,6 @@ Tasks.DueMap.prototype.get = function (date) {
 Tasks.DueMap.prototype.getToBeDetermined = function () {
 	var tasks = this.map[0];
 	return tasks ? tasks : [];
-};
-/**
- * Returns days.
- * @returns {Array} array of time {@link Number}
- */
-Tasks.DueMap.prototype.days = function () {
-	return $.map(this.map, function (v, k) {
-		return k > 0 ? k : undefined;
-	});
 };
 /**
  * @class the task
