@@ -9,44 +9,49 @@ function CalendarViewModel (taskdata) {
  * @param {Taskdata} taskdata
  */
 CalendarViewModel.prototype.initialize = function (taskdata) {
-	var calendar = new Calendar();
-	(function (d) {
-		d.setHours(0, 0, 0, 0);
-		d.setDate(1);
-		calendar.extendTo(d);
-		d.setMonth(d.getMonth() + 1);
-		d.setDate(0);
-		calendar.extendTo(d);
-	})(new Date());
-
-	this.days = ko.computed(function () {
-		return $.map(calendar.days(), function (day) {
-			return new CalendarDayViewModel(day);
-		});
+	var calendar = new Calendar(function (day) {
+		return new CalendarDayViewModel(day);
 	});
 
+	(function () {
+		var d = new Date();
+		d.setHours(0, 0, 0, 0);
+		d.setDate(1);
+		var firstInMonth = d.getTime();
+		d.setMonth(d.getMonth() + 1);
+		d.setDate(0);
+		var lastInMonth = d.getTime();
+		calendar.extendTo(firstInMonth, lastInMonth);
+	})();
+
+	this.days = calendar.days;
 	this.tasklists = ko.computed(function () {
 		return TasklistViewModel.map(taskdata.tasklists());
 	});
 
-	// extend rows to show all tasks
+	// extend rows to cover all tasks
 	ko.computed(function () {
-		var days = Tasks.days(taskdata.tasks());
-		calendar.extendTo(Math.min.apply(null, days));
-		calendar.extendTo(Math.max.apply(null, days));
+		var tasks = taskdata.tasks();
+		if (tasks.length > 0) {
+			var days = Tasks.days(tasks);
+			calendar.extendTo(Math.min.apply(null, days), Math.max.apply(null, days));
+		}
 	});
 
 	// arrange tasks by each due date and tasklist
-	ko.computed(function () {
-		var tasklistIdMap = {};
+	var tasklistsIdMap = ko.computed(function () {
+		var map = {};
 		$.each(this.tasklists(), function (i, tasklist) {
-			tasklistIdMap[tasklist.id()] = tasklist;
+			map[tasklist.id()] = tasklist;
 		});
+		return map;
+	}, this);
 
+	ko.computed(function () {
 		$.each(this.days(), function (i, day) {
 			var tasksInDay = taskdata.dueMap().get(day.date());
 			day.tasklists($.map(Tasks.groupByTasklist(tasksInDay), function (tasks, tasklistId) {
-				var tasklistvm = tasklistIdMap[tasklistId];
+				var tasklistvm = tasklistsIdMap[tasklistId];
 				return {
 					visible: tasklistvm ? tasklistvm.visible() : true,  // always true while initializing
 					tasks: TaskViewModel.map(tasks)
@@ -59,7 +64,7 @@ CalendarViewModel.prototype.initialize = function (taskdata) {
 	 * Last day of next month.
 	 */
 	this.nextMonth = ko.computed(function () {
-		var d = new Date(calendar.latestTime());
+		var d = new Date(calendar.last().time());
 		d.setDate(0);  // yesterday
 		d.setMonth(d.getMonth() + 2);
 		return d;

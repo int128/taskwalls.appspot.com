@@ -1,36 +1,65 @@
 /**
  * @class calendar
+ * @param {Function} factory factory function of a new element
  */
-function Calendar () {
+function Calendar (factory) {
 	this.initialize.apply(this, arguments);
 };
 /**
+ * @param {Function} factory factory function of a new element
  */
-Calendar.prototype.initialize = function () {
-	var today = taskwalls.settings.today();
-	this.earliestTime = ko.observable(today.getTime());
-	this.latestTime = ko.observable(today.getTime());
-	this.days = ko.computed(function () {
-		var a = [];
-		var i = 0;
-		var l = this.latestTime();
-		for (var t = this.earliestTime(); t <= l; t += 86400000) {
-			a[i++] = t;
-		}
-		return a;
+Calendar.prototype.initialize = function (factory) {
+	this.factory = factory;
+
+	var today = taskwalls.settings.today().getTime();
+	var todayElement = this.factory(today);
+	this.daysHashMin = today;
+	this.daysHashMax = today;
+	this.daysHash = {};
+	this.daysHash[today] = todayElement;
+
+	this.days = ko.observableArray([todayElement]);
+	this.first = ko.computed(function () {
+		return this.days()[0];
+	}, this);
+	this.last = ko.computed(function () {
+		var days = this.days();
+		return days[days.length - 1];
 	}, this);
 };
 /**
  * Extend rows of the calendar.
- * @param {Number} time time to extend (also accepts {Date})
+ * This function accepts one or more arguments.
+ * @param {Number} timeArgs time to extend (also accepts {Date})
  */
-Calendar.prototype.extendTo = function (time) {
-	var normalizedTime = DateUtil.normalize(time).getTime();
-	if (normalizedTime > this.latestTime()) {
-		this.latestTime(normalizedTime);
+Calendar.prototype.extendTo = function (timeArgs) {
+	var needsUpdate = false;
+	for (var i in arguments) {
+		var time = arguments[i];
+		var normalizedTime = DateUtil.normalize(time).getTime();
+		if (normalizedTime < this.daysHashMin) {
+			this.daysHashMin = normalizedTime;
+			needsUpdate = true;
+		}
+		if (normalizedTime > this.daysHashMax) {
+			this.daysHashMax = normalizedTime;
+			needsUpdate = true;
+		}
 	}
-	if (normalizedTime < this.earliestTime()) {
-		this.earliestTime(normalizedTime);
+
+	if (needsUpdate) {
+		var days = [];
+		var i = 0;
+		for (var t = this.daysHashMin; t <= this.daysHashMax; t += 86400000) {
+			if (this.daysHash[t] === undefined) {
+				var element = this.factory(t);
+				days[i++] = element;
+				this.daysHash[t] = element;
+			} else {
+				days[i++] = this.daysHash[t];
+			}
+		}
+		this.days(days);
 	}
 };
 /**
