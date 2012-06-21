@@ -32,11 +32,8 @@ CalendarViewModel.prototype.initialize = function (taskdata) {
 	// extend rows to show all tasks
 	ko.computed(function () {
 		var days = Tasks.days(taskdata.tasks());
-		window.setTimeout(function () {
-			// lazy execution in order to prevent infinite loop
-			calendar.extendTo(Math.min.apply(null, days));
-			calendar.extendTo(Math.max.apply(null, days));
-		});
+		calendar.extendTo(Math.min.apply(null, days));
+		calendar.extendTo(Math.max.apply(null, days));
 	});
 
 	// arrange tasks by each due date and tasklist
@@ -74,18 +71,18 @@ CalendarViewModel.prototype.initialize = function (taskdata) {
 };
 /**
  * @class Daily row of the calendar.
- * @param {Date} date day of the row
+ * @param {Number} day day of the row
  */
-function CalendarDayViewModel (date) {
+function CalendarDayViewModel (day) {
 	this.initialize.apply(this, arguments);
 };
 /**
- * @param {Date} date day of the row
+ * @param {Number} day day of the row
  */
-CalendarDayViewModel.prototype.initialize = function (date) {
-	this.date = ko.observable(date);
-	this.time = ko.computed(function () {
-		return this.date().getTime();
+CalendarDayViewModel.prototype.initialize = function (day) {
+	this.time = ko.observable(day);
+	this.date = ko.computed(function () {
+		return new Date(this.time());
 	}, this);
 	this.weekdayName = ko.computed(function () {
 		return $.resource('weekday' + this.date().getDay());

@@ -8,36 +8,28 @@ function Calendar () {
  */
 Calendar.prototype.initialize = function () {
 	var today = taskwalls.settings.today();
-	this.days = ko.observableArray([today]);
 	this.earliestTime = ko.observable(today.getTime());
 	this.latestTime = ko.observable(today.getTime());
+	this.days = ko.computed(function () {
+		var a = [];
+		var i = 0;
+		var l = this.latestTime();
+		for (var t = this.earliestTime(); t <= l; t += 86400000) {
+			a[i++] = t;
+		}
+		return a;
+	}, this);
 };
 /**
  * Extend rows of the calendar.
- * Do not call this function in ko.computed() scope.
- * @param {Date} time time to extend (also accepts {Number})
+ * @param {Number} time time to extend (also accepts {Date})
  */
 Calendar.prototype.extendTo = function (time) {
 	var normalizedTime = DateUtil.normalize(time).getTime();
 	if (normalizedTime > this.latestTime()) {
-		// append rows
-		var a = [];
-		var i = 0;
-		for (var t = this.latestTime() + 86400000; t <= normalizedTime; t += 86400000) {
-			a[i++] = new Date(t);
-		}
-		this.days(this.days().concat(a));
 		this.latestTime(normalizedTime);
 	}
 	if (normalizedTime < this.earliestTime()) {
-		// prepend rows
-		var a = [];
-		var i = 0;
-		var e = this.earliestTime();
-		for (var t = normalizedTime; t < e; t += 86400000) {
-			a[i++] = new Date(t);
-		}
-		this.days(a.concat(this.days()));
 		this.earliestTime(normalizedTime);
 	}
 };
