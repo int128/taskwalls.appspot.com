@@ -51,7 +51,7 @@ CalendarViewModel.prototype.initialize = function (taskdata) {
 		$.each(this.days(), function (i, day) {
 			var tasksInDay = taskdata.dueMap().get(day.date());
 			day.tasklists($.map(Tasks.groupByTasklist(tasksInDay), function (tasks, tasklistId) {
-				var tasklistvm = tasklistsIdMap[tasklistId];
+				var tasklistvm = tasklistsIdMap()[tasklistId];
 				return {
 					visible: tasklistvm ? tasklistvm.visible() : true,  // always true while initializing
 					tasks: TaskViewModel.map(tasks)
