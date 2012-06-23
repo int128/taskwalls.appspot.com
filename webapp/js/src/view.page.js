@@ -7,7 +7,7 @@ function AuthorizedPageViewModel () {
 /**
  */
 AuthorizedPageViewModel.prototype.initialize = function () {
-	var taskdata = new Taskdata();
+	var taskdata = new TaskdataViewModel();
 
 	// toggle
 	this.completedCount = ko.computed(function () {

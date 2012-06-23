@@ -73,9 +73,6 @@ function Taskdata () {
 Taskdata.prototype.initialize = function () {
 	this.tasks = ko.observableArray();
 	this.tasklists = ko.observableArray();
-	this.dueMap = ko.computed(function () {
-		return Tasks.groupByDue(this.tasks());
-	}, this);
 };
 /**
  * Asynchronously load task data from server.
