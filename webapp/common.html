@@ -352,6 +352,7 @@ Task WallはGoogleタスクと連携するタスク管理アプリです。<br/>
   _gaq.push(['_setAccount', 'UA-3232369-8']);
   _gaq.push(['_trackPageview']);
 
+  location.hostname == 'localhost' ? null :  /* added */
   (function() {
     var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
     ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
