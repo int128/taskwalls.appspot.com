@@ -25,17 +25,13 @@ CalendarViewModel.prototype.initialize = function (taskdata) {
 	})();
 
 	this.days = calendar.days;
-
+	this.planner = new PlannerViewModel();
 	this.tasklists = ko.computed(function () {
 		return TasklistViewModel.extend(taskdata.tasklists());
 	}, this);
 
 	this.dueMap = ko.computed(function () {
 		return Tasks.groupByDue(taskdata.tasks());
-	}, this);
-
-	this.tbdTasks = ko.computed(function () {
-		return TaskViewModel.extend(this.dueMap().getToBeDetermined());
 	}, this);
 
 	// extend rows to cover all tasks
@@ -58,6 +54,15 @@ CalendarViewModel.prototype.initialize = function (taskdata) {
 				};
 			}));
 		}, this));
+	}, this);
+	ko.computed(function () {
+		var tbdTasks = TaskViewModel.extend(this.dueMap().getToBeDetermined());
+		this.planner.tasklists($.map(Tasks.groupByTasklist(tbdTasks), function (tasks) {
+			return {
+				tasklist: tasks[0].tasklist(),
+				tasks: TaskViewModel.extend(tasks)
+			};
+		}));
 	}, this);
 
 	/**
@@ -98,6 +103,17 @@ CalendarDayViewModel.prototype.initialize = function (day) {
 	this.thisweek = ko.computed(function () {
 		return DateUtil.isThisWeek(this.time());
 	}, this);
+	this.tasklists = ko.observableArray();
+};
+/**
+ * @class Planner view model.
+ */
+function PlannerViewModel () {
+	this.initialize.apply(this, arguments);
+};
+/**
+ */
+PlannerViewModel.prototype.initialize = function () {
 	this.tasklists = ko.observableArray();
 };
 /**

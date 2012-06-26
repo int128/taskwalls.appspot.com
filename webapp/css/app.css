@@ -419,6 +419,7 @@ body {
 	top: 0;
 	bottom: 0;
 	right: 0;
+	overflow-y: auto;
 	box-shadow: 0 0 10px 2px rgba(0, 0, 0, 0.3);
 }
 
@@ -428,11 +429,6 @@ body {
 	color: #ccc;
 	font-size: 16px;
 	font-weight: normal;
-}
-
-.planner .tasks {
-	clear: both;
-	overflow-y: auto;
 }
 
 /* buttons */
