@@ -30,7 +30,7 @@ AuthorizedPageViewModel.prototype.initialize = function () {
 			// context may be CalendarDayViewModel
 			return new CreateTaskDialog(taskdata, context.date(), event);
 		} else {
-			// context may be PlannerViewModel
+			// context may be CalendarIceboxViewModel
 			return new CreateTaskDialog(taskdata, null, event);
 		}
 	}, this);
