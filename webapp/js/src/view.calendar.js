@@ -105,20 +105,22 @@ CalendarDayViewModel.prototype.initialize = function (day) {
  */
 function TasklistViewModel () {}
 /**
- * @param {Tasklist} instance an instance (also accepts {@link Array})
+ * @param {Tasklist} target an instance (also accepts {@link Array})
  */
-TasklistViewModel.extend = function (instance) {
-	var extension = {};
-	extension.visible = ko.observable(true);
-	extension.toggleVisibility = TasklistViewModel.toggleVisibility;
-	if ($.isArray(instance)) {
-		$.each(instance, function () {
-			$.extend(this, extension);
-		});
+TasklistViewModel.extend = function (target) {
+	var extend = function () {
+		var extension = {};
+		extension.visible = ko.observable(true);
+		extension.toggleVisibility = TasklistViewModel.toggleVisibility;
+		$.extend(this, extension);
+	};
+
+	if ($.isArray(target)) {
+		$.each(target, extend);
 	} else {
-		$.extend(instance, extension);
+		extend.apply(target);
 	}
-	return instance;
+	return target;
 };
 /**
  * Toggle visibility of the tasklist and its tasks.
@@ -131,19 +133,21 @@ TasklistViewModel.toggleVisibility = function () {
  */
 function TaskViewModel () {}
 /**
- * @param {Task} instance an instance (also accepts {@link Array})
+ * @param {Task} target an instance (also accepts {@link Array})
  */
-TaskViewModel.extend = function (instance) {
-	var extension = {};
-	extension.saveStatus = TaskViewModel.saveStatus;
-	if ($.isArray(instance)) {
-		$.each(instance, function () {
-			$.extend(this, extension);
-		});
+TaskViewModel.extend = function (target) {
+	var extend = function () {
+		var extension = {};
+		extension.saveStatus = TaskViewModel.saveStatus;
+		$.extend(this, extension);
+	};
+
+	if ($.isArray(target)) {
+		$.each(target, extend);
 	} else {
-		$.extend(instance, extension);
+		extend.apply(target);
 	}
-	return instance;
+	return target;
 };
 /**
  * Save and update status of the task.
