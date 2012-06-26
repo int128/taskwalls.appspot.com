@@ -131,7 +131,7 @@ Task WallはGoogleタスクと連携するタスク管理アプリです。<br/>
 <td class="border weekday"><div data-bind="text: weekdayName"></div></td>
 <td class="border tasks">
 <div data-bind="foreach: tasklists">
-<div data-bind="foreach: tasks, visible: visible" class="tasklist">
+<div data-bind="foreach: tasks, visible: tasklist.visible" class="tasklist">
 <div data-bind="overlappedClick: $root.updateTaskDialog.create,
 	attr: {
 		'data-status': status,
@@ -155,14 +155,14 @@ Task WallはGoogleタスクと連携するタスク管理アプリです。<br/>
 </table>
 </section>
 
-<section data-bind="with: planner" class="planner">
+<section data-bind="with: calendar" class="planner">
 <h2>計画中のタスク</h2>
 <div class="create">
 <a data-bind="click: $root.createTaskDialog.create"
 	href="#" class="with-tooltip"
 	data-placement="left" title="新しいタスクを作成する"></a>
 </div>
-<div data-bind="foreach: tasks" class="tasks">
+<div data-bind="foreach: tbdTasks" class="tasks">
 <div data-bind="overlappedClick: $root.updateTaskDialog.create,
 	attr: {
 		'data-status': status,

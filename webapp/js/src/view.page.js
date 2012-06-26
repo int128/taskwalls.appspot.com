@@ -7,7 +7,7 @@ function AuthorizedPageViewModel () {
 /**
  */
 AuthorizedPageViewModel.prototype.initialize = function () {
-	var taskdata = new TaskdataViewModel();
+	var taskdata = new Taskdata();
 
 	// toggle
 	this.completedCount = ko.computed(function () {
@@ -23,7 +23,6 @@ AuthorizedPageViewModel.prototype.initialize = function () {
 
 	// calendar
 	this.calendar = new CalendarViewModel(taskdata);
-	this.planner = new PlannerViewModel(taskdata);
 
 	// dialogs
 	this.createTaskDialog = ko.disposableObservable(function (context, event) {
@@ -35,14 +34,14 @@ AuthorizedPageViewModel.prototype.initialize = function () {
 			return new CreateTaskDialog(taskdata, null, event);
 		}
 	}, this);
-	this.updateTaskDialog = ko.disposableObservable(function (taskvm, event) {
-		return new UpdateTaskDialog(taskdata, taskvm, event);
+	this.updateTaskDialog = ko.disposableObservable(function (task, event) {
+		return new UpdateTaskDialog(taskdata, task, event);
 	}, this);
 	this.createTasklistDialog = ko.disposableObservable(function () {
 		return new CreateTasklistDialog(taskdata);
 	});
-	this.updateTasklistDialog = ko.disposableObservable(function (tasklistvm, event) {
-		return new UpdateTasklistDialog(taskdata, tasklistvm, event);
+	this.updateTasklistDialog = ko.disposableObservable(function (tasklist, event) {
+		return new UpdateTasklistDialog(taskdata, tasklist, event);
 	});
 
 	// offline

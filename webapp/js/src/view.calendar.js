@@ -6,7 +6,7 @@ function CalendarViewModel (taskdata) {
 	this.initialize.apply(this, arguments);
 };
 /**
- * @param {TaskdataViewModel} taskdata
+ * @param {Taskdata} taskdata
  */
 CalendarViewModel.prototype.initialize = function (taskdata) {
 	var calendar = new Calendar(function (day) {
@@ -25,7 +25,18 @@ CalendarViewModel.prototype.initialize = function (taskdata) {
 	})();
 
 	this.days = calendar.days;
-	this.tasklists = taskdata.tasklists;
+
+	this.tasklists = ko.computed(function () {
+		return TasklistViewModel.extend(taskdata.tasklists());
+	}, this);
+
+	this.dueMap = ko.computed(function () {
+		return Tasks.groupByDue(taskdata.tasks());
+	}, this);
+
+	this.tbdTasks = ko.computed(function () {
+		return TaskViewModel.extend(this.dueMap().getToBeDetermined());
+	}, this);
 
 	// extend rows to cover all tasks
 	ko.computed(function () {
@@ -37,25 +48,16 @@ CalendarViewModel.prototype.initialize = function (taskdata) {
 	});
 
 	// arrange tasks by each due date and tasklist
-	var tasklistsIdMap = ko.computed(function () {
-		var map = {};
-		$.each(this.tasklists(), function (i, tasklist) {
-			map[tasklist.id()] = tasklist;
-		});
-		return map;
-	}, this);
-
 	ko.computed(function () {
-		$.each(this.days(), function (i, day) {
-			var tasksInDay = taskdata.dueMap().get(day.date());
-			day.tasklists($.map(Tasks.groupByTasklist(tasksInDay), function (tasks, tasklistId) {
-				var tasklistvm = tasklistsIdMap()[tasklistId];
+		$.each(this.days(), $.proxy(function (i, day) {
+			var tasksInDay = this.dueMap().get(day.date());
+			day.tasklists($.map(Tasks.groupByTasklist(tasksInDay), function (tasks) {
 				return {
-					visible: tasklistvm ? tasklistvm.visible() : true,  // always true while initializing
-					tasks: tasks
+					tasklist: tasks[0].tasklist(),
+					tasks: TaskViewModel.extend(tasks)
 				};
 			}));
-		});
+		}, this));
 	}, this);
 
 	/**
@@ -99,99 +101,56 @@ CalendarDayViewModel.prototype.initialize = function (day) {
 	this.tasklists = ko.observableArray();
 };
 /**
- * @class Planner view model.
- * @param {Taskdata} taskdata
- */
-function PlannerViewModel (taskdata) {
-	this.initialize.apply(this, arguments);
-};
-/**
- * @param {TaskdataViewModel} taskdata
- */
-PlannerViewModel.prototype.initialize = function (taskdata) {
-	this.tasks = ko.computed(function () {
-		return taskdata.dueMap().getToBeDetermined();
-	});
-};
-/**
- * @class tasklists and tasks
- */
-function TaskdataViewModel () {
-	this.initialize.apply(this, arguments);
-};
-/**
- */
-TaskdataViewModel.prototype.initialize = function () {
-	this.taskdata = new Taskdata();
-
-	var tasklistsHash = {};
-	this.tasklists = ko.computed(function () {
-		var a = [];
-		$.each(this.taskdata.tasklists(), function (i, tasklist) {
-			if (!tasklistsHash[tasklist.id()]) {
-				tasklistsHash[tasklist.id()] = new TasklistViewModel(tasklist);
-			}
-			a.push(tasklistsHash[tasklist.id()]);
-		});
-		return a;
-	}, this);
-
-	var tasksHash = {};
-	this.tasks = ko.computed(function () {
-		var a = [];
-		$.each(this.taskdata.tasks(), function (i, task) {
-			if (!tasksHash[task.id()]) {
-				tasksHash[task.id()] = new TaskViewModel(task);
-			}
-			a.push(tasksHash[task.id()]);
-		});
-		return a;
-	}, this);
-
-	this.dueMap = ko.computed(function () {
-		return Tasks.groupByDue(this.tasks());
-	}, this);
-};
-/**
- * Load task data from server.
- */
-TaskdataViewModel.prototype.load = function () {
-	this.taskdata.load();
-};
-/**
  * @class Tasklist view model.
- * @param {Tasklist} tasklist
  */
-function TasklistViewModel (tasklist) {
-	this.initialize.apply(this, arguments);
+function TasklistViewModel () {}
+/**
+ * @param {Tasklist} instance an instance (also accepts {@link Array})
+ */
+TasklistViewModel.extend = function (instance) {
+	var extension = {};
+	extension.visible = ko.observable(true);
+	extension.toggleVisibility = TasklistViewModel.toggleVisibility;
+	if ($.isArray(instance)) {
+		$.each(instance, function () {
+			$.extend(this, extension);
+		});
+	} else {
+		$.extend(instance, extension);
+	}
+	return instance;
 };
 /**
- * @param {Tasklist} tasklist
+ * Toggle visibility of the tasklist and its tasks.
  */
-TasklistViewModel.prototype.initialize = function (tasklist) {
-	$.extend(this, tasklist);
-	this.visible = ko.observable(true);
-	this.toggleVisibility = function () {
-		this.visible(!this.visible());
-	};
+TasklistViewModel.toggleVisibility = function () {
+	this.visible(!this.visible());
 };
 /**
  * @class Task view model.
- * @param {Task} task
  */
-function TaskViewModel (task) {
-	this.initialize.apply(this, arguments);
+function TaskViewModel () {}
+/**
+ * @param {Task} instance an instance (also accepts {@link Array})
+ */
+TaskViewModel.extend = function (instance) {
+	var extension = {};
+	extension.saveStatus = TaskViewModel.saveStatus;
+	if ($.isArray(instance)) {
+		$.each(instance, function () {
+			$.extend(this, extension);
+		});
+	} else {
+		$.extend(instance, extension);
+	}
+	return instance;
 };
 /**
- * @param {Task} task
+ * Save and update status of the task.
  */
-TaskViewModel.prototype.initialize = function (task) {
-	$.extend(this, task);
-	var self = this;
-	this.saveStatus = function () {
-		self.update({
-			status: self.status()
-		});
-		return true;  // bubbling event for checkbox
-	};
+TaskViewModel.saveStatus = function () {
+	this.update({
+		status: this.status()
+	});
+	return true;  // bubbling event for checkbox
 };
