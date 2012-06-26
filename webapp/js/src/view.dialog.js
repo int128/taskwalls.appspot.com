@@ -1,7 +1,7 @@
 /**
  * @class Dialog to create a task.
  */
-function CreateTaskDialog (due, event, tasklists) {
+function CreateTaskDialog (due, due, event) {
 	this.initialize.apply(this, arguments);
 };
 /**

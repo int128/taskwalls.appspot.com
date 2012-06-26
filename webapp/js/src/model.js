@@ -433,12 +433,12 @@ function Task (object, tasklist) {
 Task.prototype.initialize = function (object, tasklist) {
 	ko.extendObservables(this, object);
 	this.tasklist = ko.observable(tasklist);
-	if (this.notes === undefined) {
+	if (object.notes === undefined) {
 		this.notes = ko.observable();
 	}
-	if (this.due) {
+	if (object.due) {
 		// normalize for current timezone
-		this.due(DateUtil.normalize(this.due()));
+		this.due(DateUtil.normalize(object.due));
 	} else {
 		this.due = ko.observable();
 	}
