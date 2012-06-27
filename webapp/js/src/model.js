@@ -127,6 +127,19 @@ Taskdata.prototype.remove = function (item) {
 	}
 };
 /**
+ * Clear completed tasks.
+ */
+Taskdata.prototype.clearCompletedTasks = function () {
+	var self = this;
+	$.each(this.tasklists(), function (i, tasklist) {
+		tasklist.clearCompletedTasks().done(function () {
+			self.tasks.remove(function (task) {
+				return task.tasklist().id() == tasklist.id() && task.isCompleted();
+			});
+		});
+	});
+};
+/**
  * @class set of tasklist
  */
 function Tasklists () {
@@ -275,23 +288,15 @@ Tasklist.prototype.remove = function () {
 };
 /**
  * Clear completed tasks in the tasklist.
- * @param {Function} success
- * @param {Function} error
+ * @returns {Deferred}
  */
-Tasklist.prototype.clearCompleted = function (success, error) {
-	$.ajax({
-		url: '/tasks/v1/lists/' + this.id + '/clear',
-		type: 'POST',
-		/**
-		 * @param {XMLHttpRequest} xhr
-		 */
-		beforeSend: function (xhr) {
-			xhr.setRequestHeader('X-HTTP-Method-Override', 'POST');
-		},
-		dataType: 'json',
-		success: success,
-		error: error
-	});
+Tasklist.prototype.clearCompletedTasks = function () {
+	if (!taskwalls.settings.offline()) {
+		return $.post('/tasks/v1/lists/' + this.id() + '/clear');
+	} else {
+		// TODO: offline
+		return $.Deferred().resolve();
+	}
 };
 /**
  * @class set of task

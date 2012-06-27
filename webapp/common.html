@@ -112,10 +112,6 @@ Task WallはGoogleタスクと連携するタスク管理アプリです。<br/>
 </span>
 </section>
 
-<div class="calendar-operations-tab">
-<a href="#clear-completed-tasks">完了したタスクを消す</a>
-</div>
-
 <section data-bind="with: calendar" class="calendar">
 <table>
 <tbody data-bind="foreach: days">
@@ -184,6 +180,10 @@ Task WallはGoogleタスクと連携するタスク管理アプリです。<br/>
 <span data-bind="text: nextMonth().getFullYear()"></span>年
 <span data-bind="text: nextMonth().getMonth()+1"></span>月を表示
 </a>
+</div>
+
+<div data-bind="with: calendar" class="manipulations">
+<a data-bind="click: clearCompleted" href="#">完了したタスクを消去する</a>
 </div>
 
 <!-- ko if: createTasklistDialog -->

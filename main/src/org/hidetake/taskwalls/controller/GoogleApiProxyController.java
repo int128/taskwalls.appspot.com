@@ -51,12 +51,17 @@ public class GoogleApiProxyController extends ControllerBase {
 			return null;
 		}
 		String uri = BASE_URI + asString("path");
-		HttpMethod method = HttpMethod.valueOf(request.getHeader("X-HTTP-Method-Override"));
-		if (method == null) {
-			logger.warning("Precondition failed: unknown method: "
-					+ request.getHeader("X-HTTP-Method-Override"));
-			response.sendError(Constants.STATUS_PRECONDITION_FAILED);
-			return null;
+		String methodHeader = request.getHeader("X-HTTP-Method-Override");
+		HttpMethod method;
+		if (methodHeader == null) {
+			method = HttpMethod.POST;
+		} else {
+			method = HttpMethod.valueOf(methodHeader);
+			if (method == null) {
+				logger.warning("Precondition failed: unknown method: " + methodHeader);
+				response.sendError(Constants.STATUS_PRECONDITION_FAILED);
+				return null;
+			}
 		}
 		HttpTransport httpTransport = NetHttpTransportLocator.get();
 		JsonFactory jsonFactory = JacksonFactoryLocator.get();

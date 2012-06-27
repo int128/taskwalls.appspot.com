@@ -78,6 +78,13 @@ CalendarViewModel.prototype.initialize = function (taskdata) {
 	this.extendToNextMonth = function () {
 		calendar.extendTo(this.nextMonth());
 	};
+
+	/**
+	 * Clear completed tasks.
+	 */
+	this.clearCompleted = function () {
+		taskdata.clearCompletedTasks();
+	};
 };
 /**
  * @class Daily row of the calendar.
