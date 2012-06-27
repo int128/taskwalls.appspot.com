@@ -63,6 +63,7 @@ Task WallはGoogleタスクと連携するタスク管理アプリです。<br/>
 <section class="header">
 <h1>Task Wall<span style="color: gold;">*</span></h1>
 <div style="text-align: center; font-weight: bold; margin-top: -5px; color: #888;">BETA</div>
+<h3>Tasklists</h3>
 <div data-bind="foreach: calendar.tasklists" class="toggle tasklists">
 <div data-bind="overlappedClick: toggleVisibility,
 	css: {visible: visible},
@@ -77,18 +78,10 @@ Task WallはGoogleタスクと連携するタスク管理アプリです。<br/>
 <a data-bind="click: $root.createTasklistDialog.create"
 	href="#" class="create tasklist with-tooltip"
 	data-placement="right" title="新しいタスクリストを作成する"></a>
-<div class="toggle kinds">
-<div class="description">this week's</div>
-<div>
-<a href="#" class="kind with-tooltip"
-	data-placement="right" title="完了したタスクの表示を切り替える">completed<br/>
-<span data-bind="text: completedCount" class="count"></span></a>
-</div>
-<div>
-<a href="#" class="kind with-tooltip"
-	data-placement="right" title="未完了タスクの表示を切り替える">needs action<br/>
-<span data-bind="text: needsActionCount" class="count"></span></a>
-</div>
+<div class="thisweek with-tooltip" data-placement="right" title="今週のタスクの進捗">
+<h3>Tasks</h3>
+<div class="fraction numerator"><span data-bind="text: completedCount" class="count"></span></div>
+<div class="fraction denominator"><span data-bind="text: count" class="count"></span></div>
 </div>
 <div>
 <div><a data-bind="click: logout" href="#" class="myicon-logout with-tooltip"

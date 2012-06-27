@@ -15,9 +15,9 @@ AuthorizedPageViewModel.prototype.initialize = function () {
 			return DateUtil.isThisWeek(task.due()) && task.isCompleted();
 		}).length;
 	}, this);
-	this.needsActionCount = ko.computed(function () {
+	this.count = ko.computed(function () {
 		return $.grep(taskdata.tasks(), function (task) {
-			return DateUtil.isThisWeek(task.due()) && !task.isCompleted();
+			return DateUtil.isThisWeek(task.due());
 		}).length;
 	}, this);
 
