@@ -26,7 +26,7 @@ CreateTaskDialog.prototype.initialize = function (taskdata, due, event) {
 	};
 
 	this.save = function () {
-		Task.create({
+		Tasks.create({
 			tasklistID: self.selectedTasklist().id(),
 			due: self.due(),
 			title: self.title(),
@@ -114,7 +114,7 @@ CreateTasklistDialog.prototype.initialize = function (taskdata) {
 	this.title = ko.observable();
 	this.save = function () {
 		if (self.title()) {
-			Tasklist.create({
+			Tasklists.create({
 				title: self.title()
 			}).done(function (tasklist) {
 				taskdata.tasklists.push(tasklist);

@@ -176,6 +176,23 @@ Tasklists.map = function (items) {
 	});
 };
 /**
+ * Create a tasklist.
+ * @param {Object} data
+ * @returns {Deferred} call with new instance of {@link Tasklist}
+ */
+Tasklists.create = function (data) {
+	if (!taskwalls.settings.offline()) {
+		$.post('/tasklists/create', data).pipe(function (object) {
+			return new Tasklist(object);
+		});
+	} else {
+		// TODO: offline
+		return $.Deferred().resolve(new Tasklist($.extend({
+			id: 'tasklist__' + $.now()
+		}, data)));
+	}
+};
+/**
  * @class the tasklist
  * @param {Object} object
  */
@@ -276,23 +293,6 @@ Tasklist.prototype.clearCompleted = function (success, error) {
 	});
 };
 /**
- * Create a tasklist.
- * @param {Object} data
- * @returns {Deferred} call with new instance of {@link Tasklist}
- */
-Tasklist.create = function (data) {
-	if (!taskwalls.settings.offline()) {
-		$.post('/tasklists/create', data).pipe(function (object) {
-			return new Tasklist(object);
-		});
-	} else {
-		// TODO: offline
-		return $.Deferred().resolve(new Tasklist($.extend({
-			id: 'tasklist__' + $.now()
-		}, data)));
-	}
-};
-/**
  * @class set of task
  */
 function Tasks () {
@@ -340,6 +340,27 @@ Tasks.map = function (items, tasklist) {
 	return $.map(items, function (item) {
 		return new Task(item, tasklist);
 	});
+};
+/**
+ * Create a task.
+ * @param {Object} data
+ * @returns {Deferred} call with new instance of {@link Task}
+ */
+Tasks.create = function (data) {
+	if (!taskwalls.settings.offline()) {
+		return $.post('/tasks/create', $.extend({}, data, {
+			// specify zero for to-be-determined
+			due: data.due ? data.due.getUTCTime() : 0
+		})).pipe(function (object) {
+			return new Task(object);
+		});
+	} else {
+		// TODO: offline
+		return $.Deferred().resolve(new Task($.extend({
+			id: 'task__' + $.now(),
+			status: 'needsAction'
+		}, data)));
+	}
 };
 /**
  * Returns days.
@@ -521,26 +542,5 @@ Task.prototype.remove = function () {
 	} else {
 		// TODO: offline
 		return $.Deferred().resolve();
-	}
-};
-/**
- * Create a task.
- * @param {Object} data
- * @returns {Deferred} call with new instance of {@link Task}
- */
-Task.create = function (data) {
-	if (!taskwalls.settings.offline()) {
-		return $.post('/tasks/create', $.extend({}, data, {
-			// specify zero for to-be-determined
-			due: data.due ? data.due.getUTCTime() : 0
-		})).pipe(function (object) {
-			return new Task(object);
-		});
-	} else {
-		// TODO: offline
-		return $.Deferred().resolve(new Task($.extend({
-			id: 'task__' + $.now(),
-			status: 'needsAction'
-		}, data)));
 	}
 };
