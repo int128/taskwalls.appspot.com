@@ -225,6 +225,7 @@ Tasklist.prototype.update = function (data) {
 				ko.extendObservables(self, data);
 			})
 			.fail(function () {
+				// FIXME: view model should do this
 				ko.extendObservables(data, self);
 			});
 	} else {
@@ -249,6 +250,7 @@ Tasklist.prototype.updateMetadata = function (data) {
 				ko.extendObservables(self, data);
 			})
 			.fail(function () {
+				// FIXME: view model should do this
 				ko.extendObservables(data, self);
 			});
 	} else {
