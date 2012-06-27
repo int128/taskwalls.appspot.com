@@ -91,7 +91,7 @@ UpdateTaskDialog.prototype.initialize = function (taskdata, task, event) {
 	};
 	this.remove = function () {
 		self.task.remove().done(function () {
-			taskdata.removeTask(self.task);
+			taskdata.remove(self.task);
 			self.dispose();
 		});
 	};
@@ -175,7 +175,7 @@ UpdateTasklistDialog.prototype.initialize = function (taskdata, tasklist, event)
 	};
 	this.remove = function () {
 		self.tasklist.remove().done(function () {
-			taskdata.removeTasklist(self.tasklist);
+			taskdata.remove(self.tasklist);
 			self.dispose();
 		});
 	};

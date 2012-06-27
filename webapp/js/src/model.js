@@ -110,22 +110,21 @@ Taskdata.prototype.load = function () {
 		});
 	});
 };
-Taskdata.prototype.removeTask = function (task) {
-	this.tasks.remove(function (item) {
-		return item.id() == task.id();
-	});
-};
 /**
- * Remove the tasklist and belonged tasks.
- * @param {Tasklist} tasklist
+ * Remove the item from collection. 
+ * @param {Object} item item to remove {@link Task} or {@link Tasklist}
  */
-Taskdata.prototype.removeTasklist = function (tasklist) {
-	this.tasks.remove(function (item) {
-		return item.tasklist().id() == tasklist.id();
-	});
-	this.tasklists.remove(function (item) {
-		return item.id() == tasklist.id();
-	});
+Taskdata.prototype.remove = function (item) {
+	if (item instanceof Task) {
+		this.tasks.remove(item);
+	} else if (item instanceof Tasklist) {
+		this.tasks.remove(function (task) {
+			return task.tasklist().id() == item.id();
+		});
+		this.tasklists.remove(item);
+	} else {
+		throw new TypeError('argument should be Task or Tasklist');
+	}
 };
 /**
  * @class set of tasklist
