@@ -56,8 +56,8 @@ CalendarViewModel.prototype.initialize = function (taskdata) {
 		}, this));
 	}, this);
 	ko.computed(function () {
-		var tbdTasks = TaskViewModel.extend(this.dueMap().getToBeDetermined());
-		this.icebox.tasklists($.map(Tasks.groupByTasklist(tbdTasks), function (tasks) {
+		var iceboxTasks = TaskViewModel.extend(this.dueMap().getInIceBox());
+		this.icebox.tasklists($.map(Tasks.groupByTasklist(iceboxTasks), function (tasks) {
 			return {
 				tasklist: tasks[0].tasklist(),
 				tasks: TaskViewModel.extend(tasks)

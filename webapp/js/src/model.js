@@ -350,7 +350,7 @@ Tasks.map = function (items, tasklist) {
 Tasks.create = function (data) {
 	if (!taskwalls.settings.offline()) {
 		return $.post('/tasks/create', $.extend({}, data, {
-			// specify zero for to-be-determined
+			// specify zero for icebox
 			due: data.due ? data.due.getUTCTime() : 0
 		})).pipe(function (object) {
 			return new Task(object);
@@ -433,10 +433,10 @@ Tasks.DueMap.prototype.get = function (date) {
 	return tasks ? tasks : [];
 };
 /**
- * Returns tasks of which due date is unknown.
+ * Returns tasks of which due date is not determined.
  * @returns {Array}
  */
-Tasks.DueMap.prototype.getToBeDetermined = function () {
+Tasks.DueMap.prototype.getInIceBox = function () {
 	var tasks = this.map[0];
 	return tasks ? tasks : [];
 };
@@ -486,7 +486,7 @@ Task.prototype.update = function (data) {
 				id: this.id(),
 				tasklistID: this.tasklist().id(),
 			}, data.due === undefined ? {} : {
-				// specify zero for to-be-determined
+				// specify zero for icebox
 				due: data.due ? data.due.getUTCTime() : 0
 			}))
 			.done(function () {
