@@ -61,8 +61,9 @@ Task WallはGoogleタスクと連携するタスク管理アプリです。<br/>
 
 <article class="oauth2state authorized" style="display: none;">
 <section class="header">
-<h1>Task Wall<span style="color: gold;">*</span></h1>
-<div style="text-align: center; font-weight: bold; margin-top: -5px; color: #888;">BETA</div>
+<h1>Task Wall</h1>
+<div style="font-weight: bold; margin-left: 5px; color: #888;">BETA</div>
+<section>
 <h3>Tasklists</h3>
 <div data-bind="foreach: calendar.tasklists" class="toggle tasklists">
 <div data-bind="overlappedClick: toggleVisibility,
@@ -78,17 +79,18 @@ Task WallはGoogleタスクと連携するタスク管理アプリです。<br/>
 <a data-bind="click: $root.createTasklistDialog.create"
 	href="#" class="create tasklist with-tooltip"
 	data-placement="right" title="新しいタスクリストを作成する"></a>
-<div class="thisweek with-tooltip" data-placement="right" title="今週のタスクの進捗">
+</section>
+<section class="thisweek with-tooltip" data-placement="right" title="今週のタスクの進捗">
 <h3>Tasks</h3>
 <div class="fraction numerator"><span data-bind="text: completedCount" class="count"></span></div>
 <div class="fraction denominator"><span data-bind="text: count" class="count"></span></div>
-</div>
-<div>
+</section>
+<section>
 <div><a data-bind="click: logout" href="#" class="myicon-logout with-tooltip"
 	data-placement="right" title="ログアウト"></a></div>
 <div><a href="#" class="myicon-help with-tooltip"
 	data-placement="right" title="ヘルプ"></a></div>
-</div>
+</section>
 <p class="footer">&copy; hidetake.org, 2011-2012.</p>
 </section>
 

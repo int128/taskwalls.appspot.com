@@ -90,20 +90,18 @@ body {
 	text-align: center;
 }
 
-.header>h1 {
-	margin-top: 10px;
-	line-height: inherit;
-	padding: 0;
-	font-size: 130%;
-	text-align: center;
-}
-
-.header>div,
-.header>h1 {
+.header>section {
 	margin-left: 15px;
 	margin-right: 10px;
 	margin-top: 5px;
 	margin-bottom: 5px;
+}
+
+.header h1 {
+	margin-top: 10px;
+	line-height: inherit;
+	padding: 0;
+	font-size: 18px;
 }
 
 .header h3 {
@@ -127,11 +125,6 @@ body {
 
 .header .footer a {
 	text-decoration: none;
-}
-
-.header .thisweek {
-	padding-top: 5px;
-	padding-bottom: 5px;
 }
 
 .header .thisweek .numerator {
@@ -197,14 +190,14 @@ body {
 
 .header .create.tasklist {
 	display: inline-block;
-	width: 32px;
-	height: 32px;
+	width: 24px;
+	height: 24px;
 	background: url('/img/plus24.png') no-repeat center;
-	opacity: 0.1;
+	opacity: 0.3;
 }
 
 .header .create.tasklist:HOVER {
-	opacity: 0.6;
+	opacity: 1.0;
 }
 
 /*
