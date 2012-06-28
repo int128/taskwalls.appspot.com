@@ -123,13 +123,13 @@ Task WallはGoogleタスクと連携するタスク管理アプリです。<br/>
 <td class="border tasks">
 <div data-bind="foreach: tasklists">
 <div data-bind="foreach: tasks, visible: tasklist.visible" class="tasklist">
-<div data-bind="overlappedClick: $root.updateTaskDialog.create,
+<div data-bind="click: $root.updateTaskDialog.create,
 	attr: {
 		'data-status': status,
 		'data-tasklistcolor': tasklist().colorCode
 	}"
 	class="task">
-<input data-bind="checked: isCompleted, click: saveStatus" type="checkbox" data-intercept="click" />
+<input data-bind="checked: isCompleted, click: saveStatus, clickBubble: false" type="checkbox" />
 <span data-bind="text: title" class="title"></span>
 <div data-bind="text: notes" class="notes"></div>
 </div>
@@ -156,13 +156,13 @@ Task WallはGoogleタスクと連携するタスク管理アプリです。<br/>
 <div style="clear: both;"></div>
 <div data-bind="foreach: tasklists">
 <div data-bind="foreach: tasks, visible: tasklist.visible" class="tasklist">
-<div data-bind="overlappedClick: $root.updateTaskDialog.create,
+<div data-bind="click: $root.updateTaskDialog.create,
 	attr: {
 		'data-status': status,
 		'data-tasklistcolor': tasklist().colorCode
 	}"
 	class="task">
-<input data-bind="checked: isCompleted, click: saveStatus" type="checkbox" data-intercept="click" />
+<input data-bind="checked: isCompleted, click: saveStatus, clickBubble: false" type="checkbox" />
 <span data-bind="text: title" class="title"></span>
 <div data-bind="text: notes" class="notes"></div>
 </div>
