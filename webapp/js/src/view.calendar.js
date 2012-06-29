@@ -160,11 +160,9 @@ function TaskViewModel () {}
  */
 TaskViewModel.extend = function (target) {
 	var extend = function () {
-		var extension = {};
-		extension.saveStatus = TaskViewModel.saveStatus;
-		$.extend(this, extension);
+		// TODO: apply to other classes
+		$.extend(this, TaskViewModel.prototype);
 	};
-
 	if ($.isArray(target)) {
 		$.each(target, extend);
 	} else {
@@ -175,9 +173,26 @@ TaskViewModel.extend = function (target) {
 /**
  * Save and update status of the task.
  */
-TaskViewModel.saveStatus = function () {
+TaskViewModel.prototype.saveStatus = function () {
 	this.update({
 		status: this.status()
 	});
 	return true;  // bubbling event for checkbox
+};
+/**
+ * Dropped.
+ * @param {Task} task
+ * @param {Event} e
+ * @param {CalendarDayViewModel} day
+ */
+TaskViewModel.prototype.dropped = function (task, e, day) {
+	if (day instanceof CalendarDayViewModel) {
+		task.update({
+			due: day.date()
+		});  // TODO: failed?
+	} else if (day instanceof CalendarIceboxViewModel) {
+		task.update({
+			due: null
+		});  // TODO: failed?
+	}
 };

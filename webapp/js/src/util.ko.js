@@ -29,6 +29,78 @@ ko.bindingHandlers.overlappedClick = {
 		}
 };
 /**
+ * Drag and drop binding.
+ */
+ko.bindingHandlers.draggable = {
+		/**
+		 * Initialize binding.
+		 * @param {Element} element
+		 * @param valueAccessor
+		 * @param allBindingsAccessor
+		 * @param viewModel
+		 * @returns
+		 */
+		init: function (element, valueAccessor, allBindingsAccessor, viewModel) {
+			$(element).draggable();
+		},
+		/**
+		 * Update the binding.
+		 * @param {Element} element
+		 * @param valueAccessor
+		 * @param allBindingsAccessor
+		 * @param viewModel
+		 * @returns
+		 */
+		update: function (element, valueAccessor, allBindingsAccessor, viewModel) {
+			if (valueAccessor()) {
+				$(element).draggable('enable');
+			} else {
+				$(element).draggable('disable');
+			}
+		}
+};
+ko.bindingHandlers.droppable = {
+		/**
+		 * Initialize binding.
+		 * @param {Element} element
+		 * @param valueAccessor
+		 * @param allBindingsAccessor
+		 * @param viewModel
+		 * @returns
+		 */
+		init: function (element, valueAccessor, allBindingsAccessor, viewModel) {
+			/**
+			 * @type Function
+			 */
+			$(element).droppable({
+				accept: $(element).data('drop-accept'),
+				hoverClass: $(element).data('drop-hover-class'),
+				tolerance: 'pointer',
+				drop: function (e, ui) {
+					// reset position
+					ui.draggable.css({top: 0, left: 0});
+					// trigger event
+					ui.draggable.trigger('dropped', [viewModel, e, ui]);
+				}
+			});
+		},
+		/**
+		 * Update the binding.
+		 * @param {Element} element
+		 * @param valueAccessor
+		 * @param allBindingsAccessor
+		 * @param viewModel
+		 * @returns
+		 */
+		update: function (element, valueAccessor, allBindingsAccessor, viewModel) {
+			if (valueAccessor()) {
+				$(element).droppable('enable');
+			} else {
+				$(element).droppable('disable');
+			}
+		}
+};
+/**
  * Create a <code>ko.observable()</code> with constructor and disposer.
  * Managed instance has <code>dispose()</code> method to dispose itself.
  * @param {Function} constructor function that returns new instance

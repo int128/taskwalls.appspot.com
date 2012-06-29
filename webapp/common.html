@@ -110,20 +110,24 @@ Task WallはGoogleタスクと連携するタスク管理アプリです。<br/>
 <section data-bind="with: calendar" class="calendar">
 <table>
 <tbody data-bind="foreach: days">
-<tr data-bind="css: {
+<tr data-bind="droppable: true,
+	css: {
 		past: past,
 		thisweek: thisweek
 	}, attr: {
 		'data-day': date().getDate(),
 		'data-weekday': date().getDay()
-	}">
+	}"
+	data-drop-accept=".task">
 <td class="month"><div><span data-bind="text: date().getMonth()+1"></span>月</div></td>
 <td class="border day"><div data-bind="text: date().getDate()"></div></td>
 <td class="border weekday"><div data-bind="text: weekdayName"></div></td>
 <td class="border tasks">
 <div data-bind="foreach: tasklists">
 <div data-bind="foreach: tasks, visible: tasklist.visible" class="tasklist">
-<div data-bind="overlappedClick: $root.updateTaskDialog.create,
+<div data-bind="draggable: true,
+	event: {'dropped': dropped},
+	overlappedClick: $root.updateTaskDialog.create,
 	attr: {
 		'data-status': status,
 		'data-tasklistcolor': tasklist().colorCode
@@ -147,6 +151,7 @@ Task WallはGoogleタスクと連携するタスク管理アプリです。<br/>
 </section>
 
 <section data-bind="with: calendar.icebox" class="icebox">
+<div data-bind="droppable: true" data-drop-accept=".task">
 <h2>計画中のタスク</h2>
 <div class="create">
 <a data-bind="click: $root.createTaskDialog.create"
@@ -156,7 +161,9 @@ Task WallはGoogleタスクと連携するタスク管理アプリです。<br/>
 <div style="clear: both;"></div>
 <div data-bind="foreach: tasklists">
 <div data-bind="foreach: tasks, visible: tasklist.visible" class="tasklist">
-<div data-bind="overlappedClick: $root.updateTaskDialog.create,
+<div data-bind="draggable: true,
+	event: {'dropped': dropped},
+	overlappedClick: $root.updateTaskDialog.create,
 	attr: {
 		'data-status': status,
 		'data-tasklistcolor': tasklist().colorCode
@@ -165,6 +172,7 @@ Task WallはGoogleタスクと連携するタスク管理アプリです。<br/>
 <input data-bind="checked: isCompleted, click: saveStatus" type="checkbox" data-intercept="click" />
 <span data-bind="text: title" class="title"></span>
 <div data-bind="text: notes" class="notes"></div>
+</div>
 </div>
 </div>
 </div>
