@@ -69,10 +69,8 @@ ko.bindingHandlers.droppable = {
 		 * @returns
 		 */
 		init: function (element, valueAccessor, allBindingsAccessor, viewModel) {
-			/**
-			 * @type Function
-			 */
-			$(element).droppable({
+			var $element = $(element);
+			$element.droppable({
 				accept: $(element).data('drop-accept'),
 				hoverClass: $(element).data('drop-hover-class'),
 				tolerance: 'pointer',
