@@ -126,7 +126,7 @@ Task WallはGoogleタスクと連携するタスク管理アプリです。<br/>
 <div data-bind="foreach: tasklists">
 <div data-bind="foreach: tasks, visible: tasklist.visible" class="tasklist">
 <div data-bind="draggable: true,
-	event: {'dropped': dropped},
+	event: {dropped: dropped},
 	overlappedClick: $root.updateTaskDialog.create,
 	attr: {
 		'data-status': status,
@@ -162,7 +162,7 @@ Task WallはGoogleタスクと連携するタスク管理アプリです。<br/>
 <div data-bind="foreach: tasklists">
 <div data-bind="foreach: tasks, visible: tasklist.visible" class="tasklist">
 <div data-bind="draggable: true,
-	event: {'dropped': dropped},
+	event: {dropped: dropped},
 	overlappedClick: $root.updateTaskDialog.create,
 	attr: {
 		'data-status': status,
