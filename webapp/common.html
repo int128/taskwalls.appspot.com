@@ -150,8 +150,8 @@ Task WallはGoogleタスクと連携するタスク管理アプリです。<br/>
 </table>
 </section>
 
-<section data-bind="with: calendar.icebox, droppable: true" class="icebox"
-	data-drop-accept=".task" data-drop-hover-class="dropping">
+<section data-bind="with: calendar.icebox" class="icebox">
+<div data-bind="droppable: true" data-drop-accept=".task" data-drop-hover-class="dropping">
 <h2>計画中のタスク</h2>
 <div class="create">
 <a data-bind="click: $root.createTaskDialog.create"
@@ -172,6 +172,7 @@ Task WallはGoogleタスクと連携するタスク管理アプリです。<br/>
 <input data-bind="checked: isCompleted, click: saveStatus" type="checkbox" data-intercept="click" />
 <span data-bind="text: title" class="title"></span>
 <div data-bind="text: notes" class="notes"></div>
+</div>
 </div>
 </div>
 </div>

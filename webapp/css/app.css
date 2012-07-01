@@ -461,7 +461,8 @@ body {
 /*
  * Drag and drop feature.
  */
-.calendar tr.dropping, .icebox.dropping {
+.calendar tr.dropping,
+.icebox .dropping {
 	background: #ddd;
 }
 
