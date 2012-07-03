@@ -66,12 +66,12 @@ Task WallはGoogleタスクと連携するタスク管理アプリです。<br/>
 <section>
 <h3>Tasklists</h3>
 <div data-bind="foreach: calendar.tasklists" class="toggle tasklists">
-<div data-bind="overlappedClick: toggleVisibility,
+<div data-bind="click: toggleVisibility,
 	css: {visible: visible},
 	attr: {'data-tasklistcolor': colorCode}"
 	class="tasklist">
-<div class="setting"><a data-bind="click: $root.updateTasklistDialog.create"
-	href="#" data-intercept="click" class="with-tooltip"
+<div class="setting"><a data-bind="click: $root.updateTasklistDialog.create, clickBubble: false"
+	href="#" class="with-tooltip"
 	data-placement="right" title="タスクリストのプロパティを開く"></a></div>
 <div data-bind="text: title" class="title"></div>
 </div>
