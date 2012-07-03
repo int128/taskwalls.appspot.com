@@ -140,7 +140,6 @@ body {
 }
 
 .header .toggle.tasklists .tasklist {
-	z-index: 500;
 	min-height: 32px;
 	overflow: hidden;
 	margin-bottom: 5px;
@@ -211,10 +210,6 @@ body {
 	border-collapse: collapse;
 	table-layout: fixed;
 	width: 100%;
-}
-
-.calendar tr.hover {
-	background: #ddd;
 }
 
 .calendar td.border {
@@ -335,7 +330,7 @@ body {
 	position: fixed;
 	bottom: 0;
 	right: 0;
-	z-index: 200;
+	z-index: 100;
 	padding: 3px;
 	background: rgba(255, 255, 255, 0.7);
 	color: dimgray;
@@ -388,7 +383,7 @@ body {
 	top: 0;
 	bottom: 0;
 	right: 0;
-	overflow-y: auto;
+	overflow: auto;
 	box-shadow: 0 0 10px 2px rgba(0, 0, 0, 0.3);
 }
 
@@ -422,17 +417,18 @@ body {
  */
 .task {
 	overflow: hidden;
+	padding: 5px;
 	border-left-style: solid;
 	border-left-width: 5px;
 }
 
-.calendar .task {
+.calendar .task,
+.task.ui-draggable-dragging {
 	width: 200px;
 	min-height: 40px;
 	margin-left: 15px;
 	margin-bottom: 1px;
 	margin-top: 1px;
-	padding: 5px;
 	border-top: solid 1px #ddd;
 	border-bottom: solid 1px #ddd;
 	border-right: solid 1px #ddd;
@@ -442,7 +438,6 @@ body {
 }
 
 .icebox .task {
-	padding: 5px;
 	border-bottom: solid 1px #ddd;
 }
 
@@ -463,10 +458,17 @@ body {
 	color: dimgray;
 }
 
-/* TODO: drag and drop */
+/*
+ * Drag and drop feature.
+ */
+.calendar tr.dropping,
+.icebox .dropping {
+	background: #ddd;
+}
+
 .task.ui-draggable-dragging {
-	z-index: 130;
-	box-shadow: 0px 3px 10px 3px rgba(0, 0, 0, 0.4);
+	z-index: 200;
+	box-shadow: 0px 6px 10px 6px rgba(0, 0, 0, 0.2);
 }
 
 /*

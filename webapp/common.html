@@ -110,7 +110,11 @@ Task WallはGoogleタスクと連携するタスク管理アプリです。<br/>
 <section data-bind="with: calendar" class="calendar">
 <table>
 <tbody data-bind="foreach: days">
-<tr data-bind="css: {
+<tr data-bind="droppable: {
+		accept: '.task',
+		hoverClass: 'dropping'
+	},
+	css: {
 		past: past,
 		thisweek: thisweek
 	}, attr: {
@@ -123,7 +127,9 @@ Task WallはGoogleタスクと連携するタスク管理アプリです。<br/>
 <td class="border tasks">
 <div data-bind="foreach: tasklists">
 <div data-bind="foreach: tasks, visible: tasklist.visible" class="tasklist">
-<div data-bind="click: $root.updateTaskDialog.create,
+<div data-bind="draggableByClone: {},
+	click: $root.updateTaskDialog.create,
+	event: {dropped: dropped},
 	attr: {
 		'data-status': status,
 		'data-tasklistcolor': tasklist().colorCode
@@ -147,6 +153,10 @@ Task WallはGoogleタスクと連携するタスク管理アプリです。<br/>
 </section>
 
 <section data-bind="with: calendar.icebox" class="icebox">
+<div data-bind="droppable: {
+		accept: '.task',
+		hoverClass: 'dropping'
+	}">
 <h2>計画中のタスク</h2>
 <div class="create">
 <a data-bind="click: $root.createTaskDialog.create"
@@ -156,7 +166,9 @@ Task WallはGoogleタスクと連携するタスク管理アプリです。<br/>
 <div style="clear: both;"></div>
 <div data-bind="foreach: tasklists">
 <div data-bind="foreach: tasks, visible: tasklist.visible" class="tasklist">
-<div data-bind="click: $root.updateTaskDialog.create,
+<div data-bind="draggableByClone: {},
+	click: $root.updateTaskDialog.create,
+	event: {dropped: dropped},
 	attr: {
 		'data-status': status,
 		'data-tasklistcolor': tasklist().colorCode
@@ -165,6 +177,7 @@ Task WallはGoogleタスクと連携するタスク管理アプリです。<br/>
 <input data-bind="checked: isCompleted, click: saveStatus, clickBubble: false" type="checkbox" />
 <span data-bind="text: title" class="title"></span>
 <div data-bind="text: notes" class="notes"></div>
+</div>
 </div>
 </div>
 </div>

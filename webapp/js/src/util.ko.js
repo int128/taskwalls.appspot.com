@@ -1,4 +1,51 @@
 /**
+ * Drag and drop binding.
+ */
+ko.bindingHandlers.draggableByClone = {
+		/**
+		 * Initialize binding.
+		 * @param {Element} element
+		 * @param valueAccessor
+		 * @param allBindingsAccessor
+		 * @param viewModel
+		 * @returns
+		 */
+		init: function (element, valueAccessor, allBindingsAccessor, viewModel) {
+			var $element = $(element), options = ko.utils.unwrapObservable(valueAccessor());
+			$element.draggable($.extend({
+				addClasses: false,
+				helper: 'clone',
+				appendTo: 'body',
+				start: function (e, ui) {
+					$(this).css('visibility', 'hidden');
+				},
+				stop: function (e, ui) {
+					$(this).css('visibility', 'visible');
+				}
+			}, options));
+		}
+};
+ko.bindingHandlers.droppable = {
+		/**
+		 * Initialize binding.
+		 * @param {Element} element
+		 * @param valueAccessor
+		 * @param allBindingsAccessor
+		 * @param viewModel
+		 * @returns
+		 */
+		init: function (element, valueAccessor, allBindingsAccessor, viewModel) {
+			var $element = $(element), options = ko.utils.unwrapObservable(valueAccessor());
+			$element.droppable($.extend({
+				addClasses: false,
+				tolerance: 'pointer',
+				drop: function (e, ui) {
+					ui.draggable.trigger('dropped', [viewModel]);
+				}
+			}, options));
+		}
+};
+/**
  * Create a <code>ko.observable()</code> with constructor and disposer.
  * Managed instance has <code>dispose()</code> method to dispose itself.
  * @param {Function} constructor function that returns new instance
