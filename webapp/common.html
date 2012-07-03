@@ -110,22 +110,28 @@ Task WallはGoogleタスクと連携するタスク管理アプリです。<br/>
 <section data-bind="with: calendar" class="calendar">
 <table>
 <tbody data-bind="foreach: days">
-<tr data-bind="droppable: true,
+<tr data-bind="droppable: {
+		accept: '.task',
+		hoverClass: 'dropping',
+		addClass: false
+	},
 	css: {
 		past: past,
 		thisweek: thisweek
 	}, attr: {
 		'data-day': date().getDate(),
 		'data-weekday': date().getDay()
-	}"
-	data-drop-accept=".task" data-drop-hover-class="dropping">
+	}">
 <td class="month"><div><span data-bind="text: date().getMonth()+1"></span>月</div></td>
 <td class="border day"><div data-bind="text: date().getDate()"></div></td>
 <td class="border weekday"><div data-bind="text: weekdayName"></div></td>
 <td class="border tasks">
 <div data-bind="foreach: tasklists">
 <div data-bind="foreach: tasks, visible: tasklist.visible" class="tasklist">
-<div data-bind="draggable: true,
+<div data-bind="draggable: {
+		helper: 'clone',
+		appendTo: 'body'
+	},
 	event: {dropped: dropped},
 	overlappedClick: $root.updateTaskDialog.create,
 	attr: {
@@ -151,7 +157,11 @@ Task WallはGoogleタスクと連携するタスク管理アプリです。<br/>
 </section>
 
 <section data-bind="with: calendar.icebox" class="icebox">
-<div data-bind="droppable: true" data-drop-accept=".task" data-drop-hover-class="dropping">
+<div data-bind="droppable: {
+		accept: '.task',
+		hoverClass: 'dropping',
+		addClass: false
+	}">
 <h2>計画中のタスク</h2>
 <div class="create">
 <a data-bind="click: $root.createTaskDialog.create"
@@ -161,7 +171,10 @@ Task WallはGoogleタスクと連携するタスク管理アプリです。<br/>
 <div style="clear: both;"></div>
 <div data-bind="foreach: tasklists">
 <div data-bind="foreach: tasks, visible: tasklist.visible" class="tasklist">
-<div data-bind="draggable: true,
+<div data-bind="draggable: {
+		helper: 'clone',
+		appendTo: 'body'
+	},
 	event: {dropped: dropped},
 	overlappedClick: $root.updateTaskDialog.create,
 	attr: {

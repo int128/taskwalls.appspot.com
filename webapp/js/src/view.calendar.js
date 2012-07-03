@@ -186,13 +186,17 @@ TaskViewModel.prototype.saveStatus = function () {
  * @param {CalendarDayViewModel} day
  */
 TaskViewModel.prototype.dropped = function (task, e, day) {
-	if (day instanceof CalendarDayViewModel) {
-		task.update({
-			due: day.date()
-		});  // TODO: failed?
-	} else if (day instanceof CalendarIceboxViewModel) {
-		task.update({
-			due: null
-		});  // TODO: failed?
-	}
+	// execute asynchronously to prevent exception:
+	// TypeError: Cannot read property 'options' of undefined
+	window.setTimeout(function () {
+		if (day instanceof CalendarDayViewModel) {
+			task.update({
+				due: day.date()
+			});  // TODO: failed?
+		} else if (day instanceof CalendarIceboxViewModel) {
+			task.update({
+				due: null
+			});  // TODO: failed?
+		}
+	});
 };

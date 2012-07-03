@@ -41,22 +41,9 @@ ko.bindingHandlers.draggable = {
 		 * @returns
 		 */
 		init: function (element, valueAccessor, allBindingsAccessor, viewModel) {
-			$(element).draggable();
-		},
-		/**
-		 * Update the binding.
-		 * @param {Element} element
-		 * @param valueAccessor
-		 * @param allBindingsAccessor
-		 * @param viewModel
-		 * @returns
-		 */
-		update: function (element, valueAccessor, allBindingsAccessor, viewModel) {
-			if (valueAccessor()) {
-				$(element).draggable('enable');
-			} else {
-				$(element).draggable('disable');
-			}
+			var $element = $(element), options = ko.utils.unwrapObservable(valueAccessor());
+			$element.draggable($.extend({
+			}, options));
 		}
 };
 ko.bindingHandlers.droppable = {
@@ -69,33 +56,13 @@ ko.bindingHandlers.droppable = {
 		 * @returns
 		 */
 		init: function (element, valueAccessor, allBindingsAccessor, viewModel) {
-			var $element = $(element);
-			$element.droppable({
-				accept: $(element).data('drop-accept'),
-				hoverClass: $(element).data('drop-hover-class'),
+			var $element = $(element), options = ko.utils.unwrapObservable(valueAccessor());
+			$element.droppable($.extend({
 				tolerance: 'pointer',
 				drop: function (e, ui) {
-					// reset position
-					ui.draggable.css({top: 0, left: 0});
-					// trigger event
-					ui.draggable.trigger('dropped', [viewModel, e, ui]);
+					ui.draggable.trigger('dropped', [viewModel]);
 				}
-			});
-		},
-		/**
-		 * Update the binding.
-		 * @param {Element} element
-		 * @param valueAccessor
-		 * @param allBindingsAccessor
-		 * @param viewModel
-		 * @returns
-		 */
-		update: function (element, valueAccessor, allBindingsAccessor, viewModel) {
-			if (valueAccessor()) {
-				$(element).droppable('enable');
-			} else {
-				$(element).droppable('disable');
-			}
+			}, options));
 		}
 };
 /**

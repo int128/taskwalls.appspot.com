@@ -417,17 +417,18 @@ body {
  */
 .task {
 	overflow: hidden;
+	padding: 5px;
 	border-left-style: solid;
 	border-left-width: 5px;
 }
 
-.calendar .task {
+.calendar .task,
+.task.ui-draggable-dragging {
 	width: 200px;
 	min-height: 40px;
 	margin-left: 15px;
 	margin-bottom: 1px;
 	margin-top: 1px;
-	padding: 5px;
 	border-top: solid 1px #ddd;
 	border-bottom: solid 1px #ddd;
 	border-right: solid 1px #ddd;
@@ -437,7 +438,6 @@ body {
 }
 
 .icebox .task {
-	padding: 5px;
 	border-bottom: solid 1px #ddd;
 }
 
@@ -468,7 +468,8 @@ body {
 
 .task.ui-draggable-dragging {
 	z-index: 200;
-	box-shadow: 0px 3px 10px 3px rgba(0, 0, 0, 0.4);
+	opacity: 0.8;
+	box-shadow: 0px 3px 10px 3px rgba(0, 0, 0, 0.5);
 }
 
 /*
