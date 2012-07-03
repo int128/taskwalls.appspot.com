@@ -31,7 +31,7 @@ ko.bindingHandlers.overlappedClick = {
 /**
  * Drag and drop binding.
  */
-ko.bindingHandlers.draggable = {
+ko.bindingHandlers.draggableByClone = {
 		/**
 		 * Initialize binding.
 		 * @param {Element} element
@@ -43,6 +43,14 @@ ko.bindingHandlers.draggable = {
 		init: function (element, valueAccessor, allBindingsAccessor, viewModel) {
 			var $element = $(element), options = ko.utils.unwrapObservable(valueAccessor());
 			$element.draggable($.extend({
+				helper: 'clone',
+				appendTo: 'body',
+				start: function (e, ui) {
+					$(this).hide();
+				},
+				stop: function (e, ui) {
+					$(this).show();
+				}
 			}, options));
 		}
 };
