@@ -43,6 +43,7 @@ ko.bindingHandlers.draggableByClone = {
 		init: function (element, valueAccessor, allBindingsAccessor, viewModel) {
 			var $element = $(element), options = ko.utils.unwrapObservable(valueAccessor());
 			$element.draggable($.extend({
+				addClasses: false,
 				helper: 'clone',
 				appendTo: 'body',
 				start: function (e, ui) {
@@ -66,6 +67,7 @@ ko.bindingHandlers.droppable = {
 		init: function (element, valueAccessor, allBindingsAccessor, viewModel) {
 			var $element = $(element), options = ko.utils.unwrapObservable(valueAccessor());
 			$element.droppable($.extend({
+				addClasses: false,
 				tolerance: 'pointer',
 				drop: function (e, ui) {
 					ui.draggable.trigger('dropped', [viewModel]);
