@@ -44,9 +44,12 @@ $(function () {
 		$('.oauth2state').show();
 	};
 	taskwalls.session.onUnauthorized = function () {
+		$('.oauth2state.unauthorized>.tryout').append($('.navheader,.calendar,.icebox'));
 		$('.oauth2state:not(.unauthorized)').remove();
 		$('.oauth2state').show();
 		$('.login a').attr('href', this.getAuthorizationURL());
+		// FIXME: mock
+		ko.applyBindings(taskwalls.pagevm = new AuthorizedPageViewModel());
 	};
 	taskwalls.session.handle();
 });
