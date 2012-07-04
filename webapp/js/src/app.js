@@ -45,8 +45,10 @@ $(function () {
 		$('.oauth2state').show();
 	};
 	taskwalls.session.onUnauthorized = function () {
-		// copy some elements for try-out
-		$('.oauth2state.unauthorized>.tryout').append($('.navheader,.calendar,.icebox,.dialogs'));
+		// move some elements
+		$('.oauth2state.unauthorized>.tryout').append($('.navheader,.calendar,.icebox'));
+		$('.oauth2state.unauthorized').append($('.dialogs'));
+
 		$('.oauth2state:not(.unauthorized)').remove();
 		$('.oauth2state').show();
 		$('.login a').attr('href', this.getAuthorizationURL());
