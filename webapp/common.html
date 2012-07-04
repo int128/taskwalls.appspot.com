@@ -80,10 +80,14 @@ Task WallはGoogleタスクと連携するタスク管理アプリです。<br/>
 	href="#" class="create tasklist with-tooltip"
 	data-placement="right" title="新しいタスクリストを作成する"></a>
 </section>
-<section class="thisweek with-tooltip" data-placement="right" title="今週のタスクの進捗">
+<section class="thisweek">
 <h3>今週のタスク</h3>
-<div class="fraction numerator"><span data-bind="text: completedCount" class="count"></span></div>
-<div class="fraction denominator"><span data-bind="text: count" class="count"></span></div>
+<div class="fraction numerator with-tooltip"
+	data-placement="right" title="完了したタスク"
+	><span data-bind="text: completedCount" class="count"></span></div>
+<div class="fraction denominator with-tooltip"
+	data-placement="right" title="すべてのタスク"
+	><span data-bind="text: count" class="count"></span></div>
 </section>
 <section>
 <div><a data-bind="click: logout" href="#" class="myicon-logout with-tooltip"
