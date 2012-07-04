@@ -388,7 +388,6 @@ body {
 }
 
 .icebox h2 {
-	position: fixed;
 	margin-left: 10px;
 	color: #ccc;
 	font-size: 16px;
@@ -397,7 +396,10 @@ body {
 
 /* buttons */
 .icebox .create {
-	float: right;
+	position: fixed;
+	top: 0;
+	right: 0;
+	background-color: rgba(255, 255, 255, 0.8);
 }
 
 .icebox .create a {
