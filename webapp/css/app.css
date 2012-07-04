@@ -119,12 +119,10 @@ body {
 }
 
 .navheader .footer {
-	color: #888;
-	text-align: center;
-}
-
-.navheader .footer a {
-	text-decoration: none;
+	position: absolute;
+	bottom: 0;
+	right: 0;
+	left: 10px;
 }
 
 .navheader .thisweek .numerator {
