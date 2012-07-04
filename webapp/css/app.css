@@ -77,6 +77,10 @@ body {
 	position: absolute;
 }
 
+.oauth2state.unauthorized .icebox .task {
+	margin-right: 10px;
+}
+
 .oauth2state.unauthorized .icebox .create {
 	display: none;
 }
