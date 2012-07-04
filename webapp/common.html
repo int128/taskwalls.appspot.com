@@ -197,6 +197,7 @@ Task WallはGoogleタスクと連携するタスク管理アプリです。<br/>
 <a data-bind="click: clearCompleted" href="#">完了したタスクを消去する</a>
 </div>
 
+<section class="dialogs">
 <!-- ko if: createTasklistDialog -->
 <!-- ko with: createTasklistDialog -->
 <form data-bind="submit: save">
@@ -296,6 +297,7 @@ Task WallはGoogleタスクと連携するタスク管理アプリです。<br/>
 <!-- /ko -->
 <div data-bind="click: updateTaskDialog.dispose" class="dialog-background"></div>
 <!-- /ko -->
+</section>
 </article>
 
 <div id="resources" style="display: none;">
