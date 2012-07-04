@@ -1,0 +1,86 @@
+{
+	"baseTime" : "2012-07-01T00:00:00.000Z",
+	"tasklists" : {
+		"items" : [
+			{
+				"id" : "プライベート",
+				"kind" : "tasks#taskList",
+				"selfLink" : "https://www.googleapis.com/tasks/v1/users/@me/lists/プライベート",
+				"title" : "プライベート",
+				"updated" : "2012-07-04T11:22:28.000Z",
+				"colorCode" : 10
+			},
+			{
+				"id" : "仕事",
+				"kind" : "tasks#taskList",
+				"selfLink" : "https://www.googleapis.com/tasks/v1/users/@me/lists/仕事",
+				"title" : "仕事",
+				"updated" : "2012-07-04T03:39:37.000Z",
+				"colorCode" : 9
+			}],
+		"kind" : "tasks#taskLists"
+	},
+	"tasks" : {
+		"items" : [
+			{
+				"due" : "2012-07-02T00:00:00.000Z",
+				"id" : "a",
+				"kind" : "tasks#task",
+				"position" : "00000000000000003941",
+				"selfLink" : "https://www.googleapis.com/tasks/v1/lists/仕事/tasks/a",
+				"status" : "needsAction",
+				"title" : "出張計画を申請する",
+				"updated" : "2012-07-03T14:40:01.000Z"
+			},
+			{
+				"id" : "b",
+				"kind" : "tasks#task",
+				"position" : "00000000000000007883",
+				"selfLink" : "https://www.googleapis.com/tasks/v1/lists/仕事/tasks/b",
+				"status" : "needsAction",
+				"title" : "下調べ",
+				"updated" : "2012-07-03T14:39:32.000Z"
+			},
+			{
+				"due" : "2012-07-03T00:00:00.000Z",
+				"id" : "c",
+				"kind" : "tasks#task",
+				"position" : "00000000000000031535",
+				"selfLink" : "https://www.googleapis.com/tasks/v1/lists/仕事/tasks/c",
+				"status" : "needsAction",
+				"title" : "議事録を回覧する",
+				"updated" : "2012-07-04T11:22:28.000Z"
+			},
+			{
+				"id" : "d",
+				"kind" : "tasks#task",
+				"position" : "00000000000000063071",
+				"selfLink" : "https://www.googleapis.com/tasks/v1/lists/プライベート/tasks/d",
+				"status" : "needsAction",
+				"title" : "いい感じの温泉宿を探す",
+				"updated" : "2012-06-26T16:41:36.000Z"
+			},
+			{
+				"id" : "e",
+				"kind" : "tasks#task",
+				"notes" : "40,000円",
+				"position" : "00000000000000126143",
+				"selfLink" : "https://www.googleapis.com/tasks/v1/lists/プライベート/tasks/e",
+				"status" : "needsAction",
+				"title" : "貯蓄口座に振り込む",
+				"updated" : "2012-07-02T09:45:57.000Z"
+			},
+			{
+				"due" : "2012-07-06T00:00:00.000Z",
+				"completed" : "2012-07-01T14:01:00.000Z",
+				"id" : "f",
+				"kind" : "tasks#task",
+				"position" : "00000000000000504576",
+				"selfLink" : "https://www.googleapis.com/tasks/v1/lists/プライベート/tasks/f",
+				"status" : "completed",
+				"title" : "家賃を振り込む",
+				"updated" : "2012-07-01T14:01:00.000Z"
+			}],
+		"kind" : "tasks#tasks"
+	}
+}

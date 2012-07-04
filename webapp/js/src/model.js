@@ -63,6 +63,34 @@ Calendar.prototype.extendTo = function (timeArgs) {
 	}
 };
 /**
+ * Shrink rows of the calendar.
+ * @param {Number} time origin time to be set (also accepts {Date})
+ */
+Calendar.prototype.shrinkOrigin = function (time) {
+	var normalizedTime = DateUtil.normalize(time).getTime();
+	if (normalizedTime > this.daysHashMin) {
+		var days = [], i = 0, t;
+
+		// delete hash elements to prevent memory leak
+		for (t = this.daysHashMin; t < normalizedTime; t += 86400000) {
+			delete this.daysHash[t];
+		}
+
+		// update days array
+		this.daysHashMin = normalizedTime;
+		for (t = this.daysHashMin; t <= this.daysHashMax; t += 86400000) {
+			if (this.daysHash[t] === undefined) {
+				var element = this.factory(t);
+				days[i++] = element;
+				this.daysHash[t] = element;
+			} else {
+				days[i++] = this.daysHash[t];
+			}
+		}
+		this.days(days);
+	}
+};
+/**
  * @class tasklists and tasks
  */
 function Taskdata () {

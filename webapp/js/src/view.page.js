@@ -7,41 +7,41 @@ function AuthorizedPageViewModel () {
 /**
  */
 AuthorizedPageViewModel.prototype.initialize = function () {
-	var taskdata = new Taskdata();
+	this.taskdata = new Taskdata();
 
 	// toggle
 	this.completedCount = ko.computed(function () {
-		return $.grep(taskdata.tasks(), function (task) {
+		return $.grep(this.taskdata.tasks(), function (task) {
 			return DateUtil.isThisWeek(task.due()) && task.isCompleted();
 		}).length;
 	}, this);
 	this.count = ko.computed(function () {
-		return $.grep(taskdata.tasks(), function (task) {
+		return $.grep(this.taskdata.tasks(), function (task) {
 			return DateUtil.isThisWeek(task.due());
 		}).length;
 	}, this);
 
 	// calendar
-	this.calendar = new CalendarViewModel(taskdata);
+	this.calendar = new CalendarViewModel(this.taskdata);
 
 	// dialogs
 	this.createTaskDialog = ko.disposableObservable(function (context, event) {
 		if (context.date) {
 			// context may be CalendarDayViewModel
-			return new CreateTaskDialog(taskdata, context.date(), event);
+			return new CreateTaskDialog(this.taskdata, context.date(), event);
 		} else {
 			// context may be CalendarIceboxViewModel
-			return new CreateTaskDialog(taskdata, null, event);
+			return new CreateTaskDialog(this.taskdata, null, event);
 		}
 	}, this);
 	this.updateTaskDialog = ko.disposableObservable(function (task, event) {
-		return new UpdateTaskDialog(taskdata, task, event);
+		return new UpdateTaskDialog(this.taskdata, task, event);
 	}, this);
 	this.createTasklistDialog = ko.disposableObservable(function () {
-		return new CreateTasklistDialog(taskdata);
+		return new CreateTasklistDialog(this.taskdata);
 	});
 	this.updateTasklistDialog = ko.disposableObservable(function (tasklist, event) {
-		return new UpdateTasklistDialog(taskdata, tasklist, event);
+		return new UpdateTasklistDialog(this.taskdata, tasklist, event);
 	});
 
 	// offline
@@ -53,7 +53,56 @@ AuthorizedPageViewModel.prototype.initialize = function () {
 
 	// development only
 	this.development = ko.observable(window.location.hostname == 'localhost');
+};
+/**
+ * Load task data.
+ */
+AuthorizedPageViewModel.prototype.load = function () {
+	this.taskdata.load();
+};
+/**
+ * @class View model for try out box in the unauthorized page. 
+ */
+function TryOutPageViewModel () {
+	this.initialize.apply(this, arguments);
+};
+/**
+ */
+TryOutPageViewModel.prototype.initialize = function () {
+	this.prototype = new AuthorizedPageViewModel();
+	this.prototype.initialize.apply(this, arguments);
 
-	// asynchronously load
-	taskdata.load();
+	// behave as offline
+	this.offline(true);
+
+	// origin time of the calendar: first day of this week (Monday)
+	var originTime = (function () {
+		var d = new Date(), t = d.getTime();
+		t -= d.getDay() * 86400000;
+		t += 86400000;
+		return DateUtil.normalize(t);
+	})().getTime();
+	this.calendar.shrinkOrigin(originTime);
+
+	// load example data
+	$.getJSON('/tryoutdata.json').done($.proxy(function (response) {
+		var baseTime = DateUtil.normalize(new Date(response.baseTime)).getTime();;
+
+		var tasklists = Tasklists.map(response.tasklists.items);
+		this.taskdata.tasklists(tasklists);
+		var tasks = $.map(Tasks.map(response.tasks.items), function (task) {
+			// extract tasklist ID from URL and associate with the instance
+			// see {@link Taskdata#load()}
+			var p = task.selfLink().split('/'), tasklistID = p[p.length - 3];
+			task.tasklist = ko.observable($.grep(tasklists, function (tasklist) {
+				return tasklist.id() == tasklistID;
+			})[0]);
+			// adjust date
+			if (task.due()) {
+				task.due(new Date(task.due().getTime() - baseTime + originTime));
+			}
+			return task;
+		});
+		this.taskdata.tasks(tasks);
+	}, this));
 };
