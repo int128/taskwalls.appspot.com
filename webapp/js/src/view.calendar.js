@@ -79,6 +79,10 @@ CalendarViewModel.prototype.initialize = function (taskdata) {
 		calendar.extendTo(this.nextMonth());
 	};
 
+	this.shrinkOrigin = function (time) {
+		calendar.shrinkOrigin(time);
+	};
+
 	/**
 	 * Clear completed tasks.
 	 */

@@ -82,6 +82,7 @@ TryOutPageViewModel.prototype.initialize = function () {
 		t += 86400000;
 		return DateUtil.normalize(t);
 	})().getTime();
+	this.calendar.shrinkOrigin(originTime);
 
 	// load example data
 	$.getJSON('/tryoutdata.json').done($.proxy(function (response) {
