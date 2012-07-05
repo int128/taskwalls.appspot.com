@@ -210,8 +210,8 @@ Task WallはGoogleタスクと連携するタスク管理アプリです。<br/>
 <div><button data-bind="enable: title" type="submit" class="btn">タスクリストを作成</button></div>
 </div>
 </form>
+<div data-bind="click: dispose" class="dialog-background"></div>
 <!-- /ko -->
-<div data-bind="click: createTasklistDialog.dispose" class="dialog-background"></div>
 <!-- /ko -->
 
 <!-- ko if: updateTasklistDialog -->
@@ -233,8 +233,8 @@ Task WallはGoogleタスクと連携するタスク管理アプリです。<br/>
 <button data-bind="click: remove" class="btn btn-danger">タスクリストを削除する</button>
 </div>
 </div>
+<div data-bind="click: dispose" class="dialog-background"></div>
 <!-- /ko -->
-<div data-bind="click: updateTasklistDialog.dispose" class="dialog-background"></div>
 <!-- /ko -->
 
 <!-- ko if: createTaskDialog -->
@@ -258,8 +258,8 @@ Task WallはGoogleタスクと連携するタスク管理アプリです。<br/>
 <button type="submit" class="btn">タスクを作成</button>
 </div>
 </form>
+<div data-bind="click: dispose" class="dialog-background"></div>
 <!-- /ko -->
-<div data-bind="click: createTaskDialog.dispose" class="dialog-background"></div>
 <!-- /ko -->
 
 <!-- ko if: updateTaskDialog -->
@@ -298,8 +298,8 @@ Task WallはGoogleタスクと連携するタスク管理アプリです。<br/>
 <button data-bind="click: remove" class="btn btn-danger">タスクを削除する</button>
 <!-- /ko -->
 </div>
+<div data-bind="click: dispose" class="dialog-background"></div>
 <!-- /ko -->
-<div data-bind="click: updateTaskDialog.dispose" class="dialog-background"></div>
 <!-- /ko -->
 </section>
 </article>
