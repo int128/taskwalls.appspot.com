@@ -204,7 +204,7 @@ Task WallはGoogleタスクと連携するタスク管理アプリです。<br/>
 <section class="dialogs">
 <!-- ko if: createTasklistDialog -->
 <!-- ko with: createTasklistDialog -->
-<form data-bind="submit: save">
+<form data-bind="submit: save, escKeydown: dispose">
 <div class="create-tasklist dialog">
 <div><input data-bind="value: title, valueUpdate: 'afterkeydown', hasfocus: true" type="text" placeholder="タスクリストの名前" /></div>
 <div><button data-bind="enable: title" type="submit" class="btn">タスクリストを作成</button></div>
@@ -217,7 +217,7 @@ Task WallはGoogleタスクと連携するタスク管理アプリです。<br/>
 <!-- ko if: updateTasklistDialog -->
 <!-- ko with: updateTasklistDialog -->
 <div data-bind="style: {top: top}" class="update-tasklist dialog">
-<form data-bind="submit: saveTitle">
+<form data-bind="submit: saveTitle, escKeydown: dispose">
 <input data-bind="value: title" type="text" placeholder="タスクリストの名前" />
 </form>
 <div data-bind="foreach: colors">
@@ -239,7 +239,7 @@ Task WallはGoogleタスクと連携するタスク管理アプリです。<br/>
 
 <!-- ko if: createTaskDialog -->
 <!-- ko with: createTaskDialog -->
-<form data-bind="submit: save">
+<form data-bind="submit: save, escKeydown: dispose">
 <div data-bind="style: {top: top}" class="create-task dialog">
 <div data-bind="with: due" class="due">
 <span data-bind="text: getFullYear()"></span>年
@@ -265,7 +265,7 @@ Task WallはGoogleタスクと連携するタスク管理アプリです。<br/>
 <!-- ko if: updateTaskDialog -->
 <!-- ko with: updateTaskDialog -->
 <div data-bind="style: {top: top}" class="update-task dialog">
-<form data-bind="submit: save">
+<form data-bind="submit: save, escKeydown: dispose">
 <div><input data-bind="value: title, hasfocus: true" type="text" placeholder="タスクの件名" /></div>
 <div><textarea data-bind="value: notes" placeholder="備考"></textarea></div>
 <div data-bind="with: due" class="due">
@@ -278,7 +278,7 @@ Task WallはGoogleタスクと連携するタスク管理アプリです。<br/>
 <button type="submit" class="btn">タスクを更新</button>
 </form>
 <hr/>
-<form data-bind="submit: move">
+<form data-bind="submit: move, escKeydown: dispose">
 <div data-bind="foreach: tasklists" class="tasklists">
 <a data-bind="text: title,
 	attr: {'data-tasklistcolor': colorCode},

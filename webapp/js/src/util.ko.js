@@ -47,6 +47,25 @@ ko.bindingHandlers.droppable = {
 			}, options));
 		}
 };
+ko.bindingHandlers.escKeydown = {
+		/**
+		 * Initialize binding.
+		 * @param {Element} element
+		 * @param valueAccessor
+		 * @param allBindingsAccessor
+		 * @param viewModel
+		 * @returns
+		 */
+		init: function (element, valueAccessor, allBindingsAccessor, viewModel) {
+			var $element = $(element), handler = valueAccessor();
+			$element.keydown(function (e) {
+				console.info(e);
+				if (e.keyCode == 27) {
+					return handler.call(viewModel, e);
+				}
+			});
+		}
+};
 /**
  * Create a <code>ko.observable()</code> with constructor and disposer.
  * Managed instance has <code>dispose()</code> method to dispose itself.
