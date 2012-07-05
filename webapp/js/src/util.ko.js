@@ -17,9 +17,11 @@ ko.bindingHandlers.draggableByClone = {
 				helper: 'clone',
 				appendTo: 'body',
 				start: function (e, ui) {
+					// hide original element
 					$(this).css('visibility', 'hidden');
 				},
 				stop: function (e, ui) {
+					// restore original element
 					$(this).css('visibility', 'visible');
 				}
 			}, options));
