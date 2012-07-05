@@ -420,6 +420,10 @@ body {
 	font-weight: normal;
 }
 
+.icebox .count {
+	margin-left: 5px;
+}
+
 /* buttons */
 .icebox .create {
 	position: fixed;
