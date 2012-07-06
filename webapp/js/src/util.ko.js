@@ -59,7 +59,6 @@ ko.bindingHandlers.escKeydown = {
 		init: function (element, valueAccessor, allBindingsAccessor, viewModel) {
 			var $element = $(element), handler = valueAccessor();
 			$element.keydown(function (e) {
-				console.info(e);
 				if (e.keyCode == 27) {
 					return handler.call(viewModel, e);
 				}
