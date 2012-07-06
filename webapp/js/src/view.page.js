@@ -39,10 +39,10 @@ AuthorizedPageViewModel.prototype.initialize = function () {
 	}, this);
 	this.createTasklistDialog = ko.disposableObservable(function () {
 		return new CreateTasklistDialog(this.taskdata);
-	});
+	}, this);
 	this.updateTasklistDialog = ko.disposableObservable(function (tasklist, event) {
 		return new UpdateTasklistDialog(this.taskdata, tasklist, event);
-	});
+	}, this);
 
 	// offline
 	this.offline = taskwalls.settings.offline;
