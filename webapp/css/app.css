@@ -485,6 +485,7 @@ body {
 .task[data-status='completed'] {
 	background: none;
 	box-shadow: none;
+	-ms-filter: 'progid:DXImageTransform.Microsoft.gradient(enabled=false)';
 }
 
 .task .notes {
@@ -704,143 +705,191 @@ body {
 	background: -webkit-linear-gradient(#fff, #f6f2f1);
 	background: -moz-linear-gradient(#fff, #f6f2f1);
 	background: -o-linear-gradient(#fff, #f6f2f1);
+	background: -ms-linear-gradient(#fff, #f6f2f1);
 	background: linear-gradient(#fff, #f6f2f1);
+	-ms-filter: 'progid:DXImageTransform.Microsoft.gradient(startColorstr=#ffffff, endColorstr=#f6f2f1)';
 }
 [data-tasklistcolor='1'] {
 	background: -webkit-linear-gradient(#fff, #f8f2f1);
 	background: -moz-linear-gradient(#fff, #f8f2f1);
 	background: -o-linear-gradient(#fff, #f8f2f1);
+	background: -ms-linear-gradient(#fff, #f8f2f1);
 	background: linear-gradient(#fff, #f8f2f1);
+	-ms-filter: 'progid:DXImageTransform.Microsoft.gradient(startColorstr=#ffffff, endColorstr=#f8f2f1)';
 }
 [data-tasklistcolor='2'] {
 	background: -webkit-linear-gradient(#fff, #faefed);
 	background: -moz-linear-gradient(#fff, #faefed);
 	background: -o-linear-gradient(#fff, #faefed);
+	background: -ms-linear-gradient(#fff, #faefed);
 	background: linear-gradient(#fff, #faefed);
+	-ms-filter: 'progid:DXImageTransform.Microsoft.gradient(startColorstr=#ffffff, endColorstr=#faefed)';
 }
 [data-tasklistcolor='3'] {
 	background: -webkit-linear-gradient(#fff, #faf0ef);
 	background: -moz-linear-gradient(#fff, #faf0ef);
 	background: -o-linear-gradient(#fff, #faf0ef);
+	background: -ms-linear-gradient(#fff, #faf0ef);
 	background: linear-gradient(#fff, #faf0ef);
+	-ms-filter: 'progid:DXImageTransform.Microsoft.gradient(startColorstr=#ffffff, endColorstr=#faf0ef)';
 }
 [data-tasklistcolor='4'] {
 	background: -webkit-linear-gradient(#fff, #faf2ee);
 	background: -moz-linear-gradient(#fff, #faf2ee);
 	background: -o-linear-gradient(#fff, #faf2ee);
+	background: -ms-linear-gradient(#fff, #faf2ee);
 	background: linear-gradient(#fff, #faf2ee);
+	-ms-filter: 'progid:DXImageTransform.Microsoft.gradient(startColorstr=#ffffff, endColorstr=#faf2ee)';
 }
 [data-tasklistcolor='5'] {
 	background: -webkit-linear-gradient(#fff, #faf6ef);
 	background: -moz-linear-gradient(#fff, #faf6ef);
 	background: -o-linear-gradient(#fff, #faf6ef);
+	background: -ms-linear-gradient(#fff, #faf6ef);
 	background: linear-gradient(#fff, #faf6ef);
+	-ms-filter: 'progid:DXImageTransform.Microsoft.gradient(startColorstr=#ffffff, endColorstr=#faf6ef)';
 }
 [data-tasklistcolor='6'] {
 	background: -webkit-linear-gradient(#fff, #eff8f4);
 	background: -moz-linear-gradient(#fff, #eff8f4);
 	background: -o-linear-gradient(#fff, #eff8f4);
+	background: -ms-linear-gradient(#fff, #eff8f4);
 	background: linear-gradient(#fff, #eff8f4);
+	-ms-filter: 'progid:DXImageTransform.Microsoft.gradient(startColorstr=#ffffff, endColorstr=#eff8f4)';
 }
 [data-tasklistcolor='7'] {
 	background: -webkit-linear-gradient(#fff, #ecf5f1);
 	background: -moz-linear-gradient(#fff, #ecf5f1);
 	background: -o-linear-gradient(#fff, #ecf5f1);
+	background: -ms-linear-gradient(#fff, #ecf5f1);
 	background: linear-gradient(#fff, #ecf5f1);
+	-ms-filter: 'progid:DXImageTransform.Microsoft.gradient(startColorstr=#ffffff, endColorstr=#ecf5f1)';
 }
 [data-tasklistcolor='8'] {
 	background: -webkit-linear-gradient(#fff, #f3f8ef);
 	background: -moz-linear-gradient(#fff, #f3f8ef);
 	background: -o-linear-gradient(#fff, #f3f8ef);
+	background: -ms-linear-gradient(#fff, #f3f8ef);
 	background: linear-gradient(#fff, #f3f8ef);
+	-ms-filter: 'progid:DXImageTransform.Microsoft.gradient(startColorstr=#ffffff, endColorstr=#f3f8ef)';
 }
 [data-tasklistcolor='9'] {
 	background: -webkit-linear-gradient(#fff, #f6f9f2);
 	background: -moz-linear-gradient(#fff, #f6f9f2);
 	background: -o-linear-gradient(#fff, #f6f9f2);
+	background: -ms-linear-gradient(#fff, #f6f9f2);
 	background: linear-gradient(#fff, #f6f9f2);
+	-ms-filter: 'progid:DXImageTransform.Microsoft.gradient(startColorstr=#ffffff, endColorstr=#f6f9f2)';
 }
 [data-tasklistcolor='10'] {
 	background: -webkit-linear-gradient(#fff, #faf9f3);
 	background: -moz-linear-gradient(#fff, #faf9f3);
 	background: -o-linear-gradient(#fff, #faf9f3);
+	background: -ms-linear-gradient(#fff, #faf9f3);
 	background: linear-gradient(#fff, #faf9f3);
+	-ms-filter: 'progid:DXImageTransform.Microsoft.gradient(startColorstr=#ffffff, endColorstr=#faf9f3)';
 }
 [data-tasklistcolor='11'] {
 	background: -webkit-linear-gradient(#fff, #faf8f1);
 	background: -moz-linear-gradient(#fff, #faf8f1);
 	background: -o-linear-gradient(#fff, #faf8f1);
+	background: -ms-linear-gradient(#fff, #faf8f1);
 	background: linear-gradient(#fff, #faf8f1);
+	-ms-filter: 'progid:DXImageTransform.Microsoft.gradient(startColorstr=#ffffff, endColorstr=#faf8f1)';
 }
 [data-tasklistcolor='12'] {
 	background: -webkit-linear-gradient(#fff, #f4f9f7);
 	background: -moz-linear-gradient(#fff, #f4f9f7);
 	background: -o-linear-gradient(#fff, #f4f9f7);
+	background: -ms-linear-gradient(#fff, #f4f9f7);
 	background: linear-gradient(#fff, #f4f9f7);
+	-ms-filter: 'progid:DXImageTransform.Microsoft.gradient(startColorstr=#ffffff, endColorstr=#f4f9f7)';
 }
 [data-tasklistcolor='13'] {
 	background: -webkit-linear-gradient(#fff, #f5f9f9);
 	background: -moz-linear-gradient(#fff, #f5f9f9);
 	background: -o-linear-gradient(#fff, #f5f9f9);
+	background: -ms-linear-gradient(#fff, #f5f9f9);
 	background: linear-gradient(#fff, #f5f9f9);
+	-ms-filter: 'progid:DXImageTransform.Microsoft.gradient(startColorstr=#ffffff, endColorstr=#f5f9f9)';
 }
 [data-tasklistcolor='14'] {
 	background: -webkit-linear-gradient(#fff, #f5f7f9);
 	background: -moz-linear-gradient(#fff, #f5f7f9);
 	background: -o-linear-gradient(#fff, #f5f7f9);
+	background: -ms-linear-gradient(#fff, #f5f7f9);
 	background: linear-gradient(#fff, #f5f7f9);
+	-ms-filter: 'progid:DXImageTransform.Microsoft.gradient(startColorstr=#ffffff, endColorstr=#f5f7f9)';
 }
 [data-tasklistcolor='15'] {
 	background: -webkit-linear-gradient(#fff, #f0f3f9);
 	background: -moz-linear-gradient(#fff, #f0f3f9);
 	background: -o-linear-gradient(#fff, #f0f3f9);
+	background: -ms-linear-gradient(#fff, #f0f3f9);
 	background: linear-gradient(#fff, #f0f3f9);
+	-ms-filter: 'progid:DXImageTransform.Microsoft.gradient(startColorstr=#ffffff, endColorstr=#f0f3f9)';
 }
 [data-tasklistcolor='16'] {
 	background: -webkit-linear-gradient(#fff, #f5f5fa);
 	background: -moz-linear-gradient(#fff, #f5f5fa);
 	background: -o-linear-gradient(#fff, #f5f5fa);
+	background: -ms-linear-gradient(#fff, #f5f5fa);
 	background: linear-gradient(#fff, #f5f5fa);
+	-ms-filter: 'progid:DXImageTransform.Microsoft.gradient(startColorstr=#ffffff, endColorstr=#f5f5fa)';
 }
 [data-tasklistcolor='17'] {
 	background: -webkit-linear-gradient(#fff, #f7f5fa);
 	background: -moz-linear-gradient(#fff, #f7f5fa);
 	background: -o-linear-gradient(#fff, #f7f5fa);
+	background: -ms-linear-gradient(#fff, #f7f5fa);
 	background: linear-gradient(#fff, #f7f5fa);
+	-ms-filter: 'progid:DXImageTransform.Microsoft.gradient(startColorstr=#ffffff, endColorstr=#f7f5fa)';
 }
 [data-tasklistcolor='18'] {
 	background: -webkit-linear-gradient(#fff, #f7f7f7);
 	background: -moz-linear-gradient(#fff, #f7f7f7);
 	background: -o-linear-gradient(#fff, #f7f7f7);
+	background: -ms-linear-gradient(#fff, #f7f7f7);
 	background: linear-gradient(#fff, #f7f7f7);
+	-ms-filter: 'progid:DXImageTransform.Microsoft.gradient(startColorstr=#ffffff, endColorstr=#f7f7f7)';
 }
 [data-tasklistcolor='19'] {
 	background: -webkit-linear-gradient(#fff, #f8f7f7);
 	background: -moz-linear-gradient(#fff, #f8f7f7);
 	background: -o-linear-gradient(#fff, #f8f7f7);
+	background: -ms-linear-gradient(#fff, #f8f7f7);
 	background: linear-gradient(#fff, #f8f7f7);
+	-ms-filter: 'progid:DXImageTransform.Microsoft.gradient(startColorstr=#ffffff, endColorstr=#f8f7f7)';
 }
 [data-tasklistcolor='20'] {
 	background: -webkit-linear-gradient(#fff, #f8f5f6);
 	background: -moz-linear-gradient(#fff, #f8f5f6);
 	background: -o-linear-gradient(#fff, #f8f5f6);
+	background: -ms-linear-gradient(#fff, #f8f5f6);
 	background: linear-gradient(#fff, #f8f5f6);
+	-ms-filter: 'progid:DXImageTransform.Microsoft.gradient(startColorstr=#ffffff, endColorstr=#f8f5f6)';
 }
 [data-tasklistcolor='21'] {
 	background: -webkit-linear-gradient(#fff, #faf4f6);
 	background: -moz-linear-gradient(#fff, #faf4f6);
 	background: -o-linear-gradient(#fff, #faf4f6);
+	background: -ms-linear-gradient(#fff, #faf4f6);
 	background: linear-gradient(#fff, #faf4f6);
+	-ms-filter: 'progid:DXImageTransform.Microsoft.gradient(startColorstr=#ffffff, endColorstr=#faf4f6)';
 }
 [data-tasklistcolor='22'] {
 	background: -webkit-linear-gradient(#fff, #f8f2f9);
 	background: -moz-linear-gradient(#fff, #f8f2f9);
 	background: -o-linear-gradient(#fff, #f8f2f9);
+	background: -ms-linear-gradient(#fff, #f8f2f9);
 	background: linear-gradient(#fff, #f8f2f9);
+	-ms-filter: 'progid:DXImageTransform.Microsoft.gradient(startColorstr=#ffffff, endColorstr=#f8f2f9)';
 }
 [data-tasklistcolor='23'] {
 	background: -webkit-linear-gradient(#fff, #f5f3f9);
 	background: -moz-linear-gradient(#fff, #f5f3f9);
 	background: -o-linear-gradient(#fff, #f5f3f9);
+	background: -ms-linear-gradient(#fff, #f5f3f9);
 	background: linear-gradient(#fff, #f5f3f9);
+	-ms-filter: 'progid:DXImageTransform.Microsoft.gradient(startColorstr=#ffffff, endColorstr=#f5f3f9)';
 }

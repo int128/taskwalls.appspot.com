@@ -11,7 +11,9 @@ while(<>) {
 	background: -webkit-linear-gradient(#fff, #$r$g$b);
 	background: -moz-linear-gradient(#fff, #$r$g$b);
 	background: -o-linear-gradient(#fff, #$r$g$b);
+	background: -ms-linear-gradient(#fff, #$r$g$b);
 	background: linear-gradient(#fff, #$r$g$b);
+	-ms-filter: 'progid:DXImageTransform.Microsoft.gradient(startColorstr=#ffffff, endColorstr=#$r$g$b)';
 }
 EOB
 	}
