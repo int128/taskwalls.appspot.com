@@ -1,17 +1,21 @@
 #!/usr/bin/perl -w
 
 while(<>) {
-	if (/#(\w)(\w)(\w)/) {
-		$r=to_background_factor($1);
-		$g=to_background_factor($2);
-		$b=to_background_factor($3);
-		$i=$.-1;
+	if (/^\[data-tasklistcolor='(\d+)'\].+#(\w)(\w)(\w);/) {
+		$i=$1;
+		$r=to_background_factor($2);
+		$g=to_background_factor($3);
+		$b=to_background_factor($4);
 		print <<EOB
-.tasklistcolor-$i { background: -webkit-gradient(linear, left top, left bottom, from(#fff), to(#$r$g$b) ); }
-.tasklistcolor-$i { background: -moz-linear-gradient(top, #fff, #$r$g$b); }
+[data-tasklistcolor='$i'] {
+	background: -webkit-linear-gradient(#fff, #$r$g$b);
+	background: -moz-linear-gradient(#fff, #$r$g$b);
+	background: -o-linear-gradient(#fff, #$r$g$b);
+	background: linear-gradient(#fff, #$r$g$b);
+}
 EOB
 	}
 }
 sub to_background_factor {
-	return sprintf('%02x', hex($_[0]) + 240);
+	return sprintf('%02x', hex($_[0]) + 235);
 }

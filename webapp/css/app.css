@@ -700,51 +700,147 @@ body {
 [data-tasklistcolor='22'] { border-left-color: #d7e; }
 [data-tasklistcolor='23'] { border-left-color: #a8e; }
 
-[data-tasklistcolor='0'] { background: -webkit-gradient(linear, left top, left bottom, from(#fff), to(#fbf7f6) ); }
-[data-tasklistcolor='0'] { background: -moz-linear-gradient(top, #fff, #fbf7f6); }
-[data-tasklistcolor='1'] { background: -webkit-gradient(linear, left top, left bottom, from(#fff), to(#fdf7f6) ); }
-[data-tasklistcolor='1'] { background: -moz-linear-gradient(top, #fff, #fdf7f6); }
-[data-tasklistcolor='2'] { background: -webkit-gradient(linear, left top, left bottom, from(#fff), to(#fff4f2) ); }
-[data-tasklistcolor='2'] { background: -moz-linear-gradient(top, #fff, #fff4f2); }
-[data-tasklistcolor='3'] { background: -webkit-gradient(linear, left top, left bottom, from(#fff), to(#fff5f4) ); }
-[data-tasklistcolor='3'] { background: -moz-linear-gradient(top, #fff, #fff5f4); }
-[data-tasklistcolor='4'] { background: -webkit-gradient(linear, left top, left bottom, from(#fff), to(#fff7f3) ); }
-[data-tasklistcolor='4'] { background: -moz-linear-gradient(top, #fff, #fff7f3); }
-[data-tasklistcolor='5'] { background: -webkit-gradient(linear, left top, left bottom, from(#fff), to(#fffbf4) ); }
-[data-tasklistcolor='5'] { background: -moz-linear-gradient(top, #fff, #fffbf4); }
-[data-tasklistcolor='6'] { background: -webkit-gradient(linear, left top, left bottom, from(#fff), to(#f4fdf9) ); }
-[data-tasklistcolor='6'] { background: -moz-linear-gradient(top, #fff, #f4fdf9); }
-[data-tasklistcolor='7'] { background: -webkit-gradient(linear, left top, left bottom, from(#fff), to(#f1faf6) ); }
-[data-tasklistcolor='7'] { background: -moz-linear-gradient(top, #fff, #f1faf6); }
-[data-tasklistcolor='8'] { background: -webkit-gradient(linear, left top, left bottom, from(#fff), to(#f8fdf4) ); }
-[data-tasklistcolor='8'] { background: -moz-linear-gradient(top, #fff, #f8fdf4); }
-[data-tasklistcolor='9'] { background: -webkit-gradient(linear, left top, left bottom, from(#fff), to(#fbfef7) ); }
-[data-tasklistcolor='9'] { background: -moz-linear-gradient(top, #fff, #fbfef7); }
-[data-tasklistcolor='10'] { background: -webkit-gradient(linear, left top, left bottom, from(#fff), to(#fffef8) ); }
-[data-tasklistcolor='10'] { background: -moz-linear-gradient(top, #fff, #fffef8); }
-[data-tasklistcolor='11'] { background: -webkit-gradient(linear, left top, left bottom, from(#fff), to(#fffdf6) ); }
-[data-tasklistcolor='11'] { background: -moz-linear-gradient(top, #fff, #fffdf6); }
-[data-tasklistcolor='12'] { background: -webkit-gradient(linear, left top, left bottom, from(#fff), to(#f9fefc) ); }
-[data-tasklistcolor='12'] { background: -moz-linear-gradient(top, #fff, #f9fefc); }
-[data-tasklistcolor='13'] { background: -webkit-gradient(linear, left top, left bottom, from(#fff), to(#fafefe) ); }
-[data-tasklistcolor='13'] { background: -moz-linear-gradient(top, #fff, #fafefe); }
-[data-tasklistcolor='14'] { background: -webkit-gradient(linear, left top, left bottom, from(#fff), to(#fafcfe) ); }
-[data-tasklistcolor='14'] { background: -moz-linear-gradient(top, #fff, #fafcfe); }
-[data-tasklistcolor='15'] { background: -webkit-gradient(linear, left top, left bottom, from(#fff), to(#f5f8fe) ); }
-[data-tasklistcolor='15'] { background: -moz-linear-gradient(top, #fff, #f5f8fe); }
-[data-tasklistcolor='16'] { background: -webkit-gradient(linear, left top, left bottom, from(#fff), to(#fafaff) ); }
-[data-tasklistcolor='16'] { background: -moz-linear-gradient(top, #fff, #fafaff); }
-[data-tasklistcolor='17'] { background: -webkit-gradient(linear, left top, left bottom, from(#fff), to(#fcfaff) ); }
-[data-tasklistcolor='17'] { background: -moz-linear-gradient(top, #fff, #fcfaff); }
-[data-tasklistcolor='18'] { background: -webkit-gradient(linear, left top, left bottom, from(#fff), to(#fcfcfc) ); }
-[data-tasklistcolor='18'] { background: -moz-linear-gradient(top, #fff, #fcfcfc); }
-[data-tasklistcolor='19'] { background: -webkit-gradient(linear, left top, left bottom, from(#fff), to(#fdfcfc) ); }
-[data-tasklistcolor='19'] { background: -moz-linear-gradient(top, #fff, #fdfcfc); }
-[data-tasklistcolor='20'] { background: -webkit-gradient(linear, left top, left bottom, from(#fff), to(#fdfafb) ); }
-[data-tasklistcolor='20'] { background: -moz-linear-gradient(top, #fff, #fdfafb); }
-[data-tasklistcolor='21'] { background: -webkit-gradient(linear, left top, left bottom, from(#fff), to(#fff9fb) ); }
-[data-tasklistcolor='21'] { background: -moz-linear-gradient(top, #fff, #fff9fb); }
-[data-tasklistcolor='22'] { background: -webkit-gradient(linear, left top, left bottom, from(#fff), to(#fdf7fe) ); }
-[data-tasklistcolor='22'] { background: -moz-linear-gradient(top, #fff, #fdf7fe); }
-[data-tasklistcolor='23'] { background: -webkit-gradient(linear, left top, left bottom, from(#fff), to(#faf8fe) ); }
-[data-tasklistcolor='23'] { background: -moz-linear-gradient(top, #fff, #faf8fe); }
+[data-tasklistcolor='0'] {
+	background: -webkit-linear-gradient(#fff, #f6f2f1);
+	background: -moz-linear-gradient(#fff, #f6f2f1);
+	background: -o-linear-gradient(#fff, #f6f2f1);
+	background: linear-gradient(#fff, #f6f2f1);
+}
+[data-tasklistcolor='1'] {
+	background: -webkit-linear-gradient(#fff, #f8f2f1);
+	background: -moz-linear-gradient(#fff, #f8f2f1);
+	background: -o-linear-gradient(#fff, #f8f2f1);
+	background: linear-gradient(#fff, #f8f2f1);
+}
+[data-tasklistcolor='2'] {
+	background: -webkit-linear-gradient(#fff, #faefed);
+	background: -moz-linear-gradient(#fff, #faefed);
+	background: -o-linear-gradient(#fff, #faefed);
+	background: linear-gradient(#fff, #faefed);
+}
+[data-tasklistcolor='3'] {
+	background: -webkit-linear-gradient(#fff, #faf0ef);
+	background: -moz-linear-gradient(#fff, #faf0ef);
+	background: -o-linear-gradient(#fff, #faf0ef);
+	background: linear-gradient(#fff, #faf0ef);
+}
+[data-tasklistcolor='4'] {
+	background: -webkit-linear-gradient(#fff, #faf2ee);
+	background: -moz-linear-gradient(#fff, #faf2ee);
+	background: -o-linear-gradient(#fff, #faf2ee);
+	background: linear-gradient(#fff, #faf2ee);
+}
+[data-tasklistcolor='5'] {
+	background: -webkit-linear-gradient(#fff, #faf6ef);
+	background: -moz-linear-gradient(#fff, #faf6ef);
+	background: -o-linear-gradient(#fff, #faf6ef);
+	background: linear-gradient(#fff, #faf6ef);
+}
+[data-tasklistcolor='6'] {
+	background: -webkit-linear-gradient(#fff, #eff8f4);
+	background: -moz-linear-gradient(#fff, #eff8f4);
+	background: -o-linear-gradient(#fff, #eff8f4);
+	background: linear-gradient(#fff, #eff8f4);
+}
+[data-tasklistcolor='7'] {
+	background: -webkit-linear-gradient(#fff, #ecf5f1);
+	background: -moz-linear-gradient(#fff, #ecf5f1);
+	background: -o-linear-gradient(#fff, #ecf5f1);
+	background: linear-gradient(#fff, #ecf5f1);
+}
+[data-tasklistcolor='8'] {
+	background: -webkit-linear-gradient(#fff, #f3f8ef);
+	background: -moz-linear-gradient(#fff, #f3f8ef);
+	background: -o-linear-gradient(#fff, #f3f8ef);
+	background: linear-gradient(#fff, #f3f8ef);
+}
+[data-tasklistcolor='9'] {
+	background: -webkit-linear-gradient(#fff, #f6f9f2);
+	background: -moz-linear-gradient(#fff, #f6f9f2);
+	background: -o-linear-gradient(#fff, #f6f9f2);
+	background: linear-gradient(#fff, #f6f9f2);
+}
+[data-tasklistcolor='10'] {
+	background: -webkit-linear-gradient(#fff, #faf9f3);
+	background: -moz-linear-gradient(#fff, #faf9f3);
+	background: -o-linear-gradient(#fff, #faf9f3);
+	background: linear-gradient(#fff, #faf9f3);
+}
+[data-tasklistcolor='11'] {
+	background: -webkit-linear-gradient(#fff, #faf8f1);
+	background: -moz-linear-gradient(#fff, #faf8f1);
+	background: -o-linear-gradient(#fff, #faf8f1);
+	background: linear-gradient(#fff, #faf8f1);
+}
+[data-tasklistcolor='12'] {
+	background: -webkit-linear-gradient(#fff, #f4f9f7);
+	background: -moz-linear-gradient(#fff, #f4f9f7);
+	background: -o-linear-gradient(#fff, #f4f9f7);
+	background: linear-gradient(#fff, #f4f9f7);
+}
+[data-tasklistcolor='13'] {
+	background: -webkit-linear-gradient(#fff, #f5f9f9);
+	background: -moz-linear-gradient(#fff, #f5f9f9);
+	background: -o-linear-gradient(#fff, #f5f9f9);
+	background: linear-gradient(#fff, #f5f9f9);
+}
+[data-tasklistcolor='14'] {
+	background: -webkit-linear-gradient(#fff, #f5f7f9);
+	background: -moz-linear-gradient(#fff, #f5f7f9);
+	background: -o-linear-gradient(#fff, #f5f7f9);
+	background: linear-gradient(#fff, #f5f7f9);
+}
+[data-tasklistcolor='15'] {
+	background: -webkit-linear-gradient(#fff, #f0f3f9);
+	background: -moz-linear-gradient(#fff, #f0f3f9);
+	background: -o-linear-gradient(#fff, #f0f3f9);
+	background: linear-gradient(#fff, #f0f3f9);
+}
+[data-tasklistcolor='16'] {
+	background: -webkit-linear-gradient(#fff, #f5f5fa);
+	background: -moz-linear-gradient(#fff, #f5f5fa);
+	background: -o-linear-gradient(#fff, #f5f5fa);
+	background: linear-gradient(#fff, #f5f5fa);
+}
+[data-tasklistcolor='17'] {
+	background: -webkit-linear-gradient(#fff, #f7f5fa);
+	background: -moz-linear-gradient(#fff, #f7f5fa);
+	background: -o-linear-gradient(#fff, #f7f5fa);
+	background: linear-gradient(#fff, #f7f5fa);
+}
+[data-tasklistcolor='18'] {
+	background: -webkit-linear-gradient(#fff, #f7f7f7);
+	background: -moz-linear-gradient(#fff, #f7f7f7);
+	background: -o-linear-gradient(#fff, #f7f7f7);
+	background: linear-gradient(#fff, #f7f7f7);
+}
+[data-tasklistcolor='19'] {
+	background: -webkit-linear-gradient(#fff, #f8f7f7);
+	background: -moz-linear-gradient(#fff, #f8f7f7);
+	background: -o-linear-gradient(#fff, #f8f7f7);
+	background: linear-gradient(#fff, #f8f7f7);
+}
+[data-tasklistcolor='20'] {
+	background: -webkit-linear-gradient(#fff, #f8f5f6);
+	background: -moz-linear-gradient(#fff, #f8f5f6);
+	background: -o-linear-gradient(#fff, #f8f5f6);
+	background: linear-gradient(#fff, #f8f5f6);
+}
+[data-tasklistcolor='21'] {
+	background: -webkit-linear-gradient(#fff, #faf4f6);
+	background: -moz-linear-gradient(#fff, #faf4f6);
+	background: -o-linear-gradient(#fff, #faf4f6);
+	background: linear-gradient(#fff, #faf4f6);
+}
+[data-tasklistcolor='22'] {
+	background: -webkit-linear-gradient(#fff, #f8f2f9);
+	background: -moz-linear-gradient(#fff, #f8f2f9);
+	background: -o-linear-gradient(#fff, #f8f2f9);
+	background: linear-gradient(#fff, #f8f2f9);
+}
+[data-tasklistcolor='23'] {
+	background: -webkit-linear-gradient(#fff, #f5f3f9);
+	background: -moz-linear-gradient(#fff, #f5f3f9);
+	background: -o-linear-gradient(#fff, #f5f3f9);
+	background: linear-gradient(#fff, #f5f3f9);
+}
