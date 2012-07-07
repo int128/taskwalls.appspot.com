@@ -270,6 +270,9 @@ body {
 
 .calendar td.tasks .tasklist {
 	float: left;
+
+	/* fix box-shadow for IE */
+	border-collapse: separate;
 }
 
 /* first day of month, first row */
