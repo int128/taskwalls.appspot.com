@@ -13,10 +13,13 @@
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
 <title>Task Wall</title>
 <script>
+/* detect environment */
+/* see {@link AppSettings#development} */
+var appengineDevelopment = (location.hostname.search('.appspot.com') == -1);
 /* load CSS assets */
 (function (s) {
 	document.write('<link rel="stylesheet" href="'+s+'"/>')
-})(location.hostname == 'localhost' ? '/assets/css' : '/min.css');
+})(appengineDevelopment ? '/assets/css' : '/min.css');
 </script>
 <style>
 /* loading indicator */
@@ -319,7 +322,7 @@ Task WallはGoogleタスクと連携するタスク管理アプリです。<br/>
 /* load JavaScript assets */
 (function (s) {
 	document.write('<'+'script src="'+s+'"></'+'script>')
-})(location.hostname == 'localhost' ? '/assets/js' : '/min.js');
+})(appengineDevelopment ? '/assets/js' : '/min.js');
 /* show "unauthorize" page before initializing */
 (function () {
 	if (location.search == '' && localStorage['session'] === undefined) {
@@ -336,7 +339,7 @@ Task WallはGoogleタスクと連携するタスク管理アプリです。<br/>
   _gaq.push(['_setAccount', 'UA-3232369-8']);
   _gaq.push(['_trackPageview']);
 
-  location.hostname == 'localhost' ? null :  /* added */
+  appengineDevelopment ? null :  /* added */
   (function() {
     var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
     ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';

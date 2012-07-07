@@ -44,15 +44,13 @@ AuthorizedPageViewModel.prototype.initialize = function () {
 		return new UpdateTasklistDialog(this.taskdata, tasklist, event);
 	}, this);
 
-	// offline
+	// settings
 	this.offline = taskwalls.settings.offline;
 	this.lastCached = taskwalls.settings.lastCached;
+	this.development = taskwalls.settings.development;
 
 	// session
 	this.logout = taskwalls.session.logout;
-
-	// development only
-	this.development = ko.observable(window.location.hostname == 'localhost');
 };
 /**
  * Load task data.

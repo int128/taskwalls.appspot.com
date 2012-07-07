@@ -25,6 +25,10 @@ AppSettings.prototype.initialize = function () {
 	ko.computed(function () {
 		sessionStorage['offline'] = this.offline();
 	}, this);
+	/**
+	 * Development environment.
+	 */
+	this.development = ko.observable(location.hostname.search('.appspot.com') == -1);
 };
 /**
  * Number of colors.
