@@ -82,7 +82,7 @@ OAuth2Session.prototype.logout = function () {
 	localStorage.clear();
 	sessionStorage.clear();
 	$.get('/logout').done(function () {
-		window.location.reload();
+		window.location.replace('/');
 	});
 };
 /**
