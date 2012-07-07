@@ -222,7 +222,7 @@ Tasklists.map = function (items) {
  */
 Tasklists.create = function (data) {
 	if (!taskwalls.settings.offline()) {
-		$.post('/tasklists/create', data).pipe(function (object) {
+		return $.post('/tasklists/create', data).pipe(function (object) {
 			return new Tasklist(object);
 		});
 	} else {
