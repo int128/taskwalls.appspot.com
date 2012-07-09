@@ -82,7 +82,7 @@ Task WallはGoogleタスクと連携するタスク管理アプリです。<br/>
 <div data-bind="text: title" class="title"></div>
 </div>
 </div>
-<a data-bind="click: $root.createTasklistDialog.create"
+<a data-bind="click: createTasklistDialog.create"
 	href="#" class="create tasklist with-tooltip"
 	data-placement="right" title="新しいタスクリストを作成する"></a>
 </section>
@@ -103,21 +103,21 @@ Task WallはGoogleタスクと連携するタスク管理アプリです。<br/>
 </section>
 
 <section class="cache-status">
-<!-- ko if: $root.development -->
+<!-- ko if: development -->
 <label class="checkbox"><input data-bind="checked: offline" type="checkbox"/>オフライン</label>
 <!-- /ko -->
-<span data-bind="with: lastCached">
+<!-- ko with: lastCached -->
 最後の読み込みは
 <span data-bind="text: getMonth()+1"></span>月
 <span data-bind="text: getDate()"></span>日
 <span data-bind="text: getHours()"></span>時
 <span data-bind="text: getMinutes()"></span>分です。
-</span>
+<!-- /ko -->
 </section>
 
-<section data-bind="with: calendar" class="calendar">
+<section class="calendar">
 <table>
-<tbody data-bind="foreach: days">
+<tbody data-bind="foreach: calendar.days">
 <tr data-bind="droppable: {
 		accept: '.task',
 		hoverClass: 'dropping'
@@ -168,7 +168,7 @@ Task WallはGoogleタスクと連携するタスク管理アプリです。<br/>
 	class="icebox">
 <h2>計画中のタスク</h2>
 <div class="create">
-<a data-bind="click: $root.createTaskDialog.create"
+<a data-bind="click: createTaskDialog.create"
 	href="#" class="with-tooltip"
 	data-placement="left" title="新しいタスクを作成する"></a>
 </div>
@@ -193,15 +193,17 @@ Task WallはGoogleタスクと連携するタスク管理アプリです。<br/>
 </div>
 </section>
 
-<div data-bind="with: calendar" class="calendar-next">
-<a data-bind="click: extendToNextMonth" href="#">
-<span data-bind="text: nextMonth().getFullYear()"></span>年
-<span data-bind="text: nextMonth().getMonth()+1"></span>月を表示
+<div class="calendar-next">
+<a data-bind="click: calendar.extendToNextMonth" href="#">
+<!-- ko with: calendar.nextMonth() -->
+<span data-bind="text: getFullYear()"></span>年
+<span data-bind="text: getMonth()+1"></span>月を表示
+<!-- /ko -->
 </a>
 </div>
 
-<div data-bind="with: calendar" class="manipulations">
-<a data-bind="click: clearCompleted" href="#">完了したタスクを消去する</a>
+<div class="manipulations">
+<a data-bind="click: calendar.clearCompleted" href="#">完了したタスクを消去する</a>
 </div>
 
 <section class="dialogs">
