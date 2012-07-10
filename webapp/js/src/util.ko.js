@@ -59,6 +59,9 @@ ko.bindingHandlers.droppable = {
 			}, options));
 		}
 };
+/**
+ * Key down event binding for ESC key.
+ */
 ko.bindingHandlers.escKeydown = {
 		/**
 		 * Initialize binding.
