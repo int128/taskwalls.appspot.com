@@ -1,7 +1,5 @@
-/.apt_generated
 /target
 /project/target
-/www-test
 /webapp/WEB-INF/lib
 /webapp/WEB-INF/classes
 /webapp/WEB-INF/appengine-generated
