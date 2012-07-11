@@ -93,16 +93,16 @@ ko.bindingHandlers.urlText = {
 		 * @returns
 		 */
 		update: function (element, valueAccessor, allBindingsAccessor, viewModel) {
-			$(element).empty();
-			var text = ko.utils.unwrapObservable(valueAccessor());
+			var $element = $(element), text = ko.utils.unwrapObservable(valueAccessor());
+			$element.empty();
 			if (text) {
 				$.each(text.split(/[\r\n]+/), function (i, line) {
-					var div = $(document.createElement('div'));
-					div.text(line);
-					div.html(div.html().replace(
+					var e = $(document.createElement('div'));
+					e.text(line);
+					e.html(e.html().replace(
 							/(https?:\/\/[-_.!~*\'()a-zA-Z0-9;\/?:\@&=+\$,%#]+)/g,
-							'<a href="$1" target="_blank">$1</a>'));
-					div.appendTo(element);
+							'<a href="$1" data-bind="click: $.noopTrue, clickBubble: false">$1</a>'));
+					$element.append(e);
 				});
 			}
 		}
