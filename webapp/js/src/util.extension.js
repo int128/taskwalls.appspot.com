@@ -77,5 +77,19 @@ $.extend({
 			params[decodeURIComponent(m[1])] = decodeURIComponent(m[2]);
 		}
 		return params;
+	},
+	/**
+	 * Always return true.
+	 * @returns {Boolean}
+	 */
+	noopTrue: function () {
+		return true;
+	},
+	/**
+	 * Always return false.
+	 * @returns {Boolean}
+	 */
+	noopFalse: function () {
+		return false;
 	}
 });

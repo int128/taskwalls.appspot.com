@@ -81,6 +81,28 @@ ko.bindingHandlers.escKeydown = {
 		}
 };
 /**
+ * Text binding that supports URL.
+ */
+ko.bindingHandlers.autolinkText = {
+		/**
+		 * Update value.
+		 * @param {Element} element
+		 * @param valueAccessor
+		 * @param allBindingsAccessor
+		 * @param viewModel
+		 * @returns
+		 */
+		update: function (element, valueAccessor, allBindingsAccessor, viewModel) {
+			var $element = $(element), text = ko.utils.unwrapObservable(valueAccessor());
+			if (text) {
+				$element.text(text);
+				$element.html($element.html().replace(
+						/(https?:\/\/[-_.!~*\'()a-zA-Z0-9;\/?:\@&=+\$,%#]+)/g,
+						'<a href="$1" target="_blank" data-bind="click: $.noopTrue, clickBubble: false">$1</a>'));
+			}
+		}
+};
+/**
  * Create a <code>ko.observable()</code> with constructor and disposer.
  * Managed instance has <code>dispose()</code> method to dispose itself.
  * @param {Function} constructor function that returns new instance
