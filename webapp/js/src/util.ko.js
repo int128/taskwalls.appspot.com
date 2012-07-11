@@ -83,7 +83,7 @@ ko.bindingHandlers.escKeydown = {
 /**
  * Text binding that supports URL.
  */
-ko.bindingHandlers.urlText = {
+ko.bindingHandlers.autolinkText = {
 		/**
 		 * Update value.
 		 * @param {Element} element
