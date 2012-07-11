@@ -81,6 +81,30 @@ ko.bindingHandlers.escKeydown = {
 		}
 };
 /**
+ * Text binding that supports URL.
+ */
+ko.bindingHandlers.urlText = {
+		/**
+		 * Update value.
+		 * @param {Element} element
+		 * @param valueAccessor
+		 * @param allBindingsAccessor
+		 * @param viewModel
+		 * @returns
+		 */
+		update: function (element, valueAccessor, allBindingsAccessor, viewModel) {
+			var text = ko.utils.unwrapObservable(valueAccessor());
+			if (text) {
+				$.each(text.split(/[\r\n]+/), function (i, line) {
+					var div = $(document.createElement('div')).appendTo(element),
+						pattern = /(https?:\/\/[-_.!~*\'()a-zA-Z0-9;\/?:\@&=+\$,%#]+)/g;
+					// FIXME: sanitizing
+					div.html(line.replace(pattern, '<a href="$1">$1</a>'));
+				});
+			}
+		}
+};
+/**
  * Create a <code>ko.observable()</code> with constructor and disposer.
  * Managed instance has <code>dispose()</code> method to dispose itself.
  * @param {Function} constructor function that returns new instance
