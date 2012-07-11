@@ -98,7 +98,7 @@ ko.bindingHandlers.autolinkText = {
 				$element.text(text);
 				$element.html($element.html().replace(
 						/(https?:\/\/[-_.!~*\'()a-zA-Z0-9;\/?:\@&=+\$,%#]+)/g,
-						'<a href="$1" data-bind="click: $.noopTrue, clickBubble: false">$1</a>'));
+						'<a href="$1" target="_blank" data-bind="click: $.noopTrue, clickBubble: false">$1</a>'));
 			}
 		}
 };
