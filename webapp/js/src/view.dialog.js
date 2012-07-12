@@ -26,16 +26,18 @@ CreateTaskDialog.prototype.initialize = function (taskdata, due, event) {
 	};
 
 	this.save = function () {
-		Tasks.create({
-			tasklistID: self.selectedTasklist().id(),
-			due: self.due(),
-			title: self.title(),
-			notes: self.notes()
-		}).done(function (task) {
-			task.tasklist(self.selectedTasklist());
-			taskdata.tasks.push(task);
-			self.dispose();
-		});
+		if (self.title()) {
+			Tasks.create({
+				tasklistID: self.selectedTasklist().id(),
+				due: self.due(),
+				title: self.title(),
+				notes: self.notes()
+			}).done(function (task) {
+				task.tasklist(self.selectedTasklist());
+				taskdata.tasks.push(task);
+				self.dispose();
+			});
+		}
 	};
 };
 /**
@@ -62,7 +64,7 @@ UpdateTaskDialog.prototype.initialize = function (taskdata, task, event) {
 	this.title = ko.observable(this.task.title());
 	this.notes = ko.observable(this.task.notes());
 	this.save = function () {
-		if (self.title) {
+		if (self.title()) {
 			task.update({
 				due: self.due(),
 				title: self.title(),
