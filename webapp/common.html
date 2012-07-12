@@ -77,26 +77,26 @@ Task WallはGoogleタスクと連携するタスク管理アプリです。<br/>
 	attr: {'data-tasklistcolor': colorCode}"
 	class="tasklist">
 <div class="setting"><a data-bind="click: $root.updateTasklistDialog.create, clickBubble: false"
-	href="#" class="with-tooltip"
+	href="#" class="showtooltip"
 	data-placement="right" title="タスクリストのプロパティを開く"></a></div>
 <div data-bind="text: title" class="title"></div>
 </div>
 </div>
 <a data-bind="click: createTasklistDialog.create"
-	href="#" class="create tasklist with-tooltip"
+	href="#" class="create tasklist showtooltip"
 	data-placement="right" title="新しいタスクリストを作成する"></a>
 </section>
 <section class="thisweek">
 <h3>今週のタスク</h3>
-<div class="fraction numerator with-tooltip"
+<div class="fraction numerator showtooltip"
 	data-placement="right" title="完了したタスク"
 	><span data-bind="text: completedCount" class="count"></span></div>
-<div class="fraction denominator with-tooltip"
+<div class="fraction denominator showtooltip"
 	data-placement="right" title="すべてのタスク"
 	><span data-bind="text: count" class="count"></span></div>
 </section>
 <section>
-<div><a data-bind="click: logout" href="#" class="myicon-logout with-tooltip"
+<div><a data-bind="click: logout" href="#" class="myicon-logout showtooltip"
 	data-placement="right" title="ログアウト"></a></div>
 </section>
 <p class="footer">&copy; hidetake.org</p>
@@ -151,7 +151,7 @@ Task WallはGoogleタスクと連携するタスク管理アプリです。<br/>
 </div>
 <div class="create">
 <a data-bind="click: $root.createTaskDialog.create"
-	href="#" class="with-tooltip"
+	href="#" class="showtooltip"
 	data-placement="left" title="新しいタスクを作成する"></a>
 </div>
 </td>
@@ -169,7 +169,7 @@ Task WallはGoogleタスクと連携するタスク管理アプリです。<br/>
 <h2>計画中のタスク</h2>
 <div class="create">
 <a data-bind="click: createTaskDialog.create"
-	href="#" class="with-tooltip"
+	href="#" class="showtooltip"
 	data-placement="left" title="新しいタスクを作成する"></a>
 </div>
 <div data-bind="foreach: calendar.icebox.tasklists">

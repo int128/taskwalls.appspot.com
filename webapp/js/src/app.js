@@ -62,6 +62,6 @@ var taskwalls = {
 };
 $(function () {
 	$(document).tooltip({
-		selector: '.with-tooltip'
+		selector: '.showtooltip'
 	});
 });
