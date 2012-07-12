@@ -193,14 +193,16 @@ Task WallはGoogleタスクと連携するタスク管理アプリです。<br/>
 </div>
 </section>
 
+<!-- ko with: calendar -->
 <div class="calendar-next">
-<a data-bind="click: calendar.extendToNextMonth" href="#">
-<!-- ko with: calendar.nextMonth() -->
+<a data-bind="click: extendToNextMonth" href="#">
+<!-- ko with: nextMonth -->
 <span data-bind="text: getFullYear()"></span>年
 <span data-bind="text: getMonth()+1"></span>月を表示
 <!-- /ko -->
 </a>
 </div>
+<!-- /ko -->
 
 <div class="manipulations">
 <a data-bind="click: calendar.clearCompleted" href="#">完了したタスクを消去する</a>
