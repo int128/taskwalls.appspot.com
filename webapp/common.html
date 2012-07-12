@@ -211,8 +211,8 @@ Task WallはGoogleタスクと連携するタスク管理アプリです。<br/>
 <!-- ko with: createTasklistDialog -->
 <form data-bind="submit: save, escKeydown: dispose">
 <div class="create-tasklist dialog">
-<div><input data-bind="value: title, valueUpdate: 'afterkeydown', hasfocus: true" type="text" placeholder="タスクリストの名前" /></div>
-<div><button data-bind="enable: title" type="submit" class="btn">タスクリストを作成</button></div>
+<div><input data-bind="value: title, hasfocus: true" type="text" placeholder="タスクリストの名前" /></div>
+<div><button type="submit" class="btn">タスクリストを作成</button></div>
 </div>
 </form>
 <div data-bind="click: dispose" class="dialog-background"></div>
