@@ -9,79 +9,69 @@ function CalendarViewModel (taskdata) {
  * @param {Taskdata} taskdata
  */
 CalendarViewModel.prototype.initialize = function (taskdata) {
-	var calendar = new Calendar(function (day) {
-		return new CalendarDayViewModel(day);
-	});
-
-	(function () {
-		var d = new Date();
-		d.setHours(0, 0, 0, 0);
-		d.setDate(1);
-		var firstInMonth = d.getTime();
-		d.setMonth(d.getMonth() + 1);
-		d.setDate(0);
-		var lastInMonth = d.getTime();
-		calendar.extendTo(firstInMonth, lastInMonth);
-	})();
-
-	this.days = calendar.days;
-	this.icebox = new CalendarIceboxViewModel();
-	this.tasklists = ko.computed(function () {
-		return TasklistViewModel.extend(taskdata.tasklists());
-	}, this);
-
-	this.dueMap = ko.computed(function () {
-		return Tasks.groupByDue(taskdata.tasks());
-	}, this);
-
-	// extend rows to cover all tasks
-	ko.computed(function () {
-		var tasks = taskdata.tasks();
-		if (tasks.length > 0) {
-			var days = Tasks.days(tasks);
-			calendar.extendTo(Math.min.apply(null, days), Math.max.apply(null, days));
+	this.days = ko.computed(function () {
+		// make array of days in this week
+		var d = new Date(taskwalls.settings.today());
+		d.setDate(d.getDate() - (d.getDay()+6)%7);
+		var first = d.getTime();
+		d.setDate(d.getDate() + 14);
+		var last = d.getTime();
+		var days = [], i = 0;
+		for (var t = first; t <= last; t += 86400000) {
+			days[i++] = new CalendarDayViewModel(t);
 		}
-	});
+		return days;
+	}, this);
+	this.icebox = new CalendarIceboxViewModel();
 
-	// arrange tasks by each due date and tasklist
 	ko.computed(function () {
-		$.each(this.days(), $.proxy(function (i, day) {
-			var tasksInDay = this.dueMap().get(day.date());
-			day.tasklists($.map(Tasks.groupByTasklist(tasksInDay), function (tasks) {
+		TaskViewModel.extend(taskdata.tasks());
+		var tasksByDue = Tasks.groupByDue(taskdata.tasks());
+
+		$.each(this.days(), function (i, day) {
+			day.tasklists($.map(Tasks.groupByTasklist(tasksByDue.get(day.date())),
+				function (tasksInTasklist) {
+					return {
+						tasklist: tasksInTasklist[0].tasklist(),
+						tasks: tasksInTasklist
+					};
+				}));
+		});
+
+		this.icebox.tasklists($.map(Tasks.groupByTasklist(tasksByDue.getInIceBox()),
+			function (tasksInTasklist) {
 				return {
-					tasklist: tasks[0].tasklist(),
-					tasks: TaskViewModel.extend(tasks)
+					tasklist: tasksInTasklist[0].tasklist(),
+					tasks: tasksInTasklist
 				};
 			}));
-		}, this));
 	}, this);
-	ko.computed(function () {
-		var iceboxTasks = TaskViewModel.extend(this.dueMap().getInIceBox());
-		this.icebox.tasklists($.map(Tasks.groupByTasklist(iceboxTasks), function (tasks) {
-			return {
-				tasklist: tasks[0].tasklist(),
-				tasks: TaskViewModel.extend(tasks)
-			};
-		}));
+
+	this.tasklists = ko.computed(function () {
+		return TasklistViewModel.extend(taskdata.tasklists());
 	}, this);
 
 	/**
 	 * Last day of next month.
 	 */
 	this.nextMonth = ko.computed(function () {
+		// TODO:
+/*
 		var d = new Date(calendar.last().time());
 		d.setDate(1);
 		d.setMonth(d.getMonth() + 2);
 		d.setDate(0);
 		return d;
+*/
 	});
 
 	this.extendToNextMonth = function () {
-		calendar.extendTo(this.nextMonth());
+		// TODO:
+		//calendar.extendTo(this.nextMonth());
 	};
 
 	this.shrinkOrigin = function (time) {
-		calendar.shrinkOrigin(time);
+		// TODO:
 	};
 
 	/**
