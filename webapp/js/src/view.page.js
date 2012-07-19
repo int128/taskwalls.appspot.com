@@ -77,18 +77,11 @@ TryOutPageViewModel.prototype.initialize = function () {
 	// behave as offline
 	this.offline(true);
 
-	// origin time of the calendar: first day of this week (Monday)
-	var originTime = (function () {
-		var d = new Date(), t = d.getTime();
-		t -= d.getDay() * 86400000;
-		t += 86400000;
-		return DateUtil.normalize(t);
-	})().getTime();
-	this.calendar.shrinkOrigin(originTime);
-
 	// load example data
 	$.getJSON('/tryoutdata.json').done($.proxy(function (response) {
-		var baseTime = DateUtil.normalize(new Date(response.baseTime)).getTime();;
+		var originTime = taskwalls.settings.today().getFirstDayOfWeek().getTime(),
+			baseTime = DateUtil.normalize(new Date(response.baseTime)).getTime(),
+			delta = originTime - baseTime;
 
 		var tasklists = Tasklists.map(response.tasklists.items);
 		this.taskdata.tasklists(tasklists);
@@ -101,7 +94,7 @@ TryOutPageViewModel.prototype.initialize = function () {
 			})[0]);
 			// adjust date
 			if (task.due()) {
-				task.due(new Date(task.due().getTime() - baseTime + originTime));
+				task.due(new Date(task.due().getTime() + delta));
 			}
 			return task;
 		});

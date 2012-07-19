@@ -45,29 +45,6 @@ CalendarViewModel.prototype.initialize = function (taskdata) {
 	}, this);
 
 	/**
-	 * Last day of next month.
-	 */
-	this.nextMonth = ko.computed(function () {
-		// TODO:
-/*
-		var d = new Date(calendar.last().time());
-		d.setDate(1);
-		d.setMonth(d.getMonth() + 2);
-		d.setDate(0);
-		return d;
-*/
-	});
-
-	this.extendToNextMonth = function () {
-		// TODO:
-		//calendar.extendTo(this.nextMonth());
-	};
-
-	this.shrinkOrigin = function (time) {
-		// TODO:
-	};
-
-	/**
 	 * Clear completed tasks.
 	 */
 	this.clearCompleted = function () {
