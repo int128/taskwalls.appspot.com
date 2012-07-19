@@ -24,6 +24,10 @@ AuthorizedPageViewModel.prototype.initialize = function () {
 	// calendar
 	this.calendar = new CalendarViewModel(this.taskdata);
 
+	this.tasklists = ko.computed(function () {
+		return TasklistViewModel.extend(this.taskdata.tasklists());
+	}, this);
+
 	// dialogs
 	this.createTaskDialog = ko.disposableObservable(function (context, event) {
 		if (context.date) {

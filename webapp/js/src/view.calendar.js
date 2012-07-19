@@ -44,10 +44,6 @@ CalendarViewModel.prototype.initialize = function (taskdata) {
 			}));
 	}, this);
 
-	this.tasklists = ko.computed(function () {
-		return TasklistViewModel.extend(taskdata.tasklists());
-	}, this);
-
 	/**
 	 * Last day of next month.
 	 */
