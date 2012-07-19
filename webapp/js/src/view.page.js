@@ -22,7 +22,7 @@ AuthorizedPageViewModel.prototype.initialize = function () {
 	}, this);
 
 	// calendar
-	this.calendar = new CalendarViewModel(this.taskdata);
+	this.calendar = new DailyCalendarViewModel(this.taskdata);
 
 	this.tasklists = ko.computed(function () {
 		return TasklistViewModel.extend(this.taskdata.tasklists());

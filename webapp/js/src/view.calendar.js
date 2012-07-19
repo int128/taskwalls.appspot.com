@@ -1,14 +1,14 @@
 /**
- * @class calendar
+ * @class daily calendar
  * @param {Taskdata} taskdata
  */
-function CalendarViewModel (taskdata) {
+function DailyCalendarViewModel (taskdata) {
 	this.initialize.apply(this, arguments);
 };
 /**
  * @param {Taskdata} taskdata
  */
-CalendarViewModel.prototype.initialize = function (taskdata) {
+DailyCalendarViewModel.prototype.initialize = function (taskdata) {
 	this.days = ko.computed(function () {
 		// make array of days in this week
 		var first = taskwalls.settings.today().getFirstDayOfWeek().getTime(),
