@@ -11,12 +11,9 @@ function CalendarViewModel (taskdata) {
 CalendarViewModel.prototype.initialize = function (taskdata) {
 	this.days = ko.computed(function () {
 		// make array of days in this week
-		var d = new Date(taskwalls.settings.today());
-		d.setDate(d.getDate() - (d.getDay()+6)%7);
-		var first = d.getTime();
-		d.setDate(d.getDate() + 14);
-		var last = d.getTime();
-		var days = [], i = 0;
+		var first = taskwalls.settings.today().getFirstDayOfWeek().getTime(),
+			last = first + 14 * 86400000,
+			days = [], i = 0;
 		for (var t = first; t <= last; t += 86400000) {
 			days[i++] = new CalendarDayViewModel(t);
 		}
