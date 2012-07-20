@@ -19,7 +19,7 @@ DailyCalendarViewModel.prototype.initialize = function (taskdata) {
 		}
 		return days;
 	}, this);
-	this.icebox = new CalendarIceboxViewModel();
+	this.icebox = new IceboxTasksViewModel();
 
 	ko.computed(function () {
 		TaskViewModel.extend(taskdata.tasks());
@@ -78,14 +78,14 @@ CalendarDayViewModel.prototype.initialize = function (day) {
 	this.tasklists = ko.observableArray();
 };
 /**
- * @class Icebox view model.
+ * @class Icebox tasks view model.
  */
-function CalendarIceboxViewModel () {
+function IceboxTasksViewModel () {
 	this.initialize.apply(this, arguments);
 };
 /**
  */
-CalendarIceboxViewModel.prototype.initialize = function () {
+IceboxTasksViewModel.prototype.initialize = function () {
 	this.tasklists = ko.observableArray();
 };
 /**
@@ -158,7 +158,7 @@ TaskViewModel.prototype.dropped = function (task, e, day) {
 			task.update({
 				due: day.date()
 			});  // TODO: failed?
-		} else if (day instanceof CalendarIceboxViewModel) {
+		} else if (day instanceof IceboxTasksViewModel) {
 			task.update({
 				due: null
 			});  // TODO: failed?
