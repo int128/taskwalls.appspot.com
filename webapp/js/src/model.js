@@ -382,6 +382,21 @@ Tasks.DueMap.prototype.getInIceBox = function () {
 	return tasks ? tasks : [];
 };
 /**
+ * Returns tasks of which due date is before given.
+ * @param {Number} date time of date
+ * @returns {Array}
+ */
+Tasks.DueMap.prototype.getBefore = function (time) {
+	var tasks = [];
+	$.each(this.map, function (key, tasksInDay) {
+		var day = parseInt(key);
+		if (day < time && day > 0) {
+			$.merge(tasks, tasksInDay);
+		}
+	});
+	return tasks;
+};
+/**
  * @class the task
  * @param {Object} object
  * @param {Tasklist} tasklist belonged tasklist or undefined

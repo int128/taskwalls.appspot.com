@@ -356,6 +356,18 @@ body {
 /*
  * Calendar misc.
  */
+.calendar h2,
+.icebox h2 {
+	margin-left: 10px;
+	color: #888;
+	font-size: 16px;
+	font-weight: normal;
+}
+
+.calendar .thisweek h2 {
+	margin-left: 130px;
+}
+
 .cache-status {
 	position: fixed;
 	bottom: 0;
@@ -405,6 +417,17 @@ body {
 }
 
 /*
+ * Past tasks.
+ */
+.calendar .lastweek {
+	margin-left: 120px;
+}
+
+.calendar .lastweek .tasklist {
+	float: left;
+}
+
+/*
  * Icebox.
  */
 .icebox {
@@ -415,13 +438,6 @@ body {
 	right: 0;
 	overflow: auto;
 	box-shadow: 0 0 10px 2px rgba(0, 0, 0, 0.3);
-}
-
-.icebox h2 {
-	margin-left: 10px;
-	color: #ccc;
-	font-size: 16px;
-	font-weight: normal;
 }
 
 .icebox .count {
@@ -458,6 +474,7 @@ body {
 	border-left-width: 5px;
 }
 
+.past .task,
 .calendar .task,
 .task.ui-draggable-dragging {
 	width: 200px;

@@ -115,7 +115,9 @@ Task WallはGoogleタスクと連携するタスク管理アプリです。<br/>
 <!-- /ko -->
 </section>
 
-<section class="calendar">
+<section class="daily calendar">
+<section class="thisweek">
+<h2>今週と来週のタスク</h2>
 <table>
 <tbody data-bind="foreach: calendar.days">
 <tr data-bind="droppable: {
@@ -147,6 +149,17 @@ Task WallはGoogleタスクと連携するタスク管理アプリです。<br/>
 </tr>
 </tbody>
 </table>
+</section>
+
+<section class="lastweek">
+<h2>過去のタスク</h2>
+<div data-bind="foreach: calendar.past.tasklists">
+<div data-bind="template: {name: 'task-template', foreach: tasks}, visible: tasklist.visible"
+	class="tasklist">
+</div>
+</div>
+<div style="clear: both;"></div>
+</section>
 </section>
 
 <section data-bind="droppable: {

@@ -9,17 +9,24 @@ function DailyCalendarViewModel (taskdata) {
  * @param {Taskdata} taskdata
  */
 DailyCalendarViewModel.prototype.initialize = function (taskdata) {
+	this.firstDay = ko.computed(function () {
+		return taskwalls.settings.today().getFirstDayOfWeek().getTime();
+	}, this);
+	this.lastDay = ko.computed(function () {
+		return this.firstDay() + 14 * 86400000;
+	}, this);
 	this.days = ko.computed(function () {
 		// make array of days in this week
-		var first = taskwalls.settings.today().getFirstDayOfWeek().getTime(),
-			last = first + 14 * 86400000,
+		var lastDay = this.lastDay(),
 			days = [], i = 0;
-		for (var t = first; t <= last; t += 86400000) {
+		for (var t = this.firstDay(); t <= lastDay; t += 86400000) {
 			days[i++] = new CalendarDayViewModel(t);
 		}
 		return days;
 	}, this);
+
 	this.icebox = new IceboxTasksViewModel();
+	this.past = new PastTasksViewModel();
 
 	ko.computed(function () {
 		TaskViewModel.extend(taskdata.tasks());
@@ -34,6 +41,14 @@ DailyCalendarViewModel.prototype.initialize = function (taskdata) {
 					};
 				}));
 		});
+
+		this.past.tasklists($.map(Tasks.groupByTasklist(tasksByDue.getBefore(this.firstDay())),
+			function (tasksInTasklist) {
+				return {
+					tasklist: tasksInTasklist[0].tasklist(),
+					tasks: tasksInTasklist
+				};
+			}));
 
 		this.icebox.tasklists($.map(Tasks.groupByTasklist(tasksByDue.getInIceBox()),
 			function (tasksInTasklist) {
@@ -83,9 +98,16 @@ CalendarDayViewModel.prototype.initialize = function (day) {
 function IceboxTasksViewModel () {
 	this.initialize.apply(this, arguments);
 };
-/**
- */
 IceboxTasksViewModel.prototype.initialize = function () {
+	this.tasklists = ko.observableArray();
+};
+/**
+ * @class Past tasks view model.
+ */
+function PastTasksViewModel () {
+	this.initialize.apply(this, arguments);
+};
+PastTasksViewModel.prototype.initialize = function () {
 	this.tasklists = ko.observableArray();
 };
 /**
