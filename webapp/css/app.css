@@ -427,6 +427,10 @@ body {
 	float: left;
 }
 
+.calendar .lastweek .tasklist .count {
+	margin-left: 15px;
+}
+
 /*
  * Icebox.
  */
