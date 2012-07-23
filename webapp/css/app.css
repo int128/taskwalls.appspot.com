@@ -321,15 +321,6 @@ body {
 	border-top: solid 1px #888;
 }
 
-/* past tasks */
-.calendar tr.past {
-	background-color: #eee;
-}
-
-.calendar tr.past .task[data-status='needsAction'] {
-	color: #f00;
-}
-
 /* this week's tasks */
 .calendar tr.thisweek>td.tasks {
 	border-left: solid 1px #f00;
@@ -359,7 +350,7 @@ body {
 .calendar .thisweek h2,
 .calendar .past,
 .calendar .future {
-	margin-left: 130px;
+	padding-left: 130px;
 }
 
 .calendar .past .tasklist,
@@ -372,12 +363,20 @@ body {
 	margin-left: 15px;
 }
 
+/* past tasks */
+.calendar .past {
+	background-color: #eee;
+}
+
+.calendar .past .task[data-status='needsAction'] {
+	color: #f00;
+}
+
 /*
  * Calendar misc.
  */
 .calendar h2,
 .icebox h2 {
-	margin-left: 10px;
 	color: #888;
 	font-size: 16px;
 	font-weight: normal;
@@ -442,6 +441,10 @@ body {
 	right: 0;
 	overflow: auto;
 	box-shadow: 0 0 10px 2px rgba(0, 0, 0, 0.3);
+}
+
+.icebox h2 {
+	margin-left: 10px;
 }
 
 .icebox .count {
