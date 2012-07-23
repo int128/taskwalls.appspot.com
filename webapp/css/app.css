@@ -354,6 +354,25 @@ body {
 }
 
 /*
+ * Calendar specific styles.
+ */
+.calendar .thisweek h2,
+.calendar .past,
+.calendar .future {
+	margin-left: 130px;
+}
+
+.calendar .past .tasklist,
+.calendar .future .tasklist {
+	float: left;
+}
+
+.calendar .past .tasklist .count,
+.calendar .future .tasklist .count {
+	margin-left: 15px;
+}
+
+/*
  * Calendar misc.
  */
 .calendar h2,
@@ -362,10 +381,6 @@ body {
 	color: #888;
 	font-size: 16px;
 	font-weight: normal;
-}
-
-.calendar .thisweek h2 {
-	margin-left: 130px;
 }
 
 .cache-status {
@@ -417,21 +432,6 @@ body {
 }
 
 /*
- * Past tasks.
- */
-.calendar .lastweek {
-	margin-left: 120px;
-}
-
-.calendar .lastweek .tasklist {
-	float: left;
-}
-
-.calendar .lastweek .tasklist .count {
-	margin-left: 15px;
-}
-
-/*
  * Icebox.
  */
 .icebox {
@@ -478,7 +478,6 @@ body {
 	border-left-width: 5px;
 }
 
-.past .task,
 .calendar .task,
 .task.ui-draggable-dragging {
 	width: 200px;
