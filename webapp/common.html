@@ -115,11 +115,13 @@ Task WallはGoogleタスクと連携するタスク管理アプリです。<br/>
 <!-- /ko -->
 </section>
 
+<!-- ko if: dailyCalendar -->
+<!-- ko with: dailyCalendar -->
 <section class="daily calendar">
 <section class="thisweek">
 <h2>今週と来週のタスク</h2>
 <table>
-<tbody data-bind="foreach: calendar.days">
+<tbody data-bind="foreach: days">
 <tr data-bind="droppable: {
 		accept: '.task',
 		hoverClass: 'dropping'
@@ -153,7 +155,7 @@ Task WallはGoogleタスクと連携するタスク管理アプリです。<br/>
 
 <section class="past">
 <h2>過去のタスク</h2>
-<div data-bind="foreach: calendar.past.tasklists">
+<div data-bind="foreach: past.tasklists">
 <div class="tasklist">
 <div class="count"><span data-bind="text: tasks.length" class="badge"></span></div>
 <div data-bind="template: {name: 'task-template', foreach: tasks}, visible: tasklist.visible"></div>
@@ -164,7 +166,7 @@ Task WallはGoogleタスクと連携するタスク管理アプリです。<br/>
 
 <section class="future">
 <h2>未来のタスク</h2>
-<div data-bind="foreach: calendar.future.tasklists">
+<div data-bind="foreach: future.tasklists">
 <div class="tasklist">
 <div class="count"><span data-bind="text: tasks.length" class="badge"></span></div>
 <div data-bind="template: {name: 'task-template', foreach: tasks}, visible: tasklist.visible"></div>
@@ -173,11 +175,21 @@ Task WallはGoogleタスクと連携するタスク管理アプリです。<br/>
 <div style="clear: both;"></div>
 </section>
 </section>
+<!-- /ko -->
+<!-- /ko -->
+
+<!-- ko if: weeklyCalendar -->
+<!-- ko with: weeklyCalendar -->
+<section class="weekly calendar">
+<!-- TODO -->
+</section>
+<!-- /ko -->
+<!-- /ko -->
 
 <section data-bind="droppable: {
 		accept: '.task',
 		hoverClass: 'dropping',
-		context: calendar.icebox
+		context: iceboxTasks
 	}"
 	class="icebox">
 <h2>計画中のタスク</h2>
@@ -186,7 +198,7 @@ Task WallはGoogleタスクと連携するタスク管理アプリです。<br/>
 	href="#" class="showtooltip"
 	data-placement="left" title="新しいタスクを作成する"></a>
 </div>
-<div data-bind="foreach: calendar.icebox.tasklists">
+<div data-bind="foreach: iceboxTasks.tasklists">
 <div class="count"><span data-bind="text: tasks.length" class="badge"></span></div>
 <div data-bind="template: {name: 'task-template', foreach: tasks}, visible: tasklist.visible"
 	class="tasklist">
@@ -210,7 +222,9 @@ Task WallはGoogleタスクと連携するタスク管理アプリです。<br/>
 </script>
 
 <div class="manipulations">
-<a data-bind="click: calendar.clearCompleted" href="#">完了したタスクを消去する</a>
+<button class="btn">日</button>
+<button class="btn">週</button>
+<button class="btn">月</button>
 </div>
 
 <section class="dialogs">
