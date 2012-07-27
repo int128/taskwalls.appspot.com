@@ -115,7 +115,13 @@ Task WallはGoogleタスクと連携するタスク管理アプリです。<br/>
 <!-- /ko -->
 </section>
 
-<!-- ko if: dailyCalendar -->
+<div class="manipulations">
+<button data-bind="click: switchToDailyCalendar" class="btn">日</button>
+<button data-bind="click: switchToWeeklyCalendar" class="btn">週</button>
+<button data-bind="click: switchToMonthlyCalendar" class="btn">月</button>
+</div>
+
+<!-- ko if: calendarUnit() == 'daily' -->
 <!-- ko with: dailyCalendar -->
 <section class="daily calendar">
 <section class="thisweek">
@@ -178,10 +184,44 @@ Task WallはGoogleタスクと連携するタスク管理アプリです。<br/>
 <!-- /ko -->
 <!-- /ko -->
 
-<!-- ko if: weeklyCalendar -->
+<!-- ko if: calendarUnit() == 'weekly' -->
 <!-- ko with: weeklyCalendar -->
 <section class="weekly calendar">
-<!-- TODO -->
+<h2>週の計画</h2>
+<table>
+<tbody data-bind="foreach: rows">
+<tr data-bind="droppable: {
+		accept: '.task',
+		hoverClass: 'dropping'
+	},
+	css: {
+		thisweek: thisweek
+	}">
+<td class="month"><div><span data-bind="text: beginDate.getMonth()+1"></span>月</div></td>
+<td class="border day"><div data-bind="text: beginDate.getDate()"></div></td>
+<td class="border weekday">週</td>
+<td class="border tasks">
+<div data-bind="foreach: tasklists">
+<div data-bind="template: {name: 'task-template', foreach: tasks}, visible: tasklist.visible"
+	class="tasklist">
+</div>
+</div>
+<div class="create">
+<a data-bind="click: $root.createTaskDialog.create"
+	href="#" class="showtooltip"
+	data-placement="left" title="新しいタスクを作成する"></a>
+</div>
+</td>
+</tr>
+</tbody>
+</table>
+</section>
+<!-- /ko -->
+<!-- /ko -->
+
+<!-- ko if: monthlyCalendar -->
+<!-- ko with: monthlyCalendar -->
+<section class="monthly calendar">
 </section>
 <!-- /ko -->
 <!-- /ko -->
@@ -220,12 +260,6 @@ Task WallはGoogleタスクと連携するタスク管理アプリです。<br/>
 <div data-bind="autolinkText: notes" class="notes"></div>
 </div>
 </script>
-
-<div class="manipulations">
-<button class="btn">日</button>
-<button class="btn">週</button>
-<button class="btn">月</button>
-</div>
 
 <section class="dialogs">
 <!-- ko if: createTasklistDialog -->

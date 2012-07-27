@@ -319,6 +319,23 @@ Tasks.days = function (tasks) {
 	});
 };
 /**
+ * Select items between beginTime and endTime.
+ * Note that result does not contain endTime.
+ * @param {Array} tasks
+ * @param {Number} beginTime
+ * @param {Number} endTime
+ */
+Tasks.range = function (tasks, beginTime, endTime) {
+	return $.grep(tasks, function (task) {
+		if (task.due()) {
+			var due = task.due().getTime();
+			if (beginTime <= due && due < endTime) {
+				return true;
+			}
+		}
+	});
+};
+/**
  * Returns map of tasklist and tasks.
  * @param {Array} tasks array of tasks or undefined
  * @returns {Object} map of tasklist id and tasks
@@ -434,6 +451,7 @@ Task.prototype.initialize = function (object, tasklist) {
 	}
 	if (object.due) {
 		// normalize for current timezone
+		// TODO: change to {Number} in order to save resource
 		this.due(DateUtil.normalize(object.due));
 	} else {
 		this.due = ko.observable();

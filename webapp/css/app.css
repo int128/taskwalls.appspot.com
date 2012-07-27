@@ -347,7 +347,7 @@ body {
 /*
  * Calendar specific styles.
  */
-.calendar .thisweek h2,
+.calendar h2,
 .calendar .past,
 .calendar .future {
 	padding-left: 130px;

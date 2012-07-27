@@ -134,6 +134,62 @@ FutureTasksViewModel.prototype.initialize = function () {
 	this.tasklists = ko.observableArray();
 };
 /**
+ * @class weekly calendar
+ * @param {Taskdata} taskdata
+ */
+function WeeklyCalendarViewModel (taskdata) {
+	this.initialize.apply(this, arguments);
+};
+/**
+ * @param {Taskdata} taskdata
+ */
+WeeklyCalendarViewModel.prototype.initialize = function (taskdata) {
+	this.rows = ko.computed(function () {
+		var firstDay = taskwalls.settings.today().getFirstDayOfWeek().getTime();
+		var lastDay = firstDay + 56 * 86400000;
+		var rows = [], i = 0;
+		for (var time = firstDay; time <= lastDay; time += 86400000*7) {
+			rows[i++] = new this.Row(time);
+		}
+		return rows;
+	}, this);
+
+	ko.computed(function () {
+		var tasks = TaskViewModel.extend(taskdata.tasks());
+		$.each(this.rows(), function (i, row) {
+			var tasksOnRow = Tasks.range(tasks, row.beginTime, row.endTime);
+			row.tasklists($.map(Tasks.groupByTasklist(tasksOnRow),
+				function (tasksInTasklist) {
+					return {
+						tasklist: tasksInTasklist[0].tasklist(),
+						tasks: tasksInTasklist
+					};
+				}));
+		});
+	}, this);
+};
+/**
+ * @constructor row item of {@link WeeklyCalendarViewModel}
+ * @param {Number} time begin of the week
+ */
+WeeklyCalendarViewModel.prototype.Row = function (time) {
+	this.initialize.apply(this, arguments);
+};
+/**
+ * @param {Number} time
+ */
+WeeklyCalendarViewModel.prototype.Row.prototype.initialize = function (time) {
+	this.beginTime = time;
+	this.endTime = time + 86400000 * 7;
+	this.beginDate = new Date(this.beginTime);
+	this.endDate = new Date(this.endTime);
+
+	this.tasklists = ko.observableArray();
+	this.thisweek = ko.computed(function () {
+		return DateUtil.isThisWeek(this.beginTime);
+	}, this);
+};
+/**
  * @class Tasklist view model.
  */
 function TasklistViewModel () {}

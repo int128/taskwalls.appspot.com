@@ -24,7 +24,19 @@ AuthorizedPageViewModel.prototype.initialize = function () {
 	// calendar
 	this.iceboxTasks = new IceboxTasksViewModel(this.taskdata);
 	this.dailyCalendar = new DailyCalendarViewModel(this.taskdata);
-	this.weeklyCalendar = null;
+	this.weeklyCalendar = new WeeklyCalendarViewModel(this.taskdata);
+	this.monthlyCalendar = null;  //new MonthlyCalendarViewModel(this.taskdata);
+
+	this.calendarUnit = ko.observable('daily');
+	this.switchToDailyCalendar = function () {
+		this.calendarUnit('daily');
+	};
+	this.switchToWeeklyCalendar = function () {
+		this.calendarUnit('weekly');
+	};
+	this.switchToMonthlyCalendar = function () {
+		this.calendarUnit('monthly');
+	};
 
 	this.tasklists = ko.computed(function () {
 		return TasklistViewModel.extend(this.taskdata.tasklists());
