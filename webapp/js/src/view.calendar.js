@@ -138,14 +138,18 @@ function WeeklyCalendarViewModel (taskdata) {
 	this.initialize.apply(this, arguments);
 };
 /**
+ * Number of weeks to be shown in the calendar.
+ */
+WeeklyCalendarViewModel.NUMBER_OF_WEEKS = 8;
+/**
  * @param {Taskdata} taskdata
  */
 WeeklyCalendarViewModel.prototype.initialize = function (taskdata) {
 	this.rows = ko.computed(function () {
 		var firstDay = taskwalls.settings.today().getFirstDayOfWeek().getTime();
-		var lastDay = firstDay + 56 * 86400000;
+		var lastDay = firstDay + WeeklyCalendarViewModel.NUMBER_OF_WEEKS * 7 * 86400000;
 		var rows = [], i = 0;
-		for (var time = firstDay; time <= lastDay; time += 86400000*7) {
+		for (var time = firstDay; time <= lastDay; time += 7 * 86400000) {
 			rows[i++] = new WeeklyCalendarViewModel.Row(time);
 		}
 		return rows;
