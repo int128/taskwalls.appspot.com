@@ -6,23 +6,21 @@ function DailyCalendarViewModel (taskdata) {
 	this.initialize.apply(this, arguments);
 };
 /**
+ * Number of days to show in the calendar.
+ */
+DailyCalendarViewModel.NUMBER_OF_DAYS = 14;
+/**
  * @param {Taskdata} taskdata
  */
 DailyCalendarViewModel.prototype.initialize = function (taskdata) {
-	this.firstDay = ko.computed(function () {
-		return taskwalls.settings.today().getFirstDayOfWeek().getTime();
-	}, this);
-	this.lastDay = ko.computed(function () {
-		return this.firstDay() + 14 * 86400000;
-	}, this);
-	this.days = ko.computed(function () {
-		// make array of days in this week
-		var lastDay = this.lastDay(),
-			days = [], i = 0;
-		for (var t = this.firstDay(); t <= lastDay; t += 86400000) {
-			days[i++] = new CalendarDayViewModel(t);
+	this.rows = ko.computed(function () {
+		var firstDay = taskwalls.settings.today().getFirstDayOfWeek().getTime();
+		var lastDay = firstDay + DailyCalendarViewModel.NUMBER_OF_DAYS * 86400000;
+		var rows = [], i = 0;
+		for (var time = firstDay; time <= lastDay; time += 86400000) {
+			rows[i++] = new DailyCalendarViewModel.Row(time);
 		}
-		return days;
+		return rows;
 	}, this);
 
 	this.past = new PastTasksViewModel();
@@ -31,9 +29,10 @@ DailyCalendarViewModel.prototype.initialize = function (taskdata) {
 	ko.computed(function () {
 		TaskViewModel.extend(taskdata.tasks());
 		var tasksByDue = taskdata.tasksByDue();
+		var rows = this.rows();
 
-		$.each(this.days(), function (i, day) {
-			day.tasklists($.map(Tasks.groupByTasklist(tasksByDue.get(day.date)),
+		$.each(rows, function (i, row) {
+			row.tasklists($.map(Tasks.groupByTasklist(tasksByDue.get(row.date)),
 				function (tasksInTasklist) {
 					return {
 						tasklist: tasksInTasklist[0].tasklist(),
@@ -42,7 +41,7 @@ DailyCalendarViewModel.prototype.initialize = function (taskdata) {
 				}));
 		});
 
-		this.past.tasklists($.map(Tasks.groupByTasklist(tasksByDue.getBefore(this.firstDay())),
+		this.past.tasklists($.map(Tasks.groupByTasklist(tasksByDue.getBefore(rows[0])),
 			function (tasksInTasklist) {
 				return {
 					tasklist: tasksInTasklist[0].tasklist(),
@@ -50,7 +49,7 @@ DailyCalendarViewModel.prototype.initialize = function (taskdata) {
 				};
 			}));
 
-		this.future.tasklists($.map(Tasks.groupByTasklist(tasksByDue.getAfter(this.lastDay())),
+		this.future.tasklists($.map(Tasks.groupByTasklist(tasksByDue.getAfter(rows[rows.length - 1])),
 				function (tasksInTasklist) {
 					return {
 						tasklist: tasksInTasklist[0].tasklist(),
@@ -67,16 +66,16 @@ DailyCalendarViewModel.prototype.initialize = function (taskdata) {
 	};
 };
 /**
- * @class Daily row of the calendar.
+ * @class row item of daily calendar
  * @param {Number} time day of the row
  */
-function CalendarDayViewModel (time) {
+DailyCalendarViewModel.Row = function (time) {
 	this.initialize.apply(this, arguments);
 };
 /**
  * @param {Number} time day of the row
  */
-CalendarDayViewModel.prototype.initialize = function (time) {
+DailyCalendarViewModel.Row.prototype.initialize = function (time) {
 	this.time = time;
 	this.date = new Date(time);
 	this.weekdayName = $.resource('weekday' + this.date.getDay());
