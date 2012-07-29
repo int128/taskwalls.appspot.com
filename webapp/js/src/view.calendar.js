@@ -146,7 +146,7 @@ WeeklyCalendarViewModel.prototype.initialize = function (taskdata) {
 		var lastDay = firstDay + 56 * 86400000;
 		var rows = [], i = 0;
 		for (var time = firstDay; time <= lastDay; time += 86400000*7) {
-			rows[i++] = new this.Row(time);
+			rows[i++] = new WeeklyCalendarViewModel.Row(time);
 		}
 		return rows;
 	}, this);
@@ -169,13 +169,13 @@ WeeklyCalendarViewModel.prototype.initialize = function (taskdata) {
  * @constructor row item of {@link WeeklyCalendarViewModel}
  * @param {Number} time begin of the week
  */
-WeeklyCalendarViewModel.prototype.Row = function (time) {
+WeeklyCalendarViewModel.Row = function (time) {
 	this.initialize.apply(this, arguments);
 };
 /**
  * @param {Number} time
  */
-WeeklyCalendarViewModel.prototype.Row.prototype.initialize = function (time) {
+WeeklyCalendarViewModel.Row.prototype.initialize = function (time) {
 	this.beginTime = time;
 	this.endTime = time + 86400000 * 7;
 	this.beginDate = new Date(this.beginTime);
