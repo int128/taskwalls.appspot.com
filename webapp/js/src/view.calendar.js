@@ -33,7 +33,7 @@ DailyCalendarViewModel.prototype.initialize = function (taskdata) {
 		var tasksByDue = taskdata.tasksByDue();
 
 		$.each(this.days(), function (i, day) {
-			day.tasklists($.map(Tasks.groupByTasklist(tasksByDue.get(day.date())),
+			day.tasklists($.map(Tasks.groupByTasklist(tasksByDue.get(day.date)),
 				function (tasksInTasklist) {
 					return {
 						tasklist: tasksInTasklist[0].tasklist(),
@@ -68,27 +68,24 @@ DailyCalendarViewModel.prototype.initialize = function (taskdata) {
 };
 /**
  * @class Daily row of the calendar.
- * @param {Number} day day of the row
+ * @param {Number} time day of the row
  */
-function CalendarDayViewModel (day) {
+function CalendarDayViewModel (time) {
 	this.initialize.apply(this, arguments);
 };
 /**
- * @param {Number} day day of the row
+ * @param {Number} time day of the row
  */
-CalendarDayViewModel.prototype.initialize = function (day) {
-	this.time = ko.observable(day);
-	this.date = ko.computed(function () {
-		return new Date(this.time());
-	}, this);
-	this.weekdayName = ko.computed(function () {
-		return $.resource('weekday' + this.date().getDay());
-	}, this);
+CalendarDayViewModel.prototype.initialize = function (time) {
+	this.time = time;
+	this.date = new Date(time);
+	this.weekdayName = $.resource('weekday' + this.date.getDay());
+
 	this.past = ko.computed(function () {
-		return this.time() < taskwalls.settings.today().getTime();
+		return this.time < taskwalls.settings.today().getTime();
 	}, this);
 	this.thisweek = ko.computed(function () {
-		return DateUtil.isThisWeek(this.time());
+		return DateUtil.isThisWeek(this.time);
 	}, this);
 	this.tasklists = ko.observableArray();
 };
