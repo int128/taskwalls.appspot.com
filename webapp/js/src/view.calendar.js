@@ -36,7 +36,7 @@ DailyCalendarViewModel.prototype.initialize = function (taskdata) {
 		var rows = this.rows();
 
 		$.each(rows, function (i, row) {
-			row.tasklists($.map(Tasks.groupByTasklist(dueIndex.get(row.date)),
+			row.tasklists($.map(Tasks.groupByTasklist(dueIndex.getTasks(row.date)),
 				function (tasksInTasklist) {
 					return {
 						tasklist: tasksInTasklist[0].tasklist(),
@@ -45,7 +45,7 @@ DailyCalendarViewModel.prototype.initialize = function (taskdata) {
 				}));
 		});
 
-		this.pastTasks($.map(Tasks.groupByTasklist(dueIndex.getBefore(rows[0])),
+		this.pastTasks($.map(Tasks.groupByTasklist(dueIndex.findTasksBefore(rows[0])),
 			function (tasksInTasklist) {
 				return {
 					tasklist: tasksInTasklist[0].tasklist(),
@@ -53,7 +53,7 @@ DailyCalendarViewModel.prototype.initialize = function (taskdata) {
 				};
 			}));
 
-		this.futureTasks($.map(Tasks.groupByTasklist(dueIndex.getAfter(rows[rows.length - 1])),
+		this.futureTasks($.map(Tasks.groupByTasklist(dueIndex.findTasksAfter(rows[rows.length - 1])),
 			function (tasksInTasklist) {
 				return {
 					tasklist: tasksInTasklist[0].tasklist(),
@@ -170,7 +170,7 @@ function IceboxTasksViewModel (taskdata) {
  */
 IceboxTasksViewModel.prototype.initialize = function (taskdata) {
 	this.tasklists = ko.computed(function () {
-		var tasks = taskdata.tasksByDue().getInIceBox();
+		var tasks = taskdata.tasksByDue().getTasksInIceBox();
 		TaskViewModel.extend(tasks);
 		return $.map(Tasks.groupByTasklist(tasks),
 				function (tasksInTasklist) {

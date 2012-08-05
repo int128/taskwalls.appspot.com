@@ -390,7 +390,7 @@ Tasks.DueIndex = function (map) {
  * @param {Date} date
  * @returns {Array} array of tasks or undefined
  */
-Tasks.DueIndex.prototype.get = function (date) {
+Tasks.DueIndex.prototype.getTasks = function (date) {
 	var tasks = this.map[date.getTime()];
 	return tasks ? tasks : [];
 };
@@ -398,7 +398,7 @@ Tasks.DueIndex.prototype.get = function (date) {
  * Returns tasks of which due date is not determined.
  * @returns {Array}
  */
-Tasks.DueIndex.prototype.getInIceBox = function () {
+Tasks.DueIndex.prototype.getTasksInIceBox = function () {
 	var tasks = this.map[0];
 	return tasks ? tasks : [];
 };
@@ -407,7 +407,7 @@ Tasks.DueIndex.prototype.getInIceBox = function () {
  * @param {Number} date time of date
  * @returns {Array}
  */
-Tasks.DueIndex.prototype.getBefore = function (time) {
+Tasks.DueIndex.prototype.findTasksBefore = function (time) {
 	var tasks = [];
 	$.each(this.map, function (key, tasksInDay) {
 		var day = parseInt(key);
@@ -422,7 +422,7 @@ Tasks.DueIndex.prototype.getBefore = function (time) {
  * @param {Number} date time of date
  * @returns {Array}
  */
-Tasks.DueIndex.prototype.getAfter = function (time) {
+Tasks.DueIndex.prototype.findTasksAfter = function (time) {
 	var tasks = [];
 	$.each(this.map, function (key, tasksInDay) {
 		var day = parseInt(key);
