@@ -13,6 +13,7 @@ DailyCalendarViewModel.NUMBER_OF_DAYS = 14;
  * @param {Taskdata} taskdata
  */
 DailyCalendarViewModel.prototype.initialize = function (taskdata) {
+	// set up days in the calendar
 	this.rows = ko.computed(function () {
 		var today = taskwalls.settings.today(),
 			firstDay = today.getFirstDayOfWeek().getTime(),
@@ -28,6 +29,7 @@ DailyCalendarViewModel.prototype.initialize = function (taskdata) {
 	this.pastTasks = ko.observableArray();
 	this.futureTasks = ko.observableArray();
 
+	// put tasks into each day
 	ko.computed(function () {
 		TaskViewModel.extend(taskdata.tasks());
 		var tasksByDue = taskdata.tasksByDue();
