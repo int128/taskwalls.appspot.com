@@ -14,9 +14,11 @@ DailyCalendarViewModel.NUMBER_OF_DAYS = 14;
  */
 DailyCalendarViewModel.prototype.initialize = function (taskdata) {
 	this.rows = ko.computed(function () {
-		var firstDay = taskwalls.settings.today().getFirstDayOfWeek().getTime();
-		var lastDay = firstDay + DailyCalendarViewModel.NUMBER_OF_DAYS * 86400000;
-		var rows = [], i = 0;
+		var today = taskwalls.settings.today(),
+			firstDay = today.getFirstDayOfWeek().getTime(),
+			lastDay = firstDay + (DailyCalendarViewModel.NUMBER_OF_DAYS - 1) * 86400000,
+			rows = [],
+			i = 0;
 		for (var time = firstDay; time <= lastDay; time += 86400000) {
 			rows[i++] = new DailyCalendarViewModel.Row(time);
 		}
