@@ -25,8 +25,8 @@ DailyCalendarViewModel.prototype.initialize = function (taskdata) {
 		return rows;
 	}, this);
 
-	this.past = new PastTasksViewModel();
-	this.future = new FutureTasksViewModel();
+	this.pastTasks = ko.observableArray();
+	this.futureTasks = ko.observableArray();
 
 	ko.computed(function () {
 		TaskViewModel.extend(taskdata.tasks());
@@ -43,7 +43,7 @@ DailyCalendarViewModel.prototype.initialize = function (taskdata) {
 				}));
 		});
 
-		this.past.tasklists($.map(Tasks.groupByTasklist(tasksByDue.getBefore(rows[0])),
+		this.pastTasks($.map(Tasks.groupByTasklist(tasksByDue.getBefore(rows[0])),
 			function (tasksInTasklist) {
 				return {
 					tasklist: tasksInTasklist[0].tasklist(),
@@ -51,7 +51,7 @@ DailyCalendarViewModel.prototype.initialize = function (taskdata) {
 				};
 			}));
 
-		this.future.tasklists($.map(Tasks.groupByTasklist(tasksByDue.getAfter(rows[rows.length - 1])),
+		this.futureTasks($.map(Tasks.groupByTasklist(tasksByDue.getAfter(rows[rows.length - 1])),
 				function (tasksInTasklist) {
 					return {
 						tasklist: tasksInTasklist[0].tasklist(),
@@ -89,24 +89,6 @@ DailyCalendarViewModel.Row.prototype.initialize = function (time) {
 	this.thisweek = ko.computed(function () {
 		return DateUtil.isThisWeek(this.time);
 	}, this);
-	this.tasklists = ko.observableArray();
-};
-/**
- * @class Past tasks view model.
- */
-function PastTasksViewModel () {
-	this.initialize.apply(this, arguments);
-};
-PastTasksViewModel.prototype.initialize = function () {
-	this.tasklists = ko.observableArray();
-};
-/**
- * @class Future tasks view model.
- */
-function FutureTasksViewModel () {
-	this.initialize.apply(this, arguments);
-};
-FutureTasksViewModel.prototype.initialize = function () {
 	this.tasklists = ko.observableArray();
 };
 /**

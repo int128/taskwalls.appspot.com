@@ -161,7 +161,7 @@ Task WallはGoogleタスクと連携するタスク管理アプリです。<br/>
 
 <section class="past">
 <h2>過去のタスク</h2>
-<div data-bind="foreach: past.tasklists">
+<div data-bind="foreach: pastTasks">
 <div class="tasklist">
 <div class="count"><span data-bind="text: tasks.length" class="badge"></span></div>
 <div data-bind="template: {name: 'task-template', foreach: tasks}, visible: tasklist.visible"></div>
@@ -172,7 +172,7 @@ Task WallはGoogleタスクと連携するタスク管理アプリです。<br/>
 
 <section class="future">
 <h2>未来のタスク</h2>
-<div data-bind="foreach: future.tasklists">
+<div data-bind="foreach: futureTasks">
 <div class="tasklist">
 <div class="count"><span data-bind="text: tasks.length" class="badge"></span></div>
 <div data-bind="template: {name: 'task-template', foreach: tasks}, visible: tasklist.visible"></div>
