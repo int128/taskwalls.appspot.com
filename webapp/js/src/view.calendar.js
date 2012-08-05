@@ -31,7 +31,9 @@ DailyCalendarViewModel.prototype.initialize = function (taskdata) {
 
 	// put tasks into each day
 	ko.computed(function () {
-		TaskViewModel.extend(taskdata.tasks());
+		var tasks = taskdata.tasks();
+		TaskViewModel.extend(tasks);
+
 		var dueIndex = taskdata.dueIndex();
 		var rows = this.rows();
 
@@ -45,7 +47,8 @@ DailyCalendarViewModel.prototype.initialize = function (taskdata) {
 				}));
 		});
 
-		this.pastTasks($.map(Tasks.groupByTasklist(dueIndex.findTasksBefore(rows[0])),
+		var firstDay = rows[0];
+		this.pastTasks($.map(Tasks.groupByTasklist(Tasks.before(tasks, firstDay.time)),
 			function (tasksInTasklist) {
 				return {
 					tasklist: tasksInTasklist[0].tasklist(),
@@ -53,7 +56,8 @@ DailyCalendarViewModel.prototype.initialize = function (taskdata) {
 				};
 			}));
 
-		this.futureTasks($.map(Tasks.groupByTasklist(dueIndex.findTasksAfter(rows[rows.length - 1])),
+		var lastDay = rows[rows.length - 1];
+		this.futureTasks($.map(Tasks.groupByTasklist(Tasks.after(tasks, lastDay.time)),
 			function (tasksInTasklist) {
 				return {
 					tasklist: tasksInTasklist[0].tasklist(),

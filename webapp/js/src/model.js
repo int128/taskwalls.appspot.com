@@ -335,6 +335,37 @@ Tasks.range = function (tasks, beginTime, endTime) {
 	});
 };
 /**
+ * Select items after baseTime.
+ * @param {Array} tasks
+ * @param {Number} baseTime
+ */
+Tasks.after = function (tasks, baseTime) {
+	return $.grep(tasks, function (task) {
+		if (task.due()) {
+			var due = task.due().getTime();
+			if (due > baseTime) {
+				return true;
+			}
+		}
+	});
+};
+/**
+ * Select items before baseTime.
+ * Result does not contain tasks in the ice box.
+ * @param {Array} tasks
+ * @param {Number} baseTime
+ */
+Tasks.before = function (tasks, baseTime) {
+	return $.grep(tasks, function (task) {
+		if (task.due()) {
+			var due = task.due().getTime();
+			if (0 < due && due < baseTime) {
+				return true;
+			}
+		}
+	});
+};
+/**
  * Returns map of tasklist and tasks.
  * @param {Array} tasks array of tasks or undefined
  * @returns {Object} map of tasklist id and tasks
@@ -399,36 +430,6 @@ Tasks.DueIndex.prototype.getTasks = function (date) {
 Tasks.DueIndex.prototype.getTasksInIceBox = function () {
 	var tasks = this.map[0];
 	return tasks ? tasks : [];
-};
-/**
- * Returns tasks of which due date is before given.
- * @param {Number} date time of date
- * @returns {Array}
- */
-Tasks.DueIndex.prototype.findTasksBefore = function (time) {
-	var tasks = [];
-	$.each(this.map, function (key, tasksInDay) {
-		var day = parseInt(key);
-		if (day < time && day > 0) {
-			$.merge(tasks, tasksInDay);
-		}
-	});
-	return tasks;
-};
-/**
- * Returns tasks of which due date is before given.
- * @param {Number} date time of date
- * @returns {Array}
- */
-Tasks.DueIndex.prototype.findTasksAfter = function (time) {
-	var tasks = [];
-	$.each(this.map, function (key, tasksInDay) {
-		var day = parseInt(key);
-		if (day > time) {
-			$.merge(tasks, tasksInDay);
-		}
-	});
-	return tasks;
 };
 /**
  * @class the task
