@@ -79,10 +79,9 @@ Taskdata.prototype.clearCompletedTasks = function () {
 	});
 };
 /**
- * @class set of tasklist
+ * @constructor set of tasklist
  */
-function Tasklists () {
-};
+function Tasklists () {};
 /**
  * Asynchronously get tasklists from server.
  * @returns {Deferred}
@@ -238,10 +237,9 @@ Tasklist.prototype.clearCompletedTasks = function () {
 	}
 };
 /**
- * @class set of task
+ * @constructor set of task
  */
-function Tasks () {
-};
+function Tasks () {};
 /**
  * Asynchronously get tasks from server.
  * @param {Tasklist}
