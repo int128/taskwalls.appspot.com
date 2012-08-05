@@ -52,12 +52,12 @@ DailyCalendarViewModel.prototype.initialize = function (taskdata) {
 			}));
 
 		this.futureTasks($.map(Tasks.groupByTasklist(tasksByDue.getAfter(rows[rows.length - 1])),
-				function (tasksInTasklist) {
-					return {
-						tasklist: tasksInTasklist[0].tasklist(),
-						tasks: tasksInTasklist
-					};
-				}));
+			function (tasksInTasklist) {
+				return {
+					tasklist: tasksInTasklist[0].tasklist(),
+					tasks: tasksInTasklist
+				};
+			}));
 	}, this);
 
 	/**
