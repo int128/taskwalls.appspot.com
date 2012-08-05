@@ -46,7 +46,7 @@ AuthorizedPageViewModel.prototype.initialize = function () {
 	this.createTaskDialog = ko.disposableObservable(function (context, event) {
 		if (context.date) {
 			// context may be CalendarDayViewModel
-			return new CreateTaskDialog(this.taskdata, context.date(), event);
+			return new CreateTaskDialog(this.taskdata, context.date, event);
 		} else {
 			// context may be CalendarIceboxViewModel
 			return new CreateTaskDialog(this.taskdata, null, event);
