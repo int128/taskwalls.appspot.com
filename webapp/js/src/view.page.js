@@ -25,7 +25,7 @@ AuthorizedPageViewModel.prototype.initialize = function () {
 	this.iceboxTasks = new IceboxTasksViewModel(this.taskdata);
 	this.dailyCalendar = new DailyCalendarViewModel(this.taskdata);
 	this.weeklyCalendar = new WeeklyCalendarViewModel(this.taskdata);
-	this.monthlyCalendar = null;  //new MonthlyCalendarViewModel(this.taskdata);
+	this.monthlyCalendar = new MonthlyCalendarViewModel(this.taskdata);
 
 	this.calendarUnit = ko.observable('daily');
 	this.switchToDailyCalendar = function () {

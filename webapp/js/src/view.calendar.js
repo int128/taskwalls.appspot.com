@@ -163,6 +163,72 @@ WeeklyCalendarViewModel.Row.prototype.initialize = function (time) {
 	}, this);
 };
 /**
+ * @class monthly calendar
+ * @param {Taskdata} taskdata
+ */
+function MonthlyCalendarViewModel (taskdata) {
+	this.initialize.apply(this, arguments);
+};
+/**
+ * Number of weeks to be shown in the calendar.
+ */
+MonthlyCalendarViewModel.NUMBER_OF_MONTHS = 12;
+/**
+ * @param {Taskdata} taskdata
+ */
+MonthlyCalendarViewModel.prototype.initialize = function (taskdata) {
+	// set up months in the calendar
+	this.rows = ko.computed(function () {
+		var date = taskwalls.settings.today().getFirstDayOfMonth(),
+			rows = [];
+		for (var i = 0; i < MonthlyCalendarViewModel.NUMBER_OF_MONTHS; i++) {
+			var thisMonth = date.getTime();
+			date.setMonth(date.getMonth() + 1);
+			var nextMonth = date.getTime();
+			rows[i] = new MonthlyCalendarViewModel.Row(thisMonth, nextMonth);
+		}
+		return rows;
+	}, this);
+
+	// put tasks into each month
+	ko.computed(function () {
+		var tasks = taskdata.tasks();
+		TaskViewModel.extend(tasks);
+		$.each(this.rows(), function (i, row) {
+			var tasksInMonth = Tasks.range(tasks, row.thisMonth, row.nextMonth);
+			row.tasklists($.map(Tasks.groupByTasklist(tasksInMonth),
+				function (tasksInTasklist) {
+					return {
+						tasklist: tasksInTasklist[0].tasklist(),
+						tasks: tasksInTasklist
+					};
+				}));
+		});
+	}, this);
+};
+/**
+ * @constructor row item of {@link MonthlyCalendarViewModel}
+ * @param {Number} thisMonth first day of this month
+ * @param {Number} nextMonth first day of next month
+ */
+MonthlyCalendarViewModel.Row = function (thisMonth, nextMonth) {
+	this.initialize.apply(this, arguments);
+};
+/**
+ * @param {Number} thisMonth first day of this month
+ * @param {Number} nextMonth first day of next month
+ */
+MonthlyCalendarViewModel.Row.prototype.initialize = function (thisMonth, nextMonth) {
+	this.thisMonth = thisMonth;
+	this.thisMonthDate = new Date(thisMonth);
+	this.nextMonth = nextMonth;
+
+	this.tasklists = ko.observableArray();
+	this.thisweek = ko.computed(function () {
+		return DateUtil.isThisWeek(this.thisMonth);
+	}, this);
+};
+/**
  * @class Icebox tasks view model.
  * @param {Taskdata} taskdata
  */

@@ -78,3 +78,12 @@ Date.prototype.getFirstDayOfWeek = function () {
 	day.setDate(day.getDate() - (day.getDay() + 6) % 7);
 	return day;
 };
+/**
+ * Return first day of the month.
+ * @returns {Date} first day (new instance)
+ */
+Date.prototype.getFirstDayOfMonth = function () {
+	var day = new Date(this);
+	day.setDate(1);
+	return day;
+};

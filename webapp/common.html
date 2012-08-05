@@ -219,9 +219,37 @@ Task WallはGoogleタスクと連携するタスク管理アプリです。<br/>
 <!-- /ko -->
 <!-- /ko -->
 
-<!-- ko if: monthlyCalendar -->
+<!-- ko if: calendarUnit() == 'monthly' -->
 <!-- ko with: monthlyCalendar -->
 <section class="monthly calendar">
+<h2>月の計画</h2>
+<table>
+<tbody data-bind="foreach: rows">
+<tr data-bind="droppable: {
+		accept: '.task',
+		hoverClass: 'dropping'
+	},
+	css: {
+		thisweek: thisweek
+	}">
+<td class="month"><div><span data-bind="text: thisMonthDate.getFullYear()"></span>年</div></td>
+<td class="border day"><div><span data-bind="text: thisMonthDate.getMonth()+1"></span></div></td>
+<td class="border weekday">月</td>
+<td class="border tasks">
+<div data-bind="foreach: tasklists">
+<div data-bind="template: {name: 'task-template', foreach: tasks}, visible: tasklist.visible"
+	class="tasklist">
+</div>
+</div>
+<div class="create">
+<a data-bind="click: $root.createTaskDialog.create"
+	href="#" class="showtooltip"
+	data-placement="left" title="新しいタスクを作成する"></a>
+</div>
+</td>
+</tr>
+</tbody>
+</table>
 </section>
 <!-- /ko -->
 <!-- /ko -->
