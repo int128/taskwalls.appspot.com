@@ -92,29 +92,6 @@ DailyCalendarViewModel.Row.prototype.initialize = function (time) {
 	this.tasklists = ko.observableArray();
 };
 /**
- * @class Icebox tasks view model.
- * @param {Taskdata} taskdata
- */
-function IceboxTasksViewModel (taskdata) {
-	this.initialize.apply(this, arguments);
-};
-/**
- * @param {Taskdata} taskdata
- */
-IceboxTasksViewModel.prototype.initialize = function (taskdata) {
-	this.tasklists = ko.computed(function () {
-		var tasks = taskdata.tasksByDue().getInIceBox();
-		TaskViewModel.extend(tasks);
-		return $.map(Tasks.groupByTasklist(tasks),
-				function (tasksInTasklist) {
-					return {
-						tasklist: tasksInTasklist[0].tasklist(),
-						tasks: tasksInTasklist
-					};
-				});
-	});
-};
-/**
  * @class Past tasks view model.
  */
 function PastTasksViewModel () {
@@ -196,6 +173,29 @@ WeeklyCalendarViewModel.Row.prototype.initialize = function (time) {
 	this.thisweek = ko.computed(function () {
 		return DateUtil.isThisWeek(this.beginTime);
 	}, this);
+};
+/**
+ * @class Icebox tasks view model.
+ * @param {Taskdata} taskdata
+ */
+function IceboxTasksViewModel (taskdata) {
+	this.initialize.apply(this, arguments);
+};
+/**
+ * @param {Taskdata} taskdata
+ */
+IceboxTasksViewModel.prototype.initialize = function (taskdata) {
+	this.tasklists = ko.computed(function () {
+		var tasks = taskdata.tasksByDue().getInIceBox();
+		TaskViewModel.extend(tasks);
+		return $.map(Tasks.groupByTasklist(tasks),
+				function (tasksInTasklist) {
+					return {
+						tasklist: tasksInTasklist[0].tasklist(),
+						tasks: tasksInTasklist
+					};
+				});
+	});
 };
 /**
  * @class Tasklist view model.
