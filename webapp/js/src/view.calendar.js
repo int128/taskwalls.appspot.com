@@ -159,7 +159,8 @@ WeeklyCalendarViewModel.prototype.initialize = function (taskdata) {
 
 	// put tasks into each week
 	ko.computed(function () {
-		var tasks = TaskViewModel.extend(taskdata.tasks());
+		var tasks = taskdata.tasks();
+		TaskViewModel.extend(tasks);
 		$.each(this.rows(), function (i, row) {
 			var tasksInWeek = Tasks.range(tasks, row.beginTime, row.endTime);
 			row.tasklists($.map(Tasks.groupByTasklist(tasksInWeek),
