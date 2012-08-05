@@ -146,12 +146,12 @@ WeeklyCalendarViewModel.NUMBER_OF_WEEKS = 8;
 WeeklyCalendarViewModel.prototype.initialize = function (taskdata) {
 	// set up weeks in the calendar
 	this.rows = ko.computed(function () {
-		// first day of this week
-		var firstDay = taskwalls.settings.today().getFirstDayOfWeek().getTime();
-		// first day of next week
-		var lastDay = firstDay + WeeklyCalendarViewModel.NUMBER_OF_WEEKS * 7 * 86400000;
-		var rows = [], i = 0;
-		for (var time = firstDay; time <= lastDay; time += 7 * 86400000) {
+		var today = taskwalls.settings.today(),
+			firstWeek = today.getFirstDayOfWeek().getTime(),
+			lastWeek = firstWeek + (WeeklyCalendarViewModel.NUMBER_OF_WEEKS - 1) * 7 * 86400000,
+			rows = [],
+			i = 0;
+		for (var time = firstWeek; time <= lastWeek; time += 7 * 86400000) {
 			rows[i++] = new WeeklyCalendarViewModel.Row(time);
 		}
 		return rows;
