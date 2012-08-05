@@ -358,7 +358,7 @@ Tasks.groupByTasklist = function (tasks) {
 /**
  * Returns map of due date and tasks.
  * @param {Array} tasks array of tasks or undefined
- * @returns {Tasks.DueMap} map of due date and tasks
+ * @returns {Tasks.DueIndex} map of due date and tasks
  */
 Tasks.groupByDue = function (tasks) {
 	var map = {};
@@ -376,13 +376,13 @@ Tasks.groupByDue = function (tasks) {
 			}
 		});
 	}
-	return new Tasks.DueMap(map);
+	return new Tasks.DueIndex(map);
 };
 /**
- * @class map of due date and tasks
+ * @constructor map of due date and tasks
  * @param {Object} map
  */
-Tasks.DueMap = function (map) {
+Tasks.DueIndex = function (map) {
 	this.map = map;
 };
 /**
@@ -390,7 +390,7 @@ Tasks.DueMap = function (map) {
  * @param {Date} date
  * @returns {Array} array of tasks or undefined
  */
-Tasks.DueMap.prototype.get = function (date) {
+Tasks.DueIndex.prototype.get = function (date) {
 	var tasks = this.map[date.getTime()];
 	return tasks ? tasks : [];
 };
@@ -398,7 +398,7 @@ Tasks.DueMap.prototype.get = function (date) {
  * Returns tasks of which due date is not determined.
  * @returns {Array}
  */
-Tasks.DueMap.prototype.getInIceBox = function () {
+Tasks.DueIndex.prototype.getInIceBox = function () {
 	var tasks = this.map[0];
 	return tasks ? tasks : [];
 };
@@ -407,7 +407,7 @@ Tasks.DueMap.prototype.getInIceBox = function () {
  * @param {Number} date time of date
  * @returns {Array}
  */
-Tasks.DueMap.prototype.getBefore = function (time) {
+Tasks.DueIndex.prototype.getBefore = function (time) {
 	var tasks = [];
 	$.each(this.map, function (key, tasksInDay) {
 		var day = parseInt(key);
@@ -422,7 +422,7 @@ Tasks.DueMap.prototype.getBefore = function (time) {
  * @param {Number} date time of date
  * @returns {Array}
  */
-Tasks.DueMap.prototype.getAfter = function (time) {
+Tasks.DueIndex.prototype.getAfter = function (time) {
 	var tasks = [];
 	$.each(this.map, function (key, tasksInDay) {
 		var day = parseInt(key);
