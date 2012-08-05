@@ -62,6 +62,7 @@ DailyCalendarViewModel.prototype.initialize = function (taskdata) {
 
 	/**
 	 * Clear completed tasks.
+	 * TODO: should clear completed tasks in past
 	 */
 	this.clearCompleted = function () {
 		taskdata.clearCompletedTasks();
