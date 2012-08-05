@@ -9,7 +9,7 @@ function Taskdata () {
 Taskdata.prototype.initialize = function () {
 	this.tasks = ko.observableArray();
 	this.tasklists = ko.observableArray();
-	this.tasksByDue = ko.computed(function () {
+	this.dueIndex = ko.computed(function () {
 		 return Tasks.groupByDue(this.tasks());
 	}, this);
 };

@@ -32,7 +32,7 @@ DailyCalendarViewModel.prototype.initialize = function (taskdata) {
 	// put tasks into each day
 	ko.computed(function () {
 		TaskViewModel.extend(taskdata.tasks());
-		var dueIndex = taskdata.tasksByDue();
+		var dueIndex = taskdata.dueIndex();
 		var rows = this.rows();
 
 		$.each(rows, function (i, row) {
@@ -170,7 +170,7 @@ function IceboxTasksViewModel (taskdata) {
  */
 IceboxTasksViewModel.prototype.initialize = function (taskdata) {
 	this.tasklists = ko.computed(function () {
-		var tasks = taskdata.tasksByDue().getTasksInIceBox();
+		var tasks = taskdata.dueIndex().getTasksInIceBox();
 		TaskViewModel.extend(tasks);
 		return $.map(Tasks.groupByTasklist(tasks),
 				function (tasksInTasklist) {
