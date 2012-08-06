@@ -128,36 +128,35 @@ WeeklyCalendarViewModel.prototype.initialize = function (taskdata) {
 		var tasks = taskdata.tasks();
 		TaskViewModel.extend(tasks);
 		$.each(this.rows(), function (i, row) {
-			var tasksInWeek = Tasks.range(tasks, row.beginTime, row.endTime);
-			row.tasklists($.map(Tasks.groupByTasklist(tasksInWeek),
-				function (tasksInTasklist) {
-					return {
-						tasklist: tasksInTasklist[0].tasklist(),
-						tasks: tasksInTasklist
-					};
-				}));
+			var beginOfThisWeek = row.monday.getTime();
+			var endOfThisWeek = beginOfThisWeek + 7 * 86400000;
+			row.tasklists($.map(
+					Tasks.groupByTasklist(Tasks.range(tasks, beginOfThisWeek, endOfThisWeek)),
+					function (tasksInTasklist) {
+						return {
+							tasklist: tasksInTasklist[0].tasklist(),
+							tasks: tasksInTasklist
+						};
+					}));
 		});
 	}, this);
 };
 /**
  * @constructor row item of {@link WeeklyCalendarViewModel}
- * @param {Number} time begin of the week
+ * @param {Number} mondayTime time of Monday 0:00 in this week
  */
-WeeklyCalendarViewModel.Row = function (time) {
+WeeklyCalendarViewModel.Row = function (mondayTime) {
 	this.initialize.apply(this, arguments);
 };
 /**
- * @param {Number} time
+ * @param {Number} mondayTime
  */
-WeeklyCalendarViewModel.Row.prototype.initialize = function (time) {
-	this.beginTime = time;
-	this.endTime = time + 86400000 * 7;
-	this.beginDate = new Date(this.beginTime);
-	this.endDate = new Date(this.endTime);
+WeeklyCalendarViewModel.Row.prototype.initialize = function (mondayTime) {
+	this.monday = new Date(mondayTime);
 
 	this.tasklists = ko.observableArray();
 	this.thisweek = ko.computed(function () {
-		return DateUtil.isThisWeek(this.beginTime);
+		return DateUtil.isThisWeek(mondayTime);
 	}, this);
 };
 /**
