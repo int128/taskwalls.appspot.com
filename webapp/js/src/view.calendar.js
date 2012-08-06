@@ -114,13 +114,11 @@ WeeklyCalendarViewModel.NUMBER_OF_WEEKS = 8;
 WeeklyCalendarViewModel.prototype.initialize = function (taskdata) {
 	// set up weeks in the calendar
 	this.rows = ko.computed(function () {
-		var today = taskwalls.settings.today(),
-			firstWeek = today.getFirstDayOfWeek().getTime(),
-			lastWeek = firstWeek + (WeeklyCalendarViewModel.NUMBER_OF_WEEKS - 1) * 7 * 86400000,
-			rows = [],
-			i = 0;
-		for (var time = firstWeek; time <= lastWeek; time += 7 * 86400000) {
-			rows[i++] = new WeeklyCalendarViewModel.Row(time);
+		var day = taskwalls.settings.today().getFirstDayOfWeek(),
+			rows = [];
+		for (var i = 0; i < WeeklyCalendarViewModel.NUMBER_OF_WEEKS; i++) {
+			rows[i] = new WeeklyCalendarViewModel.Row(day.getTime());
+			day.setDate(day.getDate() + 7);
 		}
 		return rows;
 	}, this);
