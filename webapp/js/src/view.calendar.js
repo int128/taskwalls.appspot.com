@@ -179,10 +179,10 @@ MonthlyCalendarViewModel.prototype.initialize = function (taskdata) {
 		var date = taskwalls.settings.today().getFirstDayOfMonth(),
 			rows = [];
 		for (var i = 0; i < MonthlyCalendarViewModel.NUMBER_OF_MONTHS; i++) {
-			var thisMonth = date.getTime();
+			var beginOfThisMonth = new Date(date);
 			date.setMonth(date.getMonth() + 1);
-			var nextMonth = date.getTime();
-			rows[i] = new MonthlyCalendarViewModel.Row(thisMonth, nextMonth);
+			var endOfThisMonth = new Date(date);
+			rows[i] = new MonthlyCalendarViewModel.Row(beginOfThisMonth, endOfThisMonth);
 		}
 		return rows;
 	}, this);
@@ -192,37 +192,38 @@ MonthlyCalendarViewModel.prototype.initialize = function (taskdata) {
 		var tasks = taskdata.tasks();
 		TaskViewModel.extend(tasks);
 		$.each(this.rows(), function (i, row) {
-			var tasksInMonth = Tasks.range(tasks, row.thisMonth, row.nextMonth);
-			row.tasklists($.map(Tasks.groupByTasklist(tasksInMonth),
-				function (tasksInTasklist) {
-					return {
-						tasklist: tasksInTasklist[0].tasklist(),
-						tasks: tasksInTasklist
-					};
-				}));
+			var tastsInMonth = Tasks.range(tasks,
+					row.beginOfThisMonth.getTime(),
+					row.endOfThisMonth.getTime());
+			row.tasklists($.map(Tasks.groupByTasklist(tastsInMonth),
+					function (tasksInTasklist) {
+						return {
+							tasklist: tasksInTasklist[0].tasklist(),
+							tasks: tasksInTasklist
+						};
+					}));
 		});
 	}, this);
 };
 /**
  * @constructor row item of {@link MonthlyCalendarViewModel}
- * @param {Number} thisMonth first day of this month
- * @param {Number} nextMonth first day of next month
+ * @param {Date} beginOfThisMonth first day of this month
+ * @param {Date} endOfThisMonth   first day of next month
  */
-MonthlyCalendarViewModel.Row = function (thisMonth, nextMonth) {
+MonthlyCalendarViewModel.Row = function (beginOfThisMonth, endOfThisMonth) {
 	this.initialize.apply(this, arguments);
 };
 /**
- * @param {Number} thisMonth first day of this month
- * @param {Number} nextMonth first day of next month
+ * @param {Date} beginOfThisMonth first day of this month
+ * @param {Date} endOfThisMonth   first day of next month
  */
-MonthlyCalendarViewModel.Row.prototype.initialize = function (thisMonth, nextMonth) {
-	this.thisMonth = thisMonth;
-	this.thisMonthDate = new Date(thisMonth);
-	this.nextMonth = nextMonth;
+MonthlyCalendarViewModel.Row.prototype.initialize = function (beginOfThisMonth, endOfThisMonth) {
+	this.beginOfThisMonth = beginOfThisMonth;
+	this.endOfThisMonth = endOfThisMonth;
 
 	this.tasklists = ko.observableArray();
 	this.thisweek = ko.computed(function () {
-		return DateUtil.isThisWeek(this.thisMonth);
+		return DateUtil.isThisWeek(beginOfThisMonth);
 	}, this);
 };
 /**

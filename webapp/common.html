@@ -232,8 +232,8 @@ Task WallはGoogleタスクと連携するタスク管理アプリです。<br/>
 	css: {
 		thisweek: thisweek
 	}">
-<td class="month"><div><span data-bind="text: thisMonthDate.getFullYear()"></span>年</div></td>
-<td class="border day"><div><span data-bind="text: thisMonthDate.getMonth()+1"></span></div></td>
+<td class="month"><div><span data-bind="text: beginOfThisMonth.getFullYear()"></span>年</div></td>
+<td class="border day"><div><span data-bind="text: beginOfThisMonth.getMonth()+1"></span></div></td>
 <td class="border weekday">月</td>
 <td class="border tasks">
 <div data-bind="foreach: tasklists">
