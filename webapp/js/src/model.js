@@ -366,9 +366,16 @@ Tasks.before = function (tasks, baseTime) {
 	});
 };
 /**
- * Returns map of tasklist and tasks.
+ * Returns array of tasklist groups.
+ * An element of array will be following:
+ * <code><pre>
+ * {
+ *   tasklist: tasklist,        // Tasklist
+ *   tasks: tasksInTheTasklist  // Array of Task
+ * }
+ * </pre></code>
  * @param {Array} tasks array of tasks or undefined
- * @returns {Object} map of tasklist id and tasks
+ * @returns {Array} array of tasklists, each contains tasklist and tasks.
  */
 Tasks.groupByTasklist = function (tasks) {
 	var map = {};
@@ -382,7 +389,12 @@ Tasks.groupByTasklist = function (tasks) {
 			}
 		});
 	}
-	return map;
+	return $.map(map, function (tasksInTasklist) {
+		return {
+			tasklist: tasksInTasklist[0].tasklist(),
+			tasks: tasksInTasklist
+		};
+	});
 };
 /**
  * Returns map of due date and tasks.

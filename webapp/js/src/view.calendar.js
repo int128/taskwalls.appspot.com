@@ -34,34 +34,15 @@ DailyCalendarViewModel.prototype.initialize = function (taskdata) {
 
 		var dueIndex = taskdata.dueIndex();
 		var rows = this.rows();
-
 		$.each(rows, function (i, row) {
-			row.tasklists($.map(Tasks.groupByTasklist(dueIndex.getTasks(row.day)),
-				function (tasksInTasklist) {
-					return {
-						tasklist: tasksInTasklist[0].tasklist(),
-						tasks: tasksInTasklist
-					};
-				}));
+			row.tasklists(Tasks.groupByTasklist(dueIndex.getTasks(row.day)));
 		});
 
 		var firstDay = rows[0].day;
-		this.pastTasks($.map(Tasks.groupByTasklist(Tasks.before(tasks, firstDay.getTime())),
-			function (tasksInTasklist) {
-				return {
-					tasklist: tasksInTasklist[0].tasklist(),
-					tasks: tasksInTasklist
-				};
-			}));
+		this.pastTasks(Tasks.groupByTasklist(Tasks.before(tasks, firstDay.getTime())));
 
 		var lastDay = rows[rows.length - 1].day;
-		this.futureTasks($.map(Tasks.groupByTasklist(Tasks.after(tasks, lastDay.getTime())),
-			function (tasksInTasklist) {
-				return {
-					tasklist: tasksInTasklist[0].tasklist(),
-					tasks: tasksInTasklist
-				};
-			}));
+		this.futureTasks(Tasks.groupByTasklist(Tasks.after(tasks, lastDay.getTime())));
 	}, this);
 
 	/**
@@ -130,13 +111,7 @@ WeeklyCalendarViewModel.prototype.initialize = function (taskdata) {
 			var tasksInWeek = Tasks.range(tasks,
 					row.beginOfThisWeek.getTime(),
 					row.endOfThisWeek.getTime());
-			row.tasklists($.map(Tasks.groupByTasklist(tasksInWeek),
-					function (tasksInTasklist) {
-						return {
-							tasklist: tasksInTasklist[0].tasklist(),
-							tasks: tasksInTasklist
-						};
-					}));
+			row.tasklists(Tasks.groupByTasklist(tasksInWeek));
 		});
 	}, this);
 };
@@ -197,13 +172,7 @@ MonthlyCalendarViewModel.prototype.initialize = function (taskdata) {
 			var tastsInMonth = Tasks.range(tasks,
 					row.beginOfThisMonth.getTime(),
 					row.endOfThisMonth.getTime());
-			row.tasklists($.map(Tasks.groupByTasklist(tastsInMonth),
-					function (tasksInTasklist) {
-						return {
-							tasklist: tasksInTasklist[0].tasklist(),
-							tasks: tasksInTasklist
-						};
-					}));
+			row.tasklists(Tasks.groupByTasklist(tastsInMonth));
 		});
 	}, this);
 };
@@ -242,13 +211,7 @@ IceboxTasksViewModel.prototype.initialize = function (taskdata) {
 	this.tasklists = ko.computed(function () {
 		var tasks = taskdata.dueIndex().getTasksInIceBox();
 		TaskViewModel.extend(tasks);
-		return $.map(Tasks.groupByTasklist(tasks),
-				function (tasksInTasklist) {
-					return {
-						tasklist: tasksInTasklist[0].tasklist(),
-						tasks: tasksInTasklist
-					};
-				});
+		return Tasks.groupByTasklist(tasks);
 	});
 };
 /**
