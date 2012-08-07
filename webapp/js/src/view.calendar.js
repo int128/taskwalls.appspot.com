@@ -117,8 +117,10 @@ WeeklyCalendarViewModel.prototype.initialize = function (taskdata) {
 		var day = taskwalls.settings.today().getFirstDayOfWeek(),
 			rows = [];
 		for (var i = 0; i < WeeklyCalendarViewModel.NUMBER_OF_WEEKS; i++) {
-			rows[i] = new WeeklyCalendarViewModel.Row(day.getTime());
+			var beginOfThisWeek = new Date(day);
 			day.setDate(day.getDate() + 7);
+			var endOfThisWeek = new Date(day);
+			rows[i] = new WeeklyCalendarViewModel.Row(beginOfThisWeek, endOfThisWeek);
 		}
 		return rows;
 	}, this);
@@ -128,10 +130,10 @@ WeeklyCalendarViewModel.prototype.initialize = function (taskdata) {
 		var tasks = taskdata.tasks();
 		TaskViewModel.extend(tasks);
 		$.each(this.rows(), function (i, row) {
-			var beginOfThisWeek = row.monday.getTime();
-			var endOfThisWeek = beginOfThisWeek + 7 * 86400000;
-			row.tasklists($.map(
-					Tasks.groupByTasklist(Tasks.range(tasks, beginOfThisWeek, endOfThisWeek)),
+			var tasksInWeek = Tasks.range(tasks,
+					row.beginOfThisWeek.getTime(),
+					row.endOfThisWeek.getTime());
+			row.tasklists($.map(Tasks.groupByTasklist(tasksInWeek),
 					function (tasksInTasklist) {
 						return {
 							tasklist: tasksInTasklist[0].tasklist(),
@@ -143,20 +145,23 @@ WeeklyCalendarViewModel.prototype.initialize = function (taskdata) {
 };
 /**
  * @constructor row item of {@link WeeklyCalendarViewModel}
- * @param {Number} mondayTime time of Monday 0:00 in this week
+ * @param {Date} beginOfThisWeek time of Monday 0:00 in this week
+ * @param {Date} endOfThisWeek   time of Monday 0:00 in next week
  */
-WeeklyCalendarViewModel.Row = function (mondayTime) {
+WeeklyCalendarViewModel.Row = function (beginOfThisWeek, endOfThisWeek) {
 	this.initialize.apply(this, arguments);
 };
 /**
- * @param {Number} mondayTime
+ * @param {Date} beginOfThisWeek
+ * @param {Date} endOfThisWeek
  */
-WeeklyCalendarViewModel.Row.prototype.initialize = function (mondayTime) {
-	this.monday = new Date(mondayTime);
+WeeklyCalendarViewModel.Row.prototype.initialize = function (beginOfThisWeek, endOfThisWeek) {
+	this.beginOfThisWeek = beginOfThisWeek;
+	this.endOfThisWeek = endOfThisWeek;
 
 	this.tasklists = ko.observableArray();
 	this.thisweek = ko.computed(function () {
-		return DateUtil.isThisWeek(mondayTime);
+		return DateUtil.isThisWeek(beginOfThisWeek);
 	}, this);
 };
 /**
