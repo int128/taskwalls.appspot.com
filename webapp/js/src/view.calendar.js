@@ -25,7 +25,6 @@ DailyCalendarViewModel.prototype.initialize = function (taskdata) {
 	}, this);
 
 	this.pastTasks = ko.observableArray();
-	this.futureTasks = ko.observableArray();
 
 	// put tasks into each day
 	ko.computed(function () {
@@ -40,9 +39,6 @@ DailyCalendarViewModel.prototype.initialize = function (taskdata) {
 
 		var firstDay = rows[0].day;
 		this.pastTasks(Tasks.groupByTasklist(Tasks.before(tasks, firstDay.getTime())));
-
-		var lastDay = rows[rows.length - 1].day;
-		this.futureTasks(Tasks.groupByTasklist(Tasks.after(tasks, lastDay.getTime())));
 	}, this);
 
 	/**
@@ -113,6 +109,13 @@ WeeklyCalendarViewModel.prototype.initialize = function (taskdata) {
 					row.endOfThisWeek.getTime());
 			row.tasklists(Tasks.groupByTasklist(tasksInWeek));
 		});
+	}, this);
+
+	this.futureTasks = ko.computed(function () {
+		var rows = this.rows();
+		var lastDay = rows[rows.length - 1].endOfThisWeek;
+		// TODO: should use "after or equal"
+		Tasks.groupByTasklist(Tasks.after(taskdata.tasks(), lastDay.getTime() - 1));
 	}, this);
 };
 /**
