@@ -116,9 +116,9 @@ Task WallはGoogleタスクと連携するタスク管理アプリです。<br/>
 </section>
 
 <div class="manipulations">
-<button data-bind="click: switchToDailyCalendar" class="btn">日</button>
-<button data-bind="click: switchToWeeklyCalendar" class="btn">週</button>
-<button data-bind="click: switchToMonthlyCalendar" class="btn">月</button>
+<button data-bind="click: switchView('daily')" class="btn">日</button>
+<button data-bind="click: switchView('weekly')" class="btn">週</button>
+<button data-bind="click: switchView('monthly')" class="btn">月</button>
 </div>
 
 <!-- ko if: calendarUnit() == 'daily' -->

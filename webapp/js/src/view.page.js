@@ -28,14 +28,10 @@ AuthorizedPageViewModel.prototype.initialize = function () {
 	this.monthlyCalendar = new MonthlyCalendarViewModel(this.taskdata);
 
 	this.calendarUnit = ko.observable('daily');
-	this.switchToDailyCalendar = function () {
-		this.calendarUnit('daily');
-	};
-	this.switchToWeeklyCalendar = function () {
-		this.calendarUnit('weekly');
-	};
-	this.switchToMonthlyCalendar = function () {
-		this.calendarUnit('monthly');
+	this.switchView = function (name) {
+		return function () {
+			this.calendarUnit(name);
+		};
 	};
 
 	this.tasklists = ko.computed(function () {
