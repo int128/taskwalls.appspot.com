@@ -9,7 +9,7 @@ function AuthorizedPageViewModel () {
 AuthorizedPageViewModel.prototype.initialize = function () {
 	this.taskdata = new Taskdata();
 
-	// toggle
+	// summary
 	this.completedCount = ko.computed(function () {
 		return $.grep(this.taskdata.tasks(), function (task) {
 			return DateUtil.isThisWeek(task.due()) && task.isCompleted();
@@ -21,12 +21,11 @@ AuthorizedPageViewModel.prototype.initialize = function () {
 		}).length;
 	}, this);
 
-	// calendar
-	this.iceboxTasks = new IceboxTasksViewModel(this.taskdata);
-	this.dailyCalendar = new DailyCalendarViewModel(this.taskdata);
-	this.weeklyCalendar = new WeeklyCalendarViewModel(this.taskdata);
-	this.monthlyCalendar = new MonthlyCalendarViewModel(this.taskdata);
+	this.tasklists = ko.computed(function () {
+		return TasklistViewModel.extend(this.taskdata.tasklists());
+	}, this);
 
+	// calendar
 	this.viewMode = ko.observable('daily');
 	this.switchView = function (name) {
 		return function () {
@@ -34,9 +33,10 @@ AuthorizedPageViewModel.prototype.initialize = function () {
 		};
 	};
 
-	this.tasklists = ko.computed(function () {
-		return TasklistViewModel.extend(this.taskdata.tasklists());
-	}, this);
+	this.dailyCalendar = new DailyCalendarViewModel(this.taskdata);
+	this.weeklyCalendar = new WeeklyCalendarViewModel(this.taskdata);
+	this.monthlyCalendar = new MonthlyCalendarViewModel(this.taskdata);
+	this.iceboxTasks = new IceboxTasksViewModel(this.taskdata);
 
 	// dialogs
 	this.createTaskDialog = ko.disposableObservable(function (context, event) {
