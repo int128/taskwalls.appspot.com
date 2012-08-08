@@ -121,7 +121,7 @@ Task WallはGoogleタスクと連携するタスク管理アプリです。<br/>
 <button data-bind="click: switchView('monthly')" class="btn">月</button>
 </div>
 
-<!-- ko if: calendarUnit() == 'daily' -->
+<!-- ko if: viewMode() == 'daily' -->
 <!-- ko with: dailyCalendar -->
 <section class="daily calendar">
 <section class="thisweek">
@@ -173,7 +173,7 @@ Task WallはGoogleタスクと連携するタスク管理アプリです。<br/>
 <!-- /ko -->
 <!-- /ko -->
 
-<!-- ko if: calendarUnit() == 'weekly' -->
+<!-- ko if: viewMode() == 'weekly' -->
 <!-- ko with: weeklyCalendar -->
 <section class="weekly calendar">
 <h2>週の計画</h2>
@@ -219,7 +219,7 @@ Task WallはGoogleタスクと連携するタスク管理アプリです。<br/>
 <!-- /ko -->
 <!-- /ko -->
 
-<!-- ko if: calendarUnit() == 'monthly' -->
+<!-- ko if: viewMode() == 'monthly' -->
 <!-- ko with: monthlyCalendar -->
 <section class="monthly calendar">
 <h2>月の計画</h2>

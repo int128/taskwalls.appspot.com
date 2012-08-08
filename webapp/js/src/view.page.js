@@ -27,10 +27,10 @@ AuthorizedPageViewModel.prototype.initialize = function () {
 	this.weeklyCalendar = new WeeklyCalendarViewModel(this.taskdata);
 	this.monthlyCalendar = new MonthlyCalendarViewModel(this.taskdata);
 
-	this.calendarUnit = ko.observable('daily');
+	this.viewMode = ko.observable('daily');
 	this.switchView = function (name) {
 		return function () {
-			this.calendarUnit(name);
+			this.viewMode(name);
 		};
 	};
 
