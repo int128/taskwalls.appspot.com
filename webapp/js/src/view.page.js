@@ -37,6 +37,7 @@ AuthorizedPageViewModel.prototype.initialize = function () {
 	this.weeklyCalendar = new WeeklyCalendarViewModel(this.taskdata);
 	this.monthlyCalendar = new MonthlyCalendarViewModel(this.taskdata);
 	this.iceboxTasks = new IceboxTasksViewModel(this.taskdata);
+	this.pastTasks = new PastTasksViewModel(this.taskdata);
 
 	// dialogs
 	this.createTaskDialog = ko.disposableObservable(function (context, event) {

@@ -36,9 +36,6 @@ DailyCalendarViewModel.prototype.initialize = function (taskdata) {
 		$.each(rows, function (i, row) {
 			row.tasklists(Tasks.groupByTasklist(dueIndex.getTasks(row.day)));
 		});
-
-		var firstDay = rows[0].day;
-		this.pastTasks(Tasks.groupByTasklist(Tasks.before(tasks, firstDay.getTime())));
 	}, this);
 
 	/**
@@ -213,6 +210,24 @@ function IceboxTasksViewModel (taskdata) {
 IceboxTasksViewModel.prototype.initialize = function (taskdata) {
 	this.tasklists = ko.computed(function () {
 		var tasks = taskdata.dueIndex().getTasksInIceBox();
+		TaskViewModel.extend(tasks);
+		return Tasks.groupByTasklist(tasks);
+	});
+};
+/**
+ * @class past tasks view model (contains tasks in last week and ago)
+ * @param {Taskdata} taskdata
+ */
+function PastTasksViewModel (taskdata) {
+	this.initialize.apply(this, arguments);
+};
+/**
+ * @param {Taskdata} taskdata
+ */
+PastTasksViewModel.prototype.initialize = function (taskdata) {
+	this.tasklists = ko.computed(function () {
+		var firstDayOfThisWeek = taskwalls.settings.today().getFirstDayOfWeek();
+		var tasks = Tasks.before(taskdata.tasks(), firstDayOfThisWeek.getTime());
 		TaskViewModel.extend(tasks);
 		return Tasks.groupByTasklist(tasks);
 	});

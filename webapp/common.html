@@ -116,15 +116,15 @@ Task WallはGoogleタスクと連携するタスク管理アプリです。<br/>
 </section>
 
 <div class="manipulations">
-<button data-bind="click: switchView('daily')" class="btn">日</button>
-<button data-bind="click: switchView('weekly')" class="btn">週</button>
-<button data-bind="click: switchView('monthly')" class="btn">月</button>
+<button data-bind="click: switchView('daily')" class="btn">日の表示</button>
+<button data-bind="click: switchView('weekly')" class="btn">週の表示</button>
+<button data-bind="click: switchView('monthly')" class="btn">月の表示</button>
+<button data-bind="click: switchView('past')" class="btn">過去のタスク</button>
 </div>
 
 <!-- ko if: viewMode() == 'daily' -->
 <!-- ko with: dailyCalendar -->
 <section class="daily calendar">
-<section class="thisweek">
 <h2>今週と来週のタスク</h2>
 <table>
 <tbody data-bind="foreach: rows">
@@ -157,18 +157,6 @@ Task WallはGoogleタスクと連携するタスク管理アプリです。<br/>
 </tr>
 </tbody>
 </table>
-</section>
-
-<section class="past">
-<h2>過去のタスク</h2>
-<div data-bind="foreach: pastTasks">
-<div class="tasklist">
-<div class="count"><span data-bind="text: tasks.length" class="badge"></span></div>
-<div data-bind="template: {name: 'task-template', foreach: tasks}, visible: tasklist.visible"></div>
-</div>
-</div>
-<div style="clear: both;"></div>
-</section>
 </section>
 <!-- /ko -->
 <!-- /ko -->
@@ -250,6 +238,21 @@ Task WallはGoogleタスクと連携するタスク管理アプリです。<br/>
 </tr>
 </tbody>
 </table>
+</section>
+<!-- /ko -->
+<!-- /ko -->
+
+<!-- ko if: viewMode() == 'past' -->
+<!-- ko with: pastTasks -->
+<section class="past calendar">
+<h2>過去のタスク</h2>
+<div data-bind="foreach: tasklists">
+<div class="tasklist">
+<div class="count"><span data-bind="text: tasks.length" class="badge"></span></div>
+<div data-bind="template: {name: 'task-template', foreach: tasks}, visible: tasklist.visible"></div>
+</div>
+</div>
+<div style="clear: both;"></div>
 </section>
 <!-- /ko -->
 <!-- /ko -->
