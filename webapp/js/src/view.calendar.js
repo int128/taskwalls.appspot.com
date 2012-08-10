@@ -69,6 +69,13 @@ DailyCalendarViewModel.Row.prototype.initialize = function (day) {
 	this.tasklists = ko.observableArray();
 };
 /**
+ * Return day for new task adding to this row.
+ * @returns {Date}
+ */
+DailyCalendarViewModel.Row.prototype.getDayForNewTask = function () {
+	return this.day;
+};
+/**
  * @class weekly calendar
  * @param {Taskdata} taskdata
  */
@@ -137,6 +144,13 @@ WeeklyCalendarViewModel.Row.prototype.initialize = function (beginOfThisWeek, en
 	}, this);
 };
 /**
+ * Return day for new task adding to this row.
+ * @returns {Date}
+ */
+WeeklyCalendarViewModel.Row.prototype.getDayForNewTask = function () {
+	return this.beginOfThisWeek;
+};
+/**
  * @class monthly calendar
  * @param {Taskdata} taskdata
  */
@@ -198,6 +212,13 @@ MonthlyCalendarViewModel.Row.prototype.initialize = function (beginOfThisMonth, 
 	}, this);
 };
 /**
+ * Return day for new task adding to this row.
+ * @returns {Date}
+ */
+MonthlyCalendarViewModel.Row.prototype.getDayForNewTask = function () {
+	return this.beginOfThisMonth;
+};
+/**
  * @class Icebox tasks view model.
  * @param {Taskdata} taskdata
  */
@@ -213,6 +234,14 @@ IceboxTasksViewModel.prototype.initialize = function (taskdata) {
 		TaskViewModel.extend(tasks);
 		return Tasks.groupByTasklist(tasks);
 	});
+};
+/**
+ * Return day for new task adding to this row.
+ * @returns {Date}
+ */
+IceboxTasksViewModel.prototype.getDayForNewTask = function () {
+	// indicates the ice box
+	return null;
 };
 /**
  * @class past tasks view model (contains tasks in last week and ago)

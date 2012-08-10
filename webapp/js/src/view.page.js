@@ -40,14 +40,8 @@ AuthorizedPageViewModel.prototype.initialize = function () {
 	this.pastTasks = new PastTasksViewModel(this.taskdata);
 
 	// dialogs
-	this.createTaskDialog = ko.disposableObservable(function (context, event) {
-		if (context.date) {
-			// context may be CalendarDayViewModel
-			return new CreateTaskDialog(this.taskdata, context.date, event);
-		} else {
-			// context may be CalendarIceboxViewModel
-			return new CreateTaskDialog(this.taskdata, null, event);
-		}
+	this.createTaskDialog = ko.disposableObservable(function (row, event) {
+		return new CreateTaskDialog(this.taskdata, row.getDayForNewTask(), event);
 	}, this);
 	this.updateTaskDialog = ko.disposableObservable(function (task, event) {
 		return new UpdateTaskDialog(this.taskdata, task, event);
