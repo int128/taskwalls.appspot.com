@@ -375,13 +375,13 @@ body {
 	color: dimgray;
 }
 
-.manipulations {
+.switch-view {
 	position: fixed;
 	top: 10px;
 	right: 250px;
 }
 
-.manipulations a {
+.switch-view a {
 	padding: 5px;
 	border-radius: 5px;
 	-moz-border-radius: 5px;
@@ -389,7 +389,7 @@ body {
 	color: #888;
 }
 
-.manipulations a:HOVER {
+.switch-view a:HOVER {
 	color: #000;
 	text-decoration: none;
 }
