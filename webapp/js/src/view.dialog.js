@@ -1,7 +1,10 @@
 /**
  * @class Dialog to create a task.
+ * @param {Taskdata} taskdata
+ * @param {Date} due
+ * @param {Event} event
  */
-function CreateTaskDialog (due, due, event) {
+function CreateTaskDialog (taskdata, due, event) {
 	this.initialize.apply(this, arguments);
 };
 /**
