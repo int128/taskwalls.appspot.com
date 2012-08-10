@@ -116,16 +116,25 @@ Task WallはGoogleタスクと連携するタスク管理アプリです。<br/>
 </section>
 
 <div class="switch-view">
-<button data-bind="click: switchView('daily')" class="btn">日の表示</button>
-<button data-bind="click: switchView('weekly')" class="btn">週の表示</button>
-<button data-bind="click: switchView('monthly')" class="btn">月の表示</button>
-<button data-bind="click: switchView('past')" class="btn">過去のタスク</button>
+<ul class="nav nav-tabs">
+<li data-bind="css: {active: viewMode() == 'daily'}">
+<a data-bind="click: switchView('daily')">直近のタスク</a>
+</li>
+<li data-bind="css: {active: viewMode() == 'weekly'}">
+<a data-bind="click: switchView('weekly')">週単位の計画</a>
+</li>
+<li data-bind="css: {active: viewMode() == 'monthly'}">
+<a data-bind="click: switchView('monthly')">月単位の計画</a>
+</li>
+<li data-bind="css: {active: viewMode() == 'past'}">
+<a data-bind="click: switchView('past')">過去のタスク</a>
+</li>
+</ul>
 </div>
 
 <!-- ko if: viewMode() == 'daily' -->
 <!-- ko with: dailyCalendar -->
 <section class="daily calendar">
-<h2>直近のタスク</h2>
 <table>
 <tbody data-bind="foreach: rows">
 <tr data-bind="droppable: {
@@ -164,7 +173,6 @@ Task WallはGoogleタスクと連携するタスク管理アプリです。<br/>
 <!-- ko if: viewMode() == 'weekly' -->
 <!-- ko with: weeklyCalendar -->
 <section class="weekly calendar">
-<h2>週の計画</h2>
 <table>
 <tbody data-bind="foreach: rows">
 <tr data-bind="droppable: {
@@ -210,7 +218,6 @@ Task WallはGoogleタスクと連携するタスク管理アプリです。<br/>
 <!-- ko if: viewMode() == 'monthly' -->
 <!-- ko with: monthlyCalendar -->
 <section class="monthly calendar">
-<h2>月の計画</h2>
 <table>
 <tbody data-bind="foreach: rows">
 <tr data-bind="droppable: {
@@ -245,7 +252,6 @@ Task WallはGoogleタスクと連携するタスク管理アプリです。<br/>
 <!-- ko if: viewMode() == 'past' -->
 <!-- ko with: pastTasks -->
 <section class="past calendar">
-<h2>過去のタスク</h2>
 <div data-bind="foreach: tasklists">
 <div class="tasklist">
 <div class="count"><span data-bind="text: tasks.length" class="badge"></span></div>

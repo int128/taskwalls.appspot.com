@@ -230,14 +230,20 @@ body {
  * Calendar.
  */
 .calendar {
-	margin-left: 130px;
+	margin-left: 120px;
 	margin-right: 240px;
+	margin-top: 40px;
 }
 
 .calendar table {
 	border-collapse: collapse;
 	table-layout: fixed;
 	width: 100%;
+}
+
+.calendar tr:FIRST-CHILD>td.border {
+	/* hide border to fit with tabs */
+	border-top: none;
 }
 
 .calendar td.border {
@@ -310,15 +316,14 @@ body {
 	color: #f00;
 }
 
+.calendar tr[data-weekday="0"]>td {
+	border-bottom: solid 1px #888;
+}
+
 /* Saturday */
 .calendar tr[data-weekday="6"]>td.weekday,
 .calendar tr[data-weekday="6"]>td.day {
 	color: #11d;
-}
-
-/* Monday */
-.calendar tr[data-weekday="1"]>td.border {
-	border-top: solid 1px #888;
 }
 
 /* this week's tasks */
@@ -381,23 +386,16 @@ body {
 }
 
 .switch-view {
+	z-index: 80;
 	position: fixed;
-	top: 10px;
-	right: 250px;
-	z-index: 100;
+	top: 0;
+	left: 120px;
+	right: 0;
+	background-color: #fff;
 }
 
-.switch-view a {
-	padding: 5px;
-	border-radius: 5px;
-	-moz-border-radius: 5px;
-	background-color: rgba(255, 255, 255, 0.7);
-	color: #888;
-}
-
-.switch-view a:HOVER {
-	color: #000;
-	text-decoration: none;
+.switch-view .nav {
+	margin-bottom: 0;
 }
 
 .calendar-next {
@@ -423,12 +421,14 @@ body {
  * Icebox.
  */
 .icebox {
+	z-index: 90;
 	position: fixed;
 	width: 240px;
 	top: 0;
 	bottom: 0;
 	right: 0;
 	overflow: auto;
+	background-color: #fff;
 	box-shadow: 0 0 10px 2px rgba(0, 0, 0, 0.3);
 }
 
