@@ -379,6 +379,7 @@ body {
 	position: fixed;
 	top: 10px;
 	right: 250px;
+	z-index: 100;
 }
 
 .switch-view a {
