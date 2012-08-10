@@ -306,10 +306,6 @@ body {
 	display: none;
 }
 
-.calendar tr[data-day="1"]>td {
-	border-top: solid 1px #ccc;
-}
-
 /* Sunday */
 .calendar tr[data-weekday="0"]>td.weekday,
 .calendar tr[data-weekday="0"]>td.day {
