@@ -251,20 +251,18 @@ body {
 }
 
 .calendar td.month {
-	width: 0;
+	width: 30px;
 }
 
 .calendar td.weekday {
-	width: 40px;
-	padding-right: 5px;
+	width: 30px;
 	text-align: center;
 	color: dimgray;
 	text-shadow: #ccc 1px 1px 1px;
 }
 
 .calendar td.day {
-	width: 40px;
-	padding-left: 20px;
+	width: 30px;
 	text-align: center;
 	font-size: 130%;
 	text-shadow: #ccc 1px 1px 1px;
@@ -284,17 +282,9 @@ body {
 }
 
 /* first day of month, first row */
-.calendar tr[data-day="1"]>td.month,
-.calendar tr:FIRST-CHILD>td.month {
-	position: relative;
-}
-
 .calendar tr[data-day="1"]>td.month>div,
 .calendar tr:FIRST-CHILD>td.month>div {
 	display: block;
-	position: absolute;
-	top: 10px;
-	min-width: 40px;
 	text-shadow: #ccc 1px 1px 1px;
 }
 
