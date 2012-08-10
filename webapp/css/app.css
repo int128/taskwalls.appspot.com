@@ -230,6 +230,7 @@ body {
  * Calendar.
  */
 .calendar {
+	margin-left: 130px;
 	margin-right: 240px;
 }
 
@@ -244,7 +245,7 @@ body {
 }
 
 .calendar td.month {
-	width: 130px;
+	width: 0;
 }
 
 .calendar td.weekday {
@@ -287,7 +288,6 @@ body {
 	display: block;
 	position: absolute;
 	top: 10px;
-	left: 130px;
 	min-width: 40px;
 	text-shadow: #ccc 1px 1px 1px;
 }
@@ -347,13 +347,6 @@ body {
 /*
  * Calendar specific styles.
  */
-.calendar h2,
-.calendar.past,
-.calendar.future {
-	/* TODO: should be calendar common */
-	margin-left: 130px;
-}
-
 .calendar.past .tasklist,
 .calendar.future .tasklist {
 	float: left;
