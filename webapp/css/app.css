@@ -347,13 +347,13 @@ body {
 /*
  * Calendar specific styles.
  */
-.calendar.past .tasklist,
-.calendar.future .tasklist {
+.past.calendar .tasklist,
+.future.calendar .tasklist {
 	float: left;
 }
 
-.calendar.past .tasklist .count,
-.calendar.future .tasklist .count {
+.past.calendar .tasklist .count,
+.future.calendar .tasklist .count {
 	margin-left: 15px;
 }
 
