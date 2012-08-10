@@ -326,6 +326,11 @@ body {
 	border-left: solid 1px #f00;
 }
 
+/* past tasks */
+.calendar tr.past {
+	background-color: #eee;
+}
+
 /* buttons */
 .calendar td.tasks .create {
 	float: right;
