@@ -76,6 +76,15 @@ DailyCalendarViewModel.Row.prototype.getDayForNewTask = function () {
 	return this.day;
 };
 /**
+ * Update the task dropped to this row.
+ * @param {Task} task dropped task
+ */
+DailyCalendarViewModel.Row.prototype.dropped = function (task) {
+	task.update({
+		due: this.day
+	});  // TODO: failed?
+};
+/**
  * @class weekly calendar
  * @param {Taskdata} taskdata
  */
@@ -151,6 +160,15 @@ WeeklyCalendarViewModel.Row.prototype.getDayForNewTask = function () {
 	return this.beginOfThisWeek;
 };
 /**
+ * Update the task dropped to this row.
+ * @param {Task} task dropped task
+ */
+WeeklyCalendarViewModel.Row.prototype.dropped = function (task) {
+	task.update({
+		due: this.beginOfThisWeek
+	});  // TODO: failed?
+};
+/**
  * @class monthly calendar
  * @param {Taskdata} taskdata
  */
@@ -219,6 +237,15 @@ MonthlyCalendarViewModel.Row.prototype.getDayForNewTask = function () {
 	return this.beginOfThisMonth;
 };
 /**
+ * Update the task dropped to this row.
+ * @param {Task} task dropped task
+ */
+MonthlyCalendarViewModel.Row.prototype.dropped = function (task) {
+	task.update({
+		due: this.beginOfThisMonth
+	});  // TODO: failed?
+};
+/**
  * @class Icebox tasks view model.
  * @param {Taskdata} taskdata
  */
@@ -242,6 +269,15 @@ IceboxTasksViewModel.prototype.initialize = function (taskdata) {
 IceboxTasksViewModel.prototype.getDayForNewTask = function () {
 	// indicates the ice box
 	return null;
+};
+/**
+ * Update the task dropped to this row.
+ * @param {Task} task dropped task
+ */
+IceboxTasksViewModel.prototype.dropped = function (task) {
+	task.update({
+		due: null
+	});  // TODO: failed?
 };
 /**
  * @class past tasks view model (contains tasks in last week and ago)
@@ -321,20 +357,14 @@ TaskViewModel.prototype.saveStatus = function () {
  * Dropped.
  * @param {Task} task
  * @param {Event} e
- * @param {CalendarDayViewModel} day
+ * @param {Row} row
  */
-TaskViewModel.prototype.dropped = function (task, e, day) {
+TaskViewModel.prototype.dropped = function (task, e, row) {
 	// execute asynchronously to prevent exception:
 	// TypeError: Cannot read property 'options' of undefined
 	window.setTimeout(function () {
-		if (day instanceof CalendarDayViewModel) {
-			task.update({
-				due: day.date()
-			});  // TODO: failed?
-		} else if (day instanceof IceboxTasksViewModel) {
-			task.update({
-				due: null
-			});  // TODO: failed?
+		if ($.isFunction(row.dropped)) {
+			row.dropped(task);
 		}
 	});
 };
