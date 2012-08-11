@@ -9,7 +9,7 @@ function AuthorizedPageViewModel () {
 AuthorizedPageViewModel.prototype.initialize = function () {
 	this.taskdata = new Taskdata();
 
-	// toggle
+	// summary
 	this.completedCount = ko.computed(function () {
 		return $.grep(this.taskdata.tasks(), function (task) {
 			return DateUtil.isThisWeek(task.due()) && task.isCompleted();
@@ -21,18 +21,27 @@ AuthorizedPageViewModel.prototype.initialize = function () {
 		}).length;
 	}, this);
 
+	this.tasklists = ko.computed(function () {
+		return TasklistViewModel.extend(this.taskdata.tasklists());
+	}, this);
+
 	// calendar
-	this.calendar = new CalendarViewModel(this.taskdata);
+	this.viewMode = ko.observable('daily');
+	this.switchView = function (name) {
+		return function () {
+			this.viewMode(name);
+		};
+	};
+
+	this.dailyCalendar = new DailyCalendarViewModel(this.taskdata);
+	this.weeklyCalendar = new WeeklyCalendarViewModel(this.taskdata);
+	this.monthlyCalendar = new MonthlyCalendarViewModel(this.taskdata);
+	this.iceboxTasks = new IceboxTasksViewModel(this.taskdata);
+	this.pastTasks = new PastTasksViewModel(this.taskdata);
 
 	// dialogs
-	this.createTaskDialog = ko.disposableObservable(function (context, event) {
-		if (context.date) {
-			// context may be CalendarDayViewModel
-			return new CreateTaskDialog(this.taskdata, context.date(), event);
-		} else {
-			// context may be CalendarIceboxViewModel
-			return new CreateTaskDialog(this.taskdata, null, event);
-		}
+	this.createTaskDialog = ko.disposableObservable(function (row, event) {
+		return new CreateTaskDialog(this.taskdata, row.getDayForNewTask(), event);
 	}, this);
 	this.updateTaskDialog = ko.disposableObservable(function (task, event) {
 		return new UpdateTaskDialog(this.taskdata, task, event);
@@ -73,18 +82,11 @@ TryOutPageViewModel.prototype.initialize = function () {
 	// behave as offline
 	this.offline(true);
 
-	// origin time of the calendar: first day of this week (Monday)
-	var originTime = (function () {
-		var d = new Date(), t = d.getTime();
-		t -= d.getDay() * 86400000;
-		t += 86400000;
-		return DateUtil.normalize(t);
-	})().getTime();
-	this.calendar.shrinkOrigin(originTime);
-
 	// load example data
 	$.getJSON('/tryoutdata.json').done($.proxy(function (response) {
-		var baseTime = DateUtil.normalize(new Date(response.baseTime)).getTime();;
+		var originTime = taskwalls.settings.today().getFirstDayOfWeek().getTime(),
+			baseTime = DateUtil.normalize(new Date(response.baseTime)).getTime(),
+			delta = originTime - baseTime;
 
 		var tasklists = Tasklists.map(response.tasklists.items);
 		this.taskdata.tasklists(tasklists);
@@ -97,7 +99,7 @@ TryOutPageViewModel.prototype.initialize = function () {
 			})[0]);
 			// adjust date
 			if (task.due()) {
-				task.due(new Date(task.due().getTime() - baseTime + originTime));
+				task.due(new Date(task.due().getTime() + delta));
 			}
 			return task;
 		});

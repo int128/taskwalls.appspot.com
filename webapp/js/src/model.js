@@ -1,96 +1,4 @@
 /**
- * @class calendar
- * @param {Function} factory factory function of a new element
- */
-function Calendar (factory) {
-	this.initialize.apply(this, arguments);
-};
-/**
- * @param {Function} factory factory function of a new element
- */
-Calendar.prototype.initialize = function (factory) {
-	this.factory = factory;
-
-	var today = taskwalls.settings.today().getTime();
-	var todayElement = this.factory(today);
-	this.daysHashMin = today;
-	this.daysHashMax = today;
-	this.daysHash = {};
-	this.daysHash[today] = todayElement;
-
-	this.days = ko.observableArray([todayElement]);
-	this.first = ko.computed(function () {
-		return this.days()[0];
-	}, this);
-	this.last = ko.computed(function () {
-		var days = this.days();
-		return days[days.length - 1];
-	}, this);
-};
-/**
- * Extend rows of the calendar.
- * This function accepts one or more arguments.
- * @param {Number} timeArgs time to extend (also accepts {Date})
- */
-Calendar.prototype.extendTo = function (timeArgs) {
-	var needsUpdate = false;
-	for (var i in arguments) {
-		var time = arguments[i];
-		var normalizedTime = DateUtil.normalize(time).getTime();
-		if (normalizedTime < this.daysHashMin) {
-			this.daysHashMin = normalizedTime;
-			needsUpdate = true;
-		}
-		if (normalizedTime > this.daysHashMax) {
-			this.daysHashMax = normalizedTime;
-			needsUpdate = true;
-		}
-	}
-
-	if (needsUpdate) {
-		var days = [];
-		var i = 0;
-		for (var t = this.daysHashMin; t <= this.daysHashMax; t += 86400000) {
-			if (this.daysHash[t] === undefined) {
-				var element = this.factory(t);
-				days[i++] = element;
-				this.daysHash[t] = element;
-			} else {
-				days[i++] = this.daysHash[t];
-			}
-		}
-		this.days(days);
-	}
-};
-/**
- * Shrink rows of the calendar.
- * @param {Number} time origin time to be set (also accepts {Date})
- */
-Calendar.prototype.shrinkOrigin = function (time) {
-	var normalizedTime = DateUtil.normalize(time).getTime();
-	if (normalizedTime > this.daysHashMin) {
-		var days = [], i = 0, t;
-
-		// delete hash elements to prevent memory leak
-		for (t = this.daysHashMin; t < normalizedTime; t += 86400000) {
-			delete this.daysHash[t];
-		}
-
-		// update days array
-		this.daysHashMin = normalizedTime;
-		for (t = this.daysHashMin; t <= this.daysHashMax; t += 86400000) {
-			if (this.daysHash[t] === undefined) {
-				var element = this.factory(t);
-				days[i++] = element;
-				this.daysHash[t] = element;
-			} else {
-				days[i++] = this.daysHash[t];
-			}
-		}
-		this.days(days);
-	}
-};
-/**
  * @class tasklists and tasks
  */
 function Taskdata () {
@@ -101,6 +9,9 @@ function Taskdata () {
 Taskdata.prototype.initialize = function () {
 	this.tasks = ko.observableArray();
 	this.tasklists = ko.observableArray();
+	this.dueIndex = ko.computed(function () {
+		 return Tasks.groupByDue(this.tasks());
+	}, this);
 };
 /**
  * Asynchronously load task data from server.
@@ -168,10 +79,9 @@ Taskdata.prototype.clearCompletedTasks = function () {
 	});
 };
 /**
- * @class set of tasklist
+ * @constructor set of tasklist
  */
-function Tasklists () {
-};
+function Tasklists () {};
 /**
  * Asynchronously get tasklists from server.
  * @returns {Deferred}
@@ -327,10 +237,9 @@ Tasklist.prototype.clearCompletedTasks = function () {
 	}
 };
 /**
- * @class set of task
+ * @constructor set of task
  */
-function Tasks () {
-};
+function Tasks () {};
 /**
  * Asynchronously get tasks from server.
  * @param {Tasklist}
@@ -400,6 +309,7 @@ Tasks.create = function (data) {
  * Returns days.
  * @param {Array} tasks array of tasks
  * @returns {Array} array of time {@link Number}
+ * TODO: remove this?
  */
 Tasks.days = function (tasks) {
 	return $.map(tasks, function (task) {
@@ -408,9 +318,64 @@ Tasks.days = function (tasks) {
 	});
 };
 /**
- * Returns map of tasklist and tasks.
+ * Select items between beginTime and endTime.
+ * Note that result does not contain endTime.
+ * @param {Array} tasks
+ * @param {Number} beginTime
+ * @param {Number} endTime
+ */
+Tasks.range = function (tasks, beginTime, endTime) {
+	return $.grep(tasks, function (task) {
+		if (task.due()) {
+			var due = task.due().getTime();
+			if (beginTime <= due && due < endTime) {
+				return true;
+			}
+		}
+	});
+};
+/**
+ * Select items after baseTime.
+ * @param {Array} tasks
+ * @param {Number} baseTime
+ */
+Tasks.after = function (tasks, baseTime) {
+	return $.grep(tasks, function (task) {
+		if (task.due()) {
+			var due = task.due().getTime();
+			if (due > baseTime) {
+				return true;
+			}
+		}
+	});
+};
+/**
+ * Select items before baseTime.
+ * Result does not contain tasks in the ice box.
+ * @param {Array} tasks
+ * @param {Number} baseTime
+ */
+Tasks.before = function (tasks, baseTime) {
+	return $.grep(tasks, function (task) {
+		if (task.due()) {
+			var due = task.due().getTime();
+			if (0 < due && due < baseTime) {
+				return true;
+			}
+		}
+	});
+};
+/**
+ * Returns array of tasklist groups.
+ * An element of array will be following:
+ * <code><pre>
+ * {
+ *   tasklist: tasklist,        // Tasklist
+ *   tasks: tasksInTheTasklist  // Array of Task
+ * }
+ * </pre></code>
  * @param {Array} tasks array of tasks or undefined
- * @returns {Object} map of tasklist id and tasks
+ * @returns {Array} array of tasklists, each contains tasklist and tasks.
  */
 Tasks.groupByTasklist = function (tasks) {
 	var map = {};
@@ -424,12 +389,17 @@ Tasks.groupByTasklist = function (tasks) {
 			}
 		});
 	}
-	return map;
+	return $.map(map, function (tasksInTasklist) {
+		return {
+			tasklist: tasksInTasklist[0].tasklist(),
+			tasks: tasksInTasklist
+		};
+	});
 };
 /**
  * Returns map of due date and tasks.
  * @param {Array} tasks array of tasks or undefined
- * @returns {Tasks.DueMap} map of due date and tasks
+ * @returns {Tasks.DueIndex} map of due date and tasks
  */
 Tasks.groupByDue = function (tasks) {
 	var map = {};
@@ -447,13 +417,13 @@ Tasks.groupByDue = function (tasks) {
 			}
 		});
 	}
-	return new Tasks.DueMap(map);
+	return new Tasks.DueIndex(map);
 };
 /**
- * @class map of due date and tasks
+ * @constructor map of due date and tasks
  * @param {Object} map
  */
-Tasks.DueMap = function (map) {
+Tasks.DueIndex = function (map) {
 	this.map = map;
 };
 /**
@@ -461,7 +431,7 @@ Tasks.DueMap = function (map) {
  * @param {Date} date
  * @returns {Array} array of tasks or undefined
  */
-Tasks.DueMap.prototype.get = function (date) {
+Tasks.DueIndex.prototype.getTasks = function (date) {
 	var tasks = this.map[date.getTime()];
 	return tasks ? tasks : [];
 };
@@ -469,7 +439,7 @@ Tasks.DueMap.prototype.get = function (date) {
  * Returns tasks of which due date is not determined.
  * @returns {Array}
  */
-Tasks.DueMap.prototype.getInIceBox = function () {
+Tasks.DueIndex.prototype.getTasksInIceBox = function () {
 	var tasks = this.map[0];
 	return tasks ? tasks : [];
 };
@@ -493,6 +463,7 @@ Task.prototype.initialize = function (object, tasklist) {
 	}
 	if (object.due) {
 		// normalize for current timezone
+		// TODO: change to {Number} in order to save resource
 		this.due(DateUtil.normalize(object.due));
 	} else {
 		this.due = ko.observable();

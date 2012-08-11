@@ -69,3 +69,21 @@ DateUtil.isThisWeek = function (time) {
 Date.prototype.getUTCTime = function () {
 	return this.getTime() - this.getTimezoneOffset() * 60 * 1000;
 };
+/**
+ * Return first day of the week.
+ * @returns {Date} first day (new instance)
+ */
+Date.prototype.getFirstDayOfWeek = function () {
+	var day = new Date(this);
+	day.setDate(day.getDate() - (day.getDay() + 6) % 7);
+	return day;
+};
+/**
+ * Return first day of the month.
+ * @returns {Date} first day (new instance)
+ */
+Date.prototype.getFirstDayOfMonth = function () {
+	var day = new Date(this);
+	day.setDate(1);
+	return day;
+};

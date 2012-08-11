@@ -1,132 +1,301 @@
 /**
- * @class calendar
+ * @class daily calendar
  * @param {Taskdata} taskdata
  */
-function CalendarViewModel (taskdata) {
+function DailyCalendarViewModel (taskdata) {
 	this.initialize.apply(this, arguments);
 };
 /**
+ * Number of days to show in the calendar.
+ */
+DailyCalendarViewModel.NUMBER_OF_DAYS = 14;
+/**
  * @param {Taskdata} taskdata
  */
-CalendarViewModel.prototype.initialize = function (taskdata) {
-	var calendar = new Calendar(function (day) {
-		return new CalendarDayViewModel(day);
-	});
-
-	(function () {
-		var d = new Date();
-		d.setHours(0, 0, 0, 0);
-		d.setDate(1);
-		var firstInMonth = d.getTime();
-		d.setMonth(d.getMonth() + 1);
-		d.setDate(0);
-		var lastInMonth = d.getTime();
-		calendar.extendTo(firstInMonth, lastInMonth);
-	})();
-
-	this.days = calendar.days;
-	this.icebox = new CalendarIceboxViewModel();
-	this.tasklists = ko.computed(function () {
-		return TasklistViewModel.extend(taskdata.tasklists());
+DailyCalendarViewModel.prototype.initialize = function (taskdata) {
+	// set up days in the calendar
+	this.rows = ko.computed(function () {
+		var day = taskwalls.settings.today().getFirstDayOfWeek();
+			rows = [];
+		for (var i = 0; i < DailyCalendarViewModel.NUMBER_OF_DAYS; i++) {
+			rows[i] = new DailyCalendarViewModel.Row(new Date(day));
+			day.setDate(day.getDate() + 1);
+		}
+		return rows;
 	}, this);
 
-	this.dueMap = ko.computed(function () {
-		return Tasks.groupByDue(taskdata.tasks());
-	}, this);
+	this.pastTasks = ko.observableArray();
 
-	// extend rows to cover all tasks
+	// put tasks into each day
 	ko.computed(function () {
 		var tasks = taskdata.tasks();
-		if (tasks.length > 0) {
-			var days = Tasks.days(tasks);
-			calendar.extendTo(Math.min.apply(null, days), Math.max.apply(null, days));
-		}
-	});
+		TaskViewModel.extend(tasks);
 
-	// arrange tasks by each due date and tasklist
-	ko.computed(function () {
-		$.each(this.days(), $.proxy(function (i, day) {
-			var tasksInDay = this.dueMap().get(day.date());
-			day.tasklists($.map(Tasks.groupByTasklist(tasksInDay), function (tasks) {
-				return {
-					tasklist: tasks[0].tasklist(),
-					tasks: TaskViewModel.extend(tasks)
-				};
-			}));
-		}, this));
+		var dueIndex = taskdata.dueIndex();
+		var rows = this.rows();
+		$.each(rows, function (i, row) {
+			row.tasklists(Tasks.groupByTasklist(dueIndex.getTasks(row.day)));
+		});
 	}, this);
-	ko.computed(function () {
-		var iceboxTasks = TaskViewModel.extend(this.dueMap().getInIceBox());
-		this.icebox.tasklists($.map(Tasks.groupByTasklist(iceboxTasks), function (tasks) {
-			return {
-				tasklist: tasks[0].tasklist(),
-				tasks: TaskViewModel.extend(tasks)
-			};
-		}));
-	}, this);
-
-	/**
-	 * Last day of next month.
-	 */
-	this.nextMonth = ko.computed(function () {
-		var d = new Date(calendar.last().time());
-		d.setDate(1);
-		d.setMonth(d.getMonth() + 2);
-		d.setDate(0);
-		return d;
-	});
-
-	this.extendToNextMonth = function () {
-		calendar.extendTo(this.nextMonth());
-	};
-
-	this.shrinkOrigin = function (time) {
-		calendar.shrinkOrigin(time);
-	};
 
 	/**
 	 * Clear completed tasks.
+	 * TODO: should clear completed tasks in past
 	 */
 	this.clearCompleted = function () {
 		taskdata.clearCompletedTasks();
 	};
 };
 /**
- * @class Daily row of the calendar.
- * @param {Number} day day of the row
+ * @class row item of daily calendar
+ * @param {Date} day day of the row
  */
-function CalendarDayViewModel (day) {
+DailyCalendarViewModel.Row = function (day) {
 	this.initialize.apply(this, arguments);
 };
 /**
- * @param {Number} day day of the row
+ * @param {Date} day day of the row
  */
-CalendarDayViewModel.prototype.initialize = function (day) {
-	this.time = ko.observable(day);
-	this.date = ko.computed(function () {
-		return new Date(this.time());
-	}, this);
-	this.weekdayName = ko.computed(function () {
-		return $.resource('weekday' + this.date().getDay());
-	}, this);
+DailyCalendarViewModel.Row.prototype.initialize = function (day) {
+	this.day = day;
+	this.weekdayName = $.resource('weekday' + day.getDay());
+
 	this.past = ko.computed(function () {
-		return this.time() < taskwalls.settings.today().getTime();
+		return day.getTime() < taskwalls.settings.today().getTime();
 	}, this);
 	this.thisweek = ko.computed(function () {
-		return DateUtil.isThisWeek(this.time());
+		return DateUtil.isThisWeek(day);
 	}, this);
 	this.tasklists = ko.observableArray();
 };
 /**
- * @class Icebox view model.
+ * Return day for new task adding to this row.
+ * @returns {Date}
  */
-function CalendarIceboxViewModel () {
+DailyCalendarViewModel.Row.prototype.getDayForNewTask = function () {
+	return this.day;
+};
+/**
+ * Update the task dropped to this row.
+ * @param {Task} task dropped task
+ */
+DailyCalendarViewModel.Row.prototype.dropped = function (task) {
+	task.update({
+		due: this.day
+	});  // TODO: failed?
+};
+/**
+ * @class weekly calendar
+ * @param {Taskdata} taskdata
+ */
+function WeeklyCalendarViewModel (taskdata) {
 	this.initialize.apply(this, arguments);
 };
 /**
+ * Number of weeks to be shown in the calendar.
  */
-CalendarIceboxViewModel.prototype.initialize = function () {
+WeeklyCalendarViewModel.NUMBER_OF_WEEKS = 8;
+/**
+ * @param {Taskdata} taskdata
+ */
+WeeklyCalendarViewModel.prototype.initialize = function (taskdata) {
+	// set up weeks in the calendar
+	this.rows = ko.computed(function () {
+		var day = taskwalls.settings.today().getFirstDayOfWeek(),
+			rows = [];
+		for (var i = 0; i < WeeklyCalendarViewModel.NUMBER_OF_WEEKS; i++) {
+			var beginOfThisWeek = new Date(day);
+			day.setDate(day.getDate() + 7);
+			var endOfThisWeek = new Date(day);
+			rows[i] = new WeeklyCalendarViewModel.Row(beginOfThisWeek, endOfThisWeek);
+		}
+		return rows;
+	}, this);
+
+	// put tasks into each week
+	ko.computed(function () {
+		var tasks = taskdata.tasks();
+		TaskViewModel.extend(tasks);
+		$.each(this.rows(), function (i, row) {
+			var tasksInWeek = Tasks.range(tasks,
+					row.beginOfThisWeek.getTime(),
+					row.endOfThisWeek.getTime());
+			row.tasklists(Tasks.groupByTasklist(tasksInWeek));
+		});
+	}, this);
+
+	this.futureTasks = ko.computed(function () {
+		var rows = this.rows();
+		var lastDay = rows[rows.length - 1].endOfThisWeek;
+		// TODO: should use "after or equal"
+		Tasks.groupByTasklist(Tasks.after(taskdata.tasks(), lastDay.getTime() - 1));
+	}, this);
+};
+/**
+ * @constructor row item of {@link WeeklyCalendarViewModel}
+ * @param {Date} beginOfThisWeek time of Monday 0:00 in this week
+ * @param {Date} endOfThisWeek   time of Monday 0:00 in next week
+ */
+WeeklyCalendarViewModel.Row = function (beginOfThisWeek, endOfThisWeek) {
+	this.initialize.apply(this, arguments);
+};
+/**
+ * @param {Date} beginOfThisWeek
+ * @param {Date} endOfThisWeek
+ */
+WeeklyCalendarViewModel.Row.prototype.initialize = function (beginOfThisWeek, endOfThisWeek) {
+	this.beginOfThisWeek = beginOfThisWeek;
+	this.endOfThisWeek = endOfThisWeek;
+
 	this.tasklists = ko.observableArray();
+	this.thisweek = ko.computed(function () {
+		return DateUtil.isThisWeek(beginOfThisWeek);
+	}, this);
+};
+/**
+ * Return day for new task adding to this row.
+ * @returns {Date}
+ */
+WeeklyCalendarViewModel.Row.prototype.getDayForNewTask = function () {
+	return this.beginOfThisWeek;
+};
+/**
+ * Update the task dropped to this row.
+ * @param {Task} task dropped task
+ */
+WeeklyCalendarViewModel.Row.prototype.dropped = function (task) {
+	task.update({
+		due: this.beginOfThisWeek
+	});  // TODO: failed?
+};
+/**
+ * @class monthly calendar
+ * @param {Taskdata} taskdata
+ */
+function MonthlyCalendarViewModel (taskdata) {
+	this.initialize.apply(this, arguments);
+};
+/**
+ * Number of weeks to be shown in the calendar.
+ */
+MonthlyCalendarViewModel.NUMBER_OF_MONTHS = 12;
+/**
+ * @param {Taskdata} taskdata
+ */
+MonthlyCalendarViewModel.prototype.initialize = function (taskdata) {
+	// set up months in the calendar
+	this.rows = ko.computed(function () {
+		var date = taskwalls.settings.today().getFirstDayOfMonth(),
+			rows = [];
+		for (var i = 0; i < MonthlyCalendarViewModel.NUMBER_OF_MONTHS; i++) {
+			var beginOfThisMonth = new Date(date);
+			date.setMonth(date.getMonth() + 1);
+			var endOfThisMonth = new Date(date);
+			rows[i] = new MonthlyCalendarViewModel.Row(beginOfThisMonth, endOfThisMonth);
+		}
+		return rows;
+	}, this);
+
+	// put tasks into each month
+	ko.computed(function () {
+		var tasks = taskdata.tasks();
+		TaskViewModel.extend(tasks);
+		$.each(this.rows(), function (i, row) {
+			var tastsInMonth = Tasks.range(tasks,
+					row.beginOfThisMonth.getTime(),
+					row.endOfThisMonth.getTime());
+			row.tasklists(Tasks.groupByTasklist(tastsInMonth));
+		});
+	}, this);
+};
+/**
+ * @constructor row item of {@link MonthlyCalendarViewModel}
+ * @param {Date} beginOfThisMonth first day of this month
+ * @param {Date} endOfThisMonth   first day of next month
+ */
+MonthlyCalendarViewModel.Row = function (beginOfThisMonth, endOfThisMonth) {
+	this.initialize.apply(this, arguments);
+};
+/**
+ * @param {Date} beginOfThisMonth first day of this month
+ * @param {Date} endOfThisMonth   first day of next month
+ */
+MonthlyCalendarViewModel.Row.prototype.initialize = function (beginOfThisMonth, endOfThisMonth) {
+	this.beginOfThisMonth = beginOfThisMonth;
+	this.endOfThisMonth = endOfThisMonth;
+
+	this.tasklists = ko.observableArray();
+	this.thisweek = ko.computed(function () {
+		return DateUtil.isThisWeek(beginOfThisMonth);
+	}, this);
+};
+/**
+ * Return day for new task adding to this row.
+ * @returns {Date}
+ */
+MonthlyCalendarViewModel.Row.prototype.getDayForNewTask = function () {
+	return this.beginOfThisMonth;
+};
+/**
+ * Update the task dropped to this row.
+ * @param {Task} task dropped task
+ */
+MonthlyCalendarViewModel.Row.prototype.dropped = function (task) {
+	task.update({
+		due: this.beginOfThisMonth
+	});  // TODO: failed?
+};
+/**
+ * @class Icebox tasks view model.
+ * @param {Taskdata} taskdata
+ */
+function IceboxTasksViewModel (taskdata) {
+	this.initialize.apply(this, arguments);
+};
+/**
+ * @param {Taskdata} taskdata
+ */
+IceboxTasksViewModel.prototype.initialize = function (taskdata) {
+	this.tasklists = ko.computed(function () {
+		var tasks = taskdata.dueIndex().getTasksInIceBox();
+		TaskViewModel.extend(tasks);
+		return Tasks.groupByTasklist(tasks);
+	});
+};
+/**
+ * Return day for new task adding to this row.
+ * @returns {Date}
+ */
+IceboxTasksViewModel.prototype.getDayForNewTask = function () {
+	// indicates the ice box
+	return null;
+};
+/**
+ * Update the task dropped to this row.
+ * @param {Task} task dropped task
+ */
+IceboxTasksViewModel.prototype.dropped = function (task) {
+	task.update({
+		due: null
+	});  // TODO: failed?
+};
+/**
+ * @class past tasks view model (contains tasks in last week and ago)
+ * @param {Taskdata} taskdata
+ */
+function PastTasksViewModel (taskdata) {
+	this.initialize.apply(this, arguments);
+};
+/**
+ * @param {Taskdata} taskdata
+ */
+PastTasksViewModel.prototype.initialize = function (taskdata) {
+	this.tasklists = ko.computed(function () {
+		var firstDayOfThisWeek = taskwalls.settings.today().getFirstDayOfWeek();
+		var tasks = Tasks.before(taskdata.tasks(), firstDayOfThisWeek.getTime());
+		TaskViewModel.extend(tasks);
+		return Tasks.groupByTasklist(tasks);
+	});
 };
 /**
  * @class Tasklist view model.
@@ -188,20 +357,14 @@ TaskViewModel.prototype.saveStatus = function () {
  * Dropped.
  * @param {Task} task
  * @param {Event} e
- * @param {CalendarDayViewModel} day
+ * @param {Row} row
  */
-TaskViewModel.prototype.dropped = function (task, e, day) {
+TaskViewModel.prototype.dropped = function (task, e, row) {
 	// execute asynchronously to prevent exception:
 	// TypeError: Cannot read property 'options' of undefined
 	window.setTimeout(function () {
-		if (day instanceof CalendarDayViewModel) {
-			task.update({
-				due: day.date()
-			});  // TODO: failed?
-		} else if (day instanceof CalendarIceboxViewModel) {
-			task.update({
-				due: null
-			});  // TODO: failed?
+		if ($.isFunction(row.dropped)) {
+			row.dropped(task);
 		}
 	});
 };

@@ -71,7 +71,7 @@ Task WallはGoogleタスクと連携するタスク管理アプリです。<br/>
 <div style="font-weight: bold; margin-left: 5px; color: #888;">BETA</div>
 <section>
 <h3>タスクリスト</h3>
-<div data-bind="foreach: calendar.tasklists" class="toggle tasklists">
+<div data-bind="foreach: tasklists" class="toggle tasklists">
 <div data-bind="click: toggleVisibility,
 	css: {visible: visible},
 	attr: {'data-tasklistcolor': colorCode}"
@@ -115,9 +115,28 @@ Task WallはGoogleタスクと連携するタスク管理アプリです。<br/>
 <!-- /ko -->
 </section>
 
-<section class="calendar">
+<div class="switch-view">
+<ul class="nav nav-tabs">
+<li data-bind="css: {active: viewMode() == 'daily'}">
+<a data-bind="click: switchView('daily')" href="#">直近のタスク</a>
+</li>
+<li data-bind="css: {active: viewMode() == 'weekly'}">
+<a data-bind="click: switchView('weekly')" href="#">週単位の計画</a>
+</li>
+<li data-bind="css: {active: viewMode() == 'monthly'}">
+<a data-bind="click: switchView('monthly')" href="#">月単位の計画</a>
+</li>
+<li data-bind="css: {active: viewMode() == 'past'}">
+<a data-bind="click: switchView('past')" href="#">過去のタスク</a>
+</li>
+</ul>
+</div>
+
+<!-- ko if: viewMode() == 'daily' -->
+<!-- ko with: dailyCalendar -->
+<section class="daily calendar">
 <table>
-<tbody data-bind="foreach: calendar.days">
+<tbody data-bind="foreach: rows">
 <tr data-bind="droppable: {
 		accept: '.task',
 		hoverClass: 'dropping'
@@ -126,27 +145,16 @@ Task WallはGoogleタスクと連携するタスク管理アプリです。<br/>
 		past: past,
 		thisweek: thisweek
 	}, attr: {
-		'data-day': date().getDate(),
-		'data-weekday': date().getDay()
+		'data-day': day.getDate(),
+		'data-weekday': day.getDay()
 	}">
-<td class="month"><div><span data-bind="text: date().getMonth()+1"></span>月</div></td>
-<td class="border day"><div data-bind="text: date().getDate()"></div></td>
+<td class="month"><div><span data-bind="text: day.getMonth()+1"></span>月</div></td>
+<td class="border day"><div data-bind="text: day.getDate()"></div></td>
 <td class="border weekday"><div data-bind="text: weekdayName"></div></td>
 <td class="border tasks">
 <div data-bind="foreach: tasklists">
-<div data-bind="foreach: tasks, visible: tasklist.visible" class="tasklist">
-<div data-bind="draggableByClone: {},
-	click: $root.updateTaskDialog.create,
-	event: {dropped: dropped},
-	attr: {
-		'data-status': status,
-		'data-tasklistcolor': tasklist().colorCode
-	}"
-	class="task">
-<input data-bind="checked: isCompleted, click: saveStatus, clickBubble: false" type="checkbox" />
-<span data-bind="text: title" class="title"></span>
-<div data-bind="autolinkText: notes" class="notes"></div>
-</div>
+<div data-bind="template: {name: 'task-template', foreach: tasks}, visible: tasklist.visible"
+	class="tasklist">
 </div>
 </div>
 <div class="create">
@@ -159,11 +167,106 @@ Task WallはGoogleタスクと連携するタスク管理アプリです。<br/>
 </tbody>
 </table>
 </section>
+<!-- /ko -->
+<!-- /ko -->
+
+<!-- ko if: viewMode() == 'weekly' -->
+<!-- ko with: weeklyCalendar -->
+<section class="weekly calendar">
+<table>
+<tbody data-bind="foreach: rows">
+<tr data-bind="droppable: {
+		accept: '.task',
+		hoverClass: 'dropping'
+	},
+	css: {
+		thisweek: thisweek
+	}">
+<td class="month"><div><span data-bind="text: beginOfThisWeek.getMonth()+1"></span>月</div></td>
+<td class="border day"><div data-bind="text: beginOfThisWeek.getDate()"></div></td>
+<td class="border weekday">週</td>
+<td class="border tasks">
+<div data-bind="foreach: tasklists">
+<div data-bind="template: {name: 'task-template', foreach: tasks}, visible: tasklist.visible"
+	class="tasklist">
+</div>
+</div>
+<div class="create">
+<a data-bind="click: $root.createTaskDialog.create"
+	href="#" class="showtooltip"
+	data-placement="left" title="新しいタスクを作成する"></a>
+</div>
+</td>
+</tr>
+</tbody>
+</table>
+
+<section class="future">
+<h2>未来のタスク</h2>
+<div data-bind="foreach: futureTasks">
+<div class="tasklist">
+<div class="count"><span data-bind="text: tasks.length" class="badge"></span></div>
+<div data-bind="template: {name: 'task-template', foreach: tasks}, visible: tasklist.visible"></div>
+</div>
+</div>
+<div style="clear: both;"></div>
+</section>
+</section>
+<!-- /ko -->
+<!-- /ko -->
+
+<!-- ko if: viewMode() == 'monthly' -->
+<!-- ko with: monthlyCalendar -->
+<section class="monthly calendar">
+<table>
+<tbody data-bind="foreach: rows">
+<tr data-bind="droppable: {
+		accept: '.task',
+		hoverClass: 'dropping'
+	},
+	css: {
+		thisweek: thisweek
+	}">
+<td class="month"><div><span data-bind="text: beginOfThisMonth.getFullYear()"></span>年</div></td>
+<td class="border day"><div><span data-bind="text: beginOfThisMonth.getMonth()+1"></span></div></td>
+<td class="border weekday">月</td>
+<td class="border tasks">
+<div data-bind="foreach: tasklists">
+<div data-bind="template: {name: 'task-template', foreach: tasks}, visible: tasklist.visible"
+	class="tasklist">
+</div>
+</div>
+<div class="create">
+<a data-bind="click: $root.createTaskDialog.create"
+	href="#" class="showtooltip"
+	data-placement="left" title="新しいタスクを作成する"></a>
+</div>
+</td>
+</tr>
+</tbody>
+</table>
+</section>
+<!-- /ko -->
+<!-- /ko -->
+
+<!-- ko if: viewMode() == 'past' -->
+<!-- ko with: pastTasks -->
+<section class="past calendar">
+<div data-bind="foreach: tasklists">
+<div class="tasklist">
+<div class="count"><span data-bind="text: tasks.length" class="badge"></span></div>
+<div data-bind="template: {name: 'task-template', foreach: tasks}, visible: tasklist.visible"></div>
+</div>
+</div>
+<div style="clear: both;"></div>
+</section>
+<!-- /ko -->
+<!-- /ko -->
 
 <section data-bind="droppable: {
 		accept: '.task',
 		hoverClass: 'dropping',
-		context: calendar.icebox
+		context: iceboxTasks
 	}"
 	class="icebox">
 <h2>計画中のタスク</h2>
@@ -172,11 +275,15 @@ Task WallはGoogleタスクと連携するタスク管理アプリです。<br/>
 	href="#" class="showtooltip"
 	data-placement="left" title="新しいタスクを作成する"></a>
 </div>
-<div data-bind="foreach: calendar.icebox.tasklists">
-<div class="count">
-<span data-bind="text: tasks.length" class="badge"></span>
+<div data-bind="foreach: iceboxTasks.tasklists">
+<div class="count"><span data-bind="text: tasks.length" class="badge"></span></div>
+<div data-bind="template: {name: 'task-template', foreach: tasks}, visible: tasklist.visible"
+	class="tasklist">
 </div>
-<div data-bind="foreach: tasks, visible: tasklist.visible" class="tasklist">
+</div>
+</section>
+
+<script type="text/html" id="task-template">
 <div data-bind="draggableByClone: {},
 	click: $root.updateTaskDialog.create,
 	event: {dropped: dropped},
@@ -189,24 +296,7 @@ Task WallはGoogleタスクと連携するタスク管理アプリです。<br/>
 <span data-bind="text: title" class="title"></span>
 <div data-bind="autolinkText: notes" class="notes"></div>
 </div>
-</div>
-</div>
-</section>
-
-<!-- ko with: calendar -->
-<div class="calendar-next">
-<a data-bind="click: extendToNextMonth" href="#">
-<!-- ko with: nextMonth -->
-<span data-bind="text: getFullYear()"></span>年
-<span data-bind="text: getMonth()+1"></span>月を表示
-<!-- /ko -->
-</a>
-</div>
-<!-- /ko -->
-
-<div class="manipulations">
-<a data-bind="click: calendar.clearCompleted" href="#">完了したタスクを消去する</a>
-</div>
+</script>
 
 <section class="dialogs">
 <!-- ko if: createTasklistDialog -->
