@@ -32,12 +32,14 @@ $.extend({
 	loadingIndicator.$indicator = $('#loading').hide();
 	loadingIndicator.counter = 0;
 	loadingIndicator.enter = function () {
+		console.info('enter', this.counter);
 		if (this.counter == 0) {
 			this.$indicator.fadeIn();
 		}
 		this.counter++;
 	};
 	loadingIndicator.leave = function () {
+		console.info('leave', this.counter);
 		this.counter--;
 		if (this.counter == 0) {
 			this.$indicator.fadeOut();
@@ -48,10 +50,7 @@ $.extend({
 	$(document).ajaxSend(function () {
 		loadingIndicator.enter();
 	});
-	$(document).ajaxStop(function () {
-		loadingIndicator.leave();
-	});
-	$(document).ajaxError(function () {
+	$(document).ajaxComplete(function () {
 		loadingIndicator.leave();
 	});
 })();
