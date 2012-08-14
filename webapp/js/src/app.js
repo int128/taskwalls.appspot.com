@@ -1,37 +1,65 @@
+// extensions
+$.extend({
+	/**
+	 * Get resource from document.
+	 * @param {String} key
+	 * @returns {String}
+	 */
+	resource: function (key) {
+		return $('#resources>[data-key="' + key + '"]').text();
+	}
+});
+// global errors
 (function () {
-	// extensions
-	$.extend({
-		/**
-		 * Get resource from document.
-		 * @param {String} key
-		 * @returns {String}
-		 */
-		resource: function (key) {
-			return $('#resources>[data-key="' + key + '"]').text();
-		}
-	});
-	// global error handler
 	var _window_onerror_handling = false;
 	window.onerror = function () {
 		if (!_window_onerror_handling) {
 			_window_onerror_handling = true;
-			$('#loading').hide();
-			$('#global-errors').text($.resource('global-errors')).fadeIn();
+			$('#global-errors').text($.resource('global-errors')).show();
 		}
 		_window_onerror_handling = false;
 	};
 	$('#global-errors').click(function () {
 		$(this).fadeOut();
 	});
-	// ajax handler
-	$(document).ajaxStart(function (event, xhr) {
-		$('#global-errors').fadeOut();
-		$('#loading').fadeIn();
+	$(document).ajaxSend(function () {
+		$('#global-errors').hide();
 	});
-	$(document).ajaxStop(function (event, xhr) {
-		$('#loading').fadeOut();
+})();
+// loading indicator
+(function () {
+	/**
+	 * @class manager of loading indicator
+	 */
+	function LoadingIndicator ($indicator) {
+		this.counter = 0;
+		this.$indicator = $indicator;
+		$indicator.hide();
+	};
+	LoadingIndicator.prototype.enter = function () {
+		if (this.counter == 0) {
+			this.$indicator.fadeIn();
+		}
+		this.counter++;
+	};
+	LoadingIndicator.prototype.leave = function () {
+		this.counter--;
+		if (this.counter == 0) {
+			this.$indicator.fadeOut();
+		}
+	};
+	var loadingIndicator = new LoadingIndicator($('#loading'));
+	// use ajaxSend() instead of ajaxStart()
+	// because ajaxStart() is never called since AJAX error occurred
+	$(document).ajaxSend(function () {
+		loadingIndicator.enter();
 	});
-	$('#loading').hide();
+	$(document).ajaxStop(function () {
+		loadingIndicator.leave();
+	});
+	$(document).ajaxError(function () {
+		loadingIndicator.leave();
+	});
 })();
 $(function () {
 	taskwalls.session.onAuthorized = function () {
