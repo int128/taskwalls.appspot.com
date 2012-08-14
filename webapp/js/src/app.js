@@ -28,27 +28,21 @@ $.extend({
 })();
 // loading indicator
 (function () {
-	/**
-	 * @class manager of loading indicator
-	 */
-	function LoadingIndicator ($indicator) {
-		this.counter = 0;
-		this.$indicator = $indicator;
-		$indicator.hide();
-	};
-	LoadingIndicator.prototype.enter = function () {
+	var loadingIndicator = {};
+	loadingIndicator.$indicator = $('#loading').hide();
+	loadingIndicator.counter = 0;
+	loadingIndicator.enter = function () {
 		if (this.counter == 0) {
 			this.$indicator.fadeIn();
 		}
 		this.counter++;
 	};
-	LoadingIndicator.prototype.leave = function () {
+	loadingIndicator.leave = function () {
 		this.counter--;
 		if (this.counter == 0) {
 			this.$indicator.fadeOut();
 		}
 	};
-	var loadingIndicator = new LoadingIndicator($('#loading'));
 	// use ajaxSend() instead of ajaxStart()
 	// because ajaxStart() is never called since AJAX error occurred
 	$(document).ajaxSend(function () {
