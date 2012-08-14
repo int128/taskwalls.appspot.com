@@ -9,49 +9,29 @@ $.extend({
 		return $('#resources>[data-key="' + key + '"]').text();
 	}
 });
-// global errors
 (function () {
+	// global error handler
 	var _window_onerror_handling = false;
 	window.onerror = function () {
 		if (!_window_onerror_handling) {
 			_window_onerror_handling = true;
 			$('#global-errors').text($.resource('global-errors')).show();
+			$('#loading').hide();
 		}
 		_window_onerror_handling = false;
 	};
 	$('#global-errors').click(function () {
 		$(this).fadeOut();
 	});
-	$(document).ajaxSend(function () {
-		$('#global-errors').hide();
-	});
-})();
-// loading indicator
-(function () {
-	var loadingIndicator = {};
-	loadingIndicator.$indicator = $('#loading').hide();
-	loadingIndicator.counter = 0;
-	loadingIndicator.enter = function () {
-		console.info('enter', this.counter);
-		if (this.counter == 0) {
-			this.$indicator.fadeIn();
-		}
-		this.counter++;
-	};
-	loadingIndicator.leave = function () {
-		console.info('leave', this.counter);
-		this.counter--;
-		if (this.counter == 0) {
-			this.$indicator.fadeOut();
-		}
-	};
+	$('#loading').hide();
 	// use ajaxSend() instead of ajaxStart()
 	// because ajaxStart() is never called since AJAX error occurred
 	$(document).ajaxSend(function () {
-		loadingIndicator.enter();
+		$('#loading').fadeIn();
+		$('#global-errors').hide();
 	});
-	$(document).ajaxComplete(function () {
-		loadingIndicator.leave();
+	$(document).ajaxStop(function () {
+		$('#loading').fadeOut();
 	});
 })();
 $(function () {
