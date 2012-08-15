@@ -1,37 +1,34 @@
+// extensions
+$.extend({
+	/**
+	 * Get resource from document.
+	 * @param {String} key
+	 * @returns {String}
+	 */
+	resource: function (key) {
+		return $('#resources>[data-key="' + key + '"]').text();
+	}
+});
 (function () {
-	// extensions
-	$.extend({
-		/**
-		 * Get resource from document.
-		 * @param {String} key
-		 * @returns {String}
-		 */
-		resource: function (key) {
-			return $('#resources>[data-key="' + key + '"]').text();
-		}
-	});
 	// global error handler
-	var _window_onerror_handling = false;
 	window.onerror = function () {
-		if (!_window_onerror_handling) {
-			_window_onerror_handling = true;
-			$('#loading').hide();
-			$('#global-errors').text($.resource('global-errors')).fadeIn();
-		}
-		_window_onerror_handling = false;
+		$('#loading').hide();
+		$('#global-errors').text($.resource('global-errors')).fadeIn();
 	};
 	$('#global-errors').click(function () {
 		$(this).fadeOut();
 	});
-	// ajax handler
-	$(document).ajaxStart(function (event, xhr) {
-		$('#global-errors').fadeOut();
+	// loading indicator
+	$('#loading').hide();
+	// use ajaxSend() instead of ajaxStart()
+	// because ajaxStart() is never called since AJAX error occurred
+	$(document).ajaxSend(function () {
 		$('#loading').fadeIn();
+		$('#global-errors').hide();
 	});
-	$(document).ajaxStop(function (event, xhr) {
+	$(document).ajaxStop(function () {
 		$('#loading').fadeOut();
 	});
-	$('#loading').hide();
 })();
 $(function () {
 	taskwalls.session.onAuthorized = function () {
