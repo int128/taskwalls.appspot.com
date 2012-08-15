@@ -10,84 +10,16 @@ body {
 /*
  * Welcome page.
  */
-.oauth2state.unauthorized .welcome {
-	text-align: center;
-}
-
-.oauth2state.unauthorized .welcome h1 {
-	font-size: 36px;
-	margin-bottom: 10px;
-}
-
-.oauth2state.unauthorized .welcome p {
-	margin-top: 30px;
-	margin-bottom: 30px;
-}
-
-.oauth2state.unauthorized .welcome .login button {
-	padding: 10px;
-	border-radius: 5px;
-	-moz-border-radius: 5px;
-	background: #eee;
-	box-shadow: 0px 3px 10px 3px rgba(192, 192, 32, 0.2);
-	background: -webkit-gradient(linear, left top, left bottom, from(#fff), to(#ffc) );
-	background: -moz-linear-gradient(top, #fff, #ffc);
-	-ms-filter: 'progid:DXImageTransform.Microsoft.gradient(startColorstr=#ffffff, endColorstr=#f0f0c0)';
-	border: solid 1px gold;
-	text-decoration: none;
-	color: #444;
-	font-weight: bold;
-	font-size: 14px;
-}
-
-.oauth2state.unauthorized .welcome .login button:HOVER {
-	box-shadow: 0px 3px 10px 3px rgba(192, 192, 32, 0.6);
-	color: #000;
-}
-
-.oauth2state.unauthorized .welcome footer {
-	color: #888;
-	text-align: center;
-}
-
-.oauth2state.unauthorized .tryout {
-	overflow: hidden;
-	position: relative;
-	width: 800px;
-	height: 400px;
-	margin-left: auto;
-	margin-right: auto;
-	margin-top: 30px;
-	margin-bottom: 30px;
-	border: solid 1px #ccc;
-	border-radius: 5px;
-	-moz-border-radius: 5px;
-	box-shadow: 0px 3px 10px 3px rgba(0, 0, 0, 0.2) inset;
-}
-
-/* hacks for try-out */
-.oauth2state.unauthorized .navheader {
-	position: absolute;
-}
-
-.oauth2state.unauthorized .navheader .myicon-logout {
-	display: none;
-}
-
-.oauth2state.unauthorized .icebox {
-	position: absolute;
-}
-
-.oauth2state.unauthorized .icebox .task {
-	margin-right: 10px;
-}
-
-.oauth2state.unauthorized .icebox .create {
-	display: none;
-}
-
-.oauth2state.unauthorized .calendar {
+.oauth2state.unauthorized {
 	margin-top: 10px;
+}
+
+.oauth2state.unauthorized .login {
+	font-weight: bold;
+}
+
+.oauth2state.unauthorized footer {
+	color: #888;
 }
 
 /*

@@ -45,7 +45,7 @@ $(function () {
 		// move some elements
 		$('.oauth2state:not(.unauthorized)').remove();
 		$('.oauth2state').show();
-		$('.login a').attr('href', this.getAuthorizationURL());
+		$('.login').attr('href', this.getAuthorizationURL());
 	};
 	taskwalls.session.handle();
 });
