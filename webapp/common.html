@@ -263,25 +263,27 @@ Task WallはGoogleタスクと連携するタスク管理アプリです。<br/>
 <!-- /ko -->
 <!-- /ko -->
 
+<!-- ko with: iceboxTasks -->
 <section data-bind="droppable: {
 		accept: '.task',
 		hoverClass: 'dropping',
-		context: iceboxTasks
+		context: $data
 	}"
 	class="icebox">
 <h2>計画中のタスク</h2>
 <div class="create">
-<a data-bind="click: createTaskDialog.create"
+<a data-bind="click: $root.createTaskDialog.create"
 	href="#" class="showtooltip"
 	data-placement="left" title="新しいタスクを作成する"></a>
 </div>
-<div data-bind="foreach: iceboxTasks.tasklists">
+<div data-bind="foreach: tasklists">
 <div class="count"><span data-bind="text: tasks.length" class="badge"></span></div>
 <div data-bind="template: {name: 'task-template', foreach: tasks}, visible: tasklist.visible"
 	class="tasklist">
 </div>
 </div>
 </section>
+<!-- /ko -->
 
 <script type="text/html" id="task-template">
 <div data-bind="draggableByClone: {},
