@@ -41,12 +41,13 @@ var taskwalls = {
 	settings: new AppSettings(),
 	session: new OAuth2Session()
 };
-$(function () {
-	if (location.search == '?tryout') {
+var hashHandlers = {
+	'#tryout': function () {
 		$('.oauth2state:not(.authorized)').remove();
 		$('.oauth2state').show();
 		ko.applyBindings(taskwalls.pagevm = new TryOutPageViewModel());
-	} else {
+	},
+	any: function () {
 		taskwalls.session.onAuthorized = function () {
 			$('.oauth2state:not(.authorized)').remove();
 			$('.oauth2state').show();
@@ -63,5 +64,16 @@ $(function () {
 			$('.oauth2state .login').attr('href', this.getAuthorizationURL());
 		};
 		taskwalls.session.handle();
+	}
+};
+$(function () {
+	$(window).bind('hashchange', function () {
+		location.reload();
+	});
+	var handler = hashHandlers[location.hash];
+	if ($.isFunction(handler)) {
+		handler.call();
+	} else {
+		hashHandlers['any'].call();
 	}
 });
