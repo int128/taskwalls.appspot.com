@@ -59,7 +59,9 @@ AuthorizedPageViewModel.prototype.initialize = function () {
 	this.development = taskwalls.settings.development;
 
 	// session
-	this.logout = taskwalls.session.logout;
+	this.logout = function () {
+		OAuth2Controller.logout();
+	};
 };
 /**
  * Load task data.

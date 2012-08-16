@@ -1,73 +1,14 @@
 /**
- * @class OAuth 2.0 session controller.
+ * OAuth 2.0 session controller.
  */
-function OAuth2Session () {
-};
-/**
- * Handle current request.
- */
-OAuth2Session.prototype.handle = function () {
-	var self = this;
-	var params = $.queryParameters();
-	if (params['code']) {
-		// step2: received authorization code
-		localStorage.clear();
-		sessionStorage.clear();
-		if (this.onAuthorizing() !== false) {
-			$.post('/oauth2', {code: params['code']})
-				/**
-				 * @param {XMLHttpRequest} xhr
-				 */
-				.done(function (data, status, xhr) {
-					localStorage['session'] = xhr.getResponseHeader('X-TaskWall-Session');
-					window.location.replace(window.location.pathname);
-				})
-				.fail(function () {
-					// step2-1: authorization error
-					self.logout();
-				});
-		}
-	}
-	else if (params['error']) {
-		// step2-2: authorization denied
-		self.logout();
-	}
-	else if (localStorage['session']) {
-		// step3: authorized
-		/**
-		 * Add token to request header.
-		 * @param {XMLHttpRequest} xhr
-		 */
-		$(document).ajaxSend(function (event, xhr) {
-			xhr.setRequestHeader('X-TaskWall-Session', localStorage['session']);
-		});
-		/**
-		 * @param {XMLHttpRequest} xhr
-		 */
-		$(document).ajaxError(function (event, xhr, settings, e) {
-			if (xhr.status == 403) {
-				// session has been expired
-				$('#global-errors').hide();
-				window.location.replace(self.getAuthorizationURL());
-			}
-			else {
-				throw e;
-			}
-		});
-		this.onAuthorized();
-	}
-	else {
-		// step1: unauthorized
-		this.onUnauthorized();
-	}
-};
+var OAuth2Controller = {};
 /**
  * Get the authorization URL.
  * @returns {String} URL
  */
-OAuth2Session.prototype.getAuthorizationURL = function () {
+OAuth2Controller.getAuthorizationURL = function () {
 	return 'https://accounts.google.com/o/oauth2/auth'
-		+ '?redirect_uri=' + (window.location.protocol + '//' + window.location.host + window.location.pathname)
+		+ '?redirect_uri=' + (location.protocol + '//' + location.host + location.pathname)
 		+ '&response_type=code'
 		+ '&scope=https://www.googleapis.com/auth/tasks'
 		+ '&access_type=offline'
@@ -78,23 +19,60 @@ OAuth2Session.prototype.getAuthorizationURL = function () {
  * Log out the session.
  * Clean up the local cache and server session.
  */
-OAuth2Session.prototype.logout = function () {
+OAuth2Controller.logout = function () {
 	localStorage.clear();
 	sessionStorage.clear();
 	$.get('/logout').done(function () {
-		window.location.replace('/');
+		location.replace('/');
+	}).fail(function () {
+		location.replace('/');    // go home even if failed
 	});
 };
 /**
- * Event handler for authorization in progress.
- * @returns {Boolean} false if do not continue
+ * Handle the request.
+ * @param {Object} events map of event handlers
  */
-OAuth2Session.prototype.onAuthorizing = function () {};
-/**
- * Event handler on authorized.
- */
-OAuth2Session.prototype.onAuthorized = function () {};
-/**
- * Event handler for unauthorized.
- */
-OAuth2Session.prototype.onUnauthorized = function () {};
+OAuth2Controller.handle = function (events) {
+	function _ (func) {
+		return $.isFunction(func) ? func : $.noop;
+	};
+
+	var params = $.queryParameters();
+	if (params['code']) {
+		_(events.processingAuthorizationCode)();
+		this.processAuthorizationCode(params['code']);
+	}
+	else if (params['error']) {
+		this.logout();
+	}
+	else if (localStorage['session']) {
+		this.setUpAjaxSession(localStorage['session']);
+		_(events.alreadyAuthorized)();
+	}
+	else {
+		_(events.notAuthorizedYet)();
+	}
+};
+OAuth2Controller.processAuthorizationCode = function (code) {
+	localStorage.clear();
+	sessionStorage.clear();
+	$.post('/oauth2', {code: code})
+		.done(function (data, status, xhr) {
+			localStorage['session'] = xhr.getResponseHeader('X-TaskWall-Session');
+			location.replace(location.pathname);
+		})
+		.fail(function (error) {
+			OAuth2Controller.logout();
+		});
+};
+OAuth2Controller.setUpAjaxSession = function (sessionId) {
+	$(document).ajaxSend(function (event, xhr) {
+		xhr.setRequestHeader('X-TaskWall-Session', sessionId);
+	});
+	$(document).ajaxError(function (event, xhr) {
+		if (xhr.status == 403) {
+			// session has been expired
+			location.replace(OAuth2Controller.getAuthorizationURL());
+		}
+	});
+};

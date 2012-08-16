@@ -9,6 +9,15 @@ $.extend({
 		return $('#resources>[data-key="' + key + '"]').text();
 	}
 });
+$(function () {
+	$(document).tooltip({
+		selector: '.showtooltip'
+	});
+});
+var taskwalls = {
+	settings: new AppSettings()
+};
+// user notifications
 (function () {
 	// global error handler
 	window.onerror = function () {
@@ -30,35 +39,51 @@ $.extend({
 		$('#loading').fadeOut();
 	});
 })();
+// controller
 $(function () {
-	taskwalls.session.onAuthorized = function () {
-		$('.oauth2state:not(.authorized)').remove();
-		$('.oauth2state').show();
-		ko.applyBindings(taskwalls.pagevm = new AuthorizedPageViewModel());
-		taskwalls.pagevm.load();
-	};
-	taskwalls.session.onAuthorizing = function () {
-		$('.oauth2state:not(.authorizing)').remove();
-		$('.oauth2state').show();
-	};
-	taskwalls.session.onUnauthorized = function () {
-		// move some elements
-		$('.oauth2state.unauthorized>.tryout').append($('.navheader,.calendar,.icebox'));
-		$('.oauth2state.unauthorized').append($('.dialogs'));
-
-		$('.oauth2state:not(.unauthorized)').remove();
-		$('.oauth2state').show();
-		$('.login a').attr('href', this.getAuthorizationURL());
-		ko.applyBindings(taskwalls.pagevm = new TryOutPageViewModel());
-	};
-	taskwalls.session.handle();
-});
-var taskwalls = {
-		settings: new AppSettings(),
-		session: new OAuth2Session()
-};
-$(function () {
-	$(document).tooltip({
-		selector: '.showtooltip'
+	$(window).bind('hashchange', function () {
+		location.reload();
+	});
+	LocationHashRouter.route({
+		'#tryout': function () {
+			$('.oauth2state:not(.authorized)').remove();
+			$('.oauth2state').show();
+			ko.applyBindings(taskwalls.pagevm = new TryOutPageViewModel());
+		},
+		'default': function () {
+			OAuth2Controller.handle({
+				notAuthorizedYet: function () {
+					$('.oauth2state:not(.unauthorized)').remove();
+					$('.oauth2state').show();
+					$('.oauth2state .login').attr('href', OAuth2Controller.getAuthorizationURL());
+				},
+				processingAuthorizationCode: function () {
+					$('.oauth2state:not(.authorizing)').remove();
+					$('.oauth2state').show();
+				},
+				alreadyAuthorized: function () {
+					$('.oauth2state:not(.authorized)').remove();
+					$('.oauth2state').show();
+					ko.applyBindings(taskwalls.pagevm = new AuthorizedPageViewModel());
+					taskwalls.pagevm.load();
+				}
+			});
+		}
 	});
 });
+/**
+ * simple URL router
+ */
+var LocationHashRouter = {};
+/**
+ * route by given rules
+ * @param {Object} rules map of hash and function
+ */
+LocationHashRouter.route = function (rules) {
+	var func = rules[location.hash];
+	if ($.isFunction(func)) {
+		func.call();
+	} else {
+		rules['default'].call();
+	}
+};
