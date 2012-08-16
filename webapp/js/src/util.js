@@ -63,7 +63,7 @@ DateUtil.isThisWeek = function (time) {
 	return first <= time && time < next;
 };
 /**
- * Get time-stamp in UTC.
+ * Get UTC time of same date and time in local zone.
  * @returns {Number} time in UTC
  */
 Date.prototype.getUTCTime = function () {
