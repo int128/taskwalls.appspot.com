@@ -14,6 +14,9 @@ $(function () {
 		selector: '.showtooltip'
 	});
 });
+var taskwalls = {
+	settings: new AppSettings()
+};
 // user notifications
 (function () {
 	// global error handler
@@ -37,43 +40,50 @@ $(function () {
 	});
 })();
 // controller
-var taskwalls = {
-	settings: new AppSettings()
-};
-var hashHandlers = {
-	'#tryout': function () {
-		$('.oauth2state:not(.authorized)').remove();
-		$('.oauth2state').show();
-		ko.applyBindings(taskwalls.pagevm = new TryOutPageViewModel());
-	},
-	any: function () {
-		OAuth2Controller.handle({
-			notAuthorizedYet: function () {
-				$('.oauth2state:not(.unauthorized)').remove();
-				$('.oauth2state').show();
-				$('.oauth2state .login').attr('href', OAuth2Controller.getAuthorizationURL());
-			},
-			processingAuthorizationCode: function () {
-				$('.oauth2state:not(.authorizing)').remove();
-				$('.oauth2state').show();
-			},
-			alreadyAuthorized: function () {
-				$('.oauth2state:not(.authorized)').remove();
-				$('.oauth2state').show();
-				ko.applyBindings(taskwalls.pagevm = new AuthorizedPageViewModel());
-				taskwalls.pagevm.load();
-			}
-		});
-	}
-};
 $(function () {
 	$(window).bind('hashchange', function () {
 		location.reload();
 	});
-	var handler = hashHandlers[location.hash];
-	if ($.isFunction(handler)) {
-		handler.call();
-	} else {
-		hashHandlers['any'].call();
-	}
+	LocationHashRouter.route({
+		'#tryout': function () {
+			$('.oauth2state:not(.authorized)').remove();
+			$('.oauth2state').show();
+			ko.applyBindings(taskwalls.pagevm = new TryOutPageViewModel());
+		},
+		'default': function () {
+			OAuth2Controller.handle({
+				notAuthorizedYet: function () {
+					$('.oauth2state:not(.unauthorized)').remove();
+					$('.oauth2state').show();
+					$('.oauth2state .login').attr('href', OAuth2Controller.getAuthorizationURL());
+				},
+				processingAuthorizationCode: function () {
+					$('.oauth2state:not(.authorizing)').remove();
+					$('.oauth2state').show();
+				},
+				alreadyAuthorized: function () {
+					$('.oauth2state:not(.authorized)').remove();
+					$('.oauth2state').show();
+					ko.applyBindings(taskwalls.pagevm = new AuthorizedPageViewModel());
+					taskwalls.pagevm.load();
+				}
+			});
+		}
+	});
 });
+/**
+ * simple URL router
+ */
+var LocationHashRouter = {};
+/**
+ * route by given rules
+ * @param {Object} rules map of hash and function
+ */
+LocationHashRouter.route = function (rules) {
+	var func = rules[location.hash];
+	if ($.isFunction(func)) {
+		func.call();
+	} else {
+		rules['default'].call();
+	}
+};
