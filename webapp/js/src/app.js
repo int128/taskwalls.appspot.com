@@ -42,20 +42,26 @@ var taskwalls = {
 	session: new OAuth2Session()
 };
 $(function () {
-	taskwalls.session.onAuthorized = function () {
+	if (location.search == '?tryout') {
 		$('.oauth2state:not(.authorized)').remove();
 		$('.oauth2state').show();
-		ko.applyBindings(taskwalls.pagevm = new AuthorizedPageViewModel());
-		taskwalls.pagevm.load();
-	};
-	taskwalls.session.onAuthorizing = function () {
-		$('.oauth2state:not(.authorizing)').remove();
-		$('.oauth2state').show();
-	};
-	taskwalls.session.onUnauthorized = function () {
-		$('.oauth2state:not(.unauthorized)').remove();
-		$('.oauth2state').show();
-		$('.oauth2state .login').attr('href', this.getAuthorizationURL());
-	};
-	taskwalls.session.handle();
+		ko.applyBindings(taskwalls.pagevm = new TryOutPageViewModel());
+	} else {
+		taskwalls.session.onAuthorized = function () {
+			$('.oauth2state:not(.authorized)').remove();
+			$('.oauth2state').show();
+			ko.applyBindings(taskwalls.pagevm = new AuthorizedPageViewModel());
+			taskwalls.pagevm.load();
+		};
+		taskwalls.session.onAuthorizing = function () {
+			$('.oauth2state:not(.authorizing)').remove();
+			$('.oauth2state').show();
+		};
+		taskwalls.session.onUnauthorized = function () {
+			$('.oauth2state:not(.unauthorized)').remove();
+			$('.oauth2state').show();
+			$('.oauth2state .login').attr('href', this.getAuthorizationURL());
+		};
+		taskwalls.session.handle();
+	}
 });
