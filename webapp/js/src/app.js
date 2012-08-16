@@ -9,6 +9,12 @@ $.extend({
 		return $('#resources>[data-key="' + key + '"]').text();
 	}
 });
+$(function () {
+	$(document).tooltip({
+		selector: '.showtooltip'
+	});
+});
+// user notifications
 (function () {
 	// global error handler
 	window.onerror = function () {
@@ -30,6 +36,11 @@ $.extend({
 		$('#loading').fadeOut();
 	});
 })();
+// controller
+var taskwalls = {
+	settings: new AppSettings(),
+	session: new OAuth2Session()
+};
 $(function () {
 	taskwalls.session.onAuthorized = function () {
 		$('.oauth2state:not(.authorized)').remove();
@@ -42,19 +53,9 @@ $(function () {
 		$('.oauth2state').show();
 	};
 	taskwalls.session.onUnauthorized = function () {
-		// move some elements
 		$('.oauth2state:not(.unauthorized)').remove();
 		$('.oauth2state').show();
-		$('.login').attr('href', this.getAuthorizationURL());
+		$('.oauth2state .login').attr('href', this.getAuthorizationURL());
 	};
 	taskwalls.session.handle();
-});
-var taskwalls = {
-		settings: new AppSettings(),
-		session: new OAuth2Session()
-};
-$(function () {
-	$(document).tooltip({
-		selector: '.showtooltip'
-	});
 });
