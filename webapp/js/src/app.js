@@ -38,8 +38,7 @@ $(function () {
 })();
 // controller
 var taskwalls = {
-	settings: new AppSettings(),
-	session: new OAuth2Session()
+	settings: new AppSettings()
 };
 var hashHandlers = {
 	'#tryout': function () {
@@ -48,22 +47,23 @@ var hashHandlers = {
 		ko.applyBindings(taskwalls.pagevm = new TryOutPageViewModel());
 	},
 	any: function () {
-		taskwalls.session.onAuthorized = function () {
-			$('.oauth2state:not(.authorized)').remove();
-			$('.oauth2state').show();
-			ko.applyBindings(taskwalls.pagevm = new AuthorizedPageViewModel());
-			taskwalls.pagevm.load();
-		};
-		taskwalls.session.onAuthorizing = function () {
-			$('.oauth2state:not(.authorizing)').remove();
-			$('.oauth2state').show();
-		};
-		taskwalls.session.onUnauthorized = function () {
-			$('.oauth2state:not(.unauthorized)').remove();
-			$('.oauth2state').show();
-			$('.oauth2state .login').attr('href', this.getAuthorizationURL());
-		};
-		taskwalls.session.handle();
+		OAuth2Controller.handle({
+			notAuthorizedYet: function () {
+				$('.oauth2state:not(.unauthorized)').remove();
+				$('.oauth2state').show();
+				$('.oauth2state .login').attr('href', OAuth2Controller.getAuthorizationURL());
+			},
+			processingAuthorizationCode: function () {
+				$('.oauth2state:not(.authorizing)').remove();
+				$('.oauth2state').show();
+			},
+			alreadyAuthorized: function () {
+				$('.oauth2state:not(.authorized)').remove();
+				$('.oauth2state').show();
+				ko.applyBindings(taskwalls.pagevm = new AuthorizedPageViewModel());
+				taskwalls.pagevm.load();
+			}
+		});
 	}
 };
 $(function () {
