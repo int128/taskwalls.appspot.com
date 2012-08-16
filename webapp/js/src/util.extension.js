@@ -62,7 +62,16 @@ if (!Array.prototype.reduce) {
     return curr;
   };
 }
+// jQuery extentions
 $.extend({
+	/**
+	 * Get resource from document.
+	 * @param {String} key
+	 * @returns {String}
+	 */
+	resource: function (key) {
+		return $('#resources>[data-key="' + key + '"]').text();
+	},
 	/**
 	 * Parse query string.
 	 * @returns hash of query parameters
@@ -92,4 +101,10 @@ $.extend({
 	noopFalse: function () {
 		return false;
 	}
+});
+// bootstrap extensions
+$(function () {
+	$(document).tooltip({
+		selector: '.showtooltip'
+	});
 });
