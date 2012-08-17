@@ -88,7 +88,7 @@ TryOutPageViewModel.prototype.initialize = function () {
 
 	// load example data
 	$.getJSON('/tryoutdata.json').done($.proxy(function (response) {
-		var originTime = taskwalls.settings.today().getFirstDayOfWeek().getTime(),
+		var originTime = DateUtil.calculateFirstDayOfWeek(taskwalls.settings.today()),
 			baseTime = DateUtil.normalize(new Date(response.baseTime)).getTime(),
 			delta = originTime - baseTime;
 

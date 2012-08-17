@@ -293,7 +293,7 @@ Tasks.create = function (data) {
 	if (!taskwalls.settings.offline()) {
 		return $.post('/tasks/create', $.extend({}, data, {
 			// specify zero for icebox
-			due: data.due ? data.due.getUTCTime() : 0
+			due: data.due ? DateUtil.calculateTimeInUTC(data.due) : 0
 		})).pipe(function (object) {
 			return new Task(object);
 		});
@@ -491,7 +491,7 @@ Task.prototype.update = function (data) {
 				tasklistID: this.tasklist().id(),
 			}, data.due === undefined ? {} : {
 				// specify zero for icebox
-				due: data.due ? data.due.getUTCTime() : 0
+				due: data.due ? DateUtil.calculateTimeInUTC(data.due) : 0
 			}))
 			.done(function () {
 				ko.extendObservables(self, data);

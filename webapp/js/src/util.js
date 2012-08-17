@@ -74,26 +74,22 @@ DateUtil.calculateFirstDayOfWeek = function (day) {
 	return firstDay;
 };
 /**
- * Get UTC time of same date and time in local zone.
- * @returns {Number} time in UTC
- */
-Date.prototype.getUTCTime = function () {
-	return this.getTime() - this.getTimezoneOffset() * 60 * 1000;
-};
-/**
  * Return first day of the week.
- * @returns {Date} first day (new instance)
- * @deprecated
+ * @param {Date} day (also accepts {Number})
+ * @returns {Date} first day of the month (new instance)
  */
-Date.prototype.getFirstDayOfWeek = function () {
-	return DateUtil.calculateFirstDayOfWeek(this);
+DateUtil.calculateFirstDayOfMonth = function (day) {
+	var firstDay = new Date(day);
+	firstDay.setHours(0, 0, 0, 0);
+	firstDay.setDate(1);
+	return firstDay;
 };
 /**
- * Return first day of the month.
- * @returns {Date} first day (new instance)
+ * Return UTC time of same date and time in local zone.
+ * For example, if parameter is (10:00 AM JST) then returns (10:00 AM UTC). 
+ * @param {Number} time local time
+ * @returns {Number} time UTC time
  */
-Date.prototype.getFirstDayOfMonth = function () {
-	var day = new Date(this);
-	day.setDate(1);
-	return day;
+DateUtil.calculateTimeInUTC = function (time) {
+	return time - new Date(time).getTimezoneOffset() * 60 * 1000;
 };

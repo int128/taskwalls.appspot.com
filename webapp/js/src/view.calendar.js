@@ -15,7 +15,7 @@ DailyCalendarViewModel.NUMBER_OF_DAYS = 14;
 DailyCalendarViewModel.prototype.initialize = function (taskdata) {
 	// set up days in the calendar
 	this.rows = ko.computed(function () {
-		var day = taskwalls.settings.today().getFirstDayOfWeek();
+		var day = DateUtil.calculateFirstDayOfWeek(taskwalls.settings.today());
 			rows = [];
 		for (var i = 0; i < DailyCalendarViewModel.NUMBER_OF_DAYS; i++) {
 			rows[i] = new DailyCalendarViewModel.Row(new Date(day));
@@ -101,7 +101,7 @@ WeeklyCalendarViewModel.NUMBER_OF_WEEKS = 8;
 WeeklyCalendarViewModel.prototype.initialize = function (taskdata) {
 	// set up weeks in the calendar
 	this.rows = ko.computed(function () {
-		var day = taskwalls.settings.today().getFirstDayOfWeek(),
+		var day = DateUtil.calculateFirstDayOfWeek(taskwalls.settings.today()),
 			rows = [];
 		for (var i = 0; i < WeeklyCalendarViewModel.NUMBER_OF_WEEKS; i++) {
 			var beginOfThisWeek = new Date(day);
@@ -185,7 +185,7 @@ MonthlyCalendarViewModel.NUMBER_OF_MONTHS = 12;
 MonthlyCalendarViewModel.prototype.initialize = function (taskdata) {
 	// set up months in the calendar
 	this.rows = ko.computed(function () {
-		var date = taskwalls.settings.today().getFirstDayOfMonth(),
+		var date = DateUtil.calculateFirstDayOfMonth(taskwalls.settings.today()),
 			rows = [];
 		for (var i = 0; i < MonthlyCalendarViewModel.NUMBER_OF_MONTHS; i++) {
 			var beginOfThisMonth = new Date(date);
@@ -291,7 +291,7 @@ function PastTasksViewModel (taskdata) {
  */
 PastTasksViewModel.prototype.initialize = function (taskdata) {
 	this.tasklists = ko.computed(function () {
-		var firstDayOfThisWeek = taskwalls.settings.today().getFirstDayOfWeek();
+		var firstDayOfThisWeek = DateUtil.calculateFirstDayOfWeek(taskwalls.settings.today());
 		var tasks = Tasks.before(taskdata.tasks(), firstDayOfThisWeek.getTime());
 		TaskViewModel.extend(tasks);
 		return Tasks.groupByTasklist(tasks);
