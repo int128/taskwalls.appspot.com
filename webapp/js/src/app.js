@@ -30,29 +30,28 @@ $(function () {
 		}
 	});
 });
-(function () {
-	// global error handler
-	window.onerror = function () {
-		$('#loading').hide();
-		$('#global-errors').text($.resource('global-errors')).fadeIn();
-	};
-	$('#global-errors').click(function () {
-		$(this).fadeOut();
-	});
 
-	// loading indicator
+// global error handler
+window.onerror = function () {
 	$('#loading').hide();
-	// use ajaxSend() instead of ajaxStart()
-	// because ajaxStart() is never called since AJAX error occurred
-	$(document).ajaxSend(function () {
-		$('#loading').fadeIn();
-		$('#global-errors').hide();
-	});
-	$(document).ajaxStop(function () {
-		$('#loading').fadeOut();
-	});
-})();
-// app constants
-var taskwalls = {
-	settings: new AppSettings()
+	$('#global-errors').text($.resource('global-errors')).fadeIn();
 };
+$('#global-errors').click(function () {
+	$(this).fadeOut();
+});
+
+// loading indicator
+$('#loading').hide();
+// use ajaxSend() instead of ajaxStart()
+// because ajaxStart() is never called since AJAX error occurred
+$(document).ajaxSend(function () {
+	$('#loading').fadeIn();
+	$('#global-errors').hide();
+});
+$(document).ajaxStop(function () {
+	$('#loading').fadeOut();
+});
+
+// app constants
+var taskwalls = {};
+taskwalls.settings = new AppSettings();
