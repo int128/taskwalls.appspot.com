@@ -2,6 +2,7 @@
  * OAuth 2.0 session controller.
  */
 var OAuth2Controller = {};
+OAuth2Controller.prototype = {};
 /**
  * Get the authorization URL.
  * @returns {String} URL
