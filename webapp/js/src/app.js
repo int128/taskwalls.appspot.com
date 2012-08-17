@@ -30,22 +30,6 @@ $(function () {
 		}
 	});
 });
-/**
- * simple URL router
- */
-var LocationHashRouter = {};
-/**
- * route by given rules
- * @param {Object} rules map of hash and function
- */
-LocationHashRouter.route = function (rules) {
-	var func = rules[location.hash];
-	if ($.isFunction(func)) {
-		func.call();
-	} else {
-		rules['default'].call();
-	}
-};
 // user notifications
 (function () {
 	// global error handler
