@@ -30,7 +30,6 @@ $(function () {
 		}
 	});
 });
-// user notifications
 (function () {
 	// global error handler
 	window.onerror = function () {
@@ -40,6 +39,7 @@ $(function () {
 	$('#global-errors').click(function () {
 		$(this).fadeOut();
 	});
+
 	// loading indicator
 	$('#loading').hide();
 	// use ajaxSend() instead of ajaxStart()
