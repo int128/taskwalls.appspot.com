@@ -64,7 +64,7 @@ DailyCalendarViewModel.Row.prototype.initialize = function (day) {
 		return day.getTime() < taskwalls.settings.today().getTime();
 	}, this);
 	this.thisweek = ko.computed(function () {
-		return DateUtil.isThisWeek(day);
+		return DateUtil.areSameWeek(day, taskwalls.settings.today());
 	}, this);
 	this.tasklists = ko.observableArray();
 };
@@ -149,7 +149,7 @@ WeeklyCalendarViewModel.Row.prototype.initialize = function (beginOfThisWeek, en
 
 	this.tasklists = ko.observableArray();
 	this.thisweek = ko.computed(function () {
-		return DateUtil.isThisWeek(beginOfThisWeek);
+		return DateUtil.areSameWeek(beginOfThisWeek, taskwalls.settings.today());
 	}, this);
 };
 /**
@@ -226,7 +226,7 @@ MonthlyCalendarViewModel.Row.prototype.initialize = function (beginOfThisMonth, 
 
 	this.tasklists = ko.observableArray();
 	this.thisweek = ko.computed(function () {
-		return DateUtil.isThisWeek(beginOfThisMonth);
+		return DateUtil.areSameWeek(beginOfThisMonth, taskwalls.settings.today());
 	}, this);
 };
 /**

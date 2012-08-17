@@ -11,13 +11,15 @@ AuthorizedPageViewModel.prototype.initialize = function () {
 
 	// summary
 	this.completedCount = ko.computed(function () {
+		var today = taskwalls.settings.today();
 		return $.grep(this.taskdata.tasks(), function (task) {
-			return DateUtil.isThisWeek(task.due()) && task.isCompleted();
+			return DateUtil.areSameWeek(task.due(), today) && task.isCompleted();
 		}).length;
 	}, this);
 	this.count = ko.computed(function () {
+		var today = taskwalls.settings.today();
 		return $.grep(this.taskdata.tasks(), function (task) {
-			return DateUtil.isThisWeek(task.due());
+			return DateUtil.areSameWeek(task.due(), today);
 		}).length;
 	}, this);
 

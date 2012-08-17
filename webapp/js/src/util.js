@@ -37,30 +37,41 @@ AppSettings.prototype.tasklistColors = 24;
 /**
  * @class Date utility.
  */
-function DateUtil () {
-};
+function DateUtil () {};
+DateUtil.prototype = {};
 /**
- * Normalize date. Hours, minutes and seconds will be 0.
- * @param {Number} or {Date} time
- * @returns {Date}
+ * Normalize date.
+ * Result is an new instance.
+ * @param {Date} date (also accepts {Number})
+ * @returns {Date} new instance
  */
-DateUtil.normalize = function (time) {
-	var normalized = new Date(time);
+DateUtil.normalize = function (date) {
+	var normalized = new Date(date);
 	normalized.setHours(0, 0, 0, 0);
 	return normalized;
 };
 /**
- * Returns true if the day is in this week.
+ * Determine if given days are in same week.
  * This function assumes a week begins from Monday.
- * @param {Date} date
- * @returns {Boolean}
+ * @param {Date} day1 (also accepts {Number})
+ * @param {Date} day2 (also accepts {Number})
+ * @returns {Boolean} true if they are in same week
  */
-DateUtil.isThisWeek = function (time) {
-	var today = new Date();
-	today.setHours(0, 0, 0, 0);
-	var first = today.getTime() - ((today.getDay() + 6) % 7) * 24 * 3600 * 1000;
-	var next = first + 7 * 24 * 3600 * 1000;
-	return first <= time && time < next;
+DateUtil.areSameWeek = function (day1, day2) {
+	return DateUtil.calculateFirstDayOfWeek(day1).getTime()
+		== DateUtil.calculateFirstDayOfWeek(day2).getTime();
+};
+/**
+ * Return first day of the week.
+ * This function assumes a week begins from Monday.
+ * @param {Date} day (also accepts {Number})
+ * @returns {Date} first day of the week (new instance)
+ */
+DateUtil.calculateFirstDayOfWeek = function (day) {
+	var firstDay = new Date(day);
+	firstDay.setHours(0, 0, 0, 0);
+	firstDay.setDate(firstDay.getDate() - (firstDay.getDay() + 6) % 7);
+	return firstDay;
 };
 /**
  * Get UTC time of same date and time in local zone.
@@ -72,11 +83,10 @@ Date.prototype.getUTCTime = function () {
 /**
  * Return first day of the week.
  * @returns {Date} first day (new instance)
+ * @deprecated
  */
 Date.prototype.getFirstDayOfWeek = function () {
-	var day = new Date(this);
-	day.setDate(day.getDate() - (day.getDay() + 6) % 7);
-	return day;
+	return DateUtil.calculateFirstDayOfWeek(this);
 };
 /**
  * Return first day of the month.
