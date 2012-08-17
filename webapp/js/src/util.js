@@ -1,40 +1,4 @@
 /**
- * @class Application settings.
- */
-function AppSettings () {
-	this.initialize.apply(this, arguments);
-}
-/**
- */
-AppSettings.prototype.initialize = function () {
-	/**
-	 * Normalized date of today.
-	 */
-	this.today = ko.observable(DateUtil.normalize(new Date()));
-	/**
-	 * Last cached date.
-	 */
-	this.lastCached = ko.observable(new Date(parseInt(localStorage['cachedDate'])));
-	ko.computed(function () {
-		localStorage['cachedDate'] = this.lastCached().getTime();
-	}, this);
-	/**
-	 * Offline mode.
-	 */
-	this.offline = ko.observable(sessionStorage['offline'] == 'true');
-	ko.computed(function () {
-		sessionStorage['offline'] = this.offline();
-	}, this);
-	/**
-	 * Development environment.
-	 */
-	this.development = ko.observable(location.hostname.search('.appspot.com') == -1);
-};
-/**
- * Number of colors.
- */
-AppSettings.prototype.tasklistColors = 24;
-/**
  * @class simple request router
  */
 function LocationHashRouter () {};

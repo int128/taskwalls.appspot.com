@@ -54,4 +54,20 @@ $(document).ajaxStop(function () {
 
 // app constants
 var taskwalls = {};
-taskwalls.settings = new AppSettings();
+taskwalls.settings = {};
+// colors
+taskwalls.settings.tasklistColors = 24;
+// today (to update view when date changed)
+taskwalls.settings.today = ko.observable(DateUtil.normalize(new Date()));
+// last date of AJAX loading
+taskwalls.settings.lastCached = ko.observable(new Date(parseInt(localStorage['cachedDate'])));
+ko.computed(function () {
+	localStorage['cachedDate'] = taskwalls.settings.lastCached().getTime();
+});
+// is offline mode?
+taskwalls.settings.offline = ko.observable(sessionStorage['offline'] == 'true');
+ko.computed(function () {
+	sessionStorage['offline'] = taskwalls.settings.offline();
+});
+// is development environment?
+taskwalls.settings.development = ko.observable(location.hostname.search('.appspot.com') == -1);
