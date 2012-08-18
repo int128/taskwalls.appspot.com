@@ -15,7 +15,7 @@ DailyCalendarViewModel.NUMBER_OF_DAYS = 14;
 DailyCalendarViewModel.prototype.initialize = function (taskdata) {
 	// set up days in the calendar
 	this.rows = ko.computed(function () {
-		var day = DateUtil.calculateFirstDayOfWeek(taskwalls.settings.today());
+		var day = DateUtil.calculateFirstDayOfWeek(DateUtil.today());
 			rows = [];
 		for (var i = 0; i < DailyCalendarViewModel.NUMBER_OF_DAYS; i++) {
 			rows[i] = new DailyCalendarViewModel.Row(new Date(day));
@@ -61,10 +61,10 @@ DailyCalendarViewModel.Row.prototype.initialize = function (day) {
 	this.weekdayName = $.resource('weekday' + day.getDay());
 
 	this.past = ko.computed(function () {
-		return day.getTime() < taskwalls.settings.today().getTime();
+		return day.getTime() < DateUtil.today().getTime();
 	}, this);
 	this.thisweek = ko.computed(function () {
-		return DateUtil.areSameWeek(day, taskwalls.settings.today());
+		return DateUtil.areSameWeek(day, DateUtil.today());
 	}, this);
 	this.tasklists = ko.observableArray();
 };
@@ -101,7 +101,7 @@ WeeklyCalendarViewModel.NUMBER_OF_WEEKS = 8;
 WeeklyCalendarViewModel.prototype.initialize = function (taskdata) {
 	// set up weeks in the calendar
 	this.rows = ko.computed(function () {
-		var day = DateUtil.calculateFirstDayOfWeek(taskwalls.settings.today()),
+		var day = DateUtil.calculateFirstDayOfWeek(DateUtil.today()),
 			rows = [];
 		for (var i = 0; i < WeeklyCalendarViewModel.NUMBER_OF_WEEKS; i++) {
 			var beginOfThisWeek = new Date(day);
@@ -149,7 +149,7 @@ WeeklyCalendarViewModel.Row.prototype.initialize = function (beginOfThisWeek, en
 
 	this.tasklists = ko.observableArray();
 	this.thisweek = ko.computed(function () {
-		return DateUtil.areSameWeek(beginOfThisWeek, taskwalls.settings.today());
+		return DateUtil.areSameWeek(beginOfThisWeek, DateUtil.today());
 	}, this);
 };
 /**
@@ -185,7 +185,7 @@ MonthlyCalendarViewModel.NUMBER_OF_MONTHS = 12;
 MonthlyCalendarViewModel.prototype.initialize = function (taskdata) {
 	// set up months in the calendar
 	this.rows = ko.computed(function () {
-		var date = DateUtil.calculateFirstDayOfMonth(taskwalls.settings.today()),
+		var date = DateUtil.calculateFirstDayOfMonth(DateUtil.today()),
 			rows = [];
 		for (var i = 0; i < MonthlyCalendarViewModel.NUMBER_OF_MONTHS; i++) {
 			var beginOfThisMonth = new Date(date);
@@ -226,7 +226,7 @@ MonthlyCalendarViewModel.Row.prototype.initialize = function (beginOfThisMonth, 
 
 	this.tasklists = ko.observableArray();
 	this.thisweek = ko.computed(function () {
-		return DateUtil.areSameWeek(beginOfThisMonth, taskwalls.settings.today());
+		return DateUtil.areSameWeek(beginOfThisMonth, DateUtil.today());
 	}, this);
 };
 /**
@@ -291,7 +291,7 @@ function PastTasksViewModel (taskdata) {
  */
 PastTasksViewModel.prototype.initialize = function (taskdata) {
 	this.tasklists = ko.computed(function () {
-		var firstDayOfThisWeek = DateUtil.calculateFirstDayOfWeek(taskwalls.settings.today());
+		var firstDayOfThisWeek = DateUtil.calculateFirstDayOfWeek(DateUtil.today());
 		var tasks = Tasks.before(taskdata.tasks(), firstDayOfThisWeek.getTime());
 		TaskViewModel.extend(tasks);
 		return Tasks.groupByTasklist(tasks);

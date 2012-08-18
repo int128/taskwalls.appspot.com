@@ -57,8 +57,6 @@ var taskwalls = {};
 taskwalls.settings = {};
 // colors
 taskwalls.settings.tasklistColors = 24;
-// today (to update view when date changed)
-taskwalls.settings.today = ko.observable(DateUtil.clearTimePart(new Date()));
 // last date of AJAX loading
 taskwalls.settings.lastCached = ko.observable(new Date(parseInt(localStorage['cachedDate'])));
 ko.computed(function () {

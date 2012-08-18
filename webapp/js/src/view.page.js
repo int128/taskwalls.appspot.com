@@ -11,13 +11,13 @@ AuthorizedPageViewModel.prototype.initialize = function () {
 
 	// summary
 	this.completedCount = ko.computed(function () {
-		var today = taskwalls.settings.today();
+		var today = DateUtil.today();
 		return $.grep(this.taskdata.tasks(), function (task) {
 			return DateUtil.areSameWeek(task.due(), today) && task.isCompleted();
 		}).length;
 	}, this);
 	this.count = ko.computed(function () {
-		var today = taskwalls.settings.today();
+		var today = DateUtil.today();
 		return $.grep(this.taskdata.tasks(), function (task) {
 			return DateUtil.areSameWeek(task.due(), today);
 		}).length;
@@ -88,7 +88,7 @@ TryOutPageViewModel.prototype.initialize = function () {
 
 	// load example data
 	$.getJSON('/tryoutdata.json').done($.proxy(function (response) {
-		var originTime = DateUtil.calculateFirstDayOfWeek(taskwalls.settings.today()),
+		var originTime = DateUtil.calculateFirstDayOfWeek(DateUtil.today()),
 			baseTime = DateUtil.clearTimePart(new Date(response.baseTime)).getTime(),
 			delta = originTime - baseTime;
 

@@ -72,3 +72,10 @@ DateUtil.calculateFirstDayOfMonth = function (day) {
 DateUtil.calculateTimeInUTC = function (time) {
 	return time - new Date(time).getTimezoneOffset() * 60 * 1000;
 };
+/**
+ * Today.
+ * This is an observable value, that is updated at 0:00.
+ * @returns {Date} today
+ */
+DateUtil.today = ko.observable(DateUtil.clearTimePart(new Date()));
+// TODO: update today()
