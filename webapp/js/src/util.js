@@ -21,15 +21,13 @@ LocationHashRouter.route = function (rules) {
 function DateUtil () {};
 DateUtil.prototype = {};
 /**
- * Normalize date.
- * Result is an new instance.
- * @param {Date} date (also accepts {Number})
- * @returns {Date} new instance
+ * Clear time part of the date.
+ * @param {Date} date
+ * @returns {Date} instance as-is
  */
-DateUtil.normalize = function (date) {
-	var normalized = new Date(date);
-	normalized.setHours(0, 0, 0, 0);
-	return normalized;
+DateUtil.clearTimePart = function (date) {
+	date.setHours(0, 0, 0, 0);
+	return date;
 };
 /**
  * Determine if given days are in same week.

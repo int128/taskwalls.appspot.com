@@ -462,9 +462,8 @@ Task.prototype.initialize = function (object, tasklist) {
 		this.notes = ko.observable();
 	}
 	if (object.due) {
-		// normalize for current timezone
-		// TODO: change to {Number} in order to save resource
-		this.due(DateUtil.normalize(object.due));
+		// convert to local Date (response is UTC string)
+		this.due(DateUtil.clearTimePart(new Date(this.due())));
 	} else {
 		this.due = ko.observable();
 	}
