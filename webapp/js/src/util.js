@@ -77,5 +77,24 @@ DateUtil.calculateTimeInUTC = function (time) {
  * This is an observable value, that is updated at 0:00.
  * @returns {Date} today
  */
-DateUtil.today = ko.observable(DateUtil.clearTimePart(new Date()));
-// TODO: update today()
+DateUtil.today = ko.observable();
+(function () {
+	/**
+	 * Calculate remaining time until 0:00.
+	 * @returns {Number} time in milliseconds
+	 */
+	function calculateTimeUntilDateChanges () {
+		var tomorrow = DateUtil.clearTimePart(new Date());
+		tomorrow.setDate(tomorrow.getDate() + 1);
+		return tomorrow.getTime() - $.now();
+	}
+	/**
+	 * Update DateUtil#today.
+	 */
+	function update () {
+		DateUtil.today(DateUtil.clearTimePart(new Date()));
+		setTimeout(update, calculateTimeUntilDateChanges());
+	}
+	// initialize value
+	update();
+})();
