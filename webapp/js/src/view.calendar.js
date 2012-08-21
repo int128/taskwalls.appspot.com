@@ -28,10 +28,8 @@ DailyCalendarViewModel.prototype.initialize = function (taskdata) {
 	ko.computed(function () {
 		var tasks = taskdata.tasks();
 		TaskViewModel.extend(tasks);
-
 		var dueIndex = taskdata.dueIndex();
-		var rows = this.rows();
-		$.each(rows, function (i, row) {
+		$.each(this.rows(), function (i, row) {
 			row.tasklists(Tasks.groupByTasklist(dueIndex.getTasks(row.day)));
 		});
 	}, this);
