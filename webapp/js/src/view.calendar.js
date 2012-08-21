@@ -24,8 +24,6 @@ DailyCalendarViewModel.prototype.initialize = function (taskdata) {
 		return rows;
 	}, this);
 
-	this.pastTasks = ko.observableArray();
-
 	// put tasks into each day
 	ko.computed(function () {
 		var tasks = taskdata.tasks();
