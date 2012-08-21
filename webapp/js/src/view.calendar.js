@@ -115,13 +115,6 @@ WeeklyCalendarViewModel.prototype.initialize = function (taskdata) {
 			row.tasklists(Tasks.groupByTasklist(tasksInWeek));
 		});
 	}, this);
-
-	this.futureTasks = ko.computed(function () {
-		var rows = this.rows();
-		var lastDay = rows[rows.length - 1].endOfThisWeek;
-		// TODO: should use "after or equal"
-		Tasks.groupByTasklist(Tasks.after(taskdata.tasks(), lastDay.getTime() - 1));
-	}, this);
 };
 /**
  * @constructor row item of {@link WeeklyCalendarViewModel}
