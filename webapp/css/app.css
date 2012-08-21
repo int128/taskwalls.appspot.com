@@ -159,12 +159,37 @@ body {
 }
 
 /*
- * Calendar.
+ * Tabs.
  */
-.calendar {
+.switch-view {
+	z-index: 80;
+	position: fixed;
+	top: 0;
+	left: 120px;
+	right: 0;
+	background-color: #fff;
+}
+
+.switch-view .nav {
+	margin-bottom: 0;
+}
+
+.navtabcontent {
 	margin-left: 120px;
 	margin-right: 240px;
 	margin-top: 40px;
+}
+
+/*
+ * Overview.
+ */
+.overview {
+}
+
+/*
+ * Calendar.
+ */
+.calendar {
 }
 
 .calendar table {
@@ -301,19 +326,6 @@ body {
 	left: 0;
 	z-index: 100;
 	color: dimgray;
-}
-
-.switch-view {
-	z-index: 80;
-	position: fixed;
-	top: 0;
-	left: 120px;
-	right: 0;
-	background-color: #fff;
-}
-
-.switch-view .nav {
-	margin-bottom: 0;
 }
 
 .calendar-next {
