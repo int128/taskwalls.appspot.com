@@ -128,8 +128,11 @@ var appengineDevelopment = (location.hostname.search('.appspot.com') == -1);
 
 <div class="switch-view">
 	<ul class="nav nav-tabs">
+	<li data-bind="css: {active: viewMode() == 'overview'}">
+	<a data-bind="click: switchView('overview')" href="#">概況</a>
+	</li>
 	<li data-bind="css: {active: viewMode() == 'daily'}">
-	<a data-bind="click: switchView('daily')" href="#">直近のタスク</a>
+	<a data-bind="click: switchView('daily')" href="#">日単位の計画</a>
 	</li>
 	<li data-bind="css: {active: viewMode() == 'weekly'}">
 	<a data-bind="click: switchView('weekly')" href="#">週単位の計画</a>
@@ -280,7 +283,7 @@ var appengineDevelopment = (location.hostname.search('.appspot.com') == -1);
 		context: $data
 	}"
 	class="icebox">
-	<h2>計画中のタスク</h2>
+	<h2>未計画のタスク</h2>
 	<div class="create">
 	<a data-bind="click: $root.createTaskDialog.create"
 		href="#" class="showtooltip"
