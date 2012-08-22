@@ -4,6 +4,7 @@ import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
 import java.util.logging.Logger;
 
+import org.apache.commons.codec.binary.Base64;
 import org.hidetake.taskwalls.Constants;
 import org.hidetake.taskwalls.model.Session;
 import org.hidetake.taskwalls.service.SessionService;
@@ -49,6 +50,22 @@ public class GoogleApiProxyController extends ControllerBase {
 			response.sendError(Constants.STATUS_PRECONDITION_FAILED);
 			return null;
 		}
+
+		String sessionHeader = request.getHeader(Constants.HEADER_SESSION);
+		if (sessionHeader == null) {
+			logger.warning("Precondition failed: no session header");
+			response.sendError(Constants.STATUS_PRECONDITION_FAILED);
+			return null;
+		}
+		Session session = SessionService.decryptAndDecode(
+				Base64.decodeBase64(sessionHeader.getBytes()),
+				AppCredential.CLIENT_CREDENTIAL);
+		if (session == null) {
+			logger.warning("Session header corrupted");
+			response.sendError(Constants.STATUS_NO_SESSION);
+			return null;
+		}
+
 		String uri = BASE_URI + asString("path");
 		String methodHeader = request.getHeader("X-HTTP-Method-Override");
 		HttpMethod method;
@@ -66,8 +83,6 @@ public class GoogleApiProxyController extends ControllerBase {
 		JsonFactory jsonFactory = JacksonFactoryLocator.get();
 
 		// make a request
-		String sessionID = request.getHeader(Constants.HEADER_SESSION_ID);
-		Session session = SessionService.get(sessionID);
 		GoogleAccessProtectedResource resource = new GoogleAccessProtectedResource(
 				session.getAccessToken(),
 				httpTransport,

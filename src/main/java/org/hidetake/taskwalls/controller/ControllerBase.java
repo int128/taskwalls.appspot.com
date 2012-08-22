@@ -3,6 +3,7 @@ package org.hidetake.taskwalls.controller;
 import java.io.IOException;
 import java.util.logging.Logger;
 
+import org.apache.commons.codec.binary.Base64;
 import org.hidetake.taskwalls.Constants;
 import org.hidetake.taskwalls.model.Session;
 import org.hidetake.taskwalls.service.GoogleOAuth2Service;
@@ -74,15 +75,17 @@ public abstract class ControllerBase extends Controller {
 	}
 
 	protected Navigation setUpServices() throws IOException {
-		String sessionID = request.getHeader(Constants.HEADER_SESSION_ID);
-		if (sessionID == null) {
-			logger.warning("Precondition failed: no session ID");
+		String sessionHeader = request.getHeader(Constants.HEADER_SESSION);
+		if (sessionHeader == null) {
+			logger.warning("Precondition failed: no session header");
 			response.sendError(Constants.STATUS_PRECONDITION_FAILED);
 			return null;
 		}
-		Session session = SessionService.get(sessionID);
+		Session session = SessionService.decryptAndDecode(
+				Base64.decodeBase64(sessionHeader.getBytes()),
+				AppCredential.CLIENT_CREDENTIAL);
 		if (session == null) {
-			logger.warning("Session has been expired or not found");
+			logger.warning("Session header corrupted");
 			response.sendError(Constants.STATUS_NO_SESSION);
 			return null;
 		}
@@ -94,7 +97,6 @@ public abstract class ControllerBase extends Controller {
 				return null;
 			}
 			oauth2Service.refresh(session);
-			SessionService.put(session);
 		}
 
 		// instantiate service

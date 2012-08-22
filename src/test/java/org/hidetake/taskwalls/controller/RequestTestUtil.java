@@ -1,10 +1,11 @@
 package org.hidetake.taskwalls.controller;
 
 import java.util.Date;
-import java.util.UUID;
 
+import org.apache.commons.codec.binary.Base64;
 import org.hidetake.taskwalls.Constants;
 import org.hidetake.taskwalls.model.Session;
+import org.hidetake.taskwalls.model.oauth2.ClientCredential;
 import org.hidetake.taskwalls.service.SessionService;
 import org.hidetake.taskwalls.util.AjaxPreconditions;
 import org.slim3.tester.ControllerTester;
@@ -18,22 +19,22 @@ public class RequestTestUtil {
 
 	/**
 	 * Enables the session.
-	 * This method creates a session and adds the cookie and header.
+	 * This method creates a session and adds into header.
 	 * 
 	 * @param tester
-	 * @return session ID
 	 */
-	public static String enableSession(ControllerTester tester) {
-		Date expiration = new Date(System.currentTimeMillis() + 3600 * 1000L);
-		String sessionID = UUID.randomUUID().toString();
+	public static void enableSession(ControllerTester tester) {
+		ClientCredential credential = new ClientCredential(
+				"ClientCredential#clientId", "ClientCredential#clientSecret");
+
+		long now = System.currentTimeMillis();
 		Session session = new Session();
-		session.setKey(Session.createKey(sessionID));
 		session.setAccessToken("accessToken");
 		session.setRefreshToken("refreshToken");
-		session.setExpiration(expiration);
-		SessionService.put(session);
-		tester.request.setHeader(Constants.HEADER_SESSION_ID, sessionID);
-		return sessionID;
+		session.setExpiration(new Date(now));
+
+		byte[] encrypted = SessionService.encodeAndEncrypt(session, credential);
+		tester.request.setHeader(Constants.HEADER_SESSION, new String(Base64.encodeBase64(encrypted)));
 	}
 
 	/**

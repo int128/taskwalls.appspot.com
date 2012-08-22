@@ -1,15 +1,14 @@
 package org.hidetake.taskwalls.controller;
 
 import java.net.URI;
-import java.util.UUID;
 import java.util.logging.Logger;
 
+import org.apache.commons.codec.binary.Base64;
 import org.hidetake.taskwalls.Constants;
 import org.hidetake.taskwalls.model.Session;
 import org.hidetake.taskwalls.service.GoogleOAuth2Service;
 import org.hidetake.taskwalls.service.SessionService;
 import org.hidetake.taskwalls.util.AjaxPreconditions;
-import org.hidetake.taskwalls.util.DigestGenerator;
 import org.hidetake.taskwalls.util.googleapis.HttpResponseExceptionUtil;
 import org.slim3.controller.Controller;
 import org.slim3.controller.Navigation;
@@ -53,19 +52,9 @@ public class Oauth2Controller extends Controller {
 		// exchange authorization code for token
 		Session session = oauth2Service.exchange(authorizationCode, getRedirectURI());
 
-		// start a session
-		String sessionID = DigestGenerator.create().update(
-				UUID.randomUUID(),
-				AppCredential.CLIENT_CREDENTIAL.getClientId(),
-				AppCredential.CLIENT_CREDENTIAL.getClientSecret(),
-				authorizationCode,
-				session.getAccessToken(),
-				session.getRefreshToken()).getAsHexString();
-		session.setKey(Session.createKey(sessionID));
-		SessionService.put(session);
-
-		// return session ID as header
-		response.setHeader(Constants.HEADER_SESSION_ID, sessionID);
+		// return session data as header
+		byte[] encrypted = SessionService.encodeAndEncrypt(session, AppCredential.CLIENT_CREDENTIAL);
+		response.setHeader(Constants.HEADER_SESSION, new String(Base64.encodeBase64(encrypted)));
 		return null;
 	}
 

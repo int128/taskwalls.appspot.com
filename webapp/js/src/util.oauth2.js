@@ -18,16 +18,12 @@ OAuth2Controller.getAuthorizationURL = function () {
 };
 /**
  * Log out the session.
- * Clean up the local cache and server session.
+ * Clean up the local cache.
  */
 OAuth2Controller.logout = function () {
 	localStorage.clear();
 	sessionStorage.clear();
-	$.get('/logout').done(function () {
-		location.replace('/');
-	}).fail(function () {
-		location.replace('/');    // go home even if failed
-	});
+	location.replace('/');
 };
 /**
  * Handle the request.
