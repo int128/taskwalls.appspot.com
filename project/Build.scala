@@ -11,13 +11,13 @@ object ProjectBuild extends Build {
       externalIvyFile(),
       classpathConfiguration in Compile := config("compileWithProvided")))
 
-  private object MyKeys {
+  object MyKeys {
     lazy val jdkHomePath = SettingKey[File]("jdk-home")
     lazy val jdkAptPath = SettingKey[File]("jdk-apt")
     lazy val slim3gen = TaskKey[Unit]("slim3gen", "Slim3 APT generation")
   }
 
-  lazy val mySettings: Seq[Project.Setting[_]] = Seq(
+  lazy val mySettings = Seq(
     MyKeys.jdkHomePath := {
       val dir = new File(System.getProperty("java.home"))
       dir.getName() match {
