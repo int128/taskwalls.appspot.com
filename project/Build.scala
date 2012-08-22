@@ -6,8 +6,35 @@ object ProjectBuild extends Build {
   lazy val root = Project(
     id = "root",
     base = new File("."),
-    settings = Project.defaultSettings ++ warSettings ++ Seq(
+    settings = Project.defaultSettings ++ warSettings ++ mySettings ++ Seq(
       externalIvySettings(),
       externalIvyFile(),
       classpathConfiguration in Compile := config("compileWithProvided")))
+
+  private object MyKeys {
+    lazy val jdkHomePath = SettingKey[File]("jdk-home")
+    lazy val jdkAptPath = SettingKey[File]("jdk-apt")
+    lazy val slim3gen = InputKey[Unit]("slim3gen", "Slim3 APT generation")
+  }
+
+  lazy val mySettings: Seq[Project.Setting[_]] = Seq(
+    MyKeys.jdkHomePath := {
+      val dir = new File(System.getProperty("java.home"))
+      dir.getName() match {
+        // remove trailing jre if needed
+        case s if s.endsWith("jre") => dir.getParentFile()
+        case _ => dir
+      }
+    },
+    MyKeys.jdkAptPath <<= MyKeys.jdkHomePath(_ / "bin" / "apt"),
+    MyKeys.slim3gen <<= inputTask { (args) =>
+      (MyKeys.jdkAptPath) map { (apt) =>
+        val out = new StringBuffer
+        // TODO: fix arguments
+        val exit = Seq(apt.absolutePath)!
+
+        println(out)
+        println(exit)
+      }
+    })
 }      
