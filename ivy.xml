@@ -11,6 +11,8 @@
 		<conf name="provided" />
 		<conf name="tools" />
 		<conf name="test" />
+
+		<conf name="compileWithProvided" extends="compile,provided" />
 	</configurations>
 
 	<dependencies defaultconf="compile->default">
@@ -22,8 +24,6 @@
 		<dependency org="org.mockito" name="mockito-core" rev="1.9.0-rc1" conf="test->default" />
 		<dependency org="com.google.appengine" name="appengine-testing" rev="1.7.0" conf="test->default" />
 		<dependency org="com.google.appengine" name="appengine-api-stubs" rev="1.7.0" conf="test->default" />
-
-		<dependency org="com.google.appengine" name="appengine-tools-sdk" rev="1.7.0" conf="compile->default" />
 
 		<dependency org="com.google.appengine" name="appengine-api-1.0-sdk" rev="1.7.0" />
 		<dependency org="com.google.appengine" name="appengine-api-labs" rev="1.7.0" />
