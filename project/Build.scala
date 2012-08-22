@@ -14,7 +14,7 @@ object ProjectBuild extends Build {
   private object MyKeys {
     lazy val jdkHomePath = SettingKey[File]("jdk-home")
     lazy val jdkAptPath = SettingKey[File]("jdk-apt")
-    lazy val slim3gen = InputKey[Unit]("slim3gen", "Slim3 APT generation")
+    lazy val slim3gen = TaskKey[Unit]("slim3gen", "Slim3 APT generation")
   }
 
   lazy val mySettings: Seq[Project.Setting[_]] = Seq(
@@ -27,14 +27,12 @@ object ProjectBuild extends Build {
       }
     },
     MyKeys.jdkAptPath <<= MyKeys.jdkHomePath(_ / "bin" / "apt"),
-    MyKeys.slim3gen <<= inputTask { (args) =>
-      (MyKeys.jdkAptPath) map { (apt) =>
-        val out = new StringBuffer
-        // TODO: fix arguments
-        val exit = Seq(apt.absolutePath)!
+    MyKeys.slim3gen <<= (MyKeys.jdkAptPath) map { (apt) =>
+      val out = new StringBuffer
+      // TODO: fix arguments
+      val exit = Seq(apt.absolutePath)!
 
-        println(out)
-        println(exit)
-      }
+      println(out)
+      println(exit)
     })
 }      
