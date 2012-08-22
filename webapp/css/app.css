@@ -161,7 +161,7 @@ body {
 /*
  * Tabs.
  */
-.switch-view {
+.navtab {
 	z-index: 80;
 	position: fixed;
 	top: 0;
@@ -170,7 +170,7 @@ body {
 	background-color: #fff;
 }
 
-.switch-view .nav {
+.navtab .nav {
 	margin-bottom: 0;
 }
 
