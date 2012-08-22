@@ -9,7 +9,6 @@
 		<conf name="runtime" />
 		<conf name="compile" />
 		<conf name="provided" />
-		<conf name="appengine" />
 		<conf name="tools" />
 		<conf name="test" />
 	</configurations>
@@ -22,8 +21,11 @@
 		<dependency org="junit" name="junit" rev="4.10" conf="test->default" />
 		<dependency org="org.mockito" name="mockito-core" rev="1.9.0-rc1" conf="test->default" />
 
-		<dependency org="com.google.appengine" name="appengine-api-1.0-sdk" rev="1.7.0" conf="appengine->default" />
-		<dependency org="com.google.appengine" name="appengine-api-labs" rev="1.7.0" conf="appengine->default" />
+		<dependency org="com.google.appengine" name="appengine-api-1.0-sdk" rev="1.7.0" conf="runtime->default" />
+		<dependency org="com.google.appengine" name="appengine-api-labs" rev="1.7.0" conf="runtime->default" />
+		<dependency org="com.google.appengine" name="appengine-tools-sdk" rev="1.7.0" conf="compile->default" />
+		<dependency org="com.google.appengine" name="appengine-api-stubs" rev="1.7.0" conf="test->default" />
+		<dependency org="com.google.appengine" name="appengine-testing" rev="1.7.0" conf="test->default" />
 
 		<dependency org="org.slim3" name="slim3" rev="1.0.15">
 			<exclude org="com.google.appengine" name="appengine-api-1.0-sdk" />
