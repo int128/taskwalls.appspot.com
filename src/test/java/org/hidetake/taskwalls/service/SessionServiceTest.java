@@ -1,19 +1,17 @@
 package org.hidetake.taskwalls.service;
 
+import static org.hamcrest.CoreMatchers.is;
+import static org.junit.Assert.assertThat;
+
 import java.util.Date;
 import java.util.concurrent.Future;
 
 import org.hidetake.taskwalls.model.Session;
-import org.hidetake.taskwalls.model.oauth2.CachedToken;
 import org.junit.Test;
 import org.slim3.memcache.Memcache;
 import org.slim3.tester.AppEngineTestCase;
 
 import com.google.appengine.api.datastore.Key;
-
-import static org.hamcrest.CoreMatchers.*;
-
-import static org.junit.Assert.*;
 
 public class SessionServiceTest extends AppEngineTestCase {
 
@@ -21,7 +19,9 @@ public class SessionServiceTest extends AppEngineTestCase {
 	public void put() throws Exception {
 		Session session = new Session();
 		session.setKey(Session.createKey("hogeSession"));
-		session.setToken(new CachedToken("accessToken", "refreshToken", new Date()));
+		session.setAccessToken("accessToken");
+		session.setRefreshToken("refreshToken");
+		session.setExpiration(new Date());
 		// wait for complete
 		Future<Key> future = SessionService.put(session);
 		future.get();
@@ -38,15 +38,16 @@ public class SessionServiceTest extends AppEngineTestCase {
 		long now = System.currentTimeMillis();
 		Session session = new Session();
 		session.setKey(Session.createKey("hogeSession"));
-		session.setToken(new CachedToken("at", "rt", new Date(now)));
+		session.setAccessToken("accessToken");
+		session.setRefreshToken("refreshToken");
+		session.setExpiration(new Date(now));
 		// wait for complete
 		Future<Key> future = SessionService.put(session);
 		future.get();
 		Session stored = SessionService.get("hogeSession");
-		assertThat(stored.getToken(), is(notNullValue()));
-		assertThat(stored.getToken().getAccessToken(), is("at"));
-		assertThat(stored.getToken().getRefreshToken(), is("rt"));
-		assertThat(stored.getToken().getExpire().getTime(), is(now));
+		assertThat(stored.getAccessToken(), is("accessToken"));
+		assertThat(stored.getRefreshToken(), is("refreshToken"));
+		assertThat(stored.getExpiration().getTime(), is(now));
 	}
 
 	@Test
@@ -54,24 +55,27 @@ public class SessionServiceTest extends AppEngineTestCase {
 		long now = System.currentTimeMillis();
 		Session session = new Session();
 		session.setKey(Session.createKey("hogeSession"));
-		session.setToken(new CachedToken("at", "rt", new Date(now)));
+		session.setAccessToken("accessToken");
+		session.setRefreshToken("refreshToken");
+		session.setExpiration(new Date(now));
 		// wait for complete
 		Future<Key> future = SessionService.put(session);
 		future.get();
 		// expire
 		Memcache.cleanAll();
 		Session stored = SessionService.get("hogeSession");
-		assertThat(stored.getToken(), is(notNullValue()));
-		assertThat(stored.getToken().getAccessToken(), is("at"));
-		assertThat(stored.getToken().getRefreshToken(), is("rt"));
-		assertThat(stored.getToken().getExpire().getTime(), is(now));
+		assertThat(stored.getAccessToken(), is("accessToken"));
+		assertThat(stored.getRefreshToken(), is("refreshToken"));
+		assertThat(stored.getExpiration().getTime(), is(now));
 	}
 
 	@Test
 	public void delete() throws Exception {
 		Session session = new Session();
 		session.setKey(Session.createKey("hogeSession"));
-		session.setToken(new CachedToken("accessToken", "refreshToken", new Date()));
+		session.setAccessToken("accessToken");
+		session.setRefreshToken("refreshToken");
+		session.setExpiration(new Date());
 		// wait for complete
 		Future<Key> future = SessionService.put(session);
 		future.get();

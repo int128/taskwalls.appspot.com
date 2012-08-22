@@ -5,7 +5,6 @@ import java.util.UUID;
 
 import org.hidetake.taskwalls.Constants;
 import org.hidetake.taskwalls.model.Session;
-import org.hidetake.taskwalls.model.oauth2.CachedToken;
 import org.hidetake.taskwalls.service.SessionService;
 import org.hidetake.taskwalls.util.AjaxPreconditions;
 import org.slim3.tester.ControllerTester;
@@ -25,12 +24,13 @@ public class RequestTestUtil {
 	 * @return session ID
 	 */
 	public static String enableSession(ControllerTester tester) {
-		Date expire = new Date(System.currentTimeMillis() + 3600 * 1000L);
-		CachedToken cachedToken = new CachedToken("access", "refresh", expire);
+		Date expiration = new Date(System.currentTimeMillis() + 3600 * 1000L);
 		String sessionID = UUID.randomUUID().toString();
 		Session session = new Session();
 		session.setKey(Session.createKey(sessionID));
-		session.setToken(cachedToken);
+		session.setAccessToken("accessToken");
+		session.setRefreshToken("refreshToken");
+		session.setExpiration(expiration);
 		SessionService.put(session);
 		tester.request.setHeader(Constants.HEADER_SESSION_ID, sessionID);
 		return sessionID;

@@ -5,7 +5,6 @@ import java.util.logging.Logger;
 
 import org.hidetake.taskwalls.Constants;
 import org.hidetake.taskwalls.model.Session;
-import org.hidetake.taskwalls.model.oauth2.CachedToken;
 import org.hidetake.taskwalls.service.GoogleOAuth2Service;
 import org.hidetake.taskwalls.service.SessionService;
 import org.hidetake.taskwalls.util.googleapis.HttpResponseExceptionUtil;
@@ -47,7 +46,8 @@ public abstract class ControllerBase extends Controller {
 	 * Returns JSON response.
 	 * This method checks the request is XHR.
 	 * 
-	 * @param object object to serialize as JSON
+	 * @param object
+	 *            object to serialize as JSON
 	 * @return always null
 	 * @throws IOException
 	 */
@@ -87,27 +87,24 @@ public abstract class ControllerBase extends Controller {
 			return null;
 		}
 
-		// refresh the token if expires
-		CachedToken token = session.getToken();
-		if (token.isExpired()) {
-			if (token.getRefreshToken() == null) {
+		if (session.isExpired()) {
+			if (session.getRefreshToken() == null) {
 				logger.warning("Refresh token is null, please re-authorize");
 				response.sendError(Constants.STATUS_NO_SESSION);
 				return null;
 			}
-			token = oauth2Service.refresh(token);
-			session.setToken(token);
+			oauth2Service.refresh(session);
 			SessionService.put(session);
 		}
 
 		// instantiate service
 		GoogleAccessProtectedResource resource = new GoogleAccessProtectedResource(
-				token.getAccessToken(),
+				session.getAccessToken(),
 				NetHttpTransportLocator.get(),
 				JacksonFactoryLocator.get(),
 				AppCredential.CLIENT_CREDENTIAL.getClientId(),
 				AppCredential.CLIENT_CREDENTIAL.getClientSecret(),
-				token.getRefreshToken());
+				session.getRefreshToken());
 		TasksRequestInitializer tasksRequestInitializer = new TasksRequestInitializer();
 		tasksRequestInitializer.setUserIp(request.getRemoteAddr());
 		tasksService = Tasks

@@ -1,18 +1,18 @@
 package org.hidetake.taskwalls.model;
 
 import java.io.Serializable;
+import java.util.Date;
 
-import org.hidetake.taskwalls.model.oauth2.CachedToken;
 import org.slim3.datastore.Attribute;
 import org.slim3.datastore.Datastore;
 import org.slim3.datastore.Model;
 
 import com.google.appengine.api.datastore.Key;
 
-@Model(schemaVersion = 2)
+@Model(schemaVersion = 3)
 public class Session implements Serializable {
 
-	private static final long serialVersionUID = 2L;
+	private static final long serialVersionUID = 3L;
 
 	/**
 	 * Create the key.
@@ -27,10 +27,9 @@ public class Session implements Serializable {
 	@Attribute(primaryKey = true)
 	private Key key;
 
-	@Attribute(lob = true)
-	private CachedToken token;
-
-	private boolean refreshable;
+	private String accessToken;
+	private String refreshToken;
+	private Date expiration;
 
 	/**
 	 * Returns the key.
@@ -51,25 +50,67 @@ public class Session implements Serializable {
 		this.key = key;
 	}
 
-	public CachedToken getToken() {
-		return token;
-	}
-
-	public void setToken(CachedToken token) {
-		this.token = token;
-		this.setRefreshable(token.getRefreshToken() != null);
-	}
-
-	public boolean isRefreshable() {
-		return refreshable;
+	/**
+	 * Get the access token.
+	 * 
+	 * @return
+	 */
+	public String getAccessToken() {
+		return accessToken;
 	}
 
 	/**
-	 * @deprecated
-	 * @param refreshable
+	 * Set the access token.
+	 * 
+	 * @param accessToken
 	 */
-	public void setRefreshable(boolean refreshable) {
-		this.refreshable = refreshable;
+	public void setAccessToken(String accessToken) {
+		this.accessToken = accessToken;
+	}
+
+	/**
+	 * Get the refresh token. This may be null.
+	 * 
+	 * @return
+	 */
+	public String getRefreshToken() {
+		return refreshToken;
+	}
+
+	/**
+	 * Set the refresh token.
+	 * 
+	 * @param refreshToken
+	 */
+	public void setRefreshToken(String refreshToken) {
+		this.refreshToken = refreshToken;
+	}
+
+	/**
+	 * Get the expiration date.
+	 * 
+	 * @return
+	 */
+	public Date getExpiration() {
+		return expiration;
+	}
+
+	/**
+	 * Set the expiration date.
+	 * 
+	 * @param expire
+	 */
+	public void setExpiration(Date expire) {
+		this.expiration = expire;
+	}
+
+	/**
+	 * Returns whether the access token has been expired.
+	 * 
+	 * @return
+	 */
+	public boolean isExpired() {
+		return getExpiration().getTime() < System.currentTimeMillis();
 	}
 
 }

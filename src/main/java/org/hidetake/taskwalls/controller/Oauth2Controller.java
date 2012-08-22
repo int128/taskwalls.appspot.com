@@ -6,7 +6,6 @@ import java.util.logging.Logger;
 
 import org.hidetake.taskwalls.Constants;
 import org.hidetake.taskwalls.model.Session;
-import org.hidetake.taskwalls.model.oauth2.CachedToken;
 import org.hidetake.taskwalls.service.GoogleOAuth2Service;
 import org.hidetake.taskwalls.service.SessionService;
 import org.hidetake.taskwalls.util.AjaxPreconditions;
@@ -52,7 +51,7 @@ public class Oauth2Controller extends Controller {
 		}
 
 		// exchange authorization code for token
-		CachedToken token = oauth2Service.exchange(authorizationCode, getRedirectURI());
+		Session session = oauth2Service.exchange(authorizationCode, getRedirectURI());
 
 		// start a session
 		String sessionID = DigestGenerator.create().update(
@@ -60,11 +59,9 @@ public class Oauth2Controller extends Controller {
 				AppCredential.CLIENT_CREDENTIAL.getClientId(),
 				AppCredential.CLIENT_CREDENTIAL.getClientSecret(),
 				authorizationCode,
-				token.getAccessToken(),
-				token.getRefreshToken()).getAsHexString();
-		Session session = new Session();
+				session.getAccessToken(),
+				session.getRefreshToken()).getAsHexString();
 		session.setKey(Session.createKey(sessionID));
-		session.setToken(token);
 		SessionService.put(session);
 
 		// return session ID as header
