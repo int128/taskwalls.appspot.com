@@ -42,6 +42,15 @@ public abstract class ControllerBase extends Controller {
 	protected GoogleOAuth2Service oauth2Service = new GoogleOAuth2Service(
 			AppCredential.CLIENT_CREDENTIAL);
 
+	@Override
+	protected Navigation setUp() {
+		try {
+			return setUpServices();
+		} catch (IOException e) {
+			throw ThrowableUtil.wrap(e);
+		}
+	}
+
 	/**
 	 * Returns JSON response.
 	 * 
@@ -60,15 +69,23 @@ public abstract class ControllerBase extends Controller {
 	}
 
 	@Override
-	protected Navigation setUp() {
-		try {
-			return setUpServices();
-		} catch (IOException e) {
-			throw ThrowableUtil.wrap(e);
+	protected Navigation handleError(Throwable e) throws Throwable {
+		if (e instanceof HttpResponseException) {
+			HttpResponseException httpResponseException = (HttpResponseException) e;
+			logger.severe(HttpResponseExceptionUtil.getMessage(httpResponseException));
+			HttpResponse httpResponse = httpResponseException.getResponse();
+			if (httpResponse != null) {
+				if (httpResponse.getStatusCode() == 401) {
+					// 401 invalid credentials
+					response.sendError(Constants.STATUS_NO_SESSION);
+					return null;
+				}
+			}
 		}
+		return super.handleError(e);
 	}
 
-	protected Navigation setUpServices() throws IOException {
+	private Navigation setUpServices() throws IOException {
 		String sessionHeader = request.getHeader(Constants.HEADER_SESSION);
 		if (sessionHeader == null) {
 			logger.warning("Precondition failed: no session header");
@@ -108,23 +125,6 @@ public abstract class ControllerBase extends Controller {
 				.setJsonHttpRequestInitializer(new TasksRequestInitializer(request.getRemoteAddr()))
 				.build();
 		return null;
-	}
-
-	@Override
-	protected Navigation handleError(Throwable e) throws Throwable {
-		if (e instanceof HttpResponseException) {
-			HttpResponseException httpResponseException = (HttpResponseException) e;
-			logger.severe(HttpResponseExceptionUtil.getMessage(httpResponseException));
-			HttpResponse httpResponse = httpResponseException.getResponse();
-			if (httpResponse != null) {
-				if (httpResponse.getStatusCode() == 401) {
-					// 401 invalid credentials
-					response.sendError(Constants.STATUS_NO_SESSION);
-					return null;
-				}
-			}
-		}
-		return super.handleError(e);
 	}
 
 }
