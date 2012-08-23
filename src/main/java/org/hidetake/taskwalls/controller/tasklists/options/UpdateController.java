@@ -32,11 +32,6 @@ public class UpdateController extends ControllerBase {
 			response.sendError(Constants.STATUS_PRECONDITION_FAILED);
 			return null;
 		}
-		if (!validate()) {
-			logger.warning("Precondition failed: " + errors.toString());
-			response.sendError(Constants.STATUS_PRECONDITION_FAILED);
-			return null;
-		}
 
 		TasklistOptionsMeta m = TasklistOptionsMeta.get();
 		TasklistOptions tasklistOptions = new TasklistOptions();
@@ -46,7 +41,8 @@ public class UpdateController extends ControllerBase {
 		return null;
 	}
 
-	private boolean validate() {
+	@Override
+	protected boolean validate() {
 		TasklistOptionsMeta m = TasklistOptionsMeta.get();
 		Validators v = new Validators(request);
 		v.add("id", v.required());

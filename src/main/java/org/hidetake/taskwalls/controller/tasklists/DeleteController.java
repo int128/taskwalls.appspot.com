@@ -24,17 +24,13 @@ public class DeleteController extends ControllerBase {
 			response.sendError(Constants.STATUS_PRECONDITION_FAILED);
 			return null;
 		}
-		if (!validate()) {
-			logger.warning("Precondition failed: " + errors.toString());
-			response.sendError(Constants.STATUS_PRECONDITION_FAILED);
-			return null;
-		}
 
 		tasksService.tasklists().delete(asString("id")).execute();
 		return null;
 	}
 
-	private boolean validate() {
+	@Override
+	protected boolean validate() {
 		Validators v = new Validators(request);
 		v.add("id", v.required());
 		return v.validate();

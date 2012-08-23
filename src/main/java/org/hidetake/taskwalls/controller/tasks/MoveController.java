@@ -31,11 +31,6 @@ public class MoveController extends ControllerBase {
 			response.sendError(Constants.STATUS_PRECONDITION_FAILED);
 			return null;
 		}
-		if (!validate()) {
-			logger.warning("Precondition failed: " + errors.toString());
-			response.sendError(Constants.STATUS_PRECONDITION_FAILED);
-			return null;
-		}
 
 		Task original = tasksService.tasks().get(asString("tasklistID"), asString("id")).execute();
 		Task task = new Task();
@@ -55,7 +50,8 @@ public class MoveController extends ControllerBase {
 		return jsonResponse(moved);
 	}
 
-	private boolean validate() {
+	@Override
+	protected boolean validate() {
 		Validators v = new Validators(request);
 		v.add("tasklistID", v.required());
 		v.add("id", v.required());

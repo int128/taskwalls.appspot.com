@@ -26,11 +26,6 @@ public class CreateController extends ControllerBase {
 			response.sendError(Constants.STATUS_PRECONDITION_FAILED);
 			return null;
 		}
-		if (!validate()) {
-			logger.warning("Precondition failed: " + errors.toString());
-			response.sendError(Constants.STATUS_PRECONDITION_FAILED);
-			return null;
-		}
 
 		TaskList taskList = new TaskList();
 		taskList.setId(asString("id"));
@@ -39,7 +34,8 @@ public class CreateController extends ControllerBase {
 		return jsonResponse(created);
 	}
 
-	private boolean validate() {
+	@Override
+	protected boolean validate() {
 		Validators v = new Validators(request);
 		v.add("title", v.required());
 		return v.validate();

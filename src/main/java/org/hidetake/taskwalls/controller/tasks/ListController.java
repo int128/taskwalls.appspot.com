@@ -31,18 +31,14 @@ public class ListController extends ControllerBase {
 			response.sendError(Constants.STATUS_PRECONDITION_FAILED);
 			return null;
 		}
-		if (!validate()) {
-			logger.warning("Precondition failed: " + errors.toString());
-			response.sendError(Constants.STATUS_PRECONDITION_FAILED);
-			return null;
-		}
 
 		String tasklistID = asString("tasklistID");
 		Tasks tasks = tasksService.tasks().list(tasklistID).execute();
 		return jsonResponse(tasks);
 	}
 
-	private boolean validate() {
+	@Override
+	protected boolean validate() {
 		Validators v = new Validators(request);
 		v.add("tasklistID", v.required());
 		return v.validate();

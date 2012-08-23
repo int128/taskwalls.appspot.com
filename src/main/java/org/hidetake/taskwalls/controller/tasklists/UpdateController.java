@@ -33,11 +33,6 @@ public class UpdateController extends ControllerBase {
 			response.sendError(Constants.STATUS_PRECONDITION_FAILED);
 			return null;
 		}
-		if (!validate()) {
-			logger.warning("Precondition failed: " + errors.toString());
-			response.sendError(Constants.STATUS_PRECONDITION_FAILED);
-			return null;
-		}
 
 		TaskList taskList = new TaskList();
 		taskList.setId(asString("id"));
@@ -50,7 +45,8 @@ public class UpdateController extends ControllerBase {
 		return jsonResponse(patched);
 	}
 
-	private boolean validate() {
+	@Override
+	protected boolean validate() {
 		Validators v = new Validators(request);
 		v.add("id", v.required());
 		v.add("title", v.required());

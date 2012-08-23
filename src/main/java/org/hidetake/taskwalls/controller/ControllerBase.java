@@ -22,7 +22,7 @@ import com.google.api.client.json.GenericJson;
 import com.google.api.services.tasks.Tasks;
 
 /**
- * Base controller class that depends on Google Tasks API.
+ * Base controller class.
  * 
  * @author hidetake.org
  */
@@ -42,13 +42,13 @@ public abstract class ControllerBase extends Controller {
 	protected GoogleOAuth2Service oauth2Service = new GoogleOAuth2Service(
 			AppCredential.CLIENT_CREDENTIAL);
 
-	@Override
-	protected Navigation setUp() {
-		try {
-			return setUpServices();
-		} catch (IOException e) {
-			throw ThrowableUtil.wrap(e);
-		}
+	/**
+	 * Validate the request.
+	 * 
+	 * @return true if valid
+	 */
+	protected boolean validate() {
+		return true;
 	}
 
 	/**
@@ -69,6 +69,18 @@ public abstract class ControllerBase extends Controller {
 	}
 
 	@Override
+	protected Navigation setUp() {
+		try {
+			if (checkPreconditions()) {
+				setUpServices();
+			}
+			return null;
+		} catch (IOException e) {
+			throw ThrowableUtil.wrap(e);
+		}
+	}
+
+	@Override
 	protected Navigation handleError(Throwable e) throws Throwable {
 		if (e instanceof HttpResponseException) {
 			HttpResponseException httpResponseException = (HttpResponseException) e;
@@ -85,20 +97,27 @@ public abstract class ControllerBase extends Controller {
 		return super.handleError(e);
 	}
 
-	private Navigation setUpServices() throws IOException {
-		String sessionHeader = request.getHeader(Constants.HEADER_SESSION);
-		if (sessionHeader == null) {
-			logger.warning("Precondition failed: no session header");
+	private boolean checkPreconditions() throws IOException {
+		if (request.getHeader(Constants.HEADER_SESSION) == null) {
+			logger.warning("No session header");
 			response.sendError(Constants.STATUS_PRECONDITION_FAILED);
-			return null;
+			return false;
 		}
+		if (!validate()) {
+			logger.warning("Validation failed: " + errors.toString());
+			response.sendError(Constants.STATUS_PRECONDITION_FAILED);
+			return false;
+		}
+		return true;
+	}
 
+	private void setUpServices() throws IOException {
 		Session session = SessionService.decryptAndDecodeFromBase64(
-				sessionHeader, AppCredential.CLIENT_CREDENTIAL);
+				request.getHeader(Constants.HEADER_SESSION), AppCredential.CLIENT_CREDENTIAL);
 		if (session == null) {
 			logger.warning("Session header corrupted");
 			response.sendError(Constants.STATUS_NO_SESSION);
-			return null;
+			return;
 		}
 
 		// refresh token if expired
@@ -106,7 +125,7 @@ public abstract class ControllerBase extends Controller {
 			if (session.getRefreshToken() == null) {
 				logger.warning("Refresh token is null, please re-authorize");
 				response.sendError(Constants.STATUS_NO_SESSION);
-				return null;
+				return;
 			}
 			oauth2Service.refresh(session);
 		}
@@ -124,7 +143,6 @@ public abstract class ControllerBase extends Controller {
 				.setHttpRequestInitializer(resource)
 				.setJsonHttpRequestInitializer(new TasksRequestInitializer(request.getRemoteAddr()))
 				.build();
-		return null;
 	}
 
 }
