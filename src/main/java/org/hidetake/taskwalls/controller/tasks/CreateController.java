@@ -5,9 +5,9 @@ import java.util.logging.Logger;
 import org.hidetake.taskwalls.Constants;
 import org.hidetake.taskwalls.controller.ControllerBase;
 import org.hidetake.taskwalls.util.AjaxPreconditions;
-import org.slim3.controller.Navigation;
 import org.slim3.controller.validator.Validators;
 
+import com.google.api.client.json.GenericJson;
 import com.google.api.client.util.Data;
 import com.google.api.client.util.DateTime;
 import com.google.api.services.tasks.model.Task;
@@ -17,7 +17,17 @@ public class CreateController extends ControllerBase {
 	private static final Logger logger = Logger.getLogger(CreateController.class.getName());
 
 	@Override
-	public Navigation run() throws Exception {
+	protected boolean validate() {
+		Validators v = new Validators(request);
+		v.add("tasklistID", v.required());
+		v.add("title", v.required());
+		v.add("notes");
+		v.add("due", v.required(), v.longType());
+		return v.validate();
+	}
+
+	@Override
+	protected GenericJson response() throws Exception {
 		if (!isPost()) {
 			logger.warning("Precondition failed: not POST");
 			response.sendError(Constants.STATUS_PRECONDITION_FAILED);
@@ -40,17 +50,7 @@ public class CreateController extends ControllerBase {
 		}
 
 		Task created = tasksService.tasks().insert(asString("tasklistID"), task).execute();
-		return jsonResponse(created);
-	}
-
-	@Override
-	protected boolean validate() {
-		Validators v = new Validators(request);
-		v.add("tasklistID", v.required());
-		v.add("title", v.required());
-		v.add("notes");
-		v.add("due", v.required(), v.longType());
-		return v.validate();
+		return created;
 	}
 
 }

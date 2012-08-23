@@ -13,7 +13,6 @@ import org.hidetake.taskwalls.util.googleapis.NetHttpTransportLocator;
 import org.hidetake.taskwalls.util.googleapis.TasksRequestInitializer;
 import org.slim3.controller.Controller;
 import org.slim3.controller.Navigation;
-import org.slim3.util.ThrowableUtil;
 
 import com.google.api.client.googleapis.auth.oauth2.draft10.GoogleAccessProtectedResource;
 import com.google.api.client.http.HttpResponse;
@@ -47,90 +46,39 @@ public abstract class ControllerBase extends Controller {
 	 * 
 	 * @return true if valid
 	 */
-	protected boolean validate() {
-		return true;
-	}
+	protected abstract boolean validate();
 
 	/**
-	 * Returns JSON response.
+	 * Process the request.
 	 * 
-	 * @param object
-	 *            object to serialize as JSON
-	 * @return always null
-	 * @throws IOException
+	 * @return JSON object for response
 	 */
-	protected Navigation jsonResponse(GenericJson object) throws IOException {
-		response.setHeader("X-Content-Type-Options", "nosniff");
-		response.setContentType("application/json");
-		response.setCharacterEncoding("UTF-8");
-		response.getWriter().append(object == null ? "null" : object.toString());
-		response.flushBuffer();
-		return null;
-	}
+	protected abstract GenericJson response() throws Exception;
 
 	@Override
-	protected Navigation setUp() {
-		try {
-			if (checkPreconditions()) {
-				setUpServices();
-			}
-			return null;
-		} catch (IOException e) {
-			throw ThrowableUtil.wrap(e);
+	protected Navigation run() throws Exception {
+		// check preconditions
+		String sessionHeader = request.getHeader(Constants.HEADER_SESSION);
+		if (sessionHeader == null) {
+			return errorStatus(Constants.STATUS_PRECONDITION_FAILED, "No session header");
 		}
-	}
-
-	@Override
-	protected Navigation handleError(Throwable e) throws Throwable {
-		if (e instanceof HttpResponseException) {
-			HttpResponseException httpResponseException = (HttpResponseException) e;
-			logger.severe(HttpResponseExceptionUtil.getMessage(httpResponseException));
-			HttpResponse httpResponse = httpResponseException.getResponse();
-			if (httpResponse != null) {
-				if (httpResponse.getStatusCode() == 401) {
-					// 401 invalid credentials
-					response.sendError(Constants.STATUS_NO_SESSION);
-					return null;
-				}
-			}
-		}
-		return super.handleError(e);
-	}
-
-	private boolean checkPreconditions() throws IOException {
-		if (request.getHeader(Constants.HEADER_SESSION) == null) {
-			logger.warning("No session header");
-			response.sendError(Constants.STATUS_PRECONDITION_FAILED);
-			return false;
+		Session session = SessionService.decryptAndDecodeFromBase64(sessionHeader, AppCredential.CLIENT_CREDENTIAL);
+		if (session == null) {
+			return errorStatus(Constants.STATUS_PRECONDITION_FAILED, "Session header corrupted");
 		}
 		if (!validate()) {
-			logger.warning("Validation failed: " + errors.toString());
-			response.sendError(Constants.STATUS_PRECONDITION_FAILED);
-			return false;
-		}
-		return true;
-	}
-
-	private void setUpServices() throws IOException {
-		Session session = SessionService.decryptAndDecodeFromBase64(
-				request.getHeader(Constants.HEADER_SESSION), AppCredential.CLIENT_CREDENTIAL);
-		if (session == null) {
-			logger.warning("Session header corrupted");
-			response.sendError(Constants.STATUS_NO_SESSION);
-			return;
+			return errorStatus(Constants.STATUS_PRECONDITION_FAILED, "Validation failed: " + errors.toString());
 		}
 
 		// refresh token if expired
 		if (session.isExpired()) {
 			if (session.getRefreshToken() == null) {
-				logger.warning("Refresh token is null, please re-authorize");
-				response.sendError(Constants.STATUS_NO_SESSION);
-				return;
+				return errorStatus(Constants.STATUS_NO_SESSION, "Refresh token is null, try re-authorize");
 			}
 			oauth2Service.refresh(session);
 		}
 
-		// instantiate service
+		// instantiate the service
 		GoogleAccessProtectedResource resource = new GoogleAccessProtectedResource(
 				session.getAccessToken(),
 				NetHttpTransportLocator.get(),
@@ -143,6 +91,38 @@ public abstract class ControllerBase extends Controller {
 				.setHttpRequestInitializer(resource)
 				.setJsonHttpRequestInitializer(new TasksRequestInitializer(request.getRemoteAddr()))
 				.build();
+
+		GenericJson responseJson = response();
+
+		if (responseJson != null) {
+			response.setHeader("X-Content-Type-Options", "nosniff");
+			response.setContentType("application/json");
+			response.setCharacterEncoding("UTF-8");
+			response.getWriter().append(responseJson.toString());
+			response.flushBuffer();
+		}
+		return null;
+	}
+
+	@Override
+	protected Navigation handleError(Throwable e) throws Throwable {
+		if (e instanceof HttpResponseException) {
+			HttpResponseException httpResponseException = (HttpResponseException) e;
+			logger.severe(HttpResponseExceptionUtil.getMessage(httpResponseException));
+			HttpResponse httpResponse = httpResponseException.getResponse();
+			if (httpResponse != null) {
+				if (httpResponse.getStatusCode() == 401) {
+					return errorStatus(Constants.STATUS_NO_SESSION, "Google API returns 401 invalid credentials");
+				}
+			}
+		}
+		return super.handleError(e);
+	}
+
+	private Navigation errorStatus(int code, String logMessage) throws IOException {
+		logger.warning(logMessage);
+		response.sendError(code);
+		return null;
 	}
 
 }

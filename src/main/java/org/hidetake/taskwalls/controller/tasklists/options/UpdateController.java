@@ -8,8 +8,9 @@ import org.hidetake.taskwalls.meta.TasklistOptionsMeta;
 import org.hidetake.taskwalls.model.TasklistOptions;
 import org.hidetake.taskwalls.service.TasklistOptionsService;
 import org.hidetake.taskwalls.util.AjaxPreconditions;
-import org.slim3.controller.Navigation;
 import org.slim3.controller.validator.Validators;
+
+import com.google.api.client.json.GenericJson;
 
 /**
  * Updates the tasklist options.
@@ -21,7 +22,16 @@ public class UpdateController extends ControllerBase {
 	private static final Logger logger = Logger.getLogger(UpdateController.class.getName());
 
 	@Override
-	public Navigation run() throws Exception {
+	protected boolean validate() {
+		TasklistOptionsMeta m = TasklistOptionsMeta.get();
+		Validators v = new Validators(request);
+		v.add("id", v.required());
+		v.add(m.colorCode, v.required(), v.integerType());
+		return v.validate();
+	}
+
+	@Override
+	public GenericJson response() throws Exception {
 		if (!isPost()) {
 			logger.warning("Precondition failed: not POST");
 			response.sendError(Constants.STATUS_PRECONDITION_FAILED);
@@ -39,15 +49,6 @@ public class UpdateController extends ControllerBase {
 		tasklistOptions.setColorCode(asInteger(m.colorCode));
 		TasklistOptionsService.put(tasklistOptions);
 		return null;
-	}
-
-	@Override
-	protected boolean validate() {
-		TasklistOptionsMeta m = TasklistOptionsMeta.get();
-		Validators v = new Validators(request);
-		v.add("id", v.required());
-		v.add(m.colorCode, v.required(), v.integerType());
-		return v.validate();
 	}
 
 }

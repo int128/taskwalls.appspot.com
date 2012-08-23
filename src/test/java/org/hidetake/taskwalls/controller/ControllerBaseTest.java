@@ -1,14 +1,14 @@
 package org.hidetake.taskwalls.controller;
 
+import static org.hamcrest.CoreMatchers.*;
+import static org.hidetake.taskwalls.controller.RequestTestUtil.*;
+import static org.junit.Assert.*;
+
 import java.util.UUID;
 
 import org.hidetake.taskwalls.Constants;
 import org.junit.Test;
 import org.slim3.tester.ControllerTestCase;
-
-import static org.hamcrest.CoreMatchers.*;
-
-import static org.junit.Assert.*;
 
 public class ControllerBaseTest extends ControllerTestCase {
 
@@ -36,7 +36,7 @@ public class ControllerBaseTest extends ControllerTestCase {
 
 	@Test
 	public void sessionEnabled() throws Exception {
-		RequestTestUtil.enableSession(tester);
+		enableSession(tester);
 		tester.start("/controllerBaseTest");
 		ControllerBaseTestController controller = tester.getController();
 		assertThat(controller, is(notNullValue()));
@@ -46,7 +46,7 @@ public class ControllerBaseTest extends ControllerTestCase {
 
 	@Test
 	public void checkJsonResponse() throws Exception {
-		RequestTestUtil.enableSession(tester);
+		enableSession(tester);
 		tester.param("json", true);
 		tester.start("/controllerBaseTest");
 		ControllerBaseTestController controller = tester.getController();

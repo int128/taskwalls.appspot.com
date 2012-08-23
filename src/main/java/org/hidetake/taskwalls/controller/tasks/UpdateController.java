@@ -5,9 +5,9 @@ import java.util.logging.Logger;
 import org.hidetake.taskwalls.Constants;
 import org.hidetake.taskwalls.controller.ControllerBase;
 import org.hidetake.taskwalls.util.AjaxPreconditions;
-import org.slim3.controller.Navigation;
 import org.slim3.controller.validator.Validators;
 
+import com.google.api.client.json.GenericJson;
 import com.google.api.client.util.Data;
 import com.google.api.client.util.DateTime;
 import com.google.api.services.tasks.Tasks.TasksOperations.Patch;
@@ -18,7 +18,19 @@ public class UpdateController extends ControllerBase {
 	private static final Logger logger = Logger.getLogger(UpdateController.class.getName());
 
 	@Override
-	public Navigation run() throws Exception {
+	protected boolean validate() {
+		Validators v = new Validators(request);
+		v.add("tasklistID", v.required());
+		v.add("id", v.required());
+		v.add("title");
+		v.add("notes");
+		v.add("due", v.longType());
+		v.add("status", v.regexp("completed|needsAction"));
+		return v.validate();
+	}
+
+	@Override
+	public GenericJson response() throws Exception {
 		if (!isPost()) {
 			logger.warning("Precondition failed: not POST");
 			response.sendError(Constants.STATUS_PRECONDITION_FAILED);
@@ -52,19 +64,7 @@ public class UpdateController extends ControllerBase {
 
 		Patch patch = tasksService.tasks().patch(asString("tasklistID"), task.getId(), task);
 		Task patched = patch.execute();
-		return jsonResponse(patched);
-	}
-
-	@Override
-	protected boolean validate() {
-		Validators v = new Validators(request);
-		v.add("tasklistID", v.required());
-		v.add("id", v.required());
-		v.add("title");
-		v.add("notes");
-		v.add("due", v.longType());
-		v.add("status", v.regexp("completed|needsAction"));
-		return v.validate();
+		return patched;
 	}
 
 }

@@ -6,8 +6,8 @@ import org.hidetake.taskwalls.Constants;
 import org.hidetake.taskwalls.controller.ControllerBase;
 import org.hidetake.taskwalls.model.TasklistOptions;
 import org.hidetake.taskwalls.util.AjaxPreconditions;
-import org.slim3.controller.Navigation;
 
+import com.google.api.client.json.GenericJson;
 import com.google.api.services.tasks.model.TaskLists;
 
 /**
@@ -20,7 +20,12 @@ public class ListController extends ControllerBase {
 	private static final Logger logger = Logger.getLogger(ListController.class.getName());
 
 	@Override
-	public Navigation run() throws Exception {
+	protected boolean validate() {
+		return true;
+	}
+
+	@Override
+	public GenericJson response() throws Exception {
 		if (!isGet()) {
 			logger.warning("Precondition failed: not GET");
 			response.sendError(Constants.STATUS_PRECONDITION_FAILED);
@@ -34,7 +39,7 @@ public class ListController extends ControllerBase {
 
 		TaskLists taskLists = tasksService.tasklists().list().execute();
 		TasklistOptions.mergeTo(taskLists);
-		return jsonResponse(taskLists);
+		return taskLists;
 	}
 
 }
