@@ -39,17 +39,8 @@ public abstract class ControllerBase extends Controller {
 
 	private static final Logger logger = Logger.getLogger(ControllerBase.class.getName());
 
-	/**
-	 * Tasks API service.
-	 * This field must be initialized at {@link #setUp()}.
-	 */
+	protected GoogleOAuth2Service oauth2Service = new GoogleOAuth2Service(AppCredential.CLIENT_CREDENTIAL);
 	protected Tasks tasksService;
-
-	/**
-	 * OAuth 2.0 service.
-	 */
-	protected GoogleOAuth2Service oauth2Service = new GoogleOAuth2Service(
-			AppCredential.CLIENT_CREDENTIAL);
 
 	/**
 	 * Validate the request.
