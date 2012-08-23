@@ -2,7 +2,6 @@ package org.hidetake.taskwalls.controller;
 
 import java.util.Date;
 
-import org.apache.commons.codec.binary.Base64;
 import org.hidetake.taskwalls.Constants;
 import org.hidetake.taskwalls.model.Session;
 import org.hidetake.taskwalls.model.oauth2.ClientCredential;
@@ -33,8 +32,8 @@ public class RequestTestUtil {
 		session.setRefreshToken("refreshToken");
 		session.setExpiration(new Date(now));
 
-		byte[] encrypted = SessionService.encodeAndEncrypt(session, credential);
-		tester.request.setHeader(Constants.HEADER_SESSION, new String(Base64.encodeBase64(encrypted)));
+		tester.response.setHeader(Constants.HEADER_SESSION,
+				SessionService.encodeAndEncryptAsBase64(session, credential));
 	}
 
 	/**

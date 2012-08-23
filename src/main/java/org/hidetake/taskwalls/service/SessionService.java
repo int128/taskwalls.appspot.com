@@ -12,6 +12,7 @@ import javax.crypto.NoSuchPaddingException;
 import javax.crypto.spec.IvParameterSpec;
 import javax.crypto.spec.SecretKeySpec;
 
+import org.apache.commons.codec.binary.Base64;
 import org.hidetake.taskwalls.model.Session;
 import org.hidetake.taskwalls.model.oauth2.ClientCredential;
 import org.hidetake.taskwalls.util.DigestGenerator;
@@ -76,6 +77,20 @@ public class SessionService {
 	}
 
 	/**
+	 * Encode and encrypt the session.
+	 * 
+	 * @param session
+	 *            the session
+	 * @param credential
+	 *            credential for encryption
+	 * @return encrypted data as base64
+	 */
+	public static String encodeAndEncryptAsBase64(Session session, ClientCredential credential) {
+		byte[] encrypted = encodeAndEncrypt(session, credential);
+		return new String(Base64.encodeBase64(encrypted));
+	}
+
+	/**
 	 * Decrypt and decode the session.
 	 * 
 	 * @param encrypted
@@ -91,6 +106,20 @@ public class SessionService {
 		}
 		Session decoded = decode(new String(decrypted));
 		return decoded;
+	}
+
+	/**
+	 * Decrypt and decode the session.
+	 * 
+	 * @param encrypted
+	 *            encrypted data as base64
+	 * @param credential
+	 *            credential for encryption
+	 * @return the session, or null if wrong credential or bad data
+	 */
+	public static Session decryptAndDecodeFromBase64(String encrypted, ClientCredential credential) {
+		byte[] base64decoded = Base64.decodeBase64(encrypted.getBytes());
+		return decryptAndDecode(base64decoded, credential);
 	}
 
 	/**

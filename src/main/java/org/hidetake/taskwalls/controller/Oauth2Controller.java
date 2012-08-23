@@ -3,7 +3,6 @@ package org.hidetake.taskwalls.controller;
 import java.net.URI;
 import java.util.logging.Logger;
 
-import org.apache.commons.codec.binary.Base64;
 import org.hidetake.taskwalls.Constants;
 import org.hidetake.taskwalls.model.Session;
 import org.hidetake.taskwalls.service.GoogleOAuth2Service;
@@ -53,8 +52,8 @@ public class Oauth2Controller extends Controller {
 		Session session = oauth2Service.exchange(authorizationCode, getRedirectURI());
 
 		// return session data as header
-		byte[] encrypted = SessionService.encodeAndEncrypt(session, AppCredential.CLIENT_CREDENTIAL);
-		response.setHeader(Constants.HEADER_SESSION, new String(Base64.encodeBase64(encrypted)));
+		response.setHeader(Constants.HEADER_SESSION,
+				SessionService.encodeAndEncryptAsBase64(session, AppCredential.CLIENT_CREDENTIAL));
 		return null;
 	}
 

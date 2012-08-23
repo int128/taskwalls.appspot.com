@@ -3,7 +3,6 @@ package org.hidetake.taskwalls.controller;
 import java.io.IOException;
 import java.util.logging.Logger;
 
-import org.apache.commons.codec.binary.Base64;
 import org.hidetake.taskwalls.Constants;
 import org.hidetake.taskwalls.model.Session;
 import org.hidetake.taskwalls.service.GoogleOAuth2Service;
@@ -81,9 +80,9 @@ public abstract class ControllerBase extends Controller {
 			response.sendError(Constants.STATUS_PRECONDITION_FAILED);
 			return null;
 		}
-		Session session = SessionService.decryptAndDecode(
-				Base64.decodeBase64(sessionHeader.getBytes()),
-				AppCredential.CLIENT_CREDENTIAL);
+
+		Session session = SessionService.decryptAndDecodeFromBase64(
+				sessionHeader, AppCredential.CLIENT_CREDENTIAL);
 		if (session == null) {
 			logger.warning("Session header corrupted");
 			response.sendError(Constants.STATUS_NO_SESSION);
