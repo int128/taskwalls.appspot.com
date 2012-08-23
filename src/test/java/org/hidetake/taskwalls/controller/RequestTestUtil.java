@@ -22,11 +22,10 @@ public class RequestTestUtil {
 	 * @param tester
 	 */
 	public static void enableSession(ControllerTester tester) {
-		long now = System.currentTimeMillis();
 		Session session = new Session();
 		session.setAccessToken("accessToken");
 		session.setRefreshToken("refreshToken");
-		session.setExpiration(new Date(now));
+		session.setExpiration(new Date(System.currentTimeMillis() + 60 * 60 * 1000L));
 		tester.request.setHeader(Constants.HEADER_SESSION,
 				SessionService.encodeAndEncryptAsBase64(session, AppCredential.CLIENT_CREDENTIAL));
 	}
