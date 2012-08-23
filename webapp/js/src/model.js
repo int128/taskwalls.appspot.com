@@ -225,18 +225,6 @@ Tasklist.prototype.remove = function () {
 	}
 };
 /**
- * Clear completed tasks in the tasklist.
- * @returns {Deferred}
- */
-Tasklist.prototype.clearCompletedTasks = function () {
-	if (!taskwalls.settings.offline()) {
-		return $.post('/tasks/v1/lists/' + this.id() + '/clear');
-	} else {
-		// TODO: offline
-		return $.Deferred().resolve();
-	}
-};
-/**
  * @constructor set of task
  */
 function Tasks () {};
