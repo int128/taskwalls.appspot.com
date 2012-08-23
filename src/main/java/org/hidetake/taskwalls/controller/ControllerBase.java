@@ -44,7 +44,6 @@ public abstract class ControllerBase extends Controller {
 
 	/**
 	 * Returns JSON response.
-	 * This method checks the request is XHR.
 	 * 
 	 * @param object
 	 *            object to serialize as JSON
@@ -55,11 +54,7 @@ public abstract class ControllerBase extends Controller {
 		response.setHeader("X-Content-Type-Options", "nosniff");
 		response.setContentType("application/json");
 		response.setCharacterEncoding("UTF-8");
-		if (object == null) {
-			response.getWriter().append("null");
-		} else {
-			response.getWriter().append(object.toString());
-		}
+		response.getWriter().append(object == null ? "null" : object.toString());
 		response.flushBuffer();
 		return null;
 	}
@@ -89,6 +84,7 @@ public abstract class ControllerBase extends Controller {
 			return null;
 		}
 
+		// refresh token if expired
 		if (session.isExpired()) {
 			if (session.getRefreshToken() == null) {
 				logger.warning("Refresh token is null, please re-authorize");
