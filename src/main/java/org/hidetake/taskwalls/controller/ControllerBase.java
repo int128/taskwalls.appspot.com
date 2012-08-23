@@ -7,6 +7,7 @@ import org.hidetake.taskwalls.Constants;
 import org.hidetake.taskwalls.model.Session;
 import org.hidetake.taskwalls.service.GoogleOAuth2Service;
 import org.hidetake.taskwalls.service.SessionService;
+import org.hidetake.taskwalls.util.AjaxPreconditions;
 import org.hidetake.taskwalls.util.googleapis.HttpResponseExceptionUtil;
 import org.hidetake.taskwalls.util.googleapis.JacksonFactoryLocator;
 import org.hidetake.taskwalls.util.googleapis.NetHttpTransportLocator;
@@ -22,6 +23,15 @@ import com.google.api.services.tasks.Tasks;
 
 /**
  * Base controller class.
+ * <p>
+ * This controller accepts requests that satisfy conditions:
+ * <ul>
+ * <li>XHR</li>
+ * <li>session header</li>
+ * <li>valid access token</li>
+ * <li>validation passed {@link #validate()}</li>
+ * </ul>
+ * </p>
  * 
  * @author hidetake.org
  */
@@ -58,6 +68,9 @@ public abstract class ControllerBase extends Controller {
 	@Override
 	protected Navigation run() throws Exception {
 		// check preconditions
+		if (!AjaxPreconditions.isXHR(request)) {
+			return errorStatus(Constants.STATUS_PRECONDITION_FAILED, "should be XHR");
+		}
 		String sessionHeader = request.getHeader(Constants.HEADER_SESSION);
 		if (sessionHeader == null) {
 			return errorStatus(Constants.STATUS_PRECONDITION_FAILED, "No session header");

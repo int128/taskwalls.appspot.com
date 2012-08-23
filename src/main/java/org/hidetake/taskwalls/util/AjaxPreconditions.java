@@ -11,7 +11,7 @@ public class AjaxPreconditions {
 	}
 
 	/**
-	 * XHR check.
+	 * Check the request is XHR.
 	 * 
 	 * @param request
 	 * @return true if the request is XHR
