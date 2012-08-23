@@ -6,7 +6,6 @@ import java.util.logging.Logger;
 
 import org.hidetake.taskwalls.Constants;
 import org.hidetake.taskwalls.model.Session;
-import org.hidetake.taskwalls.model.oauth2.CachedToken;
 import org.hidetake.taskwalls.service.SessionService;
 import org.hidetake.taskwalls.util.AjaxPreconditions;
 import org.hidetake.taskwalls.util.googleapis.JacksonFactoryLocator;
@@ -50,6 +49,22 @@ public class GoogleApiProxyController extends ControllerBase {
 			response.sendError(Constants.STATUS_PRECONDITION_FAILED);
 			return null;
 		}
+
+		String sessionHeader = request.getHeader(Constants.HEADER_SESSION);
+		if (sessionHeader == null) {
+			logger.warning("Precondition failed: no session header");
+			response.sendError(Constants.STATUS_PRECONDITION_FAILED);
+			return null;
+		}
+
+		Session session = SessionService.decryptAndDecodeFromBase64(
+				sessionHeader, AppCredential.CLIENT_CREDENTIAL);
+		if (session == null) {
+			logger.warning("Session header corrupted");
+			response.sendError(Constants.STATUS_NO_SESSION);
+			return null;
+		}
+
 		String uri = BASE_URI + asString("path");
 		String methodHeader = request.getHeader("X-HTTP-Method-Override");
 		HttpMethod method;
@@ -67,16 +82,13 @@ public class GoogleApiProxyController extends ControllerBase {
 		JsonFactory jsonFactory = JacksonFactoryLocator.get();
 
 		// make a request
-		String sessionID = request.getHeader(Constants.HEADER_SESSION_ID);
-		Session session = SessionService.get(sessionID);
-		CachedToken token = session.getToken();
 		GoogleAccessProtectedResource resource = new GoogleAccessProtectedResource(
-				token.getAccessToken(),
+				session.getAccessToken(),
 				httpTransport,
 				jsonFactory,
 				AppCredential.CLIENT_CREDENTIAL.getClientId(),
 				AppCredential.CLIENT_CREDENTIAL.getClientSecret(),
-				token.getRefreshToken());
+				session.getRefreshToken());
 		HttpRequest proxyRequest = httpTransport.createRequestFactory().buildRequest(
 				method,
 				new GenericUrl(uri),

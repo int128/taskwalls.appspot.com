@@ -4,7 +4,7 @@ import java.io.IOException;
 import java.util.Date;
 import java.util.logging.Logger;
 
-import org.hidetake.taskwalls.model.oauth2.CachedToken;
+import org.hidetake.taskwalls.model.Session;
 import org.hidetake.taskwalls.model.oauth2.ClientCredential;
 import org.hidetake.taskwalls.util.StackTraceUtil;
 import org.hidetake.taskwalls.util.googleapis.HttpResponseExceptionUtil;
@@ -36,11 +36,11 @@ public class GoogleOAuth2Service {
 	 * 
 	 * @param authorizationCode
 	 * @param redirectURI
-	 * @return token
+	 * @return session
 	 * @throws HttpResponseException
 	 * @throws IOException
 	 */
-	public CachedToken exchange(String authorizationCode, String redirectURI)
+	public Session exchange(String authorizationCode, String redirectURI)
 			throws HttpResponseException, IOException {
 		if (authorizationCode == null) {
 			throw new NullPointerException("authorizationCode is null");
@@ -58,25 +58,27 @@ public class GoogleOAuth2Service {
 				redirectURI);
 		AccessTokenResponse tokenResponse = execute(grant);
 		Date expire = new Date(System.currentTimeMillis() + tokenResponse.expiresIn * 1000L);
-		return new CachedToken(
-				tokenResponse.accessToken,
-				tokenResponse.refreshToken,
-				expire);
+
+		Session session = new Session();
+		session.setAccessToken(tokenResponse.accessToken);
+		session.setRefreshToken(tokenResponse.refreshToken);
+		session.setExpiration(expire);
+		return session;
 	}
 
 	/**
 	 * Refresh the token.
 	 * 
-	 * @param token expired token (refresh token should not be null)
-	 * @return new token
+	 * @param session
+	 *            expired session (refresh token should not be null)
 	 * @throws HttpResponseException
 	 * @throws IOException
 	 */
-	public CachedToken refresh(CachedToken token) throws HttpResponseException, IOException {
-		if (token == null) {
+	public void refresh(Session session) throws HttpResponseException, IOException {
+		if (session == null) {
 			throw new NullPointerException("token is null");
 		}
-		if (token.getRefreshToken() == null) {
+		if (session.getRefreshToken() == null) {
 			throw new NullPointerException("refresh token is null");
 		}
 
@@ -85,13 +87,12 @@ public class GoogleOAuth2Service {
 				JacksonFactoryLocator.get(),
 				clientCredential.getClientId(),
 				clientCredential.getClientSecret(),
-				token.getRefreshToken());
+				session.getRefreshToken());
 		AccessTokenResponse tokenResponse = execute(grant);
 		Date expire = new Date(System.currentTimeMillis() + tokenResponse.expiresIn * 1000L);
-		return new CachedToken(
-				tokenResponse.accessToken,
-				token.getRefreshToken(),
-				expire);
+
+		session.setAccessToken(tokenResponse.accessToken);
+		session.setExpiration(expire);
 	}
 
 	private static AccessTokenResponse execute(AccessTokenRequest accessTokenRequest)

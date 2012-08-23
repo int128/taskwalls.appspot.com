@@ -62,6 +62,15 @@ public class DigestGenerator {
 	}
 
 	/**
+	 * Computes the digest.
+	 * 
+	 * @return bytes array
+	 */
+	public byte[] getAsBytes() {
+		return digest.digest();
+	}
+
+	/**
 	 * Computes the digest and resets.
 	 * 
 	 * @return

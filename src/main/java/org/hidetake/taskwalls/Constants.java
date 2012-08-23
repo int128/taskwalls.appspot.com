@@ -15,7 +15,7 @@ public class Constants {
 	/**
 	 * Header key of the session ID.
 	 */
-	public static final String HEADER_SESSION_ID = "X-TaskWall-Session";
+	public static final String HEADER_SESSION = "X-TaskWall-Session";
 
 	public static final int STATUS_PRECONDITION_FAILED = 400;
 

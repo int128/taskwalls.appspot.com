@@ -23,9 +23,9 @@ public class ControllerBaseTest extends ControllerTestCase {
 	}
 
 	@Test
-	public void sessionExpired() throws Exception {
+	public void invalidHeader() throws Exception {
 		String sessionID = UUID.randomUUID().toString();
-		tester.request.setHeader(Constants.HEADER_SESSION_ID, sessionID);
+		tester.request.setHeader(Constants.HEADER_SESSION, sessionID);
 		tester.start("/controllerBaseTest");
 		ControllerBaseTestController controller = tester.getController();
 		assertThat(controller, is(notNullValue()));
@@ -45,7 +45,7 @@ public class ControllerBaseTest extends ControllerTestCase {
 	}
 
 	@Test
-	public void jsonResponse() throws Exception {
+	public void checkJsonResponse() throws Exception {
 		RequestTestUtil.enableSession(tester);
 		tester.param("json", true);
 		tester.start("/controllerBaseTest");

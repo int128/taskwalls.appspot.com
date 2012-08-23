@@ -1,15 +1,21 @@
 package org.hidetake.taskwalls.service;
 
-import java.util.concurrent.Future;
+import java.security.InvalidAlgorithmParameterException;
+import java.security.InvalidKeyException;
+import java.security.NoSuchAlgorithmException;
+import java.util.Date;
 
-import org.hidetake.taskwalls.Constants;
-import org.hidetake.taskwalls.meta.SessionMeta;
+import javax.crypto.BadPaddingException;
+import javax.crypto.Cipher;
+import javax.crypto.IllegalBlockSizeException;
+import javax.crypto.NoSuchPaddingException;
+import javax.crypto.spec.IvParameterSpec;
+import javax.crypto.spec.SecretKeySpec;
+
+import org.apache.commons.codec.binary.Base64;
 import org.hidetake.taskwalls.model.Session;
-import org.slim3.datastore.Datastore;
-import org.slim3.memcache.Memcache;
-
-import com.google.appengine.api.datastore.Key;
-import com.google.appengine.api.memcache.Expiration;
+import org.hidetake.taskwalls.model.oauth2.ClientCredential;
+import org.hidetake.taskwalls.util.DigestGenerator;
 
 /**
  * Service class for model {@link Session}.
@@ -18,62 +24,147 @@ import com.google.appengine.api.memcache.Expiration;
  */
 public class SessionService {
 
-	private static final Expiration expiration =
-			Expiration.byDeltaSeconds(Constants.SESSION_EXPIRATION);
-
 	private SessionService() {
 	}
 
 	/**
-	 * Put the session into datastore.
-	 * Session will be written asynchronously.
+	 * Encode the session object to string.
 	 * 
 	 * @param session
-	 * @return future key
+	 * @return
 	 */
-	public static Future<Key> put(Session session) {
-		if (session == null) {
-			throw new NullPointerException("session is null");
-		}
-		Future<Key> key = Datastore.putAsync(session);
-		Memcache.put(session.getKey(), session, expiration);
-		return key;
+	public static String encode(Session session) {
+		StringBuilder builder = new StringBuilder();
+		builder.append(session.getAccessToken());
+		builder.append("\0");
+		builder.append(session.getRefreshToken());
+		builder.append("\0");
+		builder.append(session.getExpiration().getTime());
+		return builder.toString();
 	}
 
 	/**
-	 * Get the session from datastore.
+	 * Decode string expression to the session.
 	 * 
-	 * @param sessionID
-	 * @return null if not found
+	 * @param encoded
+	 * @return
 	 */
-	public static Session get(String sessionID) {
-		if (sessionID == null) {
-			throw new NullPointerException("sessionID is null");
+	public static Session decode(String encoded) {
+		String[] parts = encoded.split("\0");
+		if (parts.length != 3) {
+			throw new IllegalArgumentException("encoded string corrupted");
 		}
-		Key key = Session.createKey(sessionID);
-		Session cached = Memcache.get(key);
-		if (cached != null) {
-			return cached;
-		}
-		Session stored = Datastore.getOrNull(SessionMeta.get(), key);
-		if (stored != null) {
-			Memcache.put(stored.getKey(), stored, expiration);
-		}
-		return stored;
+		Session session = new Session();
+		session.setAccessToken(parts[0]);
+		session.setRefreshToken(parts[1]);
+		session.setExpiration(new Date(Long.parseLong(parts[2])));
+		return session;
 	}
 
 	/**
-	 * Delete the session.
+	 * Encode and encrypt the session.
 	 * 
-	 * @param sessionID
+	 * @param session
+	 *            the session
+	 * @param credential
+	 *            credential for encryption
+	 * @return encrypted bytes
 	 */
-	public static void delete(String sessionID) {
-		if (sessionID == null) {
-			throw new NullPointerException("sessionID is null");
+	public static byte[] encodeAndEncrypt(Session session, ClientCredential credential) {
+		byte[] encoded = encode(session).getBytes();
+		byte[] encrypted = computeCipher(Cipher.ENCRYPT_MODE, credential, encoded);
+		return encrypted;
+	}
+
+	/**
+	 * Encode and encrypt the session.
+	 * 
+	 * @param session
+	 *            the session
+	 * @param credential
+	 *            credential for encryption
+	 * @return encrypted data as base64
+	 */
+	public static String encodeAndEncryptAsBase64(Session session, ClientCredential credential) {
+		byte[] encrypted = encodeAndEncrypt(session, credential);
+		return new String(Base64.encodeBase64(encrypted));
+	}
+
+	/**
+	 * Decrypt and decode the session.
+	 * 
+	 * @param encrypted
+	 *            encrypted bytes
+	 * @param credential
+	 *            credential for encryption
+	 * @return the session, or null if wrong credential or bad data
+	 */
+	public static Session decryptAndDecode(byte[] encrypted, ClientCredential credential) {
+		byte[] decrypted = computeCipher(Cipher.DECRYPT_MODE, credential, encrypted);
+		if (decrypted == null) {
+			return null;
 		}
-		Key key = Session.createKey(sessionID);
-		Memcache.delete(key);
-		Datastore.delete(key);
+		Session decoded = decode(new String(decrypted));
+		return decoded;
+	}
+
+	/**
+	 * Decrypt and decode the session.
+	 * 
+	 * @param encrypted
+	 *            encrypted data as base64
+	 * @param credential
+	 *            credential for encryption
+	 * @return the session, or null if wrong credential or bad data
+	 */
+	public static Session decryptAndDecodeFromBase64(String encrypted, ClientCredential credential) {
+		byte[] base64decoded = Base64.decodeBase64(encrypted.getBytes());
+		return decryptAndDecode(base64decoded, credential);
+	}
+
+	/**
+	 * Compute a cipher.
+	 * 
+	 * @param opmode
+	 *            {@link Cipher#ENCRYPT_MODE} or {@link Cipher#DECRYPT_MODE}
+	 * @param credential
+	 *            credential for encryption or decryption
+	 * @param data
+	 * @return encrypted data, or null if wrong credential or bad data
+	 */
+	private static byte[] computeCipher(int opmode, ClientCredential credential, byte[] data) {
+		try {
+			byte[] digest = DigestGenerator.create("SHA-256")
+					.update(credential.getClientSecret())
+					.getAsBytes();
+			byte[] first = new byte[16];
+			byte[] second = new byte[16];
+			System.arraycopy(digest, 0, first, 0, first.length);
+			System.arraycopy(digest, first.length, second, 0, second.length);
+
+			SecretKeySpec key = new SecretKeySpec(first, "AES");
+			IvParameterSpec iv = new IvParameterSpec(second);
+
+			Cipher cipher = Cipher.getInstance("AES/CBC/PKCS5Padding");
+			cipher.init(opmode, key, iv);
+			return cipher.doFinal(data);
+		} catch (InvalidKeyException e) {
+			// this should not happen
+			throw new RuntimeException(e);
+		} catch (NoSuchAlgorithmException e) {
+			// this should not happen
+			throw new RuntimeException(e);
+		} catch (NoSuchPaddingException e) {
+			// this should not happen
+			throw new RuntimeException(e);
+		} catch (InvalidAlgorithmParameterException e) {
+			// this should not happen
+			throw new RuntimeException(e);
+		} catch (IllegalBlockSizeException e) {
+			return null;
+		} catch (BadPaddingException e) {
+			return null;
+		}
 	}
 
 }
