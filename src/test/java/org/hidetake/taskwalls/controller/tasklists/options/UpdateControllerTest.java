@@ -1,23 +1,24 @@
 package org.hidetake.taskwalls.controller.tasklists.options;
 
+import static org.hamcrest.CoreMatchers.*;
+import static org.hidetake.taskwalls.controller.RequestTestUtil.*;
+import static org.junit.Assert.*;
+
+import javax.servlet.http.HttpServletResponse;
+
 import org.hidetake.taskwalls.Constants;
-import org.hidetake.taskwalls.controller.RequestTestUtil;
 import org.hidetake.taskwalls.meta.TasklistOptionsMeta;
 import org.hidetake.taskwalls.model.TasklistOptions;
 import org.junit.Test;
 import org.slim3.datastore.Datastore;
 import org.slim3.tester.ControllerTestCase;
 
-import static org.hamcrest.CoreMatchers.*;
-
-import static org.junit.Assert.*;
-
 public class UpdateControllerTest extends ControllerTestCase {
 
 	@Test
 	public void xhr() throws Exception {
-		RequestTestUtil.enableSession(tester);
-		RequestTestUtil.setMethodAsPost(tester);
+		enableSession(tester);
+		setMethodAsPost(tester);
 		tester.start("/tasklists/options/update");
 		UpdateController controller = tester.getController();
 		assertThat(controller, is(notNullValue()));
@@ -28,9 +29,9 @@ public class UpdateControllerTest extends ControllerTestCase {
 
 	@Test
 	public void preconditionFailed() throws Exception {
-		RequestTestUtil.enableSession(tester);
-		RequestTestUtil.setMethodAsPost(tester);
-		RequestTestUtil.setXHR(tester);
+		enableSession(tester);
+		setMethodAsPost(tester);
+		setXHR(tester);
 		tester.start("/tasklists/options/update");
 		UpdateController controller = tester.getController();
 		assertThat(controller, is(notNullValue()));
@@ -41,9 +42,9 @@ public class UpdateControllerTest extends ControllerTestCase {
 
 	@Test
 	public void valid() throws Exception {
-		RequestTestUtil.enableSession(tester);
-		RequestTestUtil.setMethodAsPost(tester);
-		RequestTestUtil.setXHR(tester);
+		enableSession(tester);
+		setMethodAsPost(tester);
+		setXHR(tester);
 		TasklistOptionsMeta m = TasklistOptionsMeta.get();
 		tester.param("id", "hogeId");
 		tester.param(m.colorCode, "5");
@@ -52,6 +53,7 @@ public class UpdateControllerTest extends ControllerTestCase {
 		assertThat(controller, is(notNullValue()));
 		assertThat(tester.isRedirect(), is(false));
 		assertThat(tester.getDestinationPath(), is(nullValue()));
+		assertThat(tester.response.getStatus(), is(HttpServletResponse.SC_OK));
 		TasklistOptions actual = Datastore.get(m, TasklistOptions.createKey("hogeId"));
 		assertThat(actual.getColorCode(), is(5));
 	}

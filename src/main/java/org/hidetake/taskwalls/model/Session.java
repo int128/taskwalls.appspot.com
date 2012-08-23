@@ -2,6 +2,11 @@ package org.hidetake.taskwalls.model;
 
 import java.util.Date;
 
+/**
+ * Represents an OAuth session.
+ * 
+ * @author hidetake.org
+ */
 public class Session {
 
 	private String accessToken;

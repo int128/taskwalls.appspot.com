@@ -7,13 +7,13 @@ import org.hidetake.taskwalls.Constants;
 import org.hidetake.taskwalls.model.Session;
 import org.hidetake.taskwalls.service.GoogleOAuth2Service;
 import org.hidetake.taskwalls.service.SessionService;
+import org.hidetake.taskwalls.util.AjaxPreconditions;
 import org.hidetake.taskwalls.util.googleapis.HttpResponseExceptionUtil;
 import org.hidetake.taskwalls.util.googleapis.JacksonFactoryLocator;
 import org.hidetake.taskwalls.util.googleapis.NetHttpTransportLocator;
 import org.hidetake.taskwalls.util.googleapis.TasksRequestInitializer;
 import org.slim3.controller.Controller;
 import org.slim3.controller.Navigation;
-import org.slim3.util.ThrowableUtil;
 
 import com.google.api.client.googleapis.auth.oauth2.draft10.GoogleAccessProtectedResource;
 import com.google.api.client.http.HttpResponse;
@@ -22,7 +22,16 @@ import com.google.api.client.json.GenericJson;
 import com.google.api.services.tasks.Tasks;
 
 /**
- * Base controller class that depends on Google Tasks API.
+ * Base controller class.
+ * <p>
+ * This controller accepts requests that satisfy conditions:
+ * <ul>
+ * <li>XHR</li>
+ * <li>session header</li>
+ * <li>valid access token</li>
+ * <li>validation passed {@link #validate()}</li>
+ * </ul>
+ * </p>
  * 
  * @author hidetake.org
  */
@@ -30,75 +39,50 @@ public abstract class ControllerBase extends Controller {
 
 	private static final Logger logger = Logger.getLogger(ControllerBase.class.getName());
 
-	/**
-	 * Tasks API service.
-	 * This field must be initialized at {@link #setUp()}.
-	 */
+	protected GoogleOAuth2Service oauth2Service = new GoogleOAuth2Service(AppCredential.CLIENT_CREDENTIAL);
 	protected Tasks tasksService;
 
 	/**
-	 * OAuth 2.0 service.
+	 * Validate the request.
+	 * 
+	 * @return true if valid
 	 */
-	protected GoogleOAuth2Service oauth2Service = new GoogleOAuth2Service(
-			AppCredential.CLIENT_CREDENTIAL);
+	protected abstract boolean validate();
 
 	/**
-	 * Returns JSON response.
-	 * This method checks the request is XHR.
+	 * Process the request.
 	 * 
-	 * @param object
-	 *            object to serialize as JSON
-	 * @return always null
-	 * @throws IOException
+	 * @return JSON object for response
 	 */
-	protected Navigation jsonResponse(GenericJson object) throws IOException {
-		response.setHeader("X-Content-Type-Options", "nosniff");
-		response.setContentType("application/json");
-		response.setCharacterEncoding("UTF-8");
-		if (object == null) {
-			response.getWriter().append("null");
-		} else {
-			response.getWriter().append(object.toString());
-		}
-		response.flushBuffer();
-		return null;
-	}
+	protected abstract GenericJson response() throws Exception;
 
 	@Override
-	protected Navigation setUp() {
-		try {
-			return setUpServices();
-		} catch (IOException e) {
-			throw ThrowableUtil.wrap(e);
+	protected Navigation run() throws Exception {
+		// check preconditions
+		if (!AjaxPreconditions.isXHR(request)) {
+			return errorStatus(Constants.STATUS_PRECONDITION_FAILED, "should be XHR");
 		}
-	}
-
-	protected Navigation setUpServices() throws IOException {
 		String sessionHeader = request.getHeader(Constants.HEADER_SESSION);
 		if (sessionHeader == null) {
-			logger.warning("Precondition failed: no session header");
-			response.sendError(Constants.STATUS_PRECONDITION_FAILED);
-			return null;
+			return errorStatus(Constants.STATUS_PRECONDITION_FAILED, "No session header");
 		}
-
-		Session session = SessionService.decryptAndDecodeFromBase64(
-				sessionHeader, AppCredential.CLIENT_CREDENTIAL);
+		Session session = SessionService.decryptAndDecodeFromBase64(sessionHeader, AppCredential.CLIENT_CREDENTIAL);
 		if (session == null) {
-			logger.warning("Session header corrupted");
-			response.sendError(Constants.STATUS_NO_SESSION);
-			return null;
+			return errorStatus(Constants.STATUS_PRECONDITION_FAILED, "Session header corrupted");
+		}
+		if (!validate()) {
+			return errorStatus(Constants.STATUS_PRECONDITION_FAILED, "Validation failed: " + errors.toString());
 		}
 
+		// refresh token if expired
 		if (session.isExpired()) {
 			if (session.getRefreshToken() == null) {
-				logger.warning("Refresh token is null, please re-authorize");
-				response.sendError(Constants.STATUS_NO_SESSION);
-				return null;
+				return errorStatus(Constants.STATUS_NO_SESSION, "Refresh token is null, try re-authorize");
 			}
 			oauth2Service.refresh(session);
 		}
 
-		// instantiate service
+		// instantiate the service
 		GoogleAccessProtectedResource resource = new GoogleAccessProtectedResource(
 				session.getAccessToken(),
 				NetHttpTransportLocator.get(),
@@ -106,13 +90,21 @@ public abstract class ControllerBase extends Controller {
 				AppCredential.CLIENT_CREDENTIAL.getClientId(),
 				AppCredential.CLIENT_CREDENTIAL.getClientSecret(),
 				session.getRefreshToken());
-		TasksRequestInitializer tasksRequestInitializer = new TasksRequestInitializer();
-		tasksRequestInitializer.setUserIp(request.getRemoteAddr());
 		tasksService = Tasks
 				.builder(NetHttpTransportLocator.get(), JacksonFactoryLocator.get())
 				.setHttpRequestInitializer(resource)
-				.setJsonHttpRequestInitializer(tasksRequestInitializer)
+				.setJsonHttpRequestInitializer(new TasksRequestInitializer(request.getRemoteAddr()))
 				.build();
+
+		GenericJson responseJson = response();
+
+		if (responseJson != null) {
+			response.setHeader("X-Content-Type-Options", "nosniff");
+			response.setContentType("application/json");
+			response.setCharacterEncoding("UTF-8");
+			response.getWriter().append(responseJson.toString());
+			response.flushBuffer();
+		}
 		return null;
 	}
 
@@ -124,13 +116,17 @@ public abstract class ControllerBase extends Controller {
 			HttpResponse httpResponse = httpResponseException.getResponse();
 			if (httpResponse != null) {
 				if (httpResponse.getStatusCode() == 401) {
-					// 401 invalid credentials
-					response.sendError(Constants.STATUS_NO_SESSION);
-					return null;
+					return errorStatus(Constants.STATUS_NO_SESSION, "Google API returns 401 invalid credentials");
 				}
 			}
 		}
 		return super.handleError(e);
+	}
+
+	private Navigation errorStatus(int code, String logMessage) throws IOException {
+		logger.warning(logMessage);
+		response.sendError(code);
+		return null;
 	}
 
 }

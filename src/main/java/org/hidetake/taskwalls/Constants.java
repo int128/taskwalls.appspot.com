@@ -8,11 +8,6 @@ package org.hidetake.taskwalls;
 public class Constants {
 
 	/**
-	 * Session expiration time in seconds.
-	 */
-	public static final int SESSION_EXPIRATION = 7 * 24 * 60 * 60;
-
-	/**
 	 * Header key of the session ID.
 	 */
 	public static final String HEADER_SESSION = "X-TaskWall-Session";

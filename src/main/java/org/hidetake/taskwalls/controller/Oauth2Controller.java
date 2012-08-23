@@ -1,5 +1,6 @@
 package org.hidetake.taskwalls.controller;
 
+import java.io.IOException;
 import java.net.URI;
 import java.util.logging.Logger;
 
@@ -23,29 +24,16 @@ public class Oauth2Controller extends Controller {
 
 	private static final Logger logger = Logger.getLogger(Oauth2Controller.class.getName());
 
-	/**
-	 * OAuth 2.0 service.
-	 */
-	protected GoogleOAuth2Service oauth2Service = new GoogleOAuth2Service(
-			AppCredential.CLIENT_CREDENTIAL);
+	protected GoogleOAuth2Service oauth2Service = new GoogleOAuth2Service(AppCredential.CLIENT_CREDENTIAL);
 
 	@Override
 	public Navigation run() throws Exception {
-		if (!isPost()) {
-			logger.warning("Precondition failed: not POST");
-			response.sendError(Constants.STATUS_PRECONDITION_FAILED);
-			return null;
-		}
 		if (!AjaxPreconditions.isXHR(request)) {
-			logger.warning("Precondition failed: not XHR");
-			response.sendError(Constants.STATUS_PRECONDITION_FAILED);
-			return null;
+			return preconditionFailed("should be XHR");
 		}
 		String authorizationCode = asString("code");
 		if (authorizationCode == null) {
-			logger.warning("Precondition failed: code is null");
-			response.sendError(Constants.STATUS_PRECONDITION_FAILED);
-			return null;
+			return preconditionFailed("code is null");
 		}
 
 		// exchange authorization code for token
@@ -67,6 +55,12 @@ public class Oauth2Controller extends Controller {
 			logger.severe(HttpResponseExceptionUtil.getMessage((HttpResponseException) e));
 		}
 		return super.handleError(e);
+	}
+
+	private Navigation preconditionFailed(String logMessage) throws IOException {
+		logger.warning(logMessage);
+		response.sendError(Constants.STATUS_PRECONDITION_FAILED);
+		return null;
 	}
 
 }

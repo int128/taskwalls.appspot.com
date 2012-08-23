@@ -37,14 +37,6 @@ DailyCalendarViewModel.prototype.initialize = function (taskdata) {
 			row.tasklists(Tasks.groupByTasklist(dueIndex.getTasks(row.day)));
 		});
 	}, this);
-
-	/**
-	 * Clear completed tasks.
-	 * TODO: should clear completed tasks in past
-	 */
-	this.clearCompleted = function () {
-		taskdata.clearCompletedTasks();
-	};
 };
 /**
  * @class row item of daily calendar
