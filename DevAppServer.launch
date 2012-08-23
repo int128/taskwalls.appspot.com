@@ -9,6 +9,6 @@
 <stringAttribute key="org.eclipse.jdt.launching.MAIN_TYPE" value="com.google.appengine.tools.development.DevAppServerMain"/>
 <stringAttribute key="org.eclipse.jdt.launching.PROGRAM_ARGUMENTS" value="--port=8888 ."/>
 <stringAttribute key="org.eclipse.jdt.launching.PROJECT_ATTR" value="taskwalls.appspot.com"/>
-<stringAttribute key="org.eclipse.jdt.launching.VM_ARGUMENTS" value="-Dappengine.sdk.root=${eclipse_home}/plugins/com.google.appengine.eclipse.sdkbundle_1.7.0/appengine-java-sdk-1.7.0&#10;-javaagent:${eclipse_home}/plugins/com.google.appengine.eclipse.sdkbundle_1.7.0/appengine-java-sdk-1.7.0/lib/agent/appengine-agent.jar"/>
+<stringAttribute key="org.eclipse.jdt.launching.VM_ARGUMENTS" value="-Dappengine.sdk.root=${workspace_loc}/appengine-java-sdk-1.7.0&#13;&#10;-javaagent:${workspace_loc}/appengine-java-sdk-1.7.0/lib/agent/appengine-agent.jar"/>
 <stringAttribute key="org.eclipse.jdt.launching.WORKING_DIRECTORY" value="${workspace_loc:taskwalls.appspot.com/webapp}"/>
 </launchConfiguration>
