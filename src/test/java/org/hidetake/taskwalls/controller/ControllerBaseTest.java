@@ -13,7 +13,18 @@ import org.slim3.tester.ControllerTestCase;
 public class ControllerBaseTest extends ControllerTestCase {
 
 	@Test
+	public void notXHR() throws Exception {
+		tester.start("/controllerBaseTest");
+		ControllerBaseTestController controller = tester.getController();
+		assertThat(controller, is(notNullValue()));
+		assertThat(tester.isRedirect(), is(false));
+		assertThat(tester.getDestinationPath(), is(nullValue()));
+		assertThat(tester.response.getStatus(), is(Constants.STATUS_PRECONDITION_FAILED));
+	}
+
+	@Test
 	public void noSessionHeader() throws Exception {
+		setXHR(tester);
 		tester.start("/controllerBaseTest");
 		ControllerBaseTestController controller = tester.getController();
 		assertThat(controller, is(notNullValue()));
@@ -24,6 +35,7 @@ public class ControllerBaseTest extends ControllerTestCase {
 
 	@Test
 	public void invalidHeader() throws Exception {
+		setXHR(tester);
 		String sessionID = UUID.randomUUID().toString();
 		tester.request.setHeader(Constants.HEADER_SESSION, sessionID);
 		tester.start("/controllerBaseTest");
@@ -31,11 +43,12 @@ public class ControllerBaseTest extends ControllerTestCase {
 		assertThat(controller, is(notNullValue()));
 		assertThat(tester.isRedirect(), is(false));
 		assertThat(tester.getDestinationPath(), is(nullValue()));
-		assertThat(tester.response.getStatus(), is(Constants.STATUS_NO_SESSION));
+		assertThat(tester.response.getStatus(), is(Constants.STATUS_PRECONDITION_FAILED));
 	}
 
 	@Test
 	public void sessionEnabled() throws Exception {
+		setXHR(tester);
 		enableSession(tester);
 		tester.start("/controllerBaseTest");
 		ControllerBaseTestController controller = tester.getController();
@@ -46,6 +59,7 @@ public class ControllerBaseTest extends ControllerTestCase {
 
 	@Test
 	public void checkJsonResponse() throws Exception {
+		setXHR(tester);
 		enableSession(tester);
 		tester.param("json", true);
 		tester.start("/controllerBaseTest");
