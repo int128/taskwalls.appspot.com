@@ -13,13 +13,14 @@ import com.google.api.services.tasks.TasksRequest;
  */
 public class TasksRequestInitializer implements JsonHttpRequestInitializer {
 
-	private String userIp;
+	private final String userIp;
 
 	/**
-	 * @see TasksRequest#setUserIp(String)
-	 * @param userIp
+	 * Constructor.
+	 * 
+	 * @param userIp client IP address
 	 */
-	public void setUserIp(String userIp) {
+	public TasksRequestInitializer(String userIp) {
 		this.userIp = userIp;
 	}
 

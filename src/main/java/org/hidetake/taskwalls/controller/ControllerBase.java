@@ -102,12 +102,10 @@ public abstract class ControllerBase extends Controller {
 				AppCredential.CLIENT_CREDENTIAL.getClientId(),
 				AppCredential.CLIENT_CREDENTIAL.getClientSecret(),
 				session.getRefreshToken());
-		TasksRequestInitializer tasksRequestInitializer = new TasksRequestInitializer();
-		tasksRequestInitializer.setUserIp(request.getRemoteAddr());
 		tasksService = Tasks
 				.builder(NetHttpTransportLocator.get(), JacksonFactoryLocator.get())
 				.setHttpRequestInitializer(resource)
-				.setJsonHttpRequestInitializer(tasksRequestInitializer)
+				.setJsonHttpRequestInitializer(new TasksRequestInitializer(request.getRemoteAddr()))
 				.build();
 		return null;
 	}
