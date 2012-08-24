@@ -10,13 +10,11 @@ function TasksOverviewViewModel (taskdata) {
  */
 TasksOverviewViewModel.prototype.initialize = function (taskdata) {
 	this.today = ko.computed(function () {
-		TaskViewModel.extend(taskdata.tasks());
 		var todayTasks = taskdata.dueIndex().getTasks(DateUtil.today());
 		return Tasks.groupByTasklist(todayTasks);
 	}, this);
 
 	this.thisweek = ko.computed(function () {
-		TaskViewModel.extend(taskdata.tasks());
 		var d = DateUtil.calculateFirstDayOfWeek(DateUtil.today());
 		var beginOfWeek = d.getTime();
 		d.setDate(d.getDate() + 7);
@@ -53,8 +51,6 @@ DailyCalendarViewModel.prototype.initialize = function (taskdata) {
 
 	// put tasks into each day
 	ko.computed(function () {
-		var tasks = taskdata.tasks();
-		TaskViewModel.extend(tasks);
 		var dueIndex = taskdata.dueIndex();
 		$.each(this.rows(), function (i, row) {
 			row.tasklists(Tasks.groupByTasklist(dueIndex.getTasks(row.day)));
@@ -130,7 +126,6 @@ WeeklyCalendarViewModel.prototype.initialize = function (taskdata) {
 	// put tasks into each week
 	ko.computed(function () {
 		var tasks = taskdata.tasks();
-		TaskViewModel.extend(tasks);
 		$.each(this.rows(), function (i, row) {
 			var tasksInWeek = Tasks.range(tasks,
 					row.beginOfThisWeek.getTime(),
@@ -207,7 +202,6 @@ MonthlyCalendarViewModel.prototype.initialize = function (taskdata) {
 	// put tasks into each month
 	ko.computed(function () {
 		var tasks = taskdata.tasks();
-		TaskViewModel.extend(tasks);
 		$.each(this.rows(), function (i, row) {
 			var tastsInMonth = Tasks.range(tasks,
 					row.beginOfThisMonth.getTime(),
@@ -265,9 +259,7 @@ function IceboxTasksViewModel (taskdata) {
  */
 IceboxTasksViewModel.prototype.initialize = function (taskdata) {
 	this.tasklists = ko.computed(function () {
-		var tasks = taskdata.dueIndex().getTasksInIceBox();
-		TaskViewModel.extend(tasks);
-		return Tasks.groupByTasklist(tasks);
+		return Tasks.groupByTasklist(taskdata.dueIndex().getTasksInIceBox());
 	});
 };
 /**
@@ -299,63 +291,26 @@ function PastTasksViewModel (taskdata) {
  */
 PastTasksViewModel.prototype.initialize = function (taskdata) {
 	this.tasklists = ko.computed(function () {
-		var firstDayOfThisWeek = DateUtil.calculateFirstDayOfWeek(DateUtil.today());
-		var tasks = Tasks.before(taskdata.tasks(), firstDayOfThisWeek.getTime());
-		TaskViewModel.extend(tasks);
-		return Tasks.groupByTasklist(tasks);
+		var firstDayOfThisWeek = DateUtil.calculateFirstDayOfWeek(DateUtil.today()).getTime();
+		return Tasks.groupByTasklist(Tasks.before(taskdata.tasks(), firstDayOfThisWeek));
 	});
 };
 /**
- * @class Tasklist view model.
+ * inject initializer to class {@link Tasklist}
  */
-function TasklistViewModel () {}
-/**
- * @param {Tasklist} target an instance (also accepts {@link Array})
- */
-TasklistViewModel.extend = function (target) {
-	var extend = function () {
-		var extension = {};
-		extension.visible = ko.observable(true);
-		extension.toggleVisibility = TasklistViewModel.toggleVisibility;
-		$.extend(this, extension);
-	};
-
-	if ($.isArray(target)) {
-		$.each(target, extend);
-	} else {
-		extend.apply(target);
-	}
-	return target;
-};
+Tasklist.prototype.initialize = FunctionUtil.seq(Tasklist.prototype.initialize, function () {
+	this.visible = ko.observable(true);
+});
 /**
  * Toggle visibility of the tasklist and its tasks.
  */
-TasklistViewModel.toggleVisibility = function () {
+Tasklist.prototype.toggleVisibility = function () {
 	this.visible(!this.visible());
-};
-/**
- * @class Task view model.
- */
-function TaskViewModel () {}
-/**
- * @param {Task} target an instance (also accepts {@link Array})
- */
-TaskViewModel.extend = function (target) {
-	var extend = function () {
-		// TODO: apply to other classes
-		$.extend(this, TaskViewModel.prototype);
-	};
-	if ($.isArray(target)) {
-		$.each(target, extend);
-	} else {
-		extend.apply(target);
-	}
-	return target;
 };
 /**
  * Save and update status of the task.
  */
-TaskViewModel.prototype.saveStatus = function () {
+Task.prototype.saveStatus = function () {
 	this.update({
 		status: this.status()
 	});
@@ -367,7 +322,7 @@ TaskViewModel.prototype.saveStatus = function () {
  * @param {Event} e
  * @param {Row} row
  */
-TaskViewModel.prototype.dropped = function (task, e, row) {
+Task.prototype.dropped = function (task, e, row) {
 	// execute asynchronously to prevent exception:
 	// TypeError: Cannot read property 'options' of undefined
 	window.setTimeout(function () {

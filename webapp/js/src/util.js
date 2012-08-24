@@ -98,3 +98,20 @@ DateUtil.today = ko.observable();
 	// initialize value
 	update();
 })();
+/**
+ * @class function utility
+ */
+function FunctionUtil () {};
+FunctionUtil.prototype = {};
+/**
+ * Generate a function that executes given functions sequentially.
+ * @param {Function} f
+ * @param {Function} g
+ * @returns {Function} 
+ */
+FunctionUtil.seq = function (f, g) {
+	return function () {
+		f.apply(this, arguments);
+		return g.apply(this, arguments);
+	};
+};

@@ -23,9 +23,7 @@ AuthorizedPageViewModel.prototype.initialize = function () {
 		}).length;
 	}, this);
 
-	this.tasklists = ko.computed(function () {
-		return TasklistViewModel.extend(this.taskdata.tasklists());
-	}, this);
+	this.tasklists = this.taskdata.tasklists;
 
 	// calendar
 	this.viewMode = ko.observable('overview');
