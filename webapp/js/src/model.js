@@ -82,6 +82,7 @@ Taskdata.prototype.clearCompletedTasks = function () {
  * @constructor set of tasklist
  */
 function Tasklists () {};
+Tasklists.prototype = {};
 /**
  * Asynchronously get tasklists from server.
  * @returns {Deferred}
@@ -228,6 +229,7 @@ Tasklist.prototype.remove = function () {
  * @constructor set of task
  */
 function Tasks () {};
+Tasks.prototype = {};
 /**
  * Asynchronously get tasks from server.
  * @param {Tasklist}
