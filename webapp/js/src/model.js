@@ -315,12 +315,22 @@ Tasks.days = function (tasks) {
  * @param {Number} endTime
  */
 Tasks.range = function (tasks, beginTime, endTime) {
+	return Tasks.filterByDue(tasks, function (due) {
+		return beginTime <= due && due < endTime;
+	});
+};
+/**
+ * Select items by due date.
+ * @param {Array} tasks
+ * @param {Function} func filter function ({Number} time of due date)
+ */
+Tasks.filterByDue = function (tasks, func) {
 	return $.grep(tasks, function (task) {
-		if (task.due()) {
-			var due = task.due().getTime();
-			if (beginTime <= due && due < endTime) {
-				return true;
-			}
+		var due = task.due();
+		if (due) {
+			return func.call(task, due.getTime());
+		} else {
+			return false;
 		}
 	});
 };

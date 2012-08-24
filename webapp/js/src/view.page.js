@@ -28,13 +28,15 @@ AuthorizedPageViewModel.prototype.initialize = function () {
 	}, this);
 
 	// calendar
-	this.viewMode = ko.observable('daily');
+	this.viewMode = ko.observable('overview');
+	/** @returns {Function} */
 	this.switchView = function (name) {
 		return function () {
 			this.viewMode(name);
 		};
 	};
 
+	this.overview = new TasksOverviewViewModel(this.taskdata);
 	this.dailyCalendar = new DailyCalendarViewModel(this.taskdata);
 	this.weeklyCalendar = new WeeklyCalendarViewModel(this.taskdata);
 	this.monthlyCalendar = new MonthlyCalendarViewModel(this.taskdata);

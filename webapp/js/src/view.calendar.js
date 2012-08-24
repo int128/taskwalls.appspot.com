@@ -1,4 +1,31 @@
 /**
+ * @class overview of tasks
+ * @param {Taskdata} taskdata
+ */
+function TasksOverviewViewModel (taskdata) {
+	this.initialize.apply(this, arguments);
+};
+/**
+ * @param {Taskdata} taskdata
+ */
+TasksOverviewViewModel.prototype.initialize = function (taskdata) {
+	this.today = ko.computed(function () {
+		TaskViewModel.extend(taskdata.tasks());
+		var todayTasks = taskdata.dueIndex().getTasks(DateUtil.today());
+		return Tasks.groupByTasklist(todayTasks);
+	}, this);
+
+	this.thisweek = ko.computed(function () {
+		TaskViewModel.extend(taskdata.tasks());
+		var d = DateUtil.calculateFirstDayOfWeek(DateUtil.today());
+		var beginOfWeek = d.getTime();
+		d.setDate(d.getDate() + 7);
+		var endOfWeek = d.getTime();
+		var weeklyTasks = Tasks.range(taskdata.tasks(), beginOfWeek, endOfWeek);
+		return Tasks.groupByTasklist(weeklyTasks);
+	}, this);
+};
+/**
  * @class daily calendar
  * @param {Taskdata} taskdata
  */

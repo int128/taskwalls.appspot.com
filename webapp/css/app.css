@@ -300,13 +300,11 @@ body {
 /*
  * Calendar specific styles.
  */
-.past.calendar .tasklist,
-.future.calendar .tasklist {
+.wide.calendar .tasklist {
 	float: left;
 }
 
-.past.calendar .tasklist .count,
-.future.calendar .tasklist .count {
+.wide.calendar .tasklist .count {
 	margin-left: 15px;
 }
 

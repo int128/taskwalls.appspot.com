@@ -147,9 +147,24 @@ var appengineDevelopment = (location.hostname.search('.appspot.com') == -1);
 </div>
 
 <!-- ko if: viewMode() == 'overview' -->
-<!-- ko with: dailyCalendar -->
-<section class="overview navtabcontent">
+<!-- ko with: overview -->
+<section class="overview wide calendar navtabcontent">
 	<h2>今日のタスク</h2>
+	<div data-bind="foreach: today">
+	<div class="tasklist">
+	<div class="count"><span data-bind="text: tasks.length" class="badge"></span></div>
+	<div data-bind="template: {name: 'task-template', foreach: tasks}, visible: tasklist.visible"></div>
+	</div>
+	</div>
+	<div style="clear: both;"></div>
+	<h2>今週のタスク</h2>
+	<div data-bind="foreach: thisweek">
+	<div class="tasklist">
+	<div class="count"><span data-bind="text: tasks.length" class="badge"></span></div>
+	<div data-bind="template: {name: 'task-template', foreach: tasks}, visible: tasklist.visible"></div>
+	</div>
+	</div>
+	<div style="clear: both;"></div>
 </section>
 <!-- /ko -->
 <!-- /ko -->
@@ -262,7 +277,7 @@ var appengineDevelopment = (location.hostname.search('.appspot.com') == -1);
 
 <!-- ko if: viewMode() == 'past' -->
 <!-- ko with: pastTasks -->
-<section class="past calendar navtabcontent">
+<section class="past wide calendar navtabcontent">
 	<div data-bind="foreach: tasklists">
 	<div class="tasklist">
 	<div class="count"><span data-bind="text: tasks.length" class="badge"></span></div>
