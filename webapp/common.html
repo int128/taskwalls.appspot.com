@@ -275,14 +275,14 @@ var appengineDevelopment = (location.hostname.search('.appspot.com') == -1);
 		context: $data
 	}"
 	class="icebox">
-	<h2>未計画のタスク</h2>
-	<div class="create">
 	<a data-bind="click: $root.createTaskDialog.create"
-		href="#" class="showtooltip"
-		data-placement="left" title="新しいタスクを作成する"></a>
-	</div>
+		href="#" class="create showtooltip" data-placement="left"
+		title="新しいタスクを作成する"></a>
+	<h2>未計画のタスク</h2>
 	<div data-bind="foreach: tasklists">
-	<div class="count"><span data-bind="text: tasks.length" class="badge"></span></div>
+	<div class="tasklist-header">
+	<span data-bind="text: tasks.length" class="badge"></span>
+	</div>
 	<div data-bind="template: {name: 'task-template', foreach: tasks}, visible: tasklist.visible"
 		class="tasklist">
 	</div>
