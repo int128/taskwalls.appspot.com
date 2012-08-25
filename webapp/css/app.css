@@ -326,25 +326,6 @@ body {
 	color: dimgray;
 }
 
-.calendar-next {
-	background: #fff;
-	text-align: center;
-	color: #888;
-}
-
-.calendar-next:HOVER {
-	background: #eee;
-	color: #000;
-}
-
-.calendar-next a {
-	display: block;
-	padding-top: 15px;
-	padding-bottom: 15px;
-	text-decoration: none;
-	color: inherit;
-}
-
 /*
  * Icebox.
  */
@@ -604,12 +585,6 @@ body {
 
 .myicon-logout {
 	background-image: url('/img/power.png');
-	height: 32px;
-	width: 32px;
-}
-
-.myicon-help {
-	background-image: url('/img/lightning.png');
 	height: 32px;
 	width: 32px;
 }
