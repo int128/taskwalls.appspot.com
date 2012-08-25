@@ -278,6 +278,10 @@ body {
 	-ms-filter: 'progid:DXImageTransform.Microsoft.gradient(enabled=false)';
 }
 
+.task[data-status='needsAction'].past {
+	color: #f00;
+}
+
 .task .notes {
 	max-height: 3em;
 	font-size: 90%;

@@ -229,6 +229,14 @@ Tasklist.prototype.toggleVisibility = function () {
 	this.visible(!this.visible());
 };
 /**
+ * inject initializer to class {@link Task}
+ */
+Task.prototype.initialize = FunctionUtil.seq(Task.prototype.initialize, function () {
+	this.past = ko.computed(function () {
+		return this.due() < DateUtil.today();
+	}, this);
+});
+/**
  * Save and update status of the task.
  */
 Task.prototype.saveStatus = function () {

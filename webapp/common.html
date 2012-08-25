@@ -309,6 +309,9 @@ var appengineDevelopment = (location.hostname.search('.appspot.com') == -1);
 	attr: {
 		'data-status': status,
 		'data-tasklistcolor': tasklist().colorCode
+	},
+	css: {
+		past: past
 	}"
 	class="task">
 <input data-bind="checked: isCompleted, click: saveStatus, clickBubble: false" type="checkbox" />
