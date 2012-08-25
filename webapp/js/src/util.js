@@ -77,17 +77,6 @@ DateUtil.arrayOfMonths = function (origin, count, f) {
 	return a;
 };
 /**
- * Determine if given days are in same week.
- * This function assumes a week begins from Monday.
- * @param {Date} day1 (also accepts {Number})
- * @param {Date} day2 (also accepts {Number})
- * @returns {Boolean} true if they are in same week
- */
-DateUtil.areSameWeek = function (day1, day2) {
-	return DateUtil.calculateFirstDayOfWeek(day1).getTime()
-		== DateUtil.calculateFirstDayOfWeek(day2).getTime();
-};
-/**
  * Return first day of the week.
  * This function assumes a week begins from Monday.
  * @param {Date} day (also accepts {Number})
