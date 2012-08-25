@@ -159,12 +159,37 @@ body {
 }
 
 /*
- * Calendar.
+ * Tabs.
  */
-.calendar {
+.navtab {
+	z-index: 80;
+	position: fixed;
+	top: 0;
+	left: 120px;
+	right: 0;
+	background-color: #fff;
+}
+
+.navtab .nav {
+	margin-bottom: 0;
+}
+
+.navtabcontent {
 	margin-left: 120px;
 	margin-right: 240px;
 	margin-top: 40px;
+}
+
+/*
+ * Overview.
+ */
+.overview {
+}
+
+/*
+ * Calendar.
+ */
+.calendar {
 }
 
 .calendar table {
@@ -275,13 +300,11 @@ body {
 /*
  * Calendar specific styles.
  */
-.past.calendar .tasklist,
-.future.calendar .tasklist {
+.wide.calendar .tasklist {
 	float: left;
 }
 
-.past.calendar .tasklist .count,
-.future.calendar .tasklist .count {
+.wide.calendar .tasklist .count {
 	margin-left: 15px;
 }
 
@@ -301,19 +324,6 @@ body {
 	left: 0;
 	z-index: 100;
 	color: dimgray;
-}
-
-.switch-view {
-	z-index: 80;
-	position: fixed;
-	top: 0;
-	left: 120px;
-	right: 0;
-	background-color: #fff;
-}
-
-.switch-view .nav {
-	margin-bottom: 0;
 }
 
 .calendar-next {

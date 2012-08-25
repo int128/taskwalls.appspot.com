@@ -1,4 +1,31 @@
 /**
+ * @class overview of tasks
+ * @param {Taskdata} taskdata
+ */
+function TasksOverviewViewModel (taskdata) {
+	this.initialize.apply(this, arguments);
+};
+/**
+ * @param {Taskdata} taskdata
+ */
+TasksOverviewViewModel.prototype.initialize = function (taskdata) {
+	this.today = ko.computed(function () {
+		TaskViewModel.extend(taskdata.tasks());
+		var todayTasks = taskdata.dueIndex().getTasks(DateUtil.today());
+		return Tasks.groupByTasklist(todayTasks);
+	}, this);
+
+	this.thisweek = ko.computed(function () {
+		TaskViewModel.extend(taskdata.tasks());
+		var d = DateUtil.calculateFirstDayOfWeek(DateUtil.today());
+		var beginOfWeek = d.getTime();
+		d.setDate(d.getDate() + 7);
+		var endOfWeek = d.getTime();
+		var weeklyTasks = Tasks.range(taskdata.tasks(), beginOfWeek, endOfWeek);
+		return Tasks.groupByTasklist(weeklyTasks);
+	}, this);
+};
+/**
  * @class daily calendar
  * @param {Taskdata} taskdata
  */
@@ -24,16 +51,12 @@ DailyCalendarViewModel.prototype.initialize = function (taskdata) {
 		return rows;
 	}, this);
 
-	this.pastTasks = ko.observableArray();
-
 	// put tasks into each day
 	ko.computed(function () {
 		var tasks = taskdata.tasks();
 		TaskViewModel.extend(tasks);
-
 		var dueIndex = taskdata.dueIndex();
-		var rows = this.rows();
-		$.each(rows, function (i, row) {
+		$.each(this.rows(), function (i, row) {
 			row.tasklists(Tasks.groupByTasklist(dueIndex.getTasks(row.day)));
 		});
 	}, this);
@@ -114,13 +137,6 @@ WeeklyCalendarViewModel.prototype.initialize = function (taskdata) {
 					row.endOfThisWeek.getTime());
 			row.tasklists(Tasks.groupByTasklist(tasksInWeek));
 		});
-	}, this);
-
-	this.futureTasks = ko.computed(function () {
-		var rows = this.rows();
-		var lastDay = rows[rows.length - 1].endOfThisWeek;
-		// TODO: should use "after or equal"
-		Tasks.groupByTasklist(Tasks.after(taskdata.tasks(), lastDay.getTime() - 1));
 	}, this);
 };
 /**
