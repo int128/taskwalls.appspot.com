@@ -111,6 +111,16 @@ var appengineDevelopment = (location.hostname.search('.appspot.com') == -1);
 	<ul class="nav pull-right">
 	<li class="dropdown">
 	<a href="#" class="dropdown-toggle" data-toggle="dropdown">タスクリスト <b class="caret"></b></a>
+	<ul class="dropdown-menu">
+		<!-- ko foreach: tasklists -->
+		<li><a data-bind="text: title,
+			attr: {'data-tasklistcolor': colorCode},
+			click: $root.updateTasklistDialog.create"
+			class="tasklist" href="#"></a></li>
+		<!-- /ko -->
+		<li class="divider"></li>
+		<li><a data-bind="click: createTasklistDialog.create" href="#">新しいタスクリスト</a></li>
+	</ul>
 	</li>
 	<li class="dropdown">
 	<a href="#" class="dropdown-toggle" data-toggle="dropdown">設定 <b class="caret"></b></a>

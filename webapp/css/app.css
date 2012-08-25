@@ -37,6 +37,12 @@ body {
 	z-index: 100;
 }
 
+.navbar .tasklist {
+	background: inherit;
+	border-left-style: solid;
+	border-left-width: 5px;
+}
+
 .navtabcontent {
 	margin-right: 240px;
 	margin-top: 40px;

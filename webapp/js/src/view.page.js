@@ -9,7 +9,6 @@ function AuthorizedPageViewModel () {
 AuthorizedPageViewModel.prototype.initialize = function () {
 	this.taskdata = new Taskdata();
 
-	// TODO: currently not used
 	this.tasklists = this.taskdata.tasklists;
 
 	// calendar
