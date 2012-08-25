@@ -15,12 +15,12 @@ TasksOverviewViewModel.prototype.initialize = function (taskdata) {
 	}, this);
 
 	this.thisweek = ko.computed(function () {
-		var d = DateUtil.calculateFirstDayOfWeek(DateUtil.today());
-		var beginOfWeek = d.getTime();
-		d.setDate(d.getDate() + 7);
-		var endOfWeek = d.getTime();
-		var weeklyTasks = Tasks.range(taskdata.tasks(), beginOfWeek, endOfWeek);
-		return Tasks.groupByTasklist(weeklyTasks);
+		var dueIndex = taskdata.dueIndex();
+		var tasksInWeek = Array.prototype.concat.apply([],
+				DateUtil.arrayOfDays(DateUtil.thisWeek(), 7, function (time) {
+					return dueIndex.getTasks(time);
+				}));
+		return Tasks.groupByTasklist(tasksInWeek);
 	}, this);
 };
 /**
