@@ -44,7 +44,6 @@ body {
 }
 
 .navtabcontent {
-	margin-right: 240px;
 	margin-top: 40px;
 }
 
@@ -207,6 +206,10 @@ body {
 	overflow: auto;
 	background-color: #fff;
 	border-left: solid 1px #ccc;
+}
+
+.margin-for-icebox {
+	margin-right: 240px;
 }
 
 .icebox h2 {
