@@ -166,3 +166,19 @@ FunctionUtil.seq = function (f, g) {
 		return g.apply(this, arguments);
 	};
 };
+/**
+ * Generate a match-case function.
+ * <code><pre>
+ * var f = FunctionUtil.match(100);
+ * f(100); // -> true
+ * f(200); // -> false
+ * f(50, 100, 150); // -> true
+ * </pre></code>
+ * @param {Object} target
+ * @returns {Function}
+ */
+FunctionUtil.match = function (target) {
+	return function () {
+		return Array.prototype.slice.call(arguments).indexOf(target) != -1;
+	};
+};

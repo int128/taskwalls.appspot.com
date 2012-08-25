@@ -278,6 +278,7 @@ var appengineDevelopment = (location.hostname.search('.appspot.com') == -1);
 <!-- /ko -->
 <!-- /ko -->
 
+<!-- ko if: FunctionUtil.match(viewMode())('daily', 'weekly', 'monthly') -->
 <!-- ko with: iceboxTasks -->
 <section data-bind="droppable: {
 		accept: '.task',
@@ -298,6 +299,7 @@ var appengineDevelopment = (location.hostname.search('.appspot.com') == -1);
 	</div>
 	</div>
 </section>
+<!-- /ko -->
 <!-- /ko -->
 
 <script type="text/html" id="task-template">
