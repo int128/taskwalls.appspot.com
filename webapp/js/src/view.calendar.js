@@ -24,6 +24,46 @@ TasksOverviewViewModel.prototype.initialize = function (taskdata) {
 	}, this);
 };
 /**
+ * @class abstract row of calendar
+ * @param {Number} time time of the row
+ */
+function CalendarRow (time) {
+	this.initialize.apply(this, arguments);
+};
+/**
+* @param {Number} time time of the row
+*/
+CalendarRow.prototype.initialize = function (time) {
+	this.day = new Date(time);
+	this.weekdayName = $.resource('weekday' + this.day.getDay());
+
+	this.past = ko.computed(function () {
+		return time < DateUtil.today();
+	});
+	this.thisweek = ko.computed(function () {
+		var thisWeek = DateUtil.thisWeek();
+		return thisWeek < time && time < (thisWeek + 7 * 24 * 60 * 60 * 1000);
+	});
+
+	this.tasklists = ko.observableArray();
+};
+/**
+* Return day for new task adding to this row.
+* @returns {Date}
+*/
+CalendarRow.prototype.getDayForNewTask = function () {
+	return this.day;
+};
+/**
+* Update the task dropped to this row.
+* @param {Task} task dropped task
+*/
+CalendarRow.prototype.dropped = function (task) {
+	task.update({
+		due: this.day
+	});  // TODO: failed?
+};
+/**
  * @class daily calendar
  * @param {Taskdata} taskdata
  */
@@ -40,60 +80,21 @@ DailyCalendarViewModel.NUMBER_OF_DAYS = 14;
 DailyCalendarViewModel.prototype.initialize = function (taskdata) {
 	// set up days in the calendar
 	this.rows = ko.computed(function () {
-		var day = DateUtil.calculateFirstDayOfWeek(DateUtil.today());
-			rows = [];
-		for (var i = 0; i < DailyCalendarViewModel.NUMBER_OF_DAYS; i++) {
-			rows[i] = new DailyCalendarViewModel.Row(new Date(day));
-			day.setDate(day.getDate() + 1);
-		}
-		return rows;
+		return DateUtil.arrayOfDays(
+				DateUtil.thisWeek(),
+				DailyCalendarViewModel.NUMBER_OF_DAYS,
+				function (time) {
+					return new CalendarRow(time);
+				});
 	}, this);
 
 	// put tasks into each day
 	ko.computed(function () {
 		var dueIndex = taskdata.dueIndex();
 		$.each(this.rows(), function (i, row) {
-			row.tasklists(Tasks.groupByTasklist(dueIndex.getTasks(row.day)));
+			row.tasklists(Tasks.groupByTasklist(dueIndex.getTasks(row.day.getTime())));
 		});
 	}, this);
-};
-/**
- * @class row item of daily calendar
- * @param {Date} day day of the row
- */
-DailyCalendarViewModel.Row = function (day) {
-	this.initialize.apply(this, arguments);
-};
-/**
- * @param {Date} day day of the row
- */
-DailyCalendarViewModel.Row.prototype.initialize = function (day) {
-	this.day = day;
-	this.weekdayName = $.resource('weekday' + day.getDay());
-
-	this.past = ko.computed(function () {
-		return day.getTime() < DateUtil.today().getTime();
-	}, this);
-	this.thisweek = ko.computed(function () {
-		return DateUtil.areSameWeek(day, DateUtil.today());
-	}, this);
-	this.tasklists = ko.observableArray();
-};
-/**
- * Return day for new task adding to this row.
- * @returns {Date}
- */
-DailyCalendarViewModel.Row.prototype.getDayForNewTask = function () {
-	return this.day;
-};
-/**
- * Update the task dropped to this row.
- * @param {Task} task dropped task
- */
-DailyCalendarViewModel.Row.prototype.dropped = function (task) {
-	task.update({
-		due: this.day
-	});  // TODO: failed?
 };
 /**
  * @class weekly calendar
@@ -112,64 +113,25 @@ WeeklyCalendarViewModel.NUMBER_OF_WEEKS = 8;
 WeeklyCalendarViewModel.prototype.initialize = function (taskdata) {
 	// set up weeks in the calendar
 	this.rows = ko.computed(function () {
-		var day = DateUtil.calculateFirstDayOfWeek(DateUtil.today()),
-			rows = [];
-		for (var i = 0; i < WeeklyCalendarViewModel.NUMBER_OF_WEEKS; i++) {
-			var beginOfThisWeek = new Date(day);
-			day.setDate(day.getDate() + 7);
-			var endOfThisWeek = new Date(day);
-			rows[i] = new WeeklyCalendarViewModel.Row(beginOfThisWeek, endOfThisWeek);
-		}
-		return rows;
+		return DateUtil.arrayOfWeeks(
+				DateUtil.thisWeek(),
+				WeeklyCalendarViewModel.NUMBER_OF_WEEKS,
+				function (time) {
+					return new CalendarRow(time);
+				});
 	}, this);
 
 	// put tasks into each week
 	ko.computed(function () {
-		var tasks = taskdata.tasks();
+		var dueIndex = taskdata.dueIndex();
 		$.each(this.rows(), function (i, row) {
-			var tasksInWeek = Tasks.range(tasks,
-					row.beginOfThisWeek.getTime(),
-					row.endOfThisWeek.getTime());
+			var tasksInWeek = Array.prototype.concat.apply([],
+				DateUtil.arrayOfDays(row.day.getTime(), 7, function (time) {
+					return dueIndex.getTasks(time);
+				}));
 			row.tasklists(Tasks.groupByTasklist(tasksInWeek));
 		});
 	}, this);
-};
-/**
- * @constructor row item of {@link WeeklyCalendarViewModel}
- * @param {Date} beginOfThisWeek time of Monday 0:00 in this week
- * @param {Date} endOfThisWeek   time of Monday 0:00 in next week
- */
-WeeklyCalendarViewModel.Row = function (beginOfThisWeek, endOfThisWeek) {
-	this.initialize.apply(this, arguments);
-};
-/**
- * @param {Date} beginOfThisWeek
- * @param {Date} endOfThisWeek
- */
-WeeklyCalendarViewModel.Row.prototype.initialize = function (beginOfThisWeek, endOfThisWeek) {
-	this.beginOfThisWeek = beginOfThisWeek;
-	this.endOfThisWeek = endOfThisWeek;
-
-	this.tasklists = ko.observableArray();
-	this.thisweek = ko.computed(function () {
-		return DateUtil.areSameWeek(beginOfThisWeek, DateUtil.today());
-	}, this);
-};
-/**
- * Return day for new task adding to this row.
- * @returns {Date}
- */
-WeeklyCalendarViewModel.Row.prototype.getDayForNewTask = function () {
-	return this.beginOfThisWeek;
-};
-/**
- * Update the task dropped to this row.
- * @param {Task} task dropped task
- */
-WeeklyCalendarViewModel.Row.prototype.dropped = function (task) {
-	task.update({
-		due: this.beginOfThisWeek
-	});  // TODO: failed?
 };
 /**
  * @class monthly calendar
@@ -188,64 +150,24 @@ MonthlyCalendarViewModel.NUMBER_OF_MONTHS = 12;
 MonthlyCalendarViewModel.prototype.initialize = function (taskdata) {
 	// set up months in the calendar
 	this.rows = ko.computed(function () {
-		var date = DateUtil.calculateFirstDayOfMonth(DateUtil.today()),
-			rows = [];
-		for (var i = 0; i < MonthlyCalendarViewModel.NUMBER_OF_MONTHS; i++) {
-			var beginOfThisMonth = new Date(date);
-			date.setMonth(date.getMonth() + 1);
-			var endOfThisMonth = new Date(date);
-			rows[i] = new MonthlyCalendarViewModel.Row(beginOfThisMonth, endOfThisMonth);
-		}
-		return rows;
+		return DateUtil.arrayOfMonths(
+				DateUtil.thisMonth(),
+				MonthlyCalendarViewModel.NUMBER_OF_MONTHS,
+				function (thisMonth, nextMonth) {
+					var row = new CalendarRow(thisMonth);
+					row.nextMonth = nextMonth;
+					return row;
+				});
 	}, this);
 
 	// put tasks into each month
 	ko.computed(function () {
 		var tasks = taskdata.tasks();
 		$.each(this.rows(), function (i, row) {
-			var tastsInMonth = Tasks.range(tasks,
-					row.beginOfThisMonth.getTime(),
-					row.endOfThisMonth.getTime());
+			var tastsInMonth = Tasks.range(tasks, row.day.getTime(), row.nextMonth);
 			row.tasklists(Tasks.groupByTasklist(tastsInMonth));
 		});
 	}, this);
-};
-/**
- * @constructor row item of {@link MonthlyCalendarViewModel}
- * @param {Date} beginOfThisMonth first day of this month
- * @param {Date} endOfThisMonth   first day of next month
- */
-MonthlyCalendarViewModel.Row = function (beginOfThisMonth, endOfThisMonth) {
-	this.initialize.apply(this, arguments);
-};
-/**
- * @param {Date} beginOfThisMonth first day of this month
- * @param {Date} endOfThisMonth   first day of next month
- */
-MonthlyCalendarViewModel.Row.prototype.initialize = function (beginOfThisMonth, endOfThisMonth) {
-	this.beginOfThisMonth = beginOfThisMonth;
-	this.endOfThisMonth = endOfThisMonth;
-
-	this.tasklists = ko.observableArray();
-	this.thisweek = ko.computed(function () {
-		return DateUtil.areSameWeek(beginOfThisMonth, DateUtil.today());
-	}, this);
-};
-/**
- * Return day for new task adding to this row.
- * @returns {Date}
- */
-MonthlyCalendarViewModel.Row.prototype.getDayForNewTask = function () {
-	return this.beginOfThisMonth;
-};
-/**
- * Update the task dropped to this row.
- * @param {Task} task dropped task
- */
-MonthlyCalendarViewModel.Row.prototype.dropped = function (task) {
-	task.update({
-		due: this.beginOfThisMonth
-	});  // TODO: failed?
 };
 /**
  * @class Icebox tasks view model.

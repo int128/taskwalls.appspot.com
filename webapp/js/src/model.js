@@ -428,11 +428,11 @@ Tasks.DueIndex = function (map) {
 };
 /**
  * Get tasks of which due is the date.
- * @param {Date} date
+ * @param {Number} time
  * @returns {Array} array of tasks or undefined
  */
-Tasks.DueIndex.prototype.getTasks = function (date) {
-	var tasks = this.map[date.getTime()];
+Tasks.DueIndex.prototype.getTasks = function (time) {
+	var tasks = this.map[time];
 	return tasks ? tasks : [];
 };
 /**
@@ -440,8 +440,7 @@ Tasks.DueIndex.prototype.getTasks = function (date) {
  * @returns {Array}
  */
 Tasks.DueIndex.prototype.getTasksInIceBox = function () {
-	var tasks = this.map[0];
-	return tasks ? tasks : [];
+	return this.getTasks(0);
 };
 /**
  * @class the task
