@@ -42,7 +42,7 @@ CalendarRow.prototype.initialize = function (time) {
 	});
 	this.thisweek = ko.computed(function () {
 		var thisWeek = DateUtil.thisWeek();
-		return thisWeek < time && time < (thisWeek + 7 * 24 * 60 * 60 * 1000);
+		return thisWeek <= time && time < (thisWeek + 7 * 24 * 60 * 60 * 1000);
 	});
 
 	this.tasklists = ko.observableArray();
