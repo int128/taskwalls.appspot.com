@@ -33,6 +33,10 @@ body {
 /*
  * Navigation bar
  */
+.navbar {
+	z-index: 100;
+}
+
 .navtabcontent {
 	margin-right: 240px;
 	margin-top: 40px;
