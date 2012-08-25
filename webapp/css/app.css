@@ -145,12 +145,12 @@ body {
 	color: #11d;
 }
 
-/* this week's tasks */
+/* rows in this week */
 .calendar tr.thisweek>td.tasks {
 	border-left: solid 1px #f00;
 }
 
-/* past tasks */
+/* past rows */
 .calendar tr.past {
 	background-color: #eee;
 }
