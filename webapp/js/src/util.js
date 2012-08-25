@@ -30,6 +30,53 @@ DateUtil.clearTimePart = function (date) {
 	return date;
 };
 /**
+ * Generate array of days.
+ * @param {Number} origin time of the first element
+ * @param {Number} count number of elements
+ * @param {Function} f generator of each element, function ({Number} time)
+ * @returns {Array}
+ */
+DateUtil.arrayOfDays = function (origin, count, f) {
+	var a = [], time = origin;
+	for (var i = 0; i < count; i++) {
+		a[i] = f(time);
+		time += 24 * 60 * 60 * 1000;
+	}
+	return a;
+};
+/**
+ * Generate array of weeks.
+ * @param {Number} origin time of the first element
+ * @param {Number} count number of elements
+ * @param {Function} f generator of each element, function ({Number} time)
+ * @returns {Array}
+ */
+DateUtil.arrayOfWeeks = function (origin, count, f) {
+	var a = [], time = origin;
+	for (var i = 0; i < count; i++) {
+		a[i] = f(time);
+		time += 7 * 24 * 60 * 60 * 1000;
+	}
+	return a;
+};
+/**
+ * Generate array of months.
+ * @param {Number} origin time of the first element
+ * @param {Number} count number of elements
+ * @param {Function} f generator of each element, function ({Number} thisMonth, {Number} nextMonth)
+ * @returns {Array}
+ */
+DateUtil.arrayOfMonths = function (origin, count, f) {
+	var a = [], day = new Date(origin);
+	for (var i = 0; i < count; i++) {
+		var thisMonth = day.getTime();
+		day.setMonth(day.getMonth() + 1);
+		var nextMonth = day.getTime();
+		a[i] = f(thisMonth, nextMonth);
+	}
+	return a;
+};
+/**
  * Determine if given days are in same week.
  * This function assumes a week begins from Monday.
  * @param {Date} day1 (also accepts {Number})
@@ -53,7 +100,7 @@ DateUtil.calculateFirstDayOfWeek = function (day) {
 	return firstDay;
 };
 /**
- * Return first day of the week.
+ * Return first day of the month.
  * @param {Date} day (also accepts {Number})
  * @returns {Date} first day of the month (new instance)
  */
@@ -74,8 +121,8 @@ DateUtil.calculateTimeInUTC = function (time) {
 };
 /**
  * Today.
- * This is an observable value, that is updated at 0:00.
- * @returns {Date} today
+ * This is an observable value, updated at 0:00.
+ * @returns {Number} today
  */
 DateUtil.today = ko.observable();
 (function () {
@@ -92,9 +139,41 @@ DateUtil.today = ko.observable();
 	 * Update DateUtil#today.
 	 */
 	function update () {
-		DateUtil.today(DateUtil.clearTimePart(new Date()));
+		DateUtil.today(DateUtil.clearTimePart(new Date()).getTime());
 		setTimeout(update, calculateTimeUntilDateChanges());
 	}
 	// initialize value
 	update();
 })();
+/**
+ * First day of this week.
+ * This function assumes a week begins from Monday.
+ * @returns {Number}
+ */
+DateUtil.thisWeek = ko.computed(function () {
+	return DateUtil.calculateFirstDayOfWeek(DateUtil.today()).getTime();
+});
+/**
+ * First day of this month.
+ * @returns {Number}
+ */
+DateUtil.thisMonth = ko.computed(function () {
+	return DateUtil.calculateFirstDayOfMonth(DateUtil.today()).getTime();
+});
+/**
+ * @class function utility
+ */
+function FunctionUtil () {};
+FunctionUtil.prototype = {};
+/**
+ * Generate a function that executes given functions sequentially.
+ * @param {Function} f
+ * @param {Function} g
+ * @returns {Function} 
+ */
+FunctionUtil.seq = function (f, g) {
+	return function () {
+		f.apply(this, arguments);
+		return g.apply(this, arguments);
+	};
+};

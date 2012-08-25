@@ -219,8 +219,8 @@ var appengineDevelopment = (location.hostname.search('.appspot.com') == -1);
 		css: {
 			thisweek: thisweek
 		}">
-	<td class="month"><div><span data-bind="text: beginOfThisWeek.getMonth()+1"></span>月</div></td>
-	<td class="border day"><div data-bind="text: beginOfThisWeek.getDate()"></div></td>
+	<td class="month"><div><span data-bind="text: day.getMonth()+1"></span>月</div></td>
+	<td class="border day"><div data-bind="text: day.getDate()"></div></td>
 	<td class="border weekday">週</td>
 	<td class="border tasks">
 		<div data-bind="foreach: tasklists">
@@ -253,8 +253,8 @@ var appengineDevelopment = (location.hostname.search('.appspot.com') == -1);
 		css: {
 			thisweek: thisweek
 		}">
-	<td class="month"><div><span data-bind="text: beginOfThisMonth.getFullYear()"></span>年</div></td>
-	<td class="border day"><div><span data-bind="text: beginOfThisMonth.getMonth()+1"></span></div></td>
+	<td class="month"><div><span data-bind="text: day.getFullYear()"></span>年</div></td>
+	<td class="border day"><div><span data-bind="text: day.getMonth()+1"></span></div></td>
 	<td class="border weekday">月</td>
 	<td class="border tasks">
 		<div data-bind="foreach: tasklists">
