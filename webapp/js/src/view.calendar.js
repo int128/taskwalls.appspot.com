@@ -213,8 +213,7 @@ function PastTasksViewModel (taskdata) {
  */
 PastTasksViewModel.prototype.initialize = function (taskdata) {
 	this.tasklists = ko.computed(function () {
-		var firstDayOfThisWeek = DateUtil.calculateFirstDayOfWeek(DateUtil.today()).getTime();
-		return Tasks.groupByTasklist(Tasks.before(taskdata.tasks(), firstDayOfThisWeek));
+		return Tasks.groupByTasklist(Tasks.before(taskdata.tasks(), DateUtil.thisWeek()));
 	});
 };
 /**
