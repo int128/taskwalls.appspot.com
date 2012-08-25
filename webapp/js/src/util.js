@@ -167,18 +167,23 @@ FunctionUtil.seq = function (f, g) {
 	};
 };
 /**
- * Generate a match-case function.
+ * Generate a match function.
  * <code><pre>
- * var f = FunctionUtil.match(100);
- * f(100); // -> true
- * f(200); // -> false
- * f(50, 100, 150); // -> true
+ * var value = 100;
+ * var f = FunctionUtil.match(function () {return value;});
+ * 
+ * f(100);     // -> true
+ * f(50, 200); // -> false
+ * 
+ * value = 50;
+ * f(100);     // -> false
+ * f(50, 200); // -> true
  * </pre></code>
- * @param {Object} target
+ * @param {Function} v value function
  * @returns {Function}
  */
-FunctionUtil.match = function (target) {
+FunctionUtil.match = function (v) {
 	return function () {
-		return Array.prototype.slice.call(arguments).indexOf(target) != -1;
+		return Array.prototype.slice.call(arguments).indexOf(v.call()) != -1;
 	};
 };

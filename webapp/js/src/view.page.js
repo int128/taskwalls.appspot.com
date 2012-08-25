@@ -11,10 +11,10 @@ AuthorizedPageViewModel.prototype.initialize = function () {
 
 	this.tasklists = this.taskdata.tasklists;
 
-	// calendar
+	// views
 	this.viewMode = ko.observable('overview');
-	/** @returns {Function} */
-	this.switchView = function (name) {
+	this.viewModeIs = FunctionUtil.match(this.viewMode);
+	this.switchView = /** @returns {Function} */ function (name) {
 		return function () {
 			this.viewMode(name);
 		};
