@@ -88,9 +88,7 @@ TryOutPageViewModel.prototype.initialize = function () {
 
 	// load example data
 	$.getJSON('/tryoutdata.json').done($.proxy(function (response) {
-		var originTime = DateUtil.calculateFirstDayOfWeek(DateUtil.today()),
-			baseTime = DateUtil.clearTimePart(new Date(response.baseTime)).getTime(),
-			delta = originTime - baseTime;
+		var delta = DateUtil.thisWeek() - DateUtil.clearTimePart(new Date(response.baseTime)).getTime();
 
 		var tasklists = Tasklists.map(response.tasklists.items);
 		this.taskdata.tasklists(tasklists);
