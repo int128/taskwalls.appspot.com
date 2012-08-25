@@ -31,42 +31,15 @@ body {
 }
 
 /*
- * Header.
+ * Navigation header.
  */
 .navheader {
-	z-index: 100;
+	z-index: 80;
 	position: fixed;
-	top: 20px;
-	bottom: 20px;
-	left: -10px;
-	padding-left: 5px;
-	width: 120px;
-	overflow-y: auto;
-	overflow-x: hidden;
-	background: white;
-	border-right: solid 1px #ccc;
-	box-shadow: 0 0 10px 3px rgba(0, 0, 0, 0.4);
-	border-radius: 10px;
-	-moz-border-radius: 10px;
-	text-align: center;
-}
-
-.navheader>section {
-	margin-left: 15px;
-	margin-right: 10px;
-	margin-top: 5px;
-	margin-bottom: 5px;
-}
-
-.navheader h1 {
-	margin-top: 10px;
-	line-height: inherit;
-	padding: 0;
-	font-size: 18px;
-}
-
-.navheader h3 {
-	font-size: inherit;
+	top: 0;
+	left: 0;
+	right: 240px;
+	background-color: #fff;
 }
 
 .navheader [class^='myicon-'],
@@ -79,103 +52,24 @@ body {
 	opacity: 1.0;
 }
 
-.navheader .footer {
-	position: absolute;
-	bottom: 0;
-	right: 0;
-	left: 10px;
+.navheader h1 {
+	float: left;
+	margin-left: 15px;
+	margin-right: 15px;
+	font-size: 18px;
+	line-height: inherit;
 }
 
-.navheader .thisweek .numerator {
-	border-bottom: 1px solid #888;
-}
-
-.navheader .thisweek .denominator {
-	padding-top: 5px;
-}
-
-.navheader .thisweek .count {
-	font-size: 28px;
-}
-
-.navheader .toggle.tasklists .tasklist {
-	min-height: 32px;
-	overflow: hidden;
-	margin-bottom: 5px;
-	border-style: solid;
-	border-width: 1px;
-	padding-left: 4px;
-	border-top-color: #ddd;
-	border-bottom-color: #ddd;
-	border-right-color: #ddd;
-	border-radius: 5px;
-	-moz-border-radius: 5px;
-	cursor: pointer;
-	text-align: left;
-}
-
-.navheader .toggle.tasklists .tasklist:HOVER {
-	border-top-color: #888;
-	border-bottom-color: #888;
-	border-right-color: #888;
-}
-
-.navheader .toggle.tasklists .tasklist.visible {
-	border-left-width: 5px;
-	padding-left: 0;
-}
-
-.navheader .toggle.tasklists .tasklist .title {
-	padding: 5px;
-}
-
-.navheader .toggle.tasklists .tasklist .setting {
-	position: relative;
-}
-
-.navheader .toggle.tasklists .tasklist .setting>a {
-	position: absolute;
-	right: 0;
-	width: 32px;
-	height: 32px;
-	background: url('/img/gear.png') no-repeat center;
-	opacity: 0.1;
-}
-
-.navheader .toggle.tasklists .tasklist .setting>a:HOVER {
-	opacity: 0.6;
-}
-
-.navheader .create.tasklist {
-	display: inline-block;
-	width: 24px;
-	height: 24px;
-	background: url('/img/plus24.png') no-repeat center;
-	opacity: 0.3;
-}
-
-.navheader .create.tasklist:HOVER {
-	opacity: 1.0;
-}
-
-/*
- * Tabs.
- */
-.navtab {
-	z-index: 80;
-	position: fixed;
-	top: 0;
-	left: 120px;
-	right: 0;
-	background-color: #fff;
-}
-
-.navtab .nav {
+.navheader .nav {
+	float: left;
 	margin-bottom: 0;
 }
 
+.navheader .logout {
+	float: left;
+}
+
 .navtabcontent {
-	margin-left: 120px;
 	margin-right: 240px;
 	margin-top: 40px;
 }

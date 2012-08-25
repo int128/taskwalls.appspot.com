@@ -77,42 +77,6 @@ var appengineDevelopment = (location.hostname.search('.appspot.com') == -1);
 </article>
 
 <article class="oauth2state authorized" style="display: none;">
-	<section class="navheader">
-		<h1>Task Wall</h1>
-		<div style="font-weight: bold; margin-left: 5px; color: #888;">BETA</div>
-		<section>
-			<h3>タスクリスト</h3>
-			<div data-bind="foreach: tasklists" class="toggle tasklists">
-			<div data-bind="click: toggleVisibility,
-				css: {visible: visible},
-				attr: {'data-tasklistcolor': colorCode}"
-				class="tasklist">
-			<div class="setting"><a data-bind="click: $root.updateTasklistDialog.create, clickBubble: false"
-				href="#" class="showtooltip"
-				data-placement="right" title="タスクリストのプロパティを開く"></a></div>
-			<div data-bind="text: title" class="title"></div>
-			</div>
-			</div>
-			<a data-bind="click: createTasklistDialog.create"
-				href="#" class="create tasklist showtooltip"
-				data-placement="right" title="新しいタスクリストを作成する"></a>
-		</section>
-		<section class="thisweek">
-			<h3>今週のタスク</h3>
-			<div class="fraction numerator showtooltip"
-				data-placement="right" title="完了したタスク"
-				><span data-bind="text: completedCount" class="count"></span></div>
-			<div class="fraction denominator showtooltip"
-				data-placement="right" title="すべてのタスク"
-				><span data-bind="text: count" class="count"></span></div>
-		</section>
-		<section>
-		<div><a data-bind="click: logout" href="#" class="myicon-logout showtooltip"
-			data-placement="right" title="ログアウト"></a></div>
-	</section>
-	<p class="footer">&copy; hidetake.org</p>
-</section>
-
 <section class="cache-status">
 	<!-- ko if: development -->
 	<label class="checkbox"><input data-bind="checked: offline" type="checkbox"/>オフライン</label>
@@ -126,7 +90,8 @@ var appengineDevelopment = (location.hostname.search('.appspot.com') == -1);
 	<!-- /ko -->
 </section>
 
-<div class="navtab">
+<section class="navheader">
+	<h1>Task Wall</h1>
 	<ul class="nav nav-tabs">
 	<li data-bind="css: {active: viewMode() == 'overview'}">
 	<a data-bind="click: switchView('overview')" href="#">概況</a>
@@ -144,7 +109,9 @@ var appengineDevelopment = (location.hostname.search('.appspot.com') == -1);
 	<a data-bind="click: switchView('past')" href="#">過去のタスク</a>
 	</li>
 	</ul>
-</div>
+	<div class="logout"><a data-bind="click: logout" href="#" class="myicon-logout showtooltip"
+				data-placement="bottom" title="ログアウト"></a></div>
+</section>
 
 <!-- ko if: viewMode() == 'overview' -->
 <!-- ko with: overview -->

@@ -9,20 +9,7 @@ function AuthorizedPageViewModel () {
 AuthorizedPageViewModel.prototype.initialize = function () {
 	this.taskdata = new Taskdata();
 
-	// summary
-	this.completedCount = ko.computed(function () {
-		var today = DateUtil.today();
-		return $.grep(this.taskdata.tasks(), function (task) {
-			return DateUtil.areSameWeek(task.due(), today) && task.isCompleted();
-		}).length;
-	}, this);
-	this.count = ko.computed(function () {
-		var today = DateUtil.today();
-		return $.grep(this.taskdata.tasks(), function (task) {
-			return DateUtil.areSameWeek(task.due(), today);
-		}).length;
-	}, this);
-
+	// TODO: currently not used
 	this.tasklists = this.taskdata.tasklists;
 
 	// calendar
