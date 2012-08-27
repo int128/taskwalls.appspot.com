@@ -33,11 +33,20 @@ body {
 /*
  * Authorized.
  */
-.oauth2state.authorized h2 {
+.oauth2state.authorized h2,
+.oauth2state.authorized h3,
+.oauth2state.authorized h4,
+.oauth2state.authorized h5,
+.oauth2state.authorized h6 {
 	color: #888;
-	font-size: 16px;
 	font-weight: normal;
 }
+
+.oauth2state.authorized h2 { font-size: 20px; }
+.oauth2state.authorized h3 { font-size: 18px; }
+.oauth2state.authorized h4 { font-size: 16px; }
+.oauth2state.authorized h5 { font-size: 15px; }
+.oauth2state.authorized h6 { font-size: 14px; }
 
 /*
  * Navigation bar
