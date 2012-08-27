@@ -9,19 +9,25 @@ function TasksOverviewViewModel (taskdata) {
  * @param {Taskdata} taskdata
  */
 TasksOverviewViewModel.prototype.initialize = function (taskdata) {
-	this.today = ko.computed(function () {
-		var todayTasks = taskdata.dueIndex().getTasks(DateUtil.today());
-		return Tasks.groupByTasklist(todayTasks);
-	}, this);
-
-	this.thisweek = ko.computed(function () {
+	var tasksInThisWeek = ko.computed(function () {
 		var dueIndex = taskdata.dueIndex();
-		var tasksInWeek = Array.prototype.concat.apply([],
+		return Array.prototype.concat.apply([],
 				DateUtil.arrayOfDays(DateUtil.thisWeek(), 7, function (time) {
 					return dueIndex.getTasks(time);
 				}));
-		return Tasks.groupByTasklist(tasksInWeek);
-	}, this);
+	});
+
+	this.completed = ko.computed(function () {
+		return Tasks.groupByTasklist($.grep(tasksInThisWeek(), function (task) {
+			return task.status() == 'completed';
+		}));
+	});
+
+	this.needsAction = ko.computed(function () {
+		return Tasks.groupByTasklist($.grep(tasksInThisWeek(), function (task) {
+			return task.status() == 'needsAction';
+		}));
+	});
 };
 /**
  * @class abstract row of calendar

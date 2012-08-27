@@ -189,8 +189,9 @@ body {
 	float: left;
 }
 
-.wide.calendar .tasklist .count {
-	margin-left: 15px;
+.wide.calendar .task {
+	margin-left: 0;
+	margin-right: 15px;
 }
 
 /*

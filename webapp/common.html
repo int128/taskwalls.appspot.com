@@ -138,22 +138,29 @@ var appengineDevelopment = (location.hostname.search('.appspot.com') == -1);
 <!-- ko if: viewModeIs('overview') -->
 <!-- ko with: overview -->
 <section class="overview wide calendar navtabcontent container">
-	<h2>今日のタスク</h2>
-	<div data-bind="foreach: today">
-	<div class="tasklist">
-	<div class="count"><span data-bind="text: tasks.length" class="badge"></span></div>
-	<div data-bind="template: {name: 'task-template', foreach: tasks}, visible: tasklist.visible"></div>
+	<div class="row">
+	<div class="span1">
+	<h2>今週</h2>
+	</div>
+	<div class="span5">
+		<h3>実施中のタスク</h3>
+		<div data-bind="foreach: needsAction">
+		<div class="tasklist">
+		<div class="count"><span data-bind="text: tasks.length" class="badge"></span></div>
+		<div data-bind="template: {name: 'task-template', foreach: tasks}, visible: tasklist.visible"></div>
+		</div>
+		</div>
+	</div>
+	<div class="span5">
+		<h3>完了したタスク</h3>
+		<div data-bind="foreach: completed">
+		<div class="tasklist">
+		<div class="count"><span data-bind="text: tasks.length" class="badge"></span></div>
+		<div data-bind="template: {name: 'task-template', foreach: tasks}, visible: tasklist.visible"></div>
+		</div>
+		</div>
 	</div>
 	</div>
-	<div style="clear: both;"></div>
-	<h2>今週のタスク</h2>
-	<div data-bind="foreach: thisweek">
-	<div class="tasklist">
-	<div class="count"><span data-bind="text: tasks.length" class="badge"></span></div>
-	<div data-bind="template: {name: 'task-template', foreach: tasks}, visible: tasklist.visible"></div>
-	</div>
-	</div>
-	<div style="clear: both;"></div>
 </section>
 <!-- /ko -->
 <!-- /ko -->
