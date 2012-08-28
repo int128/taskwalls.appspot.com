@@ -62,21 +62,25 @@ body {
 }
 
 .navtabcontent {
-	margin-top: 40px;
+	margin-top: 60px;
 }
 
 /*
  * Overview.
  */
-.overview {
-}
 
 /*
  * Calendar.
  */
-.calendar {
+.calendar .expired {
+	margin-left: 60px;
+	margin-right: 60px;
 }
 
+.calendar .expired .tasklists {
+	margin-top: 15px;
+	margin-bottom: 15px;
+}
 .calendar table {
 	border-collapse: collapse;
 	table-layout: fixed;
