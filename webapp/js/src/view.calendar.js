@@ -11,23 +11,19 @@ function TasksOverviewViewModel (taskdata) {
 TasksOverviewViewModel.prototype.initialize = function (taskdata) {
 	this.completed = ko.computed(function () {
 		var dueIndex = taskdata.dueIndex();
-		return Tasks.groupByTasklist($.grep(
-				Array.prototype.concat.apply([],
-						DateUtil.arrayOfDays(DateUtil.thisWeek(), 7, function (time) {
-							return dueIndex.getTasks(time);
-						})),
-				function (task) {
-					return task.status() == 'completed';
+		var tasksInWeek = Array.prototype.concat.apply([],
+				DateUtil.arrayOfDays(DateUtil.thisWeek(), 7, function (time) {
+					return dueIndex.getTasks(time);
 				}));
+		return Tasks.groupByTasklist(tasksInWeek
+				.filter(TaskFilters.status('completed')));
 	});
 
 	this.working = ko.computed(function () {
 		var nextWeek = DateUtil.thisWeek() + DateUtil.WEEK_UNIT;
-		return Tasks.groupByTasklist($.grep(
-				taskdata.tasks(),
-				function (task) {
-					return task.status() == 'needsAction' && task.due() > 0 && task.due() < nextWeek;
-				}));
+		return Tasks.groupByTasklist(taskdata.tasks()
+				.filter(TaskFilters.status('needsAction'))
+				.filter(TaskFilters.dueBefore(nextWeek)));
 	});
 };
 /**

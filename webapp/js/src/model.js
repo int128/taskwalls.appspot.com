@@ -547,3 +547,32 @@ Task.prototype.remove = function () {
 		return $.Deferred().resolve();
 	}
 };
+/**
+ * @class filter functions for {@link Task}
+ */
+function TaskFilters () {};
+TaskFilters.prototype = {};
+/**
+ * Generate a filter function for status.
+ * @param {String} status
+ * @returns {Function}
+ */
+TaskFilters.status = function (status) {
+	return function (task) {
+		return task.status() == status;
+	};
+};
+/**
+ * Generate a filter function for due.
+ * @param {Number} time
+ * @returns {Function}
+ */
+TaskFilters.dueBefore = function (time) {
+	return function (task) {
+		if (task.due()) {
+			var due = task.due().getTime();
+			return 0 < due && due < time;
+		}
+		return false;
+	};
+};
