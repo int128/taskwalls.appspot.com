@@ -21,7 +21,7 @@ TasksOverviewViewModel.prototype.initialize = function (taskdata) {
 	});
 
 	this.working = ko.computed(function () {
-		var nextWeek = DateUtil.thisWeek() + 7 * 24 * 60 * 60 * 1000;
+		var nextWeek = DateUtil.thisWeek() + DateUtil.WEEK_UNIT;
 		return Tasks.groupByTasklist($.grep(taskdata.tasks(), function (task) {
 			return task.status() == 'needsAction' && task.due() > 0 && task.due() < nextWeek;
 		}));
@@ -46,7 +46,7 @@ CalendarRow.prototype.initialize = function (time) {
 	});
 	this.thisweek = ko.computed(function () {
 		var thisWeek = DateUtil.thisWeek();
-		return thisWeek <= time && time < (thisWeek + 7 * 24 * 60 * 60 * 1000);
+		return thisWeek <= time && time < (thisWeek + DateUtil.WEEK_UNIT);
 	});
 
 	this.tasklists = ko.observableArray();
