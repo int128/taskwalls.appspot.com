@@ -296,18 +296,6 @@ Tasks.create = function (data) {
 	}
 };
 /**
- * Returns days.
- * @param {Array} tasks array of tasks
- * @returns {Array} array of time {@link Number}
- * TODO: remove this?
- */
-Tasks.days = function (tasks) {
-	return $.map(tasks, function (task) {
-		var due = task.due();
-		return due > 0 ? due : undefined;
-	});
-};
-/**
  * Returns array of tasklist groups.
  * An element of array will be following:
  * <code><pre>
