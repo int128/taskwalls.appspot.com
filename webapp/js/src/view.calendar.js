@@ -101,10 +101,9 @@ DailyCalendarViewModel.prototype.initialize = function (taskdata) {
 	}, this);
 
 	this.expired = ko.computed(function () {
-		var pastTasks = Tasks.before(taskdata.tasks(), DateUtil.thisWeek());
-		return Tasks.groupByTasklist($.grep(pastTasks, function (task) {
-			return task.status() == 'needsAction';
-		}));
+		return Tasks.groupByTasklist(taskdata.tasks()
+				.filter(TaskFilters.status('needsAction'))
+				.filter(TaskFilters.dueBefore(DateUtil.thisWeek())));
 	});
 };
 /**
@@ -175,8 +174,8 @@ MonthlyCalendarViewModel.prototype.initialize = function (taskdata) {
 	ko.computed(function () {
 		var tasks = taskdata.tasks();
 		$.each(this.rows(), function (i, row) {
-			var tastsInMonth = Tasks.range(tasks, row.day.getTime(), row.nextMonth);
-			row.tasklists(Tasks.groupByTasklist(tastsInMonth));
+			row.tasklists(Tasks.groupByTasklist(tasks
+					.filter(TaskFilters.dueRange(row.day.getTime(), row.nextMonth - 1))));
 		});
 	}, this);
 };
@@ -224,7 +223,8 @@ function PastTasksViewModel (taskdata) {
  */
 PastTasksViewModel.prototype.initialize = function (taskdata) {
 	this.tasklists = ko.computed(function () {
-		return Tasks.groupByTasklist(Tasks.before(taskdata.tasks(), DateUtil.thisWeek()));
+		return Tasks.groupByTasklist(taskdata.tasks()
+				.filter(TaskFilters.dueBefore(DateUtil.thisWeek())));
 	});
 };
 /**

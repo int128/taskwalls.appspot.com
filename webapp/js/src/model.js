@@ -308,64 +308,6 @@ Tasks.days = function (tasks) {
 	});
 };
 /**
- * Select items between beginTime and endTime.
- * Note that result does not contain endTime.
- * @param {Array} tasks
- * @param {Number} beginTime
- * @param {Number} endTime
- */
-Tasks.range = function (tasks, beginTime, endTime) {
-	return Tasks.filterByDue(tasks, function (due) {
-		return beginTime <= due && due < endTime;
-	});
-};
-/**
- * Select items by due date.
- * @param {Array} tasks
- * @param {Function} func filter function ({Number} time of due date)
- */
-Tasks.filterByDue = function (tasks, func) {
-	return $.grep(tasks, function (task) {
-		var due = task.due();
-		if (due) {
-			return func.call(task, due.getTime());
-		} else {
-			return false;
-		}
-	});
-};
-/**
- * Select items after baseTime.
- * @param {Array} tasks
- * @param {Number} baseTime
- */
-Tasks.after = function (tasks, baseTime) {
-	return $.grep(tasks, function (task) {
-		if (task.due()) {
-			var due = task.due().getTime();
-			if (due > baseTime) {
-				return true;
-			}
-		}
-	});
-};
-/**
- * Select items before baseTime.
- * Result does not contain tasks in the ice box.
- * @param {Array} tasks
- * @param {Number} baseTime
- */
-Tasks.before = function (tasks, baseTime) {
-	return $.grep(tasks, function (task) {
-		if (task.due()) {
-			var due = task.due().getTime();
-			if (0 < due && due < baseTime) {
-				return true;
-			}
-		}
-	});
-};
-/**
  * Returns array of tasklist groups.
  * An element of array will be following:
  * <code><pre>
@@ -572,6 +514,21 @@ TaskFilters.dueBefore = function (time) {
 		if (task.due()) {
 			var due = task.due().getTime();
 			return 0 < due && due < time;
+		}
+		return false;
+	};
+};
+/**
+ * Generate a filter function for due.
+ * @param {Number} min earliest time (contains this)
+ * @param {Number} max latest time (contains this)
+ * @returns {Function}
+ */
+TaskFilters.dueRange = function (min, max) {
+	return function (task) {
+		if (task.due()) {
+			var due = task.due().getTime();
+			return min <= due && due <= max;
 		}
 		return false;
 	};
