@@ -242,7 +242,9 @@ Tasks.get = function (tasklist) {
 				var items = response.items;
 				if ($.isArray(items)) {
 					localStorage['Tasks.get.' + tasklist.id()] = xhr.responseText;
-					return Tasks.map(items, tasklist);
+					return items.map(function (item) {
+						return new Task(item, tasklist);
+					});
 				}
 			}
 			// ignore empty or bad data
@@ -255,24 +257,15 @@ Tasks.get = function (tasklist) {
 			if (response) {
 				var items = response.items;
 				if ($.isArray(items)) {
-					return Tasks.map(items, tasklist);
+					return items.map(function (item) {
+						return new Task(item, tasklist);
+					});
 				}
 			}
 			// ignore empty or bad data
 			return [];
 		})());
 	}
-};
-/**
- * Map JSON to {@link Task}.
- * @param {Array} items
- * @param {Tasklist} tasklist belonged tasklist or undefined
- * @returns {Array}
- */
-Tasks.map = function (items, tasklist) {
-	return $.map(items, function (item) {
-		return new Task(item, tasklist);
-	});
 };
 /**
  * Create a task.
