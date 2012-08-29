@@ -61,7 +61,7 @@ body {
 	border-left-width: 5px;
 }
 
-.navtabcontent {
+.nav-tabs-content {
 	margin-top: 60px;
 }
 
@@ -85,6 +85,7 @@ body {
 	margin-top: 15px;
 	margin-bottom: 15px;
 }
+
 .calendar table {
 	border-collapse: collapse;
 	table-layout: fixed;
