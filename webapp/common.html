@@ -137,7 +137,7 @@ var appengineDevelopment = (location.hostname.search('.appspot.com') == -1);
 
 <!-- ko if: viewModeIs('overview') -->
 <!-- ko with: overview -->
-<section class="overview wide calendar nav-tabs-content container">
+<section class="overview board nav-tabs-content container">
 	<div class="row">
 	<div class="span1">
 	<h2>今週</h2>
@@ -167,7 +167,7 @@ var appengineDevelopment = (location.hostname.search('.appspot.com') == -1);
 
 <!-- ko if: viewModeIs('daily') -->
 <!-- ko with: dailyCalendar -->
-<section class="daily calendar nav-tabs-content margin-for-icebox">
+<section class="daily board nav-tabs-content margin-for-icebox">
 	<!-- ko if: expired().length > 0 -->
 	<div class="expired alert">
 		<h4>期限切れのタスクをリスケしてください</h4>
@@ -175,14 +175,14 @@ var appengineDevelopment = (location.hostname.search('.appspot.com') == -1);
 		<div class="tasklist">
 		<div data-bind="template: {name: 'task-template', foreach: tasks}, visible: tasklist.visible"></div>
 		</div>
-		</div>
 		<div style="clear: both;"></div>
+		</div>
 		<div class="move"><a data-bind="click: $.noop" href="#">
 			<i class="icon-arrow-down"></i>今週に移動する(FIXME)
 		</a></div>
 	</div>
 	<!-- /ko -->
-	<table>
+	<table class="calendar">
 	<tbody data-bind="foreach: rows">
 	<tr data-bind="droppable: {
 			accept: '.task',
@@ -219,8 +219,8 @@ var appengineDevelopment = (location.hostname.search('.appspot.com') == -1);
 
 <!-- ko if: viewModeIs('weekly') -->
 <!-- ko with: weeklyCalendar -->
-<section class="weekly calendar nav-tabs-content margin-for-icebox">
-	<table>
+<section class="weekly board nav-tabs-content margin-for-icebox">
+	<table class="calendar">
 	<tbody data-bind="foreach: rows">
 	<tr data-bind="droppable: {
 			accept: '.task',
@@ -253,8 +253,8 @@ var appengineDevelopment = (location.hostname.search('.appspot.com') == -1);
 
 <!-- ko if: viewModeIs('monthly') -->
 <!-- ko with: monthlyCalendar -->
-<section class="monthly calendar nav-tabs-content margin-for-icebox">
-	<table>
+<section class="monthly board nav-tabs-content margin-for-icebox">
+	<table class="calendar">
 	<tbody data-bind="foreach: rows">
 	<tr data-bind="droppable: {
 			accept: '.task',
@@ -287,7 +287,7 @@ var appengineDevelopment = (location.hostname.search('.appspot.com') == -1);
 
 <!-- ko if: viewModeIs('past') -->
 <!-- ko with: pastTasks -->
-<section class="past wide calendar nav-tabs-content container">
+<section class="past board nav-tabs-content container">
 	<div data-bind="foreach: tasklists">
 	<div class="tasklist">
 	<div class="count"><span data-bind="text: tasks.length" class="badge"></span></div>
