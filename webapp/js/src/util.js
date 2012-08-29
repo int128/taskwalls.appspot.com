@@ -20,6 +20,8 @@ LocationHashRouter.route = function (rules) {
  */
 function DateUtil () {};
 DateUtil.prototype = {};
+DateUtil.DAY_UNIT = 24 * 60 * 60 * 1000;
+DateUtil.WEEK_UNIT = 7 * 24 * 60 * 60 * 1000;
 /**
  * Clear time part of the date.
  * @param {Date} date
@@ -40,7 +42,7 @@ DateUtil.arrayOfDays = function (origin, count, f) {
 	var a = [], time = origin;
 	for (var i = 0; i < count; i++) {
 		a[i] = f(time);
-		time += 24 * 60 * 60 * 1000;
+		time += DateUtil.DAY_UNIT;
 	}
 	return a;
 };
@@ -55,7 +57,7 @@ DateUtil.arrayOfWeeks = function (origin, count, f) {
 	var a = [], time = origin;
 	for (var i = 0; i < count; i++) {
 		a[i] = f(time);
-		time += 7 * 24 * 60 * 60 * 1000;
+		time += DateUtil.WEEK_UNIT;
 	}
 	return a;
 };

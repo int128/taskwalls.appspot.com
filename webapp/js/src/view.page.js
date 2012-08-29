@@ -76,21 +76,26 @@ TryOutPageViewModel.prototype.initialize = function () {
 	$.getJSON('/tryoutdata.json').done($.proxy(function (response) {
 		var delta = DateUtil.thisWeek() - DateUtil.clearTimePart(new Date(response.baseTime)).getTime();
 
-		var tasklists = Tasklists.map(response.tasklists.items);
+		var tasklists = response.tasklists.items.map(function (item) {
+			return new Tasklist(item);
+		});
 		this.taskdata.tasklists(tasklists);
-		var tasks = $.map(Tasks.map(response.tasks.items), function (task) {
+
+		this.taskdata.tasks(response.tasks.items.map(function (item) {
 			// extract tasklist ID from URL and associate with the instance
 			// see {@link Taskdata#load()}
-			var p = task.selfLink().split('/'), tasklistID = p[p.length - 3];
-			task.tasklist = ko.observable($.grep(tasklists, function (tasklist) {
+			var p = item.selfLink.split('/');
+			var tasklistID = p[p.length - 3];
+			var tasklist = tasklists.filter(function (tasklist) {
 				return tasklist.id() == tasklistID;
-			})[0]);
+			})[0];
+			return new Task(item, tasklist);
+		}).map(function (task) {
 			// adjust date
 			if (task.due()) {
 				task.due(new Date(task.due().getTime() + delta));
 			}
 			return task;
-		});
-		this.taskdata.tasks(tasks);
+		}));
 	}, this));
 };
