@@ -95,7 +95,9 @@ Tasklists.get = function () {
 				if ($.isArray(items)) {
 					localStorage['Tasklists.get'] = xhr.responseText;
 					taskwalls.settings.lastCached(new Date());
-					return Tasklists.map(items);
+					return items.map(function (item) {
+						return new Tasklist(item);
+					});
 				}
 			}
 			// ignore empty or bad data
@@ -108,23 +110,15 @@ Tasklists.get = function () {
 			if (response) {
 				var items = response.items;
 				if ($.isArray(items)) {
-					return Tasklists.map(items);
+					return items.map(function (item) {
+						return new Tasklist(item);
+					});
 				}
 			}
 			// ignore empty or bad data
 			return [];
 		})());
 	}
-};
-/**
- * Map JSON to {@link Tasklist}.
- * @param {Array} items
- * @returns {Array}
- */
-Tasklists.map = function (items) {
-	return $.map(items, function (item) {
-		return new Tasklist(item);
-	});
 };
 /**
  * Create a tasklist.
