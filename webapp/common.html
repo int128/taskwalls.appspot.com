@@ -146,7 +146,7 @@ var appengineDevelopment = (location.hostname.search('.appspot.com') == -1);
 		<h3>実施中のタスク</h3>
 		<div data-bind="foreach: working">
 		<div class="tasklist">
-		<div class="count"><span data-bind="text: tasks.length" class="badge"></span></div>
+		<div data-bind="text: tasklist.title" class="title"></div>
 		<div data-bind="template: {name: 'task-template', foreach: tasks}, visible: tasklist.visible"></div>
 		</div>
 		</div>
@@ -155,7 +155,7 @@ var appengineDevelopment = (location.hostname.search('.appspot.com') == -1);
 		<h3>完了したタスク</h3>
 		<div data-bind="foreach: completed">
 		<div class="tasklist">
-		<div class="count"><span data-bind="text: tasks.length" class="badge"></span></div>
+		<div data-bind="text: tasklist.title" class="title"></div>
 		<div data-bind="template: {name: 'task-template', foreach: tasks}, visible: tasklist.visible"></div>
 		</div>
 		</div>
