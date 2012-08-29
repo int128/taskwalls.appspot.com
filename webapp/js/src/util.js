@@ -77,17 +77,6 @@ DateUtil.arrayOfMonths = function (origin, count, f) {
 	return a;
 };
 /**
- * Determine if given days are in same week.
- * This function assumes a week begins from Monday.
- * @param {Date} day1 (also accepts {Number})
- * @param {Date} day2 (also accepts {Number})
- * @returns {Boolean} true if they are in same week
- */
-DateUtil.areSameWeek = function (day1, day2) {
-	return DateUtil.calculateFirstDayOfWeek(day1).getTime()
-		== DateUtil.calculateFirstDayOfWeek(day2).getTime();
-};
-/**
  * Return first day of the week.
  * This function assumes a week begins from Monday.
  * @param {Date} day (also accepts {Number})
@@ -175,5 +164,26 @@ FunctionUtil.seq = function (f, g) {
 	return function () {
 		f.apply(this, arguments);
 		return g.apply(this, arguments);
+	};
+};
+/**
+ * Generate a match function.
+ * <code><pre>
+ * var value = 100;
+ * var f = FunctionUtil.match(function () {return value;});
+ * 
+ * f(100);     // -> true
+ * f(50, 200); // -> false
+ * 
+ * value = 50;
+ * f(100);     // -> false
+ * f(50, 200); // -> true
+ * </pre></code>
+ * @param {Function} v value function
+ * @returns {Function}
+ */
+FunctionUtil.match = function (v) {
+	return function () {
+		return Array.prototype.slice.call(arguments).indexOf(v.call()) != -1;
 	};
 };

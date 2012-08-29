@@ -9,19 +9,23 @@ function TasksOverviewViewModel (taskdata) {
  * @param {Taskdata} taskdata
  */
 TasksOverviewViewModel.prototype.initialize = function (taskdata) {
-	this.today = ko.computed(function () {
-		var todayTasks = taskdata.dueIndex().getTasks(DateUtil.today());
-		return Tasks.groupByTasklist(todayTasks);
-	}, this);
-
-	this.thisweek = ko.computed(function () {
+	this.completed = ko.computed(function () {
 		var dueIndex = taskdata.dueIndex();
-		var tasksInWeek = Array.prototype.concat.apply([],
-				DateUtil.arrayOfDays(DateUtil.thisWeek(), 7, function (time) {
-					return dueIndex.getTasks(time);
-				}));
-		return Tasks.groupByTasklist(tasksInWeek);
-	}, this);
+		return Tasks.groupByTasklist($.grep(
+				Array.prototype.concat.apply([],
+						DateUtil.arrayOfDays(DateUtil.thisWeek(), 7, function (time) {
+							return dueIndex.getTasks(time);
+						})), function (task) {
+							return task.status() == 'completed';
+						}));
+	});
+
+	this.working = ko.computed(function () {
+		var nextWeek = DateUtil.thisWeek() + 7 * 24 * 60 * 60 * 1000;
+		return Tasks.groupByTasklist($.grep(taskdata.tasks(), function (task) {
+			return task.status() == 'needsAction' && task.due() > 0 && task.due() < nextWeek;
+		}));
+	});
 };
 /**
  * @class abstract row of calendar
@@ -95,6 +99,13 @@ DailyCalendarViewModel.prototype.initialize = function (taskdata) {
 			row.tasklists(Tasks.groupByTasklist(dueIndex.getTasks(row.day.getTime())));
 		});
 	}, this);
+
+	this.expired = ko.computed(function () {
+		var pastTasks = Tasks.before(taskdata.tasks(), DateUtil.thisWeek());
+		return Tasks.groupByTasklist($.grep(pastTasks, function (task) {
+			return task.status() == 'needsAction';
+		}));
+	});
 };
 /**
  * @class weekly calendar
@@ -228,6 +239,14 @@ Tasklist.prototype.initialize = FunctionUtil.seq(Tasklist.prototype.initialize, 
 Tasklist.prototype.toggleVisibility = function () {
 	this.visible(!this.visible());
 };
+/**
+ * inject initializer to class {@link Task}
+ */
+Task.prototype.initialize = FunctionUtil.seq(Task.prototype.initialize, function () {
+	this.past = ko.computed(function () {
+		return this.due() < DateUtil.today();
+	}, this);
+});
 /**
  * Save and update status of the task.
  */

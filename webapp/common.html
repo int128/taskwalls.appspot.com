@@ -77,46 +77,7 @@ var appengineDevelopment = (location.hostname.search('.appspot.com') == -1);
 </article>
 
 <article class="oauth2state authorized" style="display: none;">
-	<section class="navheader">
-		<h1>Task Wall</h1>
-		<div style="font-weight: bold; margin-left: 5px; color: #888;">BETA</div>
-		<section>
-			<h3>タスクリスト</h3>
-			<div data-bind="foreach: tasklists" class="toggle tasklists">
-			<div data-bind="click: toggleVisibility,
-				css: {visible: visible},
-				attr: {'data-tasklistcolor': colorCode}"
-				class="tasklist">
-			<div class="setting"><a data-bind="click: $root.updateTasklistDialog.create, clickBubble: false"
-				href="#" class="showtooltip"
-				data-placement="right" title="タスクリストのプロパティを開く"></a></div>
-			<div data-bind="text: title" class="title"></div>
-			</div>
-			</div>
-			<a data-bind="click: createTasklistDialog.create"
-				href="#" class="create tasklist showtooltip"
-				data-placement="right" title="新しいタスクリストを作成する"></a>
-		</section>
-		<section class="thisweek">
-			<h3>今週のタスク</h3>
-			<div class="fraction numerator showtooltip"
-				data-placement="right" title="完了したタスク"
-				><span data-bind="text: completedCount" class="count"></span></div>
-			<div class="fraction denominator showtooltip"
-				data-placement="right" title="すべてのタスク"
-				><span data-bind="text: count" class="count"></span></div>
-		</section>
-		<section>
-		<div><a data-bind="click: logout" href="#" class="myicon-logout showtooltip"
-			data-placement="right" title="ログアウト"></a></div>
-	</section>
-	<p class="footer">&copy; hidetake.org</p>
-</section>
-
 <section class="cache-status">
-	<!-- ko if: development -->
-	<label class="checkbox"><input data-bind="checked: offline" type="checkbox"/>オフライン</label>
-	<!-- /ko -->
 	<!-- ko with: lastCached -->
 	最後の読み込みは
 	<span data-bind="text: getMonth()+1"></span>月
@@ -126,52 +87,101 @@ var appengineDevelopment = (location.hostname.search('.appspot.com') == -1);
 	<!-- /ko -->
 </section>
 
-<div class="navtab">
+<div class="navbar navbar-fixed-top">
+<div class="navbar-inner">
+<div class="container">
+	<a class="brand" href="/">Task Wall</a>
 	<ul class="nav nav-tabs">
-	<li data-bind="css: {active: viewMode() == 'overview'}">
+	<li data-bind="css: {active: viewModeIs('overview')}">
 	<a data-bind="click: switchView('overview')" href="#">概況</a>
 	</li>
-	<li data-bind="css: {active: viewMode() == 'daily'}">
-	<a data-bind="click: switchView('daily')" href="#">日単位の計画</a>
+	<li data-bind="css: {active: viewModeIs('daily')}">
+	<a data-bind="click: switchView('daily')" href="#">今週の計画</a>
 	</li>
-	<li data-bind="css: {active: viewMode() == 'weekly'}">
-	<a data-bind="click: switchView('weekly')" href="#">週単位の計画</a>
+	<li data-bind="css: {active: viewModeIs('weekly')}">
+	<a data-bind="click: switchView('weekly')" href="#">今月の計画</a>
 	</li>
-	<li data-bind="css: {active: viewMode() == 'monthly'}">
-	<a data-bind="click: switchView('monthly')" href="#">月単位の計画</a>
+	<li data-bind="css: {active: viewModeIs('monthly')}">
+	<a data-bind="click: switchView('monthly')" href="#">今年の計画</a>
 	</li>
-	<li data-bind="css: {active: viewMode() == 'past'}">
+	<li data-bind="css: {active: viewModeIs('past')}">
 	<a data-bind="click: switchView('past')" href="#">過去のタスク</a>
 	</li>
 	</ul>
+	<ul class="nav pull-right">
+	<li class="dropdown">
+	<a href="#" class="dropdown-toggle" data-toggle="dropdown">タスクリスト <b class="caret"></b></a>
+	<ul class="dropdown-menu">
+		<!-- ko foreach: tasklists -->
+		<li><a data-bind="text: title,
+			attr: {'data-tasklistcolor': colorCode},
+			click: $root.updateTasklistDialog.create"
+			class="tasklist" href="#"></a></li>
+		<!-- /ko -->
+		<li class="divider"></li>
+		<li><a data-bind="click: createTasklistDialog.create" href="#">新しいタスクリスト</a></li>
+	</ul>
+	</li>
+	<li class="dropdown">
+	<a href="#" class="dropdown-toggle" data-toggle="dropdown">設定 <b class="caret"></b></a>
+	<ul class="dropdown-menu">
+		<li><label class="checkbox"><input data-bind="checked: offline" type="checkbox"/>オフライン</label></li>
+		<li class="divider"></li>
+		<li><a data-bind="click: logout" href="#">ログアウト</a></li>
+	</ul>
+	</li>
+	</ul>
+</div>
+</div>
 </div>
 
-<!-- ko if: viewMode() == 'overview' -->
+<!-- ko if: viewModeIs('overview') -->
 <!-- ko with: overview -->
-<section class="overview wide calendar navtabcontent">
-	<h2>今日のタスク</h2>
-	<div data-bind="foreach: today">
-	<div class="tasklist">
-	<div class="count"><span data-bind="text: tasks.length" class="badge"></span></div>
-	<div data-bind="template: {name: 'task-template', foreach: tasks}, visible: tasklist.visible"></div>
+<section class="overview wide calendar navtabcontent container">
+	<div class="row">
+	<div class="span1">
+	<h2>今週</h2>
+	</div>
+	<div class="span5">
+		<h3>実施中のタスク</h3>
+		<div data-bind="foreach: working">
+		<div class="tasklist">
+		<div class="count"><span data-bind="text: tasks.length" class="badge"></span></div>
+		<div data-bind="template: {name: 'task-template', foreach: tasks}, visible: tasklist.visible"></div>
+		</div>
+		</div>
+	</div>
+	<div class="span5">
+		<h3>完了したタスク</h3>
+		<div data-bind="foreach: completed">
+		<div class="tasklist">
+		<div class="count"><span data-bind="text: tasks.length" class="badge"></span></div>
+		<div data-bind="template: {name: 'task-template', foreach: tasks}, visible: tasklist.visible"></div>
+		</div>
+		</div>
 	</div>
 	</div>
-	<div style="clear: both;"></div>
-	<h2>今週のタスク</h2>
-	<div data-bind="foreach: thisweek">
-	<div class="tasklist">
-	<div class="count"><span data-bind="text: tasks.length" class="badge"></span></div>
-	<div data-bind="template: {name: 'task-template', foreach: tasks}, visible: tasklist.visible"></div>
-	</div>
-	</div>
-	<div style="clear: both;"></div>
 </section>
 <!-- /ko -->
 <!-- /ko -->
 
-<!-- ko if: viewMode() == 'daily' -->
+<!-- ko if: viewModeIs('daily') -->
 <!-- ko with: dailyCalendar -->
-<section class="daily calendar navtabcontent">
+<section class="daily calendar navtabcontent margin-for-icebox">
+	<!-- ko if: expired().length > 0 -->
+	<div class="expired alert">
+		<h4>期限切れのタスクをリスケしてください</h4>
+		<div data-bind="foreach: expired" class="tasklists">
+		<div class="tasklist">
+		<div data-bind="template: {name: 'task-template', foreach: tasks}, visible: tasklist.visible"></div>
+		</div>
+		</div>
+		<div style="clear: both;"></div>
+		<div class="move"><a data-bind="click: $.noop" href="#">
+			<i class="icon-arrow-down"></i>今週に移動する(FIXME)
+		</a></div>
+	</div>
+	<!-- /ko -->
 	<table>
 	<tbody data-bind="foreach: rows">
 	<tr data-bind="droppable: {
@@ -207,9 +217,9 @@ var appengineDevelopment = (location.hostname.search('.appspot.com') == -1);
 <!-- /ko -->
 <!-- /ko -->
 
-<!-- ko if: viewMode() == 'weekly' -->
+<!-- ko if: viewModeIs('weekly') -->
 <!-- ko with: weeklyCalendar -->
-<section class="weekly calendar navtabcontent">
+<section class="weekly calendar navtabcontent margin-for-icebox">
 	<table>
 	<tbody data-bind="foreach: rows">
 	<tr data-bind="droppable: {
@@ -241,9 +251,9 @@ var appengineDevelopment = (location.hostname.search('.appspot.com') == -1);
 <!-- /ko -->
 <!-- /ko -->
 
-<!-- ko if: viewMode() == 'monthly' -->
+<!-- ko if: viewModeIs('monthly') -->
 <!-- ko with: monthlyCalendar -->
-<section class="monthly calendar navtabcontent">
+<section class="monthly calendar navtabcontent margin-for-icebox">
 	<table>
 	<tbody data-bind="foreach: rows">
 	<tr data-bind="droppable: {
@@ -275,9 +285,9 @@ var appengineDevelopment = (location.hostname.search('.appspot.com') == -1);
 <!-- /ko -->
 <!-- /ko -->
 
-<!-- ko if: viewMode() == 'past' -->
+<!-- ko if: viewModeIs('past') -->
 <!-- ko with: pastTasks -->
-<section class="past wide calendar navtabcontent">
+<section class="past wide calendar navtabcontent container">
 	<div data-bind="foreach: tasklists">
 	<div class="tasklist">
 	<div class="count"><span data-bind="text: tasks.length" class="badge"></span></div>
@@ -289,6 +299,7 @@ var appengineDevelopment = (location.hostname.search('.appspot.com') == -1);
 <!-- /ko -->
 <!-- /ko -->
 
+<!-- ko if: viewModeIs('daily', 'weekly', 'monthly') -->
 <!-- ko with: iceboxTasks -->
 <section data-bind="droppable: {
 		accept: '.task',
@@ -296,19 +307,20 @@ var appengineDevelopment = (location.hostname.search('.appspot.com') == -1);
 		context: $data
 	}"
 	class="icebox">
-	<h2>未計画のタスク</h2>
-	<div class="create">
 	<a data-bind="click: $root.createTaskDialog.create"
-		href="#" class="showtooltip"
-		data-placement="left" title="新しいタスクを作成する"></a>
-	</div>
+		href="#" class="create showtooltip" data-placement="left"
+		title="新しいタスクを作成する"></a>
+	<h2>未計画のタスク</h2>
 	<div data-bind="foreach: tasklists">
-	<div class="count"><span data-bind="text: tasks.length" class="badge"></span></div>
+	<div class="tasklist-header">
+	<span data-bind="text: tasks.length" class="badge"></span>
+	</div>
 	<div data-bind="template: {name: 'task-template', foreach: tasks}, visible: tasklist.visible"
 		class="tasklist">
 	</div>
 	</div>
 </section>
+<!-- /ko -->
 <!-- /ko -->
 
 <script type="text/html" id="task-template">
@@ -318,6 +330,9 @@ var appengineDevelopment = (location.hostname.search('.appspot.com') == -1);
 	attr: {
 		'data-status': status,
 		'data-tasklistcolor': tasklist().colorCode
+	},
+	css: {
+		past: past
 	}"
 	class="task">
 <input data-bind="checked: isCompleted, click: saveStatus, clickBubble: false" type="checkbox" />

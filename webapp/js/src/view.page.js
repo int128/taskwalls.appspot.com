@@ -9,26 +9,12 @@ function AuthorizedPageViewModel () {
 AuthorizedPageViewModel.prototype.initialize = function () {
 	this.taskdata = new Taskdata();
 
-	// summary
-	this.completedCount = ko.computed(function () {
-		var today = DateUtil.today();
-		return $.grep(this.taskdata.tasks(), function (task) {
-			return DateUtil.areSameWeek(task.due(), today) && task.isCompleted();
-		}).length;
-	}, this);
-	this.count = ko.computed(function () {
-		var today = DateUtil.today();
-		return $.grep(this.taskdata.tasks(), function (task) {
-			return DateUtil.areSameWeek(task.due(), today);
-		}).length;
-	}, this);
-
 	this.tasklists = this.taskdata.tasklists;
 
-	// calendar
+	// views
 	this.viewMode = ko.observable('overview');
-	/** @returns {Function} */
-	this.switchView = function (name) {
+	this.viewModeIs = FunctionUtil.match(this.viewMode);
+	this.switchView = /** @returns {Function} */ function (name) {
 		return function () {
 			this.viewMode(name);
 		};
