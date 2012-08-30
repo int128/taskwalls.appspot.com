@@ -19,24 +19,23 @@ TasksOverviewViewModel.prototype.initialize = function (taskdata) {
 		return new Date(DateUtil.thisWeek() + DateUtil.WEEK_UNIT - 1);
 	});
 
-	this.completedTasks = ko.computed(function () {
+	var tasksInThisWeek = ko.computed(function () {
 		var dueIndex = taskdata.dueIndex();
-		var tasksInWeek = Array.prototype.concat.apply([],
+		return Array.prototype.concat.apply([],
 				DateUtil.arrayOfDays(DateUtil.thisWeek(), 7, function (time) {
 					return dueIndex.getTasks(time);
 				}));
-		return tasksInWeek.filter(TaskFilters.status('completed'));
+	});
+
+	this.completedTasks = ko.computed(function () {
+		return tasksInThisWeek().filter(TaskFilters.status('completed'));
+	});
+	this.workingTasks = ko.computed(function () {
+		return tasksInThisWeek().filter(TaskFilters.status('needsAction'));
 	});
 	this.completedTasksGroups = ko.computed(function () {
 		return Tasks.groupByTasklist(this.completedTasks());
 	}, this);
-
-	this.workingTasks = ko.computed(function () {
-		var nextWeek = DateUtil.thisWeek() + DateUtil.WEEK_UNIT;
-		return taskdata.tasks()
-				.filter(TaskFilters.status('needsAction'))
-				.filter(TaskFilters.dueBefore(nextWeek));
-	});
 	this.workingTasksGroups = ko.computed(function () {
 		return Tasks.groupByTasklist(this.workingTasks());
 	}, this);
