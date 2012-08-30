@@ -122,7 +122,7 @@ DailyCalendarViewModel.prototype.initialize = function (taskdata) {
 	// put tasks into each day
 	ko.computed(function () {
 		var dueIndex = taskdata.dueIndex();
-		$.each(this.rows(), function (i, row) {
+		this.rows().forEach(function (row) {
 			var tasksInDay = dueIndex.getTasks(row.day.getTime());
 			row.tasklists(Tasks.groupByTasklist(tasksInDay));
 		});
@@ -161,7 +161,7 @@ WeeklyCalendarViewModel.prototype.initialize = function (taskdata) {
 	// put tasks into each week
 	ko.computed(function () {
 		var dueIndex = taskdata.dueIndex();
-		$.each(this.rows(), function (i, row) {
+		this.rows().forEach(function (row) {
 			var tasksInWeek = Array.prototype.concat.apply([],
 				DateUtil.arrayOfDays(row.day.getTime(), 7, function (time) {
 					return dueIndex.getTasks(time);
@@ -205,7 +205,7 @@ MonthlyCalendarViewModel.prototype.initialize = function (taskdata) {
 	// put tasks into each month
 	ko.computed(function () {
 		var tasks = taskdata.tasks();
-		$.each(this.rows(), function (i, row) {
+		this.rows().forEach(function (row) {
 			row.tasklists(Tasks.groupByTasklist(tasks
 					.filter(TaskFilters.dueRange(row.day.getTime(), row.nextMonth - 1))));
 		});

@@ -23,7 +23,7 @@ AuthorizedPageViewModel.prototype.initialize = function () {
 	});
 	this.moveExpiredTasks = function () {
 		var lastDayOfThisWeek = new Date(DateUtil.thisWeek() + DateUtil.DAY_UNIT * 6);
-		expiredTasks().map(function (task) {
+		expiredTasks().forEach(function (task) {
 			task.update({
 				due: lastDayOfThisWeek
 			});

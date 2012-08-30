@@ -34,7 +34,7 @@ Taskdata.prototype.load = function () {
 			defaultTasklistID = p[p.length - 3];
 		}
 
-		$.each(self.tasklists(), function (i, tasklist) {
+		self.tasklists().forEach(function (tasklist, i) {
 			if (tasklist.id() == defaultTasklistID) {
 				// replace instance of the default tasklist
 				$.extend(defaultTasklist, tasklist);
@@ -73,7 +73,7 @@ Taskdata.prototype.remove = function (item) {
  */
 Taskdata.prototype.clearCompletedTasks = function () {
 	var self = this;
-	$.each(this.tasklists(), function (i, tasklist) {
+	this.tasklists().forEach(function (tasklist, i) {
 		tasklist.clearCompletedTasks().done(function () {
 			self.tasks.remove(function (task) {
 				return task.tasklist().id() == tasklist.id() && task.isCompleted();
@@ -332,7 +332,7 @@ Tasks.create = function (data) {
 Tasks.groupByTasklist = function (tasks) {
 	var map = {};
 	if ($.isArray(tasks)) {
-		$.each(tasks, function (i, task) {
+		tasks.forEach(function (task) {
 			var key = task.tasklist().id();
 			if ($.isArray(map[key])) {
 				map[key].push(task);
@@ -359,7 +359,7 @@ Tasks.groupByTasklist = function (tasks) {
 Tasks.groupByDue = function (tasks) {
 	var map = {};
 	if ($.isArray(tasks)) {
-		$.each(tasks, function (i, task) {
+		tasks.forEach(function (task) {
 			var due = task.due();
 			var key = 0;
 			if (due) {
