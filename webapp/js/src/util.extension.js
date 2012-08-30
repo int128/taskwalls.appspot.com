@@ -17,31 +17,6 @@ String.prototype.hashCode = function () {
 	return h;
 };
 
-/**
- * @class null implementation of web storage
- * @returns {NullStorage}
- */
-function NullStorage () {
-	this.length = 0;
-}
-NullStorage.prototype.key = function () {
-};
-NullStorage.prototype.getItem = function () {
-};
-NullStorage.prototype.setItem = function () {
-};
-NullStorage.prototype.removeItem = function () {
-};
-NullStorage.prototype.clear = function () {
-};
-
-if (typeof localStorage === undefined) {
-	window.localStorage = new NullStorage();
-}
-if (typeof sessionStorage === undefined) {
-	window.sessionStorage = new NullStorage();
-}
-
 //
 // array extensions
 //
