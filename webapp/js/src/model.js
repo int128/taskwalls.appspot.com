@@ -23,12 +23,8 @@ Taskdata.prototype.load = function () {
 		id: '@default'
 	});
 
-	var loadTasksInDefaultTasklist = Tasks.get(defaultTasklist).done(function (tasks) {
-		self.tasks(tasks);
-	});
-	var loadTasklists = Tasklists.get().done(function (tasklists) {
-		self.tasklists(tasklists);
-	});
+	var loadTasksInDefaultTasklist = Tasks.get(defaultTasklist).done(this.tasks.bind(this));
+	var loadTasklists = Tasklists.get().done(this.tasklists.bind(this));
 
 	$.when(loadTasksInDefaultTasklist, loadTasklists).done(function () {
 		// extract ID of the default tasklist if possible

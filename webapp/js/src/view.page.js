@@ -33,12 +33,8 @@ AuthorizedPageViewModel.prototype.initialize = function () {
 	// views
 	this.viewMode = ko.observable('overview');
 	this.viewModeIs = FunctionUtil.match(this.viewMode);
-
-	/** @returns {Function} a function for event binding */
 	this.switchView = function (name) {
-		return function () {
-			this.viewMode(name);
-		};
+		return this.viewMode.bind(null, name);
 	};
 
 	this.overview = new TasksOverviewViewModel(this.taskdata);
