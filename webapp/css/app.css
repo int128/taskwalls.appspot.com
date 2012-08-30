@@ -38,7 +38,7 @@ body {
 .oauth2state.authorized h4,
 .oauth2state.authorized h5,
 .oauth2state.authorized h6 {
-	color: #888;
+	color: #444;
 	font-weight: normal;
 }
 
