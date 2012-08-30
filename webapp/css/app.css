@@ -38,7 +38,7 @@ body {
 .oauth2state.authorized h4,
 .oauth2state.authorized h5,
 .oauth2state.authorized h6 {
-	color: #888;
+	color: #444;
 	font-weight: normal;
 }
 
@@ -61,27 +61,39 @@ body {
 	border-left-width: 5px;
 }
 
-.navtabcontent {
+.nav-tabs-content {
 	margin-top: 60px;
+}
+
+/*
+ * Board.
+ */
+.board:not(.container) .expired {
+	margin-left: 60px;
+	margin-right: 60px;
+}
+
+.board .expired .tasklists {
+	margin-top: 15px;
+	margin-bottom: 15px;
+}
+
+.board .tasklist {
+	float: left;
 }
 
 /*
  * Overview.
  */
+.overview .tasklist>.title {
+	margin-top: 10px;
+	text-shadow: 0 1px 0 #ccc;
+}
 
 /*
  * Calendar.
  */
-.calendar .expired {
-	margin-left: 60px;
-	margin-right: 60px;
-}
-
-.calendar .expired .tasklists {
-	margin-top: 15px;
-	margin-bottom: 15px;
-}
-.calendar table {
+table.calendar {
 	border-collapse: collapse;
 	table-layout: fixed;
 	width: 100%;
@@ -116,13 +128,11 @@ body {
 
 .calendar td.tasks {
 	width: auto;
-	padding-left: 5px;
+	padding-left: 20px;
 	border-left: solid 1px #888;
 }
 
 .calendar td.tasks .tasklist {
-	float: left;
-
 	/* fix box-shadow for IE */
 	border-collapse: separate;
 }
@@ -177,25 +187,13 @@ body {
 .calendar td.tasks .create a {
 	display: inline-block;
 	background: url('/img/plus24.png') no-repeat center;
-	width: 48px;
+	width: 24px;
 	height: 24px;
 	opacity: 0.3;
 }
 
 .calendar td.tasks .create a:HOVER {
 	opacity: 1.0;
-}
-
-/*
- * Calendar specific styles.
- */
-.wide.calendar .tasklist {
-	float: left;
-}
-
-.wide.calendar .task {
-	margin-left: 0;
-	margin-right: 15px;
 }
 
 /*
@@ -261,11 +259,11 @@ body {
 	border-left-width: 5px;
 }
 
-.calendar .task,
+.board .task,
 .task.ui-draggable-dragging {
 	width: 200px;
 	min-height: 40px;
-	margin-left: 15px;
+	margin-right: 15px;
 	margin-bottom: 1px;
 	margin-top: 1px;
 	border-top: solid 1px #ddd;

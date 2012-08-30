@@ -12,21 +12,33 @@ function TasksOverviewViewModel (taskdata) {
  *            taskdata
  */
 TasksOverviewViewModel.prototype.initialize = function (taskdata) {
-	this.completed = ko.computed(function () {
+	this.beginOfThisWeek = ko.computed(function () {
+		return new Date(DateUtil.thisWeek());
+	});
+	this.endOfThisWeek = ko.computed(function () {
+		return new Date(DateUtil.thisWeek() + DateUtil.WEEK_UNIT - 1);
+	});
+
+	var tasksInThisWeek = ko.computed(function () {
 		var dueIndex = taskdata.dueIndex();
-		var tasksInWeek = Array.prototype.concat.apply([],
+		return Array.prototype.concat.apply([],
 				DateUtil.arrayOfDays(DateUtil.thisWeek(), 7, function (time) {
 					return dueIndex.getTasks(time);
 				}));
-		return Tasks.groupByTasklist(tasksInWeek.filter(TaskFilters.status('completed')));
 	});
 
-	this.working = ko.computed(function () {
-		var nextWeek = DateUtil.thisWeek() + DateUtil.WEEK_UNIT;
-		return Tasks.groupByTasklist(taskdata.tasks()
-				.filter(TaskFilters.status('needsAction'))
-				.filter(TaskFilters.dueBefore(nextWeek)));
+	this.completedTasks = ko.computed(function () {
+		return tasksInThisWeek().filter(TaskFilters.status('completed'));
 	});
+	this.workingTasks = ko.computed(function () {
+		return tasksInThisWeek().filter(TaskFilters.status('needsAction'));
+	});
+	this.completedTasksGroups = ko.computed(function () {
+		return Tasks.groupByTasklist(this.completedTasks());
+	}, this);
+	this.workingTasksGroups = ko.computed(function () {
+		return Tasks.groupByTasklist(this.workingTasks());
+	}, this);
 };
 
 /**
@@ -115,12 +127,6 @@ DailyCalendarViewModel.prototype.initialize = function (taskdata) {
 			row.tasklists(Tasks.groupByTasklist(tasksInDay));
 		});
 	}, this);
-
-	this.expired = ko.computed(function () {
-		return Tasks.groupByTasklist(taskdata.tasks()
-				.filter(TaskFilters.status('needsAction'))
-				.filter(TaskFilters.dueBefore(DateUtil.thisWeek())));
-	});
 };
 
 /**

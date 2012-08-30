@@ -137,25 +137,35 @@ var appengineDevelopment = (location.hostname.search('.appspot.com') == -1);
 
 <!-- ko if: viewModeIs('overview') -->
 <!-- ko with: overview -->
-<section class="overview wide calendar navtabcontent container">
-	<div class="row">
-	<div class="span1">
+<section class="overview board nav-tabs-content container">
+	<div data-bind="template: {name: 'expired-tasks-template'}"></div>
 	<h2>今週</h2>
+	<div>
+		<!-- ko with: beginOfThisWeek -->
+		<span data-bind="text: getMonth()+1"></span>月
+		<span data-bind="text: getDate()"></span>日
+		<!-- /ko -->
+		〜
+		<!-- ko with: endOfThisWeek -->
+		<span data-bind="text: getMonth()+1"></span>月
+		<span data-bind="text: getDate()"></span>日
+		<!-- /ko -->
 	</div>
+	<div class="row">
 	<div class="span5">
-		<h3>実施中のタスク</h3>
-		<div data-bind="foreach: working">
+		<h3>実施中のタスク <span data-bind="text: workingTasks().length" class="badge"></span></h3>
+		<div data-bind="foreach: workingTasksGroups">
 		<div class="tasklist">
-		<div class="count"><span data-bind="text: tasks.length" class="badge"></span></div>
+		<div data-bind="text: tasklist.title" class="title"></div>
 		<div data-bind="template: {name: 'task-template', foreach: tasks}, visible: tasklist.visible"></div>
 		</div>
 		</div>
 	</div>
 	<div class="span5">
-		<h3>完了したタスク</h3>
-		<div data-bind="foreach: completed">
+		<h3>完了したタスク <span data-bind="text: completedTasks().length" class="badge"></span></h3>
+		<div data-bind="foreach: completedTasksGroups">
 		<div class="tasklist">
-		<div class="count"><span data-bind="text: tasks.length" class="badge"></span></div>
+		<div data-bind="text: tasklist.title" class="title"></div>
 		<div data-bind="template: {name: 'task-template', foreach: tasks}, visible: tasklist.visible"></div>
 		</div>
 		</div>
@@ -167,22 +177,9 @@ var appengineDevelopment = (location.hostname.search('.appspot.com') == -1);
 
 <!-- ko if: viewModeIs('daily') -->
 <!-- ko with: dailyCalendar -->
-<section class="daily calendar navtabcontent margin-for-icebox">
-	<!-- ko if: expired().length > 0 -->
-	<div class="expired alert">
-		<h4>期限切れのタスクをリスケしてください</h4>
-		<div data-bind="foreach: expired" class="tasklists">
-		<div class="tasklist">
-		<div data-bind="template: {name: 'task-template', foreach: tasks}, visible: tasklist.visible"></div>
-		</div>
-		</div>
-		<div style="clear: both;"></div>
-		<div class="move"><a data-bind="click: $.noop" href="#">
-			<i class="icon-arrow-down"></i>今週に移動する(FIXME)
-		</a></div>
-	</div>
-	<!-- /ko -->
-	<table>
+<section class="daily board nav-tabs-content margin-for-icebox">
+	<div data-bind="template: {name: 'expired-tasks-template'}"></div>
+	<table class="calendar">
 	<tbody data-bind="foreach: rows">
 	<tr data-bind="droppable: {
 			accept: '.task',
@@ -207,7 +204,7 @@ var appengineDevelopment = (location.hostname.search('.appspot.com') == -1);
 		<div class="create">
 		<a data-bind="click: $root.createTaskDialog.create"
 			href="#" class="showtooltip"
-			data-placement="left" title="新しいタスクを作成する"></a>
+			title="新しいタスクを作成する"></a>
 		</div>
 	</td>
 	</tr>
@@ -219,8 +216,8 @@ var appengineDevelopment = (location.hostname.search('.appspot.com') == -1);
 
 <!-- ko if: viewModeIs('weekly') -->
 <!-- ko with: weeklyCalendar -->
-<section class="weekly calendar navtabcontent margin-for-icebox">
-	<table>
+<section class="weekly board nav-tabs-content margin-for-icebox">
+	<table class="calendar">
 	<tbody data-bind="foreach: rows">
 	<tr data-bind="droppable: {
 			accept: '.task',
@@ -241,7 +238,7 @@ var appengineDevelopment = (location.hostname.search('.appspot.com') == -1);
 		<div class="create">
 		<a data-bind="click: $root.createTaskDialog.create"
 			href="#" class="showtooltip"
-			data-placement="left" title="新しいタスクを作成する"></a>
+			title="新しいタスクを作成する"></a>
 		</div>
 	</td>
 	</tr>
@@ -253,8 +250,8 @@ var appengineDevelopment = (location.hostname.search('.appspot.com') == -1);
 
 <!-- ko if: viewModeIs('monthly') -->
 <!-- ko with: monthlyCalendar -->
-<section class="monthly calendar navtabcontent margin-for-icebox">
-	<table>
+<section class="monthly board nav-tabs-content margin-for-icebox">
+	<table class="calendar">
 	<tbody data-bind="foreach: rows">
 	<tr data-bind="droppable: {
 			accept: '.task',
@@ -275,7 +272,7 @@ var appengineDevelopment = (location.hostname.search('.appspot.com') == -1);
 		<div class="create">
 		<a data-bind="click: $root.createTaskDialog.create"
 			href="#" class="showtooltip"
-			data-placement="left" title="新しいタスクを作成する"></a>
+			title="新しいタスクを作成する"></a>
 		</div>
 	</td>
 	</tr>
@@ -287,7 +284,7 @@ var appengineDevelopment = (location.hostname.search('.appspot.com') == -1);
 
 <!-- ko if: viewModeIs('past') -->
 <!-- ko with: pastTasks -->
-<section class="past wide calendar navtabcontent container">
+<section class="past board nav-tabs-content container">
 	<div data-bind="foreach: tasklists">
 	<div class="tasklist">
 	<div class="count"><span data-bind="text: tasks.length" class="badge"></span></div>
@@ -322,6 +319,25 @@ var appengineDevelopment = (location.hostname.search('.appspot.com') == -1);
 </section>
 <!-- /ko -->
 <!-- /ko -->
+
+<script type="text/html" id="expired-tasks-template">
+	<!-- ko with: $root -->
+	<!-- ko if: expiredTasksGroups().length > 0 -->
+	<div class="expired alert">
+		<h4>期限切れのタスクをリスケしてください</h4>
+		<div data-bind="foreach: $root.expiredTasksGroups" class="tasklists">
+		<div class="tasklist">
+		<div data-bind="template: {name: 'task-template', foreach: tasks}, visible: tasklist.visible"></div>
+		</div>
+		<div style="clear: both;"></div>
+		</div>
+		<div class="move"><a data-bind="click: moveExpiredTasks" href="#">
+			<i class="icon-arrow-down"></i>今週のタスクに移動する
+		</a></div>
+	</div>
+	<!-- /ko -->
+	<!-- /ko -->
+</script>
 
 <script type="text/html" id="task-template">
 <div data-bind="draggableByClone: {},
