@@ -138,13 +138,22 @@ var appengineDevelopment = (location.hostname.search('.appspot.com') == -1);
 <!-- ko if: viewModeIs('overview') -->
 <!-- ko with: overview -->
 <section class="overview board nav-tabs-content container">
-	<div class="row">
-	<div class="span1">
 	<h2>今週</h2>
+	<div>
+		<!-- ko with: beginOfThisWeek -->
+		<span data-bind="text: getMonth()+1"></span>月
+		<span data-bind="text: getDate()"></span>日
+		<!-- /ko -->
+		〜
+		<!-- ko with: endOfThisWeek -->
+		<span data-bind="text: getMonth()+1"></span>月
+		<span data-bind="text: getDate()"></span>日
+		<!-- /ko -->
 	</div>
+	<div class="row">
 	<div class="span5">
-		<h3>実施中のタスク</h3>
-		<div data-bind="foreach: working">
+		<h3>実施中のタスク <span data-bind="text: workingTasks().length" class="badge"></span></h3>
+		<div data-bind="foreach: workingTasksGroups">
 		<div class="tasklist">
 		<div data-bind="text: tasklist.title" class="title"></div>
 		<div data-bind="template: {name: 'task-template', foreach: tasks}, visible: tasklist.visible"></div>
@@ -152,8 +161,8 @@ var appengineDevelopment = (location.hostname.search('.appspot.com') == -1);
 		</div>
 	</div>
 	<div class="span5">
-		<h3>完了したタスク</h3>
-		<div data-bind="foreach: completed">
+		<h3>完了したタスク <span data-bind="text: completedTasks().length" class="badge"></span></h3>
+		<div data-bind="foreach: completedTasksGroups">
 		<div class="tasklist">
 		<div data-bind="text: tasklist.title" class="title"></div>
 		<div data-bind="template: {name: 'task-template', foreach: tasks}, visible: tasklist.visible"></div>
