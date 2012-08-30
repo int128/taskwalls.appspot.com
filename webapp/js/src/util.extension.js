@@ -1,5 +1,6 @@
 /**
  * Get hash code of {@link String}.
+ * 
  * @returns {Number} hash code
  * @see http://werxltd.com/wp/2010/05/13/javascript-implementation-of-javas-string-hashcode-method/
  */
@@ -10,11 +11,12 @@ String.prototype.hashCode = function () {
 	}
 	for (var i = 0; i < this.length; i++) {
 		var c = this.charCodeAt(i);
-		h = ((h<<5)-h)+c;
+		h = ((h << 5) - h) + c;
 		h = h & h; // Convert to 32bit integer
 	}
 	return h;
 };
+
 /**
  * @class null implementation of web storage
  * @returns {NullStorage}
@@ -22,18 +24,28 @@ String.prototype.hashCode = function () {
 function NullStorage () {
 	this.length = 0;
 }
-NullStorage.prototype.key = function () {};
-NullStorage.prototype.getItem = function () {};
-NullStorage.prototype.setItem = function () {};
-NullStorage.prototype.removeItem = function () {};
-NullStorage.prototype.clear = function () {};
+NullStorage.prototype.key = function () {
+};
+NullStorage.prototype.getItem = function () {
+};
+NullStorage.prototype.setItem = function () {
+};
+NullStorage.prototype.removeItem = function () {
+};
+NullStorage.prototype.clear = function () {
+};
+
 if (typeof localStorage === undefined) {
 	window.localStorage = new NullStorage();
 }
 if (typeof sessionStorage === undefined) {
 	window.sessionStorage = new NullStorage();
 }
+
+//
 // array extensions
+//
+
 // https://developer.mozilla.org/en-US/docs/JavaScript/Reference/Global_Objects/Array/indexOf
 if (!Array.prototype.indexOf) {
 	Array.prototype.indexOf = function (searchElement /* , fromIndex */) {
@@ -67,6 +79,7 @@ if (!Array.prototype.indexOf) {
 		return -1;
 	};
 }
+
 // https://developer.mozilla.org/en-US/docs/JavaScript/Reference/Global_Objects/Array/filter
 if (!Array.prototype.filter) {
 	Array.prototype.filter = function (fun /* , thisp */) {
@@ -93,6 +106,7 @@ if (!Array.prototype.filter) {
 		return res;
 	};
 }
+
 // https://developer.mozilla.org/en-US/docs/JavaScript/Reference/Global_Objects/Array/every
 if (!Array.prototype.every) {
 	Array.prototype.every = function (fun /* , thisp */) {
@@ -115,6 +129,7 @@ if (!Array.prototype.every) {
 		return true;
 	};
 }
+
 // Production steps of ECMA-262, Edition 5, 15.4.4.19
 // Reference: http://es5.github.com/#x15.4.4.19
 if (!Array.prototype.map) {
@@ -190,6 +205,7 @@ if (!Array.prototype.map) {
 		return A;
 	};
 }
+
 // https://developer.mozilla.org/en-US/docs/JavaScript/Reference/Global_Objects/Array/Reduce
 if (!Array.prototype.reduce) {
 	Array.prototype.reduce = function reduce (accumulator) {
@@ -197,8 +213,8 @@ if (!Array.prototype.reduce) {
 			throw new TypeError("Object is null or undefined");
 		var i = 0, l = this.length >> 0, curr;
 
-		if (typeof accumulator !== "function") // ES5 : "If IsCallable(callbackfn) is false, throw a TypeError
-												// exception."
+		if (typeof accumulator !== "function")
+			// ES5 : "If IsCallable(callbackfn) is false, throw a TypeError exception."
 			throw new TypeError("First argument is not callable");
 
 		if (arguments.length < 2) {
@@ -218,18 +234,23 @@ if (!Array.prototype.reduce) {
 		return curr;
 	};
 }
+
 // jQuery extentions
 $.extend({
 	/**
 	 * Get resource from document.
-	 * @param {String} key
+	 * 
+	 * @param {String}
+	 *            key
 	 * @returns {String}
 	 */
 	resource: function (key) {
 		return $('#resources>[data-key="' + key + '"]').text();
 	},
+
 	/**
 	 * Parse query string.
+	 * 
 	 * @returns hash of query parameters
 	 * @see http://code.google.com/intl/ja/apis/accounts/docs/OAuth2UserAgent.html
 	 */
@@ -243,21 +264,26 @@ $.extend({
 		}
 		return params;
 	},
+
 	/**
 	 * Always return true.
+	 * 
 	 * @returns {Boolean}
 	 */
 	noopTrue: function () {
 		return true;
 	},
+
 	/**
 	 * Always return false.
+	 * 
 	 * @returns {Boolean}
 	 */
 	noopFalse: function () {
 		return false;
 	}
 });
+
 // bootstrap extensions
 $(function () {
 	$(document).tooltip({

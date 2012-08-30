@@ -1,9 +1,10 @@
 /**
- * @class View model for authorized page. 
+ * @class View model for authorized page.
  */
 function AuthorizedPageViewModel () {
 	this.initialize.apply(this, arguments);
 };
+
 /**
  */
 AuthorizedPageViewModel.prototype.initialize = function () {
@@ -14,7 +15,9 @@ AuthorizedPageViewModel.prototype.initialize = function () {
 	// views
 	this.viewMode = ko.observable('overview');
 	this.viewModeIs = FunctionUtil.match(this.viewMode);
-	this.switchView = /** @returns {Function} */ function (name) {
+
+	/** @returns {Function} a function for event binding */
+	this.switchView = function (name) {
 		return function () {
 			this.viewMode(name);
 		};
@@ -51,18 +54,21 @@ AuthorizedPageViewModel.prototype.initialize = function () {
 		OAuth2Controller.logout();
 	};
 };
+
 /**
  * Load task data.
  */
 AuthorizedPageViewModel.prototype.load = function () {
 	this.taskdata.load();
 };
+
 /**
- * @class View model for try out box in the unauthorized page. 
+ * @class View model for try out box in the unauthorized page.
  */
 function TryOutPageViewModel () {
 	this.initialize.apply(this, arguments);
 };
+
 /**
  */
 TryOutPageViewModel.prototype.initialize = function () {
