@@ -12,6 +12,12 @@ AuthorizedPageViewModel.prototype.initialize = function () {
 
 	this.tasklists = this.taskdata.tasklists;
 
+	this.expiredTasks = ko.computed(function () {
+		return Tasks.groupByTasklist(this.taskdata.tasks()
+				.filter(TaskFilters.status('needsAction'))
+				.filter(TaskFilters.dueBefore(DateUtil.thisWeek())));
+	}, this);
+
 	// views
 	this.viewMode = ko.observable('overview');
 	this.viewModeIs = FunctionUtil.match(this.viewMode);

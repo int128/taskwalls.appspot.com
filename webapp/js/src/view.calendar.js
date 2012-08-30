@@ -128,12 +128,6 @@ DailyCalendarViewModel.prototype.initialize = function (taskdata) {
 			row.tasklists(Tasks.groupByTasklist(tasksInDay));
 		});
 	}, this);
-
-	this.expired = ko.computed(function () {
-		return Tasks.groupByTasklist(taskdata.tasks()
-				.filter(TaskFilters.status('needsAction'))
-				.filter(TaskFilters.dueBefore(DateUtil.thisWeek())));
-	});
 };
 
 /**

@@ -138,6 +138,7 @@ var appengineDevelopment = (location.hostname.search('.appspot.com') == -1);
 <!-- ko if: viewModeIs('overview') -->
 <!-- ko with: overview -->
 <section class="overview board nav-tabs-content container">
+	<div data-bind="template: {name: 'expired-tasks-template'}"></div>
 	<h2>今週</h2>
 	<div>
 		<!-- ko with: beginOfThisWeek -->
@@ -177,20 +178,7 @@ var appengineDevelopment = (location.hostname.search('.appspot.com') == -1);
 <!-- ko if: viewModeIs('daily') -->
 <!-- ko with: dailyCalendar -->
 <section class="daily board nav-tabs-content margin-for-icebox">
-	<!-- ko if: expired().length > 0 -->
-	<div class="expired alert">
-		<h4>期限切れのタスクをリスケしてください</h4>
-		<div data-bind="foreach: expired" class="tasklists">
-		<div class="tasklist">
-		<div data-bind="template: {name: 'task-template', foreach: tasks}, visible: tasklist.visible"></div>
-		</div>
-		<div style="clear: both;"></div>
-		</div>
-		<div class="move"><a data-bind="click: $.noop" href="#">
-			<i class="icon-arrow-down"></i>今週に移動する(FIXME)
-		</a></div>
-	</div>
-	<!-- /ko -->
+	<div data-bind="template: {name: 'expired-tasks-template'}"></div>
 	<table class="calendar">
 	<tbody data-bind="foreach: rows">
 	<tr data-bind="droppable: {
@@ -331,6 +319,23 @@ var appengineDevelopment = (location.hostname.search('.appspot.com') == -1);
 </section>
 <!-- /ko -->
 <!-- /ko -->
+
+<script type="text/html" id="expired-tasks-template">
+	<!-- ko if: $root.expiredTasks().length > 0 -->
+	<div class="expired alert">
+		<h4>期限切れのタスクをリスケしてください</h4>
+		<div data-bind="foreach: $root.expiredTasks" class="tasklists">
+		<div class="tasklist">
+		<div data-bind="template: {name: 'task-template', foreach: tasks}, visible: tasklist.visible"></div>
+		</div>
+		<div style="clear: both;"></div>
+		</div>
+		<div class="move"><a data-bind="click: $.noop" href="#">
+			<i class="icon-arrow-down"></i>今週に移動する(FIXME)
+		</a></div>
+	</div>
+	<!-- /ko -->
+</script>
 
 <script type="text/html" id="task-template">
 <div data-bind="draggableByClone: {},
