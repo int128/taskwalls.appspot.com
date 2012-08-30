@@ -37,6 +37,7 @@ Taskdata.prototype.load = function () {
 			var p = self.tasks()[0].selfLink().split('/');
 			defaultTasklistID = p[p.length - 3];
 		}
+
 		$.each(self.tasklists(), function (i, tasklist) {
 			if (tasklist.id() == defaultTasklistID) {
 				// replace instance of the default tasklist
@@ -165,13 +166,14 @@ function Tasklist (object) {
  */
 Tasklist.prototype.initialize = function (object) {
 	ko.extendObservables(this, object);
-	if ($.isNumeric(object.colorCode)) {
-		this.colorCode = ko.observable(object.colorCode % taskwalls.settings.tasklistColors);
-	} else {
-		// auto generate
-		this.colorCode = ko.observable(Math.abs(new String(object.id).hashCode())
-				% taskwalls.settings.tasklistColors);
-	}
+
+	this.colorCode = ko.observable((function () {
+		if ($.isNumeric(object.colorCode)) {
+			return object.colorCode;
+		} else {
+			return Math.abs(new String(object.id).hashCode()); // auto generate
+		}
+	})() % taskwalls.settings.tasklistColors);
 };
 
 /**
