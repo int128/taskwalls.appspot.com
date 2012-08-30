@@ -12,11 +12,23 @@ AuthorizedPageViewModel.prototype.initialize = function () {
 
 	this.tasklists = this.taskdata.tasklists;
 
-	this.expiredTasks = ko.computed(function () {
-		return Tasks.groupByTasklist(this.taskdata.tasks()
+	// expired tasks
+	var expiredTasks = ko.computed(function () {
+		return this.taskdata.tasks()
 				.filter(TaskFilters.status('needsAction'))
-				.filter(TaskFilters.dueBefore(DateUtil.thisWeek())));
+				.filter(TaskFilters.dueBefore(DateUtil.thisWeek()));
 	}, this);
+	this.expiredTasksGroups = ko.computed(function () {
+		return Tasks.groupByTasklist(expiredTasks());
+	});
+	this.moveExpiredTasks = function () {
+		var lastDayOfThisWeek = new Date(DateUtil.thisWeek() + DateUtil.DAY_UNIT * 6);
+		expiredTasks().map(function (task) {
+			task.update({
+				due: lastDayOfThisWeek
+			});
+		});
+	};
 
 	// views
 	this.viewMode = ko.observable('overview');
