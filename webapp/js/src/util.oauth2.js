@@ -75,6 +75,10 @@ OAuth2Controller.setUpAjaxSession = function (sessionId) {
 		if (xhr.status == 403) {
 			// session has been expired
 			location.replace(OAuth2Controller.getAuthorizationURL());
+		} else if (xhr.status == 400) {
+			OAuth2Controller.logout();
+		} else {
+			throw e;
 		}
 	});
 };
