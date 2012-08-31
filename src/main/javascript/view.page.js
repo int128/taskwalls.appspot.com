@@ -12,6 +12,17 @@ AuthorizedPageViewModel.prototype.initialize = function () {
 
 	this.tasklists = this.taskdata.tasklists;
 
+	// common date
+	this.today = ko.computed(function () {
+		return new Date(DateUtil.today());
+	});
+	this.thisWeek = ko.computed(function () {
+		return new Date(DateUtil.thisWeek());
+	});
+	this.lastDayOfThisWeek = ko.computed(function () {
+		return new Date(DateUtil.thisWeek() + DateUtil.DAY_UNIT * 6);
+	});
+
 	// expired tasks
 	var expiredTasks = ko.computed(function () {
 		return this.taskdata.tasks()
@@ -22,10 +33,10 @@ AuthorizedPageViewModel.prototype.initialize = function () {
 		return Tasks.groupByTasklist(expiredTasks());
 	});
 	this.moveExpiredTasks = function () {
-		var lastDayOfThisWeek = new Date(DateUtil.thisWeek() + DateUtil.DAY_UNIT * 6);
+		var due = this.lastDayOfThisWeek();
 		expiredTasks().forEach(function (task) {
 			task.update({
-				due: lastDayOfThisWeek
+				due: due
 			});
 		});
 	};

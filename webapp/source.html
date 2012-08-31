@@ -123,12 +123,12 @@
 	<div data-bind="template: {name: 'expired-tasks-template'}"></div>
 	<h2>今週</h2>
 	<div>
-		<!-- ko with: beginOfThisWeek -->
+		<!-- ko with: $root.thisWeek -->
 		<span data-bind="text: getMonth()+1"></span>月
 		<span data-bind="text: getDate()"></span>日
 		<!-- /ko -->
 		〜
-		<!-- ko with: endOfThisWeek -->
+		<!-- ko with: $root.lastDayOfThisWeek -->
 		<span data-bind="text: getMonth()+1"></span>月
 		<span data-bind="text: getDate()"></span>日
 		<!-- /ko -->

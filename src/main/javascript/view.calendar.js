@@ -12,13 +12,6 @@ function TasksOverviewViewModel (taskdata) {
  *            taskdata
  */
 TasksOverviewViewModel.prototype.initialize = function (taskdata) {
-	this.beginOfThisWeek = ko.computed(function () {
-		return new Date(DateUtil.thisWeek());
-	});
-	this.endOfThisWeek = ko.computed(function () {
-		return new Date(DateUtil.thisWeek() + DateUtil.WEEK_UNIT - 1);
-	});
-
 	var tasksInThisWeek = ko.computed(function () {
 		var dueIndex = taskdata.dueIndex();
 		return Array.prototype.concat.apply([],
