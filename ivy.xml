@@ -19,23 +19,23 @@
 		<dependency org="taglibs" name="standard" rev="1.1.2" conf="provided->default" />
 
 		<dependency org="junit" name="junit" rev="4.10" conf="test->default" />
-		<dependency org="org.mockito" name="mockito-core" rev="1.9.0-rc1" conf="test->default" />
-		<dependency org="com.google.appengine" name="appengine-testing" rev="1.7.0" conf="test->default" />
-		<dependency org="com.google.appengine" name="appengine-api-stubs" rev="1.7.0" conf="test->default" />
+		<dependency org="org.mockito" name="mockito-core" rev="1.9.0" conf="test->default" />
+		<dependency org="com.google.appengine" name="appengine-testing" rev="1.7.1" conf="test->default" />
+		<dependency org="com.google.appengine" name="appengine-api-stubs" rev="1.7.1" conf="test->default" />
 
-		<dependency org="com.google.appengine" name="appengine-tools-sdk" rev="1.7.0" conf="compile->default" />
+		<dependency org="com.google.appengine" name="appengine-tools-sdk" rev="1.7.1" conf="compile->default" />
 
-		<dependency org="com.google.appengine" name="appengine-api-1.0-sdk" rev="1.7.0" />
-		<dependency org="com.google.appengine" name="appengine-api-labs" rev="1.7.0" />
-		<dependency org="org.slim3" name="slim3" rev="1.0.15">
+		<dependency org="com.google.appengine" name="appengine-api-1.0-sdk" rev="1.7.1" />
+		<dependency org="com.google.appengine" name="appengine-api-labs" rev="1.7.1" />
+		<dependency org="org.slim3" name="slim3" rev="1.0.16">
 			<exclude org="com.google.appengine" name="appengine-api-1.0-sdk" />
 			<exclude org="com.google.appengine" name="appengine-api-labs" />
 		</dependency>
-		<dependency org="org.slim3" name="slim3-gen" rev="1.0.15" />
+		<dependency org="org.slim3" name="slim3-gen" rev="1.0.16" />
 		<dependency org="com.google.apis" name="google-api-services-tasks" rev="v1-1.3.0-beta" />
-		<dependency org="commons-io" name="commons-io" rev="2.3" />
+		<dependency org="commons-io" name="commons-io" rev="2.4" />
 
-		<dependency org="com.yahoo.platform.yui" name="yuicompressor" rev="2.4.6" conf="tools->default" />
+		<dependency org="com.yahoo.platform.yui" name="yuicompressor" rev="2.4.7" conf="tools->default" />
 		<dependency org="com.googlecode.htmlcompressor" name="htmlcompressor" rev="1.5.2" conf="tools->default" />
 	</dependencies>
 
