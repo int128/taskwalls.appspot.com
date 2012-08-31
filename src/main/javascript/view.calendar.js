@@ -144,7 +144,7 @@ WeeklyCalendarViewModel.prototype.initialize = function (taskdata) {
 	// set up weeks in the calendar
 	this.rows = ko.computed(function () {
 		return DateUtil.arrayOfWeeks(
-				DateUtil.thisWeek(),
+				DateUtil.thisMonth(),
 				WeeklyCalendarViewModel.NUMBER_OF_WEEKS,
 				function (time) {
 					return new CalendarRow(time);
