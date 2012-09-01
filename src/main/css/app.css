@@ -288,6 +288,7 @@ table.calendar {
 	background: none;
 	box-shadow: none;
 	-ms-filter: 'progid:DXImageTransform.Microsoft.gradient(enabled=false)';
+	color: #888;
 }
 
 .task[data-status='needsAction'].past {
@@ -297,7 +298,11 @@ table.calendar {
 .task .notes {
 	max-height: 3em;
 	font-size: 90%;
-	color: dimgray;
+	color: #444;
+}
+
+.task[data-status='completed'] .notes {
+	color: #888;
 }
 
 /*

@@ -335,7 +335,9 @@
 		past: past
 	}"
 	class="task">
-<input data-bind="checked: isCompleted, click: saveStatus, clickBubble: false" type="checkbox" />
+<!-- ko if: isCompleted -->
+<i class="icon-ok"/>
+<!-- /ko -->
 <span data-bind="text: title" class="title"></span>
 <div data-bind="autolinkText: notes" class="notes"></div>
 </div>
