@@ -73,12 +73,7 @@ public abstract class ControllerBase extends Controller {
 		}
 
 		// instantiate the service
-		GoogleCredential credential = new GoogleCredential.Builder()
-				.setTransport(HttpTransportLocator.get())
-				.setJsonFactory(JsonFactoryLocator.get())
-				.setClientSecrets(AppCredential.CLIENT_CREDENTIAL.getClientId(), AppCredential.CLIENT_CREDENTIAL.getClientSecret())
-				.build()
-				.setFromTokenResponse(tokenResponse);
+		GoogleCredential credential = oauth2Service.buildCredential(tokenResponse);
 		tasksService = new Tasks.Builder(HttpTransportLocator.get(), JsonFactoryLocator.get(), credential)
 				.setJsonHttpRequestInitializer(new TasksRequestInitializer(request.getRemoteAddr()))
 				.build();

@@ -5,10 +5,12 @@ import java.util.logging.Logger;
 
 import org.hidetake.taskwalls.model.oauth2.ClientCredential;
 import org.hidetake.taskwalls.util.StackTraceUtil;
-import org.hidetake.taskwalls.util.googleapis.JsonFactoryLocator;
 import org.hidetake.taskwalls.util.googleapis.HttpTransportLocator;
+import org.hidetake.taskwalls.util.googleapis.JsonFactoryLocator;
 
 import com.google.api.client.googleapis.auth.oauth2.GoogleAuthorizationCodeTokenRequest;
+import com.google.api.client.googleapis.auth.oauth2.GoogleCredential;
+import com.google.api.client.googleapis.auth.oauth2.GoogleCredential.Builder;
 import com.google.api.client.googleapis.auth.oauth2.GoogleTokenResponse;
 import com.google.api.client.http.HttpResponseException;
 
@@ -45,6 +47,21 @@ public class GoogleOAuth2Service {
 				authorizationCode,
 				redirectURI);
 		return execute(request);
+	}
+
+	/**
+	 * Build a credential from token response.
+	 * 
+	 * @param tokenResponse
+	 * @return credential to access protected resources
+	 */
+	public GoogleCredential buildCredential(GoogleTokenResponse tokenResponse) {
+		return new Builder()
+				.setTransport(HttpTransportLocator.get())
+				.setJsonFactory(JsonFactoryLocator.get())
+				.setClientSecrets(clientCredential.getClientId(), clientCredential.getClientSecret())
+				.build()
+				.setFromTokenResponse(tokenResponse);
 	}
 
 	private static GoogleTokenResponse execute(GoogleAuthorizationCodeTokenRequest request)
