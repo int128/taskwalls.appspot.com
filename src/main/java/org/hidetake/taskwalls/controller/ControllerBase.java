@@ -7,8 +7,8 @@ import org.hidetake.taskwalls.Constants;
 import org.hidetake.taskwalls.service.GoogleOAuth2Service;
 import org.hidetake.taskwalls.util.AjaxPreconditions;
 import org.hidetake.taskwalls.util.StackTraceUtil;
-import org.hidetake.taskwalls.util.googleapis.JacksonFactoryLocator;
-import org.hidetake.taskwalls.util.googleapis.NetHttpTransportLocator;
+import org.hidetake.taskwalls.util.googleapis.JsonFactoryLocator;
+import org.hidetake.taskwalls.util.googleapis.HttpTransportLocator;
 import org.hidetake.taskwalls.util.googleapis.TasksRequestInitializer;
 import org.slim3.controller.Controller;
 import org.slim3.controller.Navigation;
@@ -66,7 +66,7 @@ public abstract class ControllerBase extends Controller {
 		}
 
 		// TODO: decrypt
-		GoogleTokenResponse tokenResponse = JacksonFactoryLocator.get().fromString(sessionHeader, GoogleTokenResponse.class);
+		GoogleTokenResponse tokenResponse = JsonFactoryLocator.get().fromString(sessionHeader, GoogleTokenResponse.class);
 
 		if (!validate()) {
 			return errorStatus(Constants.STATUS_PRECONDITION_FAILED, "Validation failed: " + errors.toString());
@@ -74,12 +74,12 @@ public abstract class ControllerBase extends Controller {
 
 		// instantiate the service
 		GoogleCredential credential = new GoogleCredential.Builder()
-				.setTransport(NetHttpTransportLocator.get())
-				.setJsonFactory(JacksonFactoryLocator.get())
+				.setTransport(HttpTransportLocator.get())
+				.setJsonFactory(JsonFactoryLocator.get())
 				.setClientSecrets(AppCredential.CLIENT_CREDENTIAL.getClientId(), AppCredential.CLIENT_CREDENTIAL.getClientSecret())
 				.build()
 				.setFromTokenResponse(tokenResponse);
-		tasksService = new Tasks.Builder(NetHttpTransportLocator.get(), JacksonFactoryLocator.get(), credential)
+		tasksService = new Tasks.Builder(HttpTransportLocator.get(), JsonFactoryLocator.get(), credential)
 				.setJsonHttpRequestInitializer(new TasksRequestInitializer(request.getRemoteAddr()))
 				.build();
 

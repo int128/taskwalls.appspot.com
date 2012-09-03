@@ -5,8 +5,8 @@ import java.util.logging.Logger;
 
 import org.hidetake.taskwalls.model.oauth2.ClientCredential;
 import org.hidetake.taskwalls.util.StackTraceUtil;
-import org.hidetake.taskwalls.util.googleapis.JacksonFactoryLocator;
-import org.hidetake.taskwalls.util.googleapis.NetHttpTransportLocator;
+import org.hidetake.taskwalls.util.googleapis.JsonFactoryLocator;
+import org.hidetake.taskwalls.util.googleapis.HttpTransportLocator;
 
 import com.google.api.client.googleapis.auth.oauth2.GoogleAuthorizationCodeTokenRequest;
 import com.google.api.client.googleapis.auth.oauth2.GoogleTokenResponse;
@@ -38,8 +38,8 @@ public class GoogleOAuth2Service {
 	public GoogleTokenResponse exchange(String authorizationCode, String redirectURI)
 			throws HttpResponseException, IOException {
 		GoogleAuthorizationCodeTokenRequest request = new GoogleAuthorizationCodeTokenRequest(
-				NetHttpTransportLocator.get(),
-				JacksonFactoryLocator.get(),
+				HttpTransportLocator.get(),
+				JsonFactoryLocator.get(),
 				clientCredential.getClientId(),
 				clientCredential.getClientSecret(),
 				authorizationCode,
