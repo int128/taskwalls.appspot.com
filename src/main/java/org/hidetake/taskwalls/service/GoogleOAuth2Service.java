@@ -15,7 +15,7 @@ import com.google.api.client.googleapis.auth.oauth2.GoogleTokenResponse;
 import com.google.api.client.http.HttpResponseException;
 
 /**
- * Google API OAuth 2.0 service (server-side flow).
+ * Google API OAuth 2.0 service (Authorization Code Flow).
  * 
  * @author hidetake.org
  */
