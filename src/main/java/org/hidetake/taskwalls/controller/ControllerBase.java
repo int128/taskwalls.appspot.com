@@ -8,8 +8,8 @@ import org.hidetake.taskwalls.service.GoogleOAuth2Service;
 import org.hidetake.taskwalls.service.SessionManager;
 import org.hidetake.taskwalls.util.AjaxPreconditions;
 import org.hidetake.taskwalls.util.StackTraceUtil;
-import org.hidetake.taskwalls.util.googleapis.JsonFactoryLocator;
 import org.hidetake.taskwalls.util.googleapis.HttpTransportLocator;
+import org.hidetake.taskwalls.util.googleapis.JsonFactoryLocator;
 import org.hidetake.taskwalls.util.googleapis.TasksRequestInitializer;
 import org.slim3.controller.Controller;
 import org.slim3.controller.Navigation;
@@ -38,7 +38,6 @@ public abstract class ControllerBase extends Controller {
 
 	private static final Logger logger = Logger.getLogger(ControllerBase.class.getName());
 
-	protected GoogleOAuth2Service oauth2Service = new GoogleOAuth2Service(AppCredential.CLIENT_CREDENTIAL);
 	protected Tasks tasksService;
 
 	/**
@@ -74,7 +73,8 @@ public abstract class ControllerBase extends Controller {
 			return errorStatus(Constants.STATUS_PRECONDITION_FAILED, "Validation failed: " + errors.toString());
 		}
 
-		GoogleCredential credential = oauth2Service.buildCredential(tokenResponse);
+		GoogleCredential credential = GoogleOAuth2Service.buildCredential(tokenResponse,
+				AppCredential.CLIENT_CREDENTIAL);
 		tasksService = new Tasks.Builder(HttpTransportLocator.get(), JsonFactoryLocator.get(), credential)
 				.setJsonHttpRequestInitializer(new TasksRequestInitializer(request.getRemoteAddr()))
 				.build();

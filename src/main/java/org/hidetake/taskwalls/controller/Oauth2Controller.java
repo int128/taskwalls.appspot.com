@@ -24,8 +24,6 @@ public class Oauth2Controller extends Controller {
 
 	private static final Logger logger = Logger.getLogger(Oauth2Controller.class.getName());
 
-	protected GoogleOAuth2Service oauth2Service = new GoogleOAuth2Service(AppCredential.CLIENT_CREDENTIAL);
-
 	@Override
 	public Navigation run() throws Exception {
 		if (!AjaxPreconditions.isXHR(request)) {
@@ -36,7 +34,8 @@ public class Oauth2Controller extends Controller {
 			return preconditionFailed("code is null");
 		}
 
-		GoogleTokenResponse tokenResponse = oauth2Service.exchange(authorizationCode, getRedirectURI());
+		GoogleTokenResponse tokenResponse = GoogleOAuth2Service.exchange(authorizationCode,
+				getRedirectURI(), AppCredential.CLIENT_CREDENTIAL);
 		String session = SessionManager.serialize(tokenResponse, AppCredential.CLIENT_CREDENTIAL);
 
 		response.setHeader(Constants.HEADER_SESSION, session);
