@@ -4,19 +4,17 @@ import java.io.IOException;
 import java.util.logging.Logger;
 
 import org.hidetake.taskwalls.Constants;
-import org.hidetake.taskwalls.model.Session;
 import org.hidetake.taskwalls.service.GoogleOAuth2Service;
-import org.hidetake.taskwalls.service.SessionService;
 import org.hidetake.taskwalls.util.AjaxPreconditions;
-import org.hidetake.taskwalls.util.googleapis.HttpResponseExceptionUtil;
+import org.hidetake.taskwalls.util.StackTraceUtil;
 import org.hidetake.taskwalls.util.googleapis.JacksonFactoryLocator;
 import org.hidetake.taskwalls.util.googleapis.NetHttpTransportLocator;
 import org.hidetake.taskwalls.util.googleapis.TasksRequestInitializer;
 import org.slim3.controller.Controller;
 import org.slim3.controller.Navigation;
 
-import com.google.api.client.googleapis.auth.oauth2.draft10.GoogleAccessProtectedResource;
-import com.google.api.client.http.HttpResponse;
+import com.google.api.client.googleapis.auth.oauth2.GoogleCredential;
+import com.google.api.client.googleapis.auth.oauth2.GoogleTokenResponse;
 import com.google.api.client.http.HttpResponseException;
 import com.google.api.client.json.GenericJson;
 import com.google.api.services.tasks.Tasks;
@@ -66,33 +64,22 @@ public abstract class ControllerBase extends Controller {
 		if (sessionHeader == null) {
 			return errorStatus(Constants.STATUS_PRECONDITION_FAILED, "No session header");
 		}
-		Session session = SessionService.decryptAndDecodeFromBase64(sessionHeader, AppCredential.CLIENT_CREDENTIAL);
-		if (session == null) {
-			return errorStatus(Constants.STATUS_PRECONDITION_FAILED, "Session header corrupted");
-		}
+
+		// TODO: decrypt
+		GoogleTokenResponse tokenResponse = JacksonFactoryLocator.get().fromString(sessionHeader, GoogleTokenResponse.class);
+
 		if (!validate()) {
 			return errorStatus(Constants.STATUS_PRECONDITION_FAILED, "Validation failed: " + errors.toString());
 		}
 
-		// refresh token if expired
-		if (session.isExpired()) {
-			if (session.getRefreshToken() == null) {
-				return errorStatus(Constants.STATUS_NO_SESSION, "Refresh token is null, try re-authorize");
-			}
-			oauth2Service.refresh(session);
-		}
-
 		// instantiate the service
-		GoogleAccessProtectedResource resource = new GoogleAccessProtectedResource(
-				session.getAccessToken(),
-				NetHttpTransportLocator.get(),
-				JacksonFactoryLocator.get(),
-				AppCredential.CLIENT_CREDENTIAL.getClientId(),
-				AppCredential.CLIENT_CREDENTIAL.getClientSecret(),
-				session.getRefreshToken());
-		tasksService = Tasks
-				.builder(NetHttpTransportLocator.get(), JacksonFactoryLocator.get())
-				.setHttpRequestInitializer(resource)
+		GoogleCredential credential = new GoogleCredential.Builder()
+				.setTransport(NetHttpTransportLocator.get())
+				.setJsonFactory(JacksonFactoryLocator.get())
+				.setClientSecrets(AppCredential.CLIENT_CREDENTIAL.getClientId(), AppCredential.CLIENT_CREDENTIAL.getClientSecret())
+				.build()
+				.setFromTokenResponse(tokenResponse);
+		tasksService = new Tasks.Builder(NetHttpTransportLocator.get(), JacksonFactoryLocator.get(), credential)
 				.setJsonHttpRequestInitializer(new TasksRequestInitializer(request.getRemoteAddr()))
 				.build();
 
@@ -112,12 +99,10 @@ public abstract class ControllerBase extends Controller {
 	protected Navigation handleError(Throwable e) throws Throwable {
 		if (e instanceof HttpResponseException) {
 			HttpResponseException httpResponseException = (HttpResponseException) e;
-			logger.severe(HttpResponseExceptionUtil.getMessage(httpResponseException));
-			HttpResponse httpResponse = httpResponseException.getResponse();
-			if (httpResponse != null) {
-				if (httpResponse.getStatusCode() == 401) {
-					return errorStatus(Constants.STATUS_NO_SESSION, "Google API returns 401 invalid credentials");
-				}
+			logger.severe(httpResponseException.getStatusMessage());
+			logger.severe(StackTraceUtil.format(e));
+			if (httpResponseException.getStatusCode() == 401) {
+				return errorStatus(Constants.STATUS_NO_SESSION, "Google API returns 401 invalid credentials");
 			}
 		}
 		return super.handleError(e);

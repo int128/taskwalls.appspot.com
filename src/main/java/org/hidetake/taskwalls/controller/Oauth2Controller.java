@@ -5,14 +5,13 @@ import java.net.URI;
 import java.util.logging.Logger;
 
 import org.hidetake.taskwalls.Constants;
-import org.hidetake.taskwalls.model.Session;
 import org.hidetake.taskwalls.service.GoogleOAuth2Service;
-import org.hidetake.taskwalls.service.SessionService;
 import org.hidetake.taskwalls.util.AjaxPreconditions;
-import org.hidetake.taskwalls.util.googleapis.HttpResponseExceptionUtil;
+import org.hidetake.taskwalls.util.StackTraceUtil;
 import org.slim3.controller.Controller;
 import org.slim3.controller.Navigation;
 
+import com.google.api.client.googleapis.auth.oauth2.GoogleTokenResponse;
 import com.google.api.client.http.HttpResponseException;
 
 /**
@@ -37,11 +36,11 @@ public class Oauth2Controller extends Controller {
 		}
 
 		// exchange authorization code for token
-		Session session = oauth2Service.exchange(authorizationCode, getRedirectURI());
+		GoogleTokenResponse tokenResponse = oauth2Service.exchange(authorizationCode, getRedirectURI());
 
 		// return session data as header
-		response.setHeader(Constants.HEADER_SESSION,
-				SessionService.encodeAndEncryptAsBase64(session, AppCredential.CLIENT_CREDENTIAL));
+		// TODO: encrypt
+		response.setHeader(Constants.HEADER_SESSION, tokenResponse.toString());
 		return null;
 	}
 
@@ -52,7 +51,9 @@ public class Oauth2Controller extends Controller {
 	@Override
 	protected Navigation handleError(Throwable e) throws Throwable {
 		if (e instanceof HttpResponseException) {
-			logger.severe(HttpResponseExceptionUtil.getMessage((HttpResponseException) e));
+			HttpResponseException httpResponseException = (HttpResponseException) e;
+			logger.severe(httpResponseException.getStatusMessage());
+			logger.severe(StackTraceUtil.format(e));
 		}
 		return super.handleError(e);
 	}
