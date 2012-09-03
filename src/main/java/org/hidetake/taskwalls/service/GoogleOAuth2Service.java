@@ -37,13 +37,6 @@ public class GoogleOAuth2Service {
 	 */
 	public GoogleTokenResponse exchange(String authorizationCode, String redirectURI)
 			throws HttpResponseException, IOException {
-		if (authorizationCode == null) {
-			throw new NullPointerException("authorizationCode is null");
-		}
-		if (redirectURI == null) {
-			throw new NullPointerException("redirectURI is null");
-		}
-
 		GoogleAuthorizationCodeTokenRequest request = new GoogleAuthorizationCodeTokenRequest(
 				NetHttpTransportLocator.get(),
 				JacksonFactoryLocator.get(),
