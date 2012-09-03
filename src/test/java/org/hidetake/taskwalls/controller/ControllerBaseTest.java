@@ -6,6 +6,8 @@ import static org.junit.Assert.*;
 
 import java.util.UUID;
 
+import javax.servlet.http.HttpServletResponse;
+
 import org.hidetake.taskwalls.Constants;
 import org.junit.Test;
 import org.slim3.tester.ControllerTestCase;
@@ -53,6 +55,7 @@ public class ControllerBaseTest extends ControllerTestCase {
 		tester.start("/controllerBaseTest");
 		ControllerBaseTestController controller = tester.getController();
 		assertThat(controller, is(notNullValue()));
+		assertThat(tester.response.getStatus(), is(HttpServletResponse.SC_OK));
 		assertThat(tester.isRedirect(), is(false));
 		assertThat(tester.getDestinationPath(), is(nullValue()));
 	}
@@ -67,6 +70,7 @@ public class ControllerBaseTest extends ControllerTestCase {
 		assertThat(controller, is(notNullValue()));
 		assertThat(tester.isRedirect(), is(false));
 		assertThat(tester.getDestinationPath(), is(nullValue()));
+		assertThat(tester.response.getStatus(), is(HttpServletResponse.SC_OK));
 		assertThat(tester.response.getContentType(), is("application/json"));
 		assertThat(tester.response.getCharacterEncoding(), is("UTF-8"));
 		assertThat(tester.response.getHeader("X-Content-Type-Options"), is("nosniff"));

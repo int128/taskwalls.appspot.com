@@ -1,122 +1,91 @@
 package org.hidetake.taskwalls.service;
 
 import java.io.IOException;
-import java.util.Date;
 import java.util.logging.Logger;
 
-import org.hidetake.taskwalls.model.Session;
 import org.hidetake.taskwalls.model.oauth2.ClientCredential;
 import org.hidetake.taskwalls.util.StackTraceUtil;
-import org.hidetake.taskwalls.util.googleapis.HttpResponseExceptionUtil;
-import org.hidetake.taskwalls.util.googleapis.JacksonFactoryLocator;
-import org.hidetake.taskwalls.util.googleapis.NetHttpTransportLocator;
+import org.hidetake.taskwalls.util.googleapis.HttpTransportLocator;
+import org.hidetake.taskwalls.util.googleapis.JsonFactoryLocator;
 
-import com.google.api.client.auth.oauth2.draft10.AccessTokenRequest;
-import com.google.api.client.auth.oauth2.draft10.AccessTokenResponse;
-import com.google.api.client.googleapis.auth.oauth2.draft10.GoogleAccessTokenRequest.GoogleAuthorizationCodeGrant;
-import com.google.api.client.googleapis.auth.oauth2.draft10.GoogleAccessTokenRequest.GoogleRefreshTokenGrant;
+import com.google.api.client.googleapis.auth.oauth2.GoogleAuthorizationCodeTokenRequest;
+import com.google.api.client.googleapis.auth.oauth2.GoogleCredential;
+import com.google.api.client.googleapis.auth.oauth2.GoogleTokenResponse;
 import com.google.api.client.http.HttpResponseException;
 
 /**
- * Google API OAuth 2.0 service (server-side flow).
+ * Google API OAuth 2.0 service (Authorization Code Flow).
  * 
  * @author hidetake.org
  */
 public class GoogleOAuth2Service {
 
 	private static final Logger logger = Logger.getLogger(GoogleOAuth2Service.class.getName());
-	private final ClientCredential clientCredential;
-
-	public GoogleOAuth2Service(ClientCredential clientCredential) {
-		this.clientCredential = clientCredential;
-	}
 
 	/**
 	 * Exchange authorization code for token.
 	 * 
 	 * @param authorizationCode
 	 * @param redirectURI
-	 * @return session
+	 * @param clientCredential
+	 * @return token response
 	 * @throws HttpResponseException
 	 * @throws IOException
 	 */
-	public Session exchange(String authorizationCode, String redirectURI)
+	public static GoogleTokenResponse exchange(
+			String authorizationCode, String redirectURI, ClientCredential clientCredential)
 			throws HttpResponseException, IOException {
-		if (authorizationCode == null) {
-			throw new NullPointerException("authorizationCode is null");
-		}
-		if (redirectURI == null) {
-			throw new NullPointerException("redirectURI is null");
-		}
-
-		GoogleAuthorizationCodeGrant grant = new GoogleAuthorizationCodeGrant(
-				NetHttpTransportLocator.get(),
-				JacksonFactoryLocator.get(),
+		GoogleAuthorizationCodeTokenRequest request = new GoogleAuthorizationCodeTokenRequest(
+				HttpTransportLocator.get(),
+				JsonFactoryLocator.get(),
 				clientCredential.getClientId(),
 				clientCredential.getClientSecret(),
 				authorizationCode,
 				redirectURI);
-		AccessTokenResponse tokenResponse = execute(grant);
-		Date expire = new Date(System.currentTimeMillis() + tokenResponse.expiresIn * 1000L);
-
-		Session session = new Session();
-		session.setAccessToken(tokenResponse.accessToken);
-		session.setRefreshToken(tokenResponse.refreshToken);
-		session.setExpiration(expire);
-		return session;
+		return execute(request);
 	}
 
 	/**
-	 * Refresh the token.
+	 * Build a credential from token response.
 	 * 
-	 * @param session
-	 *            expired session (refresh token should not be null)
-	 * @throws HttpResponseException
-	 * @throws IOException
+	 * @param tokenResponse
+	 * @param clientCredential
+	 * @return credential to access protected resources
 	 */
-	public void refresh(Session session) throws HttpResponseException, IOException {
-		if (session == null) {
-			throw new NullPointerException("token is null");
-		}
-		if (session.getRefreshToken() == null) {
-			throw new NullPointerException("refresh token is null");
-		}
-
-		GoogleRefreshTokenGrant grant = new GoogleRefreshTokenGrant(
-				NetHttpTransportLocator.get(),
-				JacksonFactoryLocator.get(),
-				clientCredential.getClientId(),
-				clientCredential.getClientSecret(),
-				session.getRefreshToken());
-		AccessTokenResponse tokenResponse = execute(grant);
-		Date expire = new Date(System.currentTimeMillis() + tokenResponse.expiresIn * 1000L);
-
-		session.setAccessToken(tokenResponse.accessToken);
-		session.setExpiration(expire);
+	public static GoogleCredential buildCredential(GoogleTokenResponse tokenResponse, ClientCredential clientCredential) {
+		return new GoogleCredential.Builder()
+				.setTransport(HttpTransportLocator.get())
+				.setJsonFactory(JsonFactoryLocator.get())
+				.setClientSecrets(clientCredential.getClientId(), clientCredential.getClientSecret())
+				.build()
+				.setFromTokenResponse(tokenResponse);
 	}
 
-	private static AccessTokenResponse execute(AccessTokenRequest accessTokenRequest)
+	private static GoogleTokenResponse execute(GoogleAuthorizationCodeTokenRequest request)
 			throws HttpResponseException, IOException {
 		// 1st chance
 		try {
-			return accessTokenRequest.execute();
+			return request.execute();
 		} catch (HttpResponseException e) {
-			logger.severe(HttpResponseExceptionUtil.getMessage(e));
+			logger.severe(e.getStatusMessage());
 			logger.severe(StackTraceUtil.format(e));
 		} catch (IOException e) {
 			logger.severe(StackTraceUtil.format(e));
 		}
 		// 2nd chance
 		try {
-			return accessTokenRequest.execute();
+			return request.execute();
 		} catch (HttpResponseException e) {
-			logger.severe(HttpResponseExceptionUtil.getMessage(e));
+			logger.severe(e.getStatusMessage());
 			logger.severe(StackTraceUtil.format(e));
 		} catch (IOException e) {
 			logger.severe(StackTraceUtil.format(e));
 		}
 		// last chance
-		return accessTokenRequest.execute();
+		return request.execute();
+	}
+
+	private GoogleOAuth2Service() {
 	}
 
 }

@@ -1,25 +1,24 @@
 package org.hidetake.taskwalls.util.googleapis;
 
+import com.google.api.client.json.JsonFactory;
 import com.google.api.client.json.jackson.JacksonFactory;
 
 /**
- * Singleton class for {@link JacksonFactory}.
- * Instance will be lazy initialized.
+ * Singleton for {@link JsonFactory}.
  * 
  * @author hidetake.org
  */
-public class JacksonFactoryLocator {
+public class JsonFactoryLocator {
 
-	private static JacksonFactory singleton;
+	private static JsonFactory singleton;
 
-	private JacksonFactoryLocator() {
+	private JsonFactoryLocator() {
 	}
 
-	public static JacksonFactory get() {
+	public static JsonFactory get() {
 		if (singleton == null) {
 			singleton = new JacksonFactory();
 		}
-
 		return singleton;
 	}
 
