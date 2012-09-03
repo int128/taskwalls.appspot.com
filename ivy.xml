@@ -15,8 +15,6 @@
 
 	<dependencies defaultconf="compile->default">
 		<dependency org="javax.servlet" name="servlet-api" rev="2.5" conf="provided->default" />
-		<dependency org="javax.servlet.jsp.jstl" name="jstl-api" rev="1.2" conf="provided->default" />
-		<dependency org="taglibs" name="standard" rev="1.1.2" conf="provided->default" />
 
 		<dependency org="junit" name="junit" rev="4.10" conf="test->default" />
 		<dependency org="org.mockito" name="mockito-core" rev="1.9.0" conf="test->default" />
