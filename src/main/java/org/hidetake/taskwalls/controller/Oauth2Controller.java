@@ -27,11 +27,11 @@ public class Oauth2Controller extends Controller {
 	@Override
 	public Navigation run() throws Exception {
 		if (!AjaxPreconditions.isXHR(request)) {
-			return preconditionFailed("should be XHR");
+			return errorStatus(Constants.STATUS_PRECONDITION_FAILED, "should be XHR");
 		}
 		String authorizationCode = asString("code");
 		if (authorizationCode == null) {
-			return preconditionFailed("code is null");
+			return errorStatus(Constants.STATUS_PRECONDITION_FAILED, "code is null");
 		}
 
 		GoogleTokenResponse tokenResponse = GoogleOAuth2Service.exchange(authorizationCode,
@@ -56,9 +56,9 @@ public class Oauth2Controller extends Controller {
 		return super.handleError(e);
 	}
 
-	private Navigation preconditionFailed(String logMessage) throws IOException {
+	private Navigation errorStatus(int code, String logMessage) throws IOException {
 		logger.warning(logMessage);
-		response.sendError(Constants.STATUS_PRECONDITION_FAILED);
+		response.sendError(code);
 		return null;
 	}
 
