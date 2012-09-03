@@ -416,7 +416,7 @@
 	<span data-bind="text: getFullYear()"></span>年
 	<span data-bind="text: getMonth()+1"></span>月
 	<span data-bind="text: getDate()"></span>日
-	<a href="#">期限を変更する...</a>
+	<a data-bind="click: $.noop" href="#">期限を変更する...</a>
 	</div>
 	<div class="datepicker"><!-- TODO: bind this --></div>
 	<button type="submit" class="btn">タスクを更新</button>
