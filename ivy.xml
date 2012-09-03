@@ -31,6 +31,7 @@
 		</dependency>
 		<dependency org="org.slim3" name="slim3-gen" rev="1.0.16" conf="tools->default" />
 		<dependency org="com.google.apis" name="google-api-services-tasks" rev="v1-rev3-1.7.2-beta" />
+		<dependency org="com.google.http-client" name="google-http-client-appengine" rev="1.10.3-beta" />
 		<dependency org="commons-io" name="commons-io" rev="2.4" />
 
 		<dependency org="com.yahoo.platform.yui" name="yuicompressor" rev="2.4.7" conf="tools->default" />
