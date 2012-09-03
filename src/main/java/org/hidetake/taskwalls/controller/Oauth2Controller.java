@@ -6,6 +6,7 @@ import java.util.logging.Logger;
 
 import org.hidetake.taskwalls.Constants;
 import org.hidetake.taskwalls.service.GoogleOAuth2Service;
+import org.hidetake.taskwalls.service.SessionManager;
 import org.hidetake.taskwalls.util.AjaxPreconditions;
 import org.hidetake.taskwalls.util.StackTraceUtil;
 import org.slim3.controller.Controller;
@@ -35,12 +36,10 @@ public class Oauth2Controller extends Controller {
 			return preconditionFailed("code is null");
 		}
 
-		// exchange authorization code for token
 		GoogleTokenResponse tokenResponse = oauth2Service.exchange(authorizationCode, getRedirectURI());
+		String session = SessionManager.serialize(tokenResponse, AppCredential.CLIENT_CREDENTIAL);
 
-		// return session data as header
-		// TODO: encrypt
-		response.setHeader(Constants.HEADER_SESSION, tokenResponse.toString());
+		response.setHeader(Constants.HEADER_SESSION, session);
 		return null;
 	}
 

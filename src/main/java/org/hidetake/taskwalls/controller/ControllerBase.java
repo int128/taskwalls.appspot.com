@@ -5,6 +5,7 @@ import java.util.logging.Logger;
 
 import org.hidetake.taskwalls.Constants;
 import org.hidetake.taskwalls.service.GoogleOAuth2Service;
+import org.hidetake.taskwalls.service.SessionManager;
 import org.hidetake.taskwalls.util.AjaxPreconditions;
 import org.hidetake.taskwalls.util.StackTraceUtil;
 import org.hidetake.taskwalls.util.googleapis.JsonFactoryLocator;
@@ -56,23 +57,23 @@ public abstract class ControllerBase extends Controller {
 
 	@Override
 	protected Navigation run() throws Exception {
-		// check preconditions
 		if (!AjaxPreconditions.isXHR(request)) {
 			return errorStatus(Constants.STATUS_PRECONDITION_FAILED, "should be XHR");
 		}
-		String sessionHeader = request.getHeader(Constants.HEADER_SESSION);
-		if (sessionHeader == null) {
+
+		String session = request.getHeader(Constants.HEADER_SESSION);
+		if (session == null) {
 			return errorStatus(Constants.STATUS_PRECONDITION_FAILED, "No session header");
 		}
-
-		// TODO: decrypt
-		GoogleTokenResponse tokenResponse = JsonFactoryLocator.get().fromString(sessionHeader, GoogleTokenResponse.class);
+		GoogleTokenResponse tokenResponse = SessionManager.restore(session, AppCredential.CLIENT_CREDENTIAL);
+		if (tokenResponse == null) {
+			return errorStatus(Constants.STATUS_PRECONDITION_FAILED, "Invalid session header");
+		}
 
 		if (!validate()) {
 			return errorStatus(Constants.STATUS_PRECONDITION_FAILED, "Validation failed: " + errors.toString());
 		}
 
-		// instantiate the service
 		GoogleCredential credential = oauth2Service.buildCredential(tokenResponse);
 		tasksService = new Tasks.Builder(HttpTransportLocator.get(), JsonFactoryLocator.get(), credential)
 				.setJsonHttpRequestInitializer(new TasksRequestInitializer(request.getRemoteAddr()))
