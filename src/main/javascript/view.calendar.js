@@ -289,16 +289,6 @@ Task.prototype.initialize = FunctionUtil.seq(Task.prototype.initialize, function
 });
 
 /**
- * Save and update status of the task.
- */
-Task.prototype.saveStatus = function () {
-	this.update({
-		status: this.status()
-	});
-	return true; // bubbling event for checkbox
-};
-
-/**
  * Dropped.
  * 
  * @param {Task}
