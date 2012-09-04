@@ -1,6 +1,6 @@
 package org.hidetake.taskwalls.controller;
 
-import org.hidetake.taskwalls.util.googleapis.JacksonFactoryLocator;
+import org.hidetake.taskwalls.util.googleapis.JsonFactoryLocator;
 
 import com.google.api.client.json.GenericJson;
 
@@ -17,7 +17,7 @@ public class ControllerBaseTestController extends ControllerBase {
 			return null;
 		} else {
 			GenericJson json = new GenericJson();
-			json.setFactory(JacksonFactoryLocator.get());
+			json.setFactory(JsonFactoryLocator.get());
 			return json;
 		}
 	}

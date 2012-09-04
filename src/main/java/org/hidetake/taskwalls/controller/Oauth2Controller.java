@@ -5,14 +5,14 @@ import java.net.URI;
 import java.util.logging.Logger;
 
 import org.hidetake.taskwalls.Constants;
-import org.hidetake.taskwalls.model.Session;
 import org.hidetake.taskwalls.service.GoogleOAuth2Service;
-import org.hidetake.taskwalls.service.SessionService;
+import org.hidetake.taskwalls.service.SessionManager;
 import org.hidetake.taskwalls.util.AjaxPreconditions;
-import org.hidetake.taskwalls.util.googleapis.HttpResponseExceptionUtil;
+import org.hidetake.taskwalls.util.StackTraceUtil;
 import org.slim3.controller.Controller;
 import org.slim3.controller.Navigation;
 
+import com.google.api.client.googleapis.auth.oauth2.GoogleTokenResponse;
 import com.google.api.client.http.HttpResponseException;
 
 /**
@@ -24,24 +24,21 @@ public class Oauth2Controller extends Controller {
 
 	private static final Logger logger = Logger.getLogger(Oauth2Controller.class.getName());
 
-	protected GoogleOAuth2Service oauth2Service = new GoogleOAuth2Service(AppCredential.CLIENT_CREDENTIAL);
-
 	@Override
 	public Navigation run() throws Exception {
 		if (!AjaxPreconditions.isXHR(request)) {
-			return preconditionFailed("should be XHR");
+			return errorStatus(Constants.STATUS_PRECONDITION_FAILED, "should be XHR");
 		}
 		String authorizationCode = asString("code");
 		if (authorizationCode == null) {
-			return preconditionFailed("code is null");
+			return errorStatus(Constants.STATUS_PRECONDITION_FAILED, "code is null");
 		}
 
-		// exchange authorization code for token
-		Session session = oauth2Service.exchange(authorizationCode, getRedirectURI());
+		GoogleTokenResponse tokenResponse = GoogleOAuth2Service.exchange(authorizationCode,
+				getRedirectURI(), AppCredential.CLIENT_CREDENTIAL);
+		String session = SessionManager.serialize(tokenResponse, AppCredential.CLIENT_CREDENTIAL);
 
-		// return session data as header
-		response.setHeader(Constants.HEADER_SESSION,
-				SessionService.encodeAndEncryptAsBase64(session, AppCredential.CLIENT_CREDENTIAL));
+		response.setHeader(Constants.HEADER_SESSION, session);
 		return null;
 	}
 
@@ -52,14 +49,16 @@ public class Oauth2Controller extends Controller {
 	@Override
 	protected Navigation handleError(Throwable e) throws Throwable {
 		if (e instanceof HttpResponseException) {
-			logger.severe(HttpResponseExceptionUtil.getMessage((HttpResponseException) e));
+			HttpResponseException httpResponseException = (HttpResponseException) e;
+			logger.severe(httpResponseException.getStatusMessage());
+			logger.severe(StackTraceUtil.format(e));
 		}
 		return super.handleError(e);
 	}
 
-	private Navigation preconditionFailed(String logMessage) throws IOException {
+	private Navigation errorStatus(int code, String logMessage) throws IOException {
 		logger.warning(logMessage);
-		response.sendError(Constants.STATUS_PRECONDITION_FAILED);
+		response.sendError(code);
 		return null;
 	}
 

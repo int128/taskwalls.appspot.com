@@ -1,12 +1,11 @@
 package org.hidetake.taskwalls.controller;
 
-import java.util.Date;
-
 import org.hidetake.taskwalls.Constants;
-import org.hidetake.taskwalls.model.Session;
-import org.hidetake.taskwalls.service.SessionService;
+import org.hidetake.taskwalls.service.SessionManager;
 import org.hidetake.taskwalls.util.AjaxPreconditions;
 import org.slim3.tester.ControllerTester;
+
+import com.google.api.client.googleapis.auth.oauth2.GoogleTokenResponse;
 
 /**
  * Request utility class for tests.
@@ -22,12 +21,12 @@ public class RequestTestUtil {
 	 * @param tester
 	 */
 	public static void enableSession(ControllerTester tester) {
-		Session session = new Session();
-		session.setAccessToken("accessToken");
-		session.setRefreshToken("refreshToken");
-		session.setExpiration(new Date(System.currentTimeMillis() + 60 * 60 * 1000L));
+		GoogleTokenResponse tokenResponse = new GoogleTokenResponse();
+		tokenResponse.setAccessToken("accessToken");
+		tokenResponse.setRefreshToken("refreshToken");
+		tokenResponse.setExpiresInSeconds(3600L);
 		tester.request.setHeader(Constants.HEADER_SESSION,
-				SessionService.encodeAndEncryptAsBase64(session, AppCredential.CLIENT_CREDENTIAL));
+				SessionManager.serialize(tokenResponse, AppCredential.CLIENT_CREDENTIAL));
 	}
 
 	/**

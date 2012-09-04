@@ -3,7 +3,7 @@ package org.hidetake.taskwalls.util;
 import java.io.IOException;
 import java.io.Serializable;
 
-import org.hidetake.taskwalls.util.googleapis.JacksonFactoryLocator;
+import org.hidetake.taskwalls.util.googleapis.JsonFactoryLocator;
 import org.slim3.memcache.Memcache;
 import org.slim3.util.AppEngineUtil;
 
@@ -94,7 +94,7 @@ public class JsonCache {
 		if (json == null) {
 			return null;
 		}
-		return JacksonFactoryLocator.get().createJsonParser(json).parse(clazz, null);
+		return JsonFactoryLocator.get().createJsonParser(json).parse(clazz, null);
 	}
 
 	/**
