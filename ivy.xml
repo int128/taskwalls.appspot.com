@@ -21,7 +21,7 @@
 		<dependency org="com.google.appengine" name="appengine-testing" rev="1.7.1" conf="test->default" />
 		<dependency org="com.google.appengine" name="appengine-api-stubs" rev="1.7.1" conf="test->default" />
 
-		<dependency org="com.google.appengine" name="appengine-tools-sdk" rev="1.7.1" conf="compile->default" />
+		<dependency org="com.google.appengine" name="appengine-tools-sdk" rev="1.7.1" conf="tools->default" />
 
 		<dependency org="com.google.appengine" name="appengine-api-1.0-sdk" rev="1.7.1" />
 		<dependency org="com.google.appengine" name="appengine-api-labs" rev="1.7.1" />
