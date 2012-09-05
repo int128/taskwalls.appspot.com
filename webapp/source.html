@@ -55,7 +55,7 @@
 		<div><a class="login btn">Google アカウントでログイン</a></div>
 		</div>
 		<div class="well">
-		<div><a href="#tryout">デモを使ってみる</a></div>
+		<div><a href="/?demo">デモを使ってみる</a></div>
 		</div>
 		</div>
 	</div>
@@ -84,21 +84,11 @@
 <div class="container">
 	<a class="brand" href="/">Task Wall</a>
 	<ul class="nav nav-tabs">
-	<li data-bind="css: {active: viewModeIs('overview')}">
-	<a data-bind="click: switchView('overview')" href="#">概況</a>
-	</li>
-	<li data-bind="css: {active: viewModeIs('daily')}">
-	<a data-bind="click: switchView('daily')" href="#">今週の計画</a>
-	</li>
-	<li data-bind="css: {active: viewModeIs('weekly')}">
-	<a data-bind="click: switchView('weekly')" href="#">今月の計画</a>
-	</li>
-	<li data-bind="css: {active: viewModeIs('monthly')}">
-	<a data-bind="click: switchView('monthly')" href="#">今年の計画</a>
-	</li>
-	<li data-bind="css: {active: viewModeIs('past')}">
-	<a data-bind="click: switchView('past')" href="#">過去のタスク</a>
-	</li>
+	<li data-bind="css: {active: viewModeIs('#overview', '')}"><a href="#overview">概況</a></li>
+	<li data-bind="css: {active: viewModeIs('#daily')}"><a href="#daily">今週の計画</a></li>
+	<li data-bind="css: {active: viewModeIs('#weekly')}"><a href="#weekly">今月の計画</a></li>
+	<li data-bind="css: {active: viewModeIs('#monthly')}"><a href="#monthly">今年の計画</a></li>
+	<li data-bind="css: {active: viewModeIs('#past')}"><a href="#past">過去のタスク</a></li>
 	</ul>
 	<ul class="nav pull-right">
 	<li class="dropdown">
@@ -127,7 +117,7 @@
 </div>
 </div>
 
-<!-- ko if: viewModeIs('overview') -->
+<!-- ko if: viewModeIs('#overview', '') -->
 <!-- ko with: overview -->
 <section class="overview board nav-tabs-content container">
 	<div data-bind="template: {name: 'expired-tasks-template'}"></div>
@@ -167,7 +157,7 @@
 <!-- /ko -->
 <!-- /ko -->
 
-<!-- ko if: viewModeIs('daily') -->
+<!-- ko if: viewModeIs('#daily') -->
 <!-- ko with: dailyCalendar -->
 <section class="daily board nav-tabs-content margin-for-icebox">
 	<div data-bind="template: {name: 'expired-tasks-template'}"></div>
@@ -206,7 +196,7 @@
 <!-- /ko -->
 <!-- /ko -->
 
-<!-- ko if: viewModeIs('weekly') -->
+<!-- ko if: viewModeIs('#weekly') -->
 <!-- ko with: weeklyCalendar -->
 <section class="weekly board nav-tabs-content margin-for-icebox">
 	<table class="calendar">
@@ -240,7 +230,7 @@
 <!-- /ko -->
 <!-- /ko -->
 
-<!-- ko if: viewModeIs('monthly') -->
+<!-- ko if: viewModeIs('#monthly') -->
 <!-- ko with: monthlyCalendar -->
 <section class="monthly board nav-tabs-content margin-for-icebox">
 	<table class="calendar">
@@ -274,7 +264,7 @@
 <!-- /ko -->
 <!-- /ko -->
 
-<!-- ko if: viewModeIs('past') -->
+<!-- ko if: viewModeIs('#past') -->
 <!-- ko with: pastTasks -->
 <section class="past board nav-tabs-content container">
 	<div data-bind="foreach: tasklists">
@@ -288,7 +278,7 @@
 <!-- /ko -->
 <!-- /ko -->
 
-<!-- ko if: viewModeIs('daily', 'weekly', 'monthly') -->
+<!-- ko if: viewModeIs('#daily', '#weekly', '#monthly') -->
 <!-- ko with: iceboxTasks -->
 <section data-bind="droppable: {
 		accept: '.task',

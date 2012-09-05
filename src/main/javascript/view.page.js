@@ -31,11 +31,11 @@ AuthorizedPageViewModel.prototype.initialize = function () {
 	};
 
 	// views
-	this.viewMode = ko.observable('overview');
+	this.viewMode = ko.observable(location.hash);
 	this.viewModeIs = FunctionUtil.match(this.viewMode);
-	this.switchView = function (name) {
-		return this.viewMode.bind(null, name);
-	};
+	$(window).bind('hashchange', $.proxy(function () {
+		this.viewMode(location.hash);
+	}, this));
 
 	this.overview = new TasksOverviewViewModel(this.taskdata);
 	this.dailyCalendar = new DailyCalendarViewModel(this.taskdata);
