@@ -26,6 +26,12 @@ import com.yahoo.platform.yui.compressor.JavaScriptCompressor;
 /**
  * Compress application assets.
  * 
+ * <ul>
+ * <li>HTML, compressed by HtmlCompressor.</li>
+ * <li>CSS, compressed by YUICompressor.</li>
+ * <li>JavaScript, compressed by YUICompressor. Minified sources (*.min.js) are written at first.</li>
+ * </ul>
+ * 
  * @author hidetake.org
  */
 public class CompressAssets {
@@ -45,9 +51,9 @@ public class CompressAssets {
 	private static final Logger logger = Logger.getLogger(CompressAssets.class.getName());
 
 	private static final List<Pattern> HTML_PRESERVE_PATTERNS = Arrays.asList(new Pattern[] {
-			// knockout.js
+			// preserve knockout.js instructions
 			Pattern.compile("<!-- */?ko .*?-->", Pattern.DOTALL),
-			// HTML template
+			// preserve HTML templates
 			Pattern.compile("<script +?type=\"text/html\".*?>", Pattern.DOTALL),
 	});
 
