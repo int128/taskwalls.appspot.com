@@ -12,15 +12,7 @@
 <![endif]-->
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
 <title>Task Wall</title>
-<script>
-/* detect environment */
-/* see {@link AppSettings#development} */
-var appengineDevelopment = (location.hostname.search('.appspot.com') == -1);
-/* load CSS assets */
-(function (s) {
-	document.write('<link rel="stylesheet" href="'+s+'"/>')
-})(appengineDevelopment ? '/assets/css' : '/min.css');
-</script>
+<link rel="stylesheet" href="/production.css"/>
 <style>
 /* loading indicator */
 #loading {
@@ -477,10 +469,16 @@ var appengineDevelopment = (location.hostname.search('.appspot.com') == -1);
 </div>
 
 <script>
-/* load JavaScript assets */
-(function (s) {
-	document.write('<'+'script src="'+s+'"></'+'script>')
-})(appengineDevelopment ? '/assets/js' : '/min.js');
+/* load assets */
+if (location.hostname != 'localhost') {
+	var e = document.createElement('script');
+	e.src = '/production.js';
+	var s0 = document.getElementsByTagName('script')[0];
+	s0.parentNode.insertBefore(e, s0);
+} else {
+	/* use document write method to load scripts sequentially */
+	document.write('<script src=\"/assets/\"><\/script>');
+}
 /* show "unauthorize" page before initializing */
 (function () {
 	if (location.search == '' && localStorage['session'] === undefined) {
@@ -497,7 +495,7 @@ var appengineDevelopment = (location.hostname.search('.appspot.com') == -1);
   _gaq.push(['_setAccount', 'UA-3232369-8']);
   _gaq.push(['_trackPageview']);
 
-  appengineDevelopment ? null :  /* added */
+  location.hostname == 'localhost' ? null :  /* added */
   (function() {
     var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
     ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
