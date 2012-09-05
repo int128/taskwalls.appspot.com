@@ -37,11 +37,11 @@ import com.yahoo.platform.yui.compressor.JavaScriptCompressor;
 public class CompressAssets {
 
 	private static final File WEBAPP_BASE = new File("./webapp");
-	private static final File JS_BASE = new File("./src/main/javascript");
 	private static final File CSS_BASE = new File("./src/main/css");
+	private static final File JS_BASE = new File("./src/main/javascript");
 
-	private static final File ASSETS_CONF_CSS = new File(WEBAPP_BASE, "/WEB-INF/assets.css.conf");
-	private static final File ASSETS_CONF_JS = new File(WEBAPP_BASE, "/WEB-INF/assets.js.conf");
+	private static final File ASSETS_CONF_CSS = new File(CSS_BASE, "/assets.conf");
+	private static final File ASSETS_CONF_JS = new File(JS_BASE, "/assets.conf");
 	private static final File ASSETS_HTML = new File(WEBAPP_BASE, "/source.html");
 
 	private static final File OUTPUT_CSS = new File(WEBAPP_BASE, "/production.css");
