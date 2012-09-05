@@ -37,7 +37,7 @@
 <div id="loading"></div>
 <div id="global-errors" style="display: none;"></div>
 
-<article class="oauth2state unauthorized" id="taskwalls-fastinit" style="display: none;">
+<article class="oauth2state unauthorized" style="display: none;">
 	<div class="container">
 		<h1>Task Wall</h1>
 		<div class="lead">成果は日々の積み重ねから</div>
@@ -479,18 +479,8 @@ if (location.hostname != 'localhost') {
 	/* use document write method to load scripts sequentially */
 	document.write('<script src=\"/assets/\"><\/script>');
 }
-/* show "unauthorize" page before initializing */
-(function () {
-	if (location.search == '' && localStorage['session'] === undefined) {
-		var element = document.getElementById('taskwalls-fastinit');
-		if (element) {
-			element.removeAttribute('style');  /* show */
-		}
-	}
-})();
-</script>
-<script>
 
+/* analytics */
   var _gaq = _gaq || [];
   _gaq.push(['_setAccount', 'UA-3232369-8']);
   _gaq.push(['_trackPageview']);
@@ -501,7 +491,6 @@ if (location.hostname != 'localhost') {
     ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
     var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
   })();
-
 </script>
 </body>
 </html>
