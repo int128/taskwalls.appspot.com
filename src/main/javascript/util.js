@@ -1,26 +1,4 @@
 /**
- * @class simple request router
- */
-function LocationHashRouter () {
-};
-LocationHashRouter.prototype = {};
-
-/**
- * route by given rules
- * 
- * @param {Object}
- *            rules map of hash and function
- */
-LocationHashRouter.route = function (rules) {
-	var func = rules[location.hash];
-	if ($.isFunction(func)) {
-		func.call();
-	} else {
-		rules['default'].call();
-	}
-};
-
-/**
  * @class Date utility.
  */
 function DateUtil () {
