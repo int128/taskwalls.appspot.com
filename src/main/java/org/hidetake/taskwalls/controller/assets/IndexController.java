@@ -15,9 +15,6 @@ import org.slim3.controller.Navigation;
  */
 public class IndexController extends Controller {
 
-	private static final String ASSETS_CONF_CSS = "/src/main/css/assets.conf";
-	private static final String ASSETS_CONF_JS = "/src/main/javascript/assets.conf";
-
 	private static final String TEMPLATE_CSS =
 			"document.write('<link rel=\"stylesheet\" href=\"/assets/file?type=css&path=%s\"/>');\n";
 	private static final String TEMPLATE_JS =
@@ -38,13 +35,15 @@ public class IndexController extends Controller {
 
 	private void writeAssets() throws Exception {
 		File projectBase = new File(servletContext.getRealPath("/")).getParentFile();
+		File cssBase = new File(projectBase, Constants.SOURCE_CSS);
+		File jsBase = new File(projectBase, Constants.SOURCE_JS);
 
 		PrintWriter writer = response.getWriter();
 		writer.append(String.format("// %s\n", new Date()));
-		for (String line : FileUtils.readLines(new File(projectBase, ASSETS_CONF_CSS))) {
+		for (String line : FileUtils.readLines(new File(cssBase, "/assets.conf"))) {
 			writer.append(String.format(TEMPLATE_CSS, line));
 		}
-		for (String line : FileUtils.readLines(new File(projectBase, ASSETS_CONF_JS))) {
+		for (String line : FileUtils.readLines(new File(jsBase, "/assets.conf"))) {
 			writer.append(String.format(TEMPLATE_JS, line));
 		}
 	}

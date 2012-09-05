@@ -17,6 +17,7 @@ import java.util.regex.Pattern;
 
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
+import org.hidetake.taskwalls.controller.assets.Constants;
 import org.mozilla.javascript.ErrorReporter;
 
 import com.googlecode.htmlcompressor.compressor.HtmlCompressor;
@@ -36,9 +37,10 @@ import com.yahoo.platform.yui.compressor.JavaScriptCompressor;
  */
 public class CompressAssets {
 
-	private static final File WEBAPP_BASE = new File("./webapp");
-	private static final File CSS_BASE = new File("./src/main/css");
-	private static final File JS_BASE = new File("./src/main/javascript");
+	private static final File PROJECT_BASE = new File(".");
+	private static final File WEBAPP_BASE = new File(PROJECT_BASE, Constants.WEBAPP_BASE);
+	private static final File CSS_BASE = new File(PROJECT_BASE, Constants.SOURCE_CSS);
+	private static final File JS_BASE = new File(PROJECT_BASE, Constants.SOURCE_JS);
 
 	private static final File ASSETS_CONF_CSS = new File(CSS_BASE, "/assets.conf");
 	private static final File ASSETS_CONF_JS = new File(JS_BASE, "/assets.conf");
