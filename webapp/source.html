@@ -409,7 +409,22 @@
 <!-- ko if: updateTaskDialog -->
 <!-- ko with: updateTaskDialog -->
 <div data-bind="style: {top: top}" class="update-task dialog">
-<form data-bind="submit: save, escKeydown: dispose">
+	<!-- ko if: isCompleted -->
+	<p><i class="icon-ok"></i> このタスクは
+		<span data-bind="with: completed">
+		<span data-bind="text: getFullYear()"></span>年
+		<span data-bind="text: getMonth()+1"></span>月
+		<span data-bind="text: getDate()"></span>日
+		</span>
+	に完了しています</p>
+	<div><a data-bind="click: saveStatusAs('needsAction')" href="#" class="btn">未完了に戻す</a></div>
+	<!-- /ko -->
+	<!-- ko ifnot: isCompleted -->
+	<div><a data-bind="click: saveStatusAs('completed')" href="#" class="btn">完了に変更</a></div>
+	<!-- /ko -->
+	<hr/>
+
+	<form data-bind="submit: save, escKeydown: dispose">
 	<div><input data-bind="value: title, hasfocus: true" type="text" placeholder="タスクの件名" /></div>
 	<div><textarea data-bind="value: notes" placeholder="備考"></textarea></div>
 	<div data-bind="with: due" class="due">
