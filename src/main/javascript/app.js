@@ -9,6 +9,7 @@ $(function () {
 			} else {
 				$('.oauth2state:not(.unauthorized)').remove();
 				$('.oauth2state').show();
+				$('.oauth2state .login').attr('href', OAuth2Controller.getAuthorizationURL());
 			}
 		},
 		processingAuthorizationCode: function () {
