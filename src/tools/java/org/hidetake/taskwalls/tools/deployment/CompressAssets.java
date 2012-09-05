@@ -9,9 +9,11 @@ import java.io.InputStreamReader;
 import java.io.SequenceInputStream;
 import java.io.Writer;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.logging.Logger;
+import java.util.regex.Pattern;
 
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
@@ -42,6 +44,13 @@ public class CompressAssets {
 
 	private static final Logger logger = Logger.getLogger(CompressAssets.class.getName());
 
+	private static final List<Pattern> HTML_PRESERVE_PATTERNS = Arrays.asList(new Pattern[] {
+			// knockout.js
+			Pattern.compile("<!-- */?ko .*?-->", Pattern.DOTALL),
+			// HTML template
+			Pattern.compile("<script +?type=\"text/html\".*?>", Pattern.DOTALL),
+	});
+
 	public static void main(String[] args) throws Exception {
 		compressHtml();
 		compressCss();
@@ -55,8 +64,9 @@ public class CompressAssets {
 		HtmlCompressor compressor = new HtmlCompressor();
 		compressor.setRemoveComments(false);
 		compressor.setCompressCss(true);
-		compressor.setCompressJavaScript(false);
+		compressor.setCompressJavaScript(true);
 		compressor.setRemoveIntertagSpaces(true);
+		compressor.setPreservePatterns(HTML_PRESERVE_PATTERNS);
 		compressor.setYuiErrorReporter(new YUICompressorErrorReporter());
 
 		String source = FileUtils.readFileToString(ASSETS_HTML);
