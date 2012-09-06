@@ -90,6 +90,10 @@ body {
 	text-shadow: 0 1px 0 #ccc;
 }
 
+.overview .dropping {
+	background-color: #eee;
+}
+
 /*
  * Calendar.
  */
@@ -226,7 +230,7 @@ table.calendar {
 	margin-right: 240px;
 }
 
-.icebox h2 {
+.icebox h3 {
 	margin-left: 5px;
 }
 
@@ -288,6 +292,7 @@ table.calendar {
 	background: none;
 	box-shadow: none;
 	-ms-filter: 'progid:DXImageTransform.Microsoft.gradient(enabled=false)';
+	color: #888;
 }
 
 .task[data-status='needsAction'].past {
@@ -297,7 +302,11 @@ table.calendar {
 .task .notes {
 	max-height: 3em;
 	font-size: 90%;
-	color: dimgray;
+	color: #444;
+}
+
+.task[data-status='completed'] .notes {
+	color: #888;
 }
 
 /*

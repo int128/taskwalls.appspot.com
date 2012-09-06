@@ -438,6 +438,13 @@ Task.prototype.initialize = function (object, tasklist) {
 		this.due = ko.observable();
 	}
 
+	if (object.completed) {
+		// convert to local Date (response is UTC string)
+		this.completed(DateUtil.clearTimePart(new Date(this.completed())));
+	} else {
+		this.completed = ko.observable();
+	}
+
 	this.isCompleted = ko.computed({
 		read: function () {
 			return this.status() == 'completed';

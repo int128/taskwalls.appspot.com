@@ -12,13 +12,6 @@ function TasksOverviewViewModel (taskdata) {
  *            taskdata
  */
 TasksOverviewViewModel.prototype.initialize = function (taskdata) {
-	this.beginOfThisWeek = ko.computed(function () {
-		return new Date(DateUtil.thisWeek());
-	});
-	this.endOfThisWeek = ko.computed(function () {
-		return new Date(DateUtil.thisWeek() + DateUtil.WEEK_UNIT - 1);
-	});
-
 	var tasksInThisWeek = ko.computed(function () {
 		var dueIndex = taskdata.dueIndex();
 		return Array.prototype.concat.apply([],
@@ -26,19 +19,64 @@ TasksOverviewViewModel.prototype.initialize = function (taskdata) {
 					return dueIndex.getTasks(time);
 				}));
 	});
+	this.completed = new TasksOverviewViewModel.Completed(tasksInThisWeek);
+	this.needsAction = new TasksOverviewViewModel.NeedsAction(tasksInThisWeek);
+};
 
-	this.completedTasks = ko.computed(function () {
+/**
+ * @class represents completed tasks in this week
+ * @param tasksInThisWeek
+ *            observable array
+ */
+TasksOverviewViewModel.Completed = function (tasksInThisWeek) {
+	this.initialize.apply(this, arguments);
+};
+
+TasksOverviewViewModel.Completed.prototype.initialize = function (tasksInThisWeek) {
+	this.tasks = ko.computed(function () {
 		return tasksInThisWeek().filter(TaskFilters.status('completed'));
 	});
-	this.workingTasks = ko.computed(function () {
+	this.tasklists = ko.computed(function () {
+		return Tasks.groupByTasklist(this.tasks());
+	}, this);
+};
+
+/**
+ * @param {Task}
+ *            task dropped task
+ */
+TasksOverviewViewModel.Completed.prototype.dropped = function (task) {
+	task.update({
+		status: 'completed'
+	});
+};
+
+/**
+ * @class represents needsAction tasks in this week
+ * @param tasksInThisWeek
+ *            observable array
+ */
+TasksOverviewViewModel.NeedsAction = function (tasksInThisWeek) {
+	this.initialize.apply(this, arguments);
+};
+
+TasksOverviewViewModel.NeedsAction.prototype.initialize = function (tasksInThisWeek) {
+	this.tasks = ko.computed(function () {
 		return tasksInThisWeek().filter(TaskFilters.status('needsAction'));
 	});
-	this.completedTasksGroups = ko.computed(function () {
-		return Tasks.groupByTasklist(this.completedTasks());
+	this.tasklists = ko.computed(function () {
+		return Tasks.groupByTasklist(this.tasks());
 	}, this);
-	this.workingTasksGroups = ko.computed(function () {
-		return Tasks.groupByTasklist(this.workingTasks());
-	}, this);
+};
+
+/**
+ * @param {Task}
+ *            task dropped task
+ */
+TasksOverviewViewModel.NeedsAction.prototype.dropped = function (task) {
+	task.update({
+		status: 'needsAction'
+	});
 };
 
 /**
@@ -151,7 +189,7 @@ WeeklyCalendarViewModel.prototype.initialize = function (taskdata) {
 	// set up weeks in the calendar
 	this.rows = ko.computed(function () {
 		return DateUtil.arrayOfWeeks(
-				DateUtil.thisWeek(),
+				DateUtil.thisMonth(),
 				WeeklyCalendarViewModel.NUMBER_OF_WEEKS,
 				function (time) {
 					return new CalendarRow(time);
@@ -296,31 +334,21 @@ Task.prototype.initialize = FunctionUtil.seq(Task.prototype.initialize, function
 });
 
 /**
- * Save and update status of the task.
- */
-Task.prototype.saveStatus = function () {
-	this.update({
-		status: this.status()
-	});
-	return true; // bubbling event for checkbox
-};
-
-/**
  * Dropped.
  * 
  * @param {Task}
  *            task
  * @param {Event}
  *            e
- * @param {Row}
- *            row
+ * @param {Object}
+ *            viewModel target view model
  */
-Task.prototype.dropped = function (task, e, row) {
+Task.prototype.dropped = function (task, e, viewModel) {
 	// execute asynchronously to prevent exception:
 	// TypeError: Cannot read property 'options' of undefined
 	window.setTimeout(function () {
-		if ($.isFunction(row.dropped)) {
-			row.dropped(task);
+		if ($.isFunction(viewModel.dropped)) {
+			viewModel.dropped(task);
 		}
 	});
 };

@@ -77,6 +77,19 @@ UpdateTaskDialog.prototype.initialize = function (taskdata, task, event) {
 	this.top = event.pageY + 'px';
 	this.task = task;
 
+	this.completed = this.task.completed();
+	this.isCompleted = this.task.isCompleted();
+	this.saveStatus = function (status) {
+		task.update({
+			status: status
+		}).done(function () {
+			self.dispose();
+		});
+	};
+	this.saveStatusAs = function (status) {
+		return this.saveStatus.bind(this, status);
+	};
+
 	this.due = ko.observable(this.task.due());
 	this.title = ko.observable(this.task.title());
 	this.notes = ko.observable(this.task.notes());

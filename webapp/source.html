@@ -86,8 +86,10 @@
 	<ul class="nav nav-tabs">
 	<li data-bind="css: {active: viewModeIs('')}"><a href="">概況</a></li>
 	<li data-bind="css: {active: viewModeIs('#daily')}"><a href="#daily">今週の計画</a></li>
-	<li data-bind="css: {active: viewModeIs('#weekly')}"><a href="#weekly">今月の計画</a></li>
-	<li data-bind="css: {active: viewModeIs('#monthly')}"><a href="#monthly">今年の計画</a></li>
+	<li data-bind="css: {active: viewModeIs('#weekly')}"><a href="#weekly">
+		<span data-bind="text: today().getMonth()+1"></span>月の計画</a></li>
+	<li data-bind="css: {active: viewModeIs('#monthly')}"><a href="#monthly">
+		<span data-bind="text: today().getFullYear()"></span>年の計画</a></li>
 	<li data-bind="css: {active: viewModeIs('#past')}"><a href="#past">過去のタスク</a></li>
 	</ul>
 	<ul class="nav pull-right">
@@ -123,33 +125,45 @@
 	<div data-bind="template: {name: 'expired-tasks-template'}"></div>
 	<h2>今週</h2>
 	<div>
-		<!-- ko with: beginOfThisWeek -->
+		<!-- ko with: $root.thisWeek -->
 		<span data-bind="text: getMonth()+1"></span>月
 		<span data-bind="text: getDate()"></span>日
 		<!-- /ko -->
 		〜
-		<!-- ko with: endOfThisWeek -->
+		<!-- ko with: $root.lastDayOfThisWeek -->
 		<span data-bind="text: getMonth()+1"></span>月
 		<span data-bind="text: getDate()"></span>日
 		<!-- /ko -->
 	</div>
 	<div class="row">
-	<div class="span5">
-		<h3>実施中のタスク <span data-bind="text: workingTasks().length" class="badge"></span></h3>
-		<div data-bind="foreach: workingTasksGroups">
-		<div class="tasklist">
-		<div data-bind="text: tasklist.title" class="title"></div>
-		<div data-bind="template: {name: 'task-template', foreach: tasks}, visible: tasklist.visible"></div>
+	<div data-bind="with: needsAction" class="span5">
+		<h3>実施中のタスク <span data-bind="text: tasks().length" class="badge"></span></h3>
+		<div data-bind="droppable: {
+				accept: '.task',
+				hoverClass: 'dropping'
+			}">
+		<div data-bind="foreach: tasklists">
+			<div class="tasklist">
+			<div data-bind="text: tasklist.title" class="title"></div>
+			<div data-bind="template: {name: 'task-template', foreach: tasks}, visible: tasklist.visible"></div>
+			</div>
 		</div>
+		<div style="clear: both;"></div>
 		</div>
 	</div>
-	<div class="span5">
-		<h3>完了したタスク <span data-bind="text: completedTasks().length" class="badge"></span></h3>
-		<div data-bind="foreach: completedTasksGroups">
-		<div class="tasklist">
-		<div data-bind="text: tasklist.title" class="title"></div>
-		<div data-bind="template: {name: 'task-template', foreach: tasks}, visible: tasklist.visible"></div>
+	<div data-bind="with: completed" class="span5">
+		<h3>完了したタスク <span data-bind="text: tasks().length" class="badge"></span></h3>
+		<div data-bind="droppable: {
+				accept: '.task',
+				hoverClass: 'dropping'
+			}">
+		<div data-bind="foreach: tasklists">
+			<div class="tasklist">
+			<div data-bind="text: tasklist.title" class="title"></div>
+			<div data-bind="template: {name: 'task-template', foreach: tasks}, visible: tasklist.visible"></div>
+			</div>
 		</div>
+		<div style="clear: both;"></div>
 		</div>
 	</div>
 	</div>
@@ -289,7 +303,7 @@
 	<a data-bind="click: $root.createTaskDialog.create"
 		href="#" class="create showtooltip" data-placement="left"
 		title="新しいタスクを作成する"></a>
-	<h2>未計画のタスク</h2>
+	<h3>未計画のタスク</h3>
 	<div data-bind="foreach: tasklists">
 	<div class="tasklist-header">
 	<span data-bind="text: tasks.length" class="badge"></span>
@@ -333,7 +347,9 @@
 		past: past
 	}"
 	class="task">
-<input data-bind="checked: isCompleted, click: saveStatus, clickBubble: false" type="checkbox" />
+<!-- ko if: isCompleted -->
+<i class="icon-ok"/>
+<!-- /ko -->
 <span data-bind="text: title" class="title"></span>
 <div data-bind="autolinkText: notes" class="notes"></div>
 </div>
@@ -405,14 +421,29 @@
 <!-- ko if: updateTaskDialog -->
 <!-- ko with: updateTaskDialog -->
 <div data-bind="style: {top: top}" class="update-task dialog">
-<form data-bind="submit: save, escKeydown: dispose">
+	<!-- ko if: isCompleted -->
+	<p><i class="icon-ok"></i> このタスクは
+		<span data-bind="with: completed">
+		<span data-bind="text: getFullYear()"></span>年
+		<span data-bind="text: getMonth()+1"></span>月
+		<span data-bind="text: getDate()"></span>日
+		</span>
+	に完了しています</p>
+	<div><a data-bind="click: saveStatusAs('needsAction')" href="#" class="btn">未完了に戻す</a></div>
+	<!-- /ko -->
+	<!-- ko ifnot: isCompleted -->
+	<div><a data-bind="click: saveStatusAs('completed')" href="#" class="btn">完了に変更</a></div>
+	<!-- /ko -->
+	<hr/>
+
+	<form data-bind="submit: save, escKeydown: dispose">
 	<div><input data-bind="value: title, hasfocus: true" type="text" placeholder="タスクの件名" /></div>
 	<div><textarea data-bind="value: notes" placeholder="備考"></textarea></div>
 	<div data-bind="with: due" class="due">
 	<span data-bind="text: getFullYear()"></span>年
 	<span data-bind="text: getMonth()+1"></span>月
 	<span data-bind="text: getDate()"></span>日
-	<a href="#">期限を変更する...</a>
+	<a data-bind="click: $.noop" href="#">期限を変更する...</a>
 	</div>
 	<div class="datepicker"><!-- TODO: bind this --></div>
 	<button type="submit" class="btn">タスクを更新</button>
