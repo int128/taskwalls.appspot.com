@@ -136,22 +136,34 @@
 		<!-- /ko -->
 	</div>
 	<div class="row">
-	<div class="span5">
-		<h3>実施中のタスク <span data-bind="text: workingTasks().length" class="badge"></span></h3>
-		<div data-bind="foreach: workingTasksGroups">
-		<div class="tasklist">
-		<div data-bind="text: tasklist.title" class="title"></div>
-		<div data-bind="template: {name: 'task-template', foreach: tasks}, visible: tasklist.visible"></div>
+	<div data-bind="with: needsAction" class="span5">
+		<h3>実施中のタスク <span data-bind="text: tasks().length" class="badge"></span></h3>
+		<div data-bind="droppable: {
+				accept: '.task',
+				hoverClass: 'dropping'
+			}">
+		<div data-bind="foreach: tasklists">
+			<div class="tasklist">
+			<div data-bind="text: tasklist.title" class="title"></div>
+			<div data-bind="template: {name: 'task-template', foreach: tasks}, visible: tasklist.visible"></div>
+			</div>
 		</div>
+		<div style="clear: both;"></div>
 		</div>
 	</div>
-	<div class="span5">
-		<h3>完了したタスク <span data-bind="text: completedTasks().length" class="badge"></span></h3>
-		<div data-bind="foreach: completedTasksGroups">
-		<div class="tasklist">
-		<div data-bind="text: tasklist.title" class="title"></div>
-		<div data-bind="template: {name: 'task-template', foreach: tasks}, visible: tasklist.visible"></div>
+	<div data-bind="with: completed" class="span5">
+		<h3>完了したタスク <span data-bind="text: tasks().length" class="badge"></span></h3>
+		<div data-bind="droppable: {
+				accept: '.task',
+				hoverClass: 'dropping'
+			}">
+		<div data-bind="foreach: tasklists">
+			<div class="tasklist">
+			<div data-bind="text: tasklist.title" class="title"></div>
+			<div data-bind="template: {name: 'task-template', foreach: tasks}, visible: tasklist.visible"></div>
+			</div>
 		</div>
+		<div style="clear: both;"></div>
 		</div>
 	</div>
 	</div>
