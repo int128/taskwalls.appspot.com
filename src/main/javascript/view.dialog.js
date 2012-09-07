@@ -146,6 +146,10 @@ function UpdateTaskDialog (taskvm, event, tasklists) {
 	this.initialize.apply(this, arguments);
 };
 
+UpdateTaskDialog.factory = function (taskdata, task, event) {
+	return new UpdateTaskDialog(taskdata, task, event);
+};
+
 /**
  * @param {Taskdata}
  *            taskdata
@@ -211,16 +215,14 @@ UpdateTaskDialog.prototype.initialize = function (taskdata, task, event) {
 };
 
 /**
- * This method will be injected by <code>ko.disposableObservable()</code>.
- */
-UpdateTaskDialog.prototype.dispose = function () {
-};
-
-/**
  * @class Dialog to create a tasklist.
  */
 function CreateTasklistDialog (taskdata) {
 	this.initialize.apply(this, arguments);
+};
+
+CreateTasklistDialog.factory = function (taskdata) {
+	return new CreateTasklistDialog(taskdata);
 };
 
 /**
@@ -242,16 +244,14 @@ CreateTasklistDialog.prototype.initialize = function (taskdata) {
 };
 
 /**
- * This method will be injected by <code>ko.disposableObservable()</code>.
- */
-CreateTasklistDialog.prototype.dispose = function () {
-};
-
-/**
  * @class Dialog to update the tasklist.
  */
 function UpdateTasklistDialog (taskdata, tasklist, event) {
 	this.initialize.apply(this, arguments);
+};
+
+UpdateTasklistDialog.factory = function (taskdata, tasklist, event) {
+	return new UpdateTasklistDialog(taskdata, tasklist, event);
 };
 
 /**
@@ -302,10 +302,4 @@ UpdateTasklistDialog.prototype.initialize = function (taskdata, tasklist, event)
 			this.dispose();
 		}.bind(this));
 	}.bind(this);
-};
-
-/**
- * This method will be injected by <code>ko.disposableObservable()</code>.
- */
-UpdateTasklistDialog.prototype.dispose = function () {
 };

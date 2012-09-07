@@ -57,16 +57,9 @@ AuthorizedPageViewModel.prototype.initialize = function () {
 
 	// dialogs
 	this.createTaskDialog = DialogManager(CreateTaskDialog.factory, this.taskdata);
-
-	this.updateTaskDialog = ko.disposableObservable(function (task, event) {
-		return new UpdateTaskDialog(this.taskdata, task, event);
-	}, this);
-	this.createTasklistDialog = ko.disposableObservable(function () {
-		return new CreateTasklistDialog(this.taskdata);
-	}, this);
-	this.updateTasklistDialog = ko.disposableObservable(function (tasklist, event) {
-		return new UpdateTasklistDialog(this.taskdata, tasklist, event);
-	}, this);
+	this.updateTaskDialog = DialogManager(UpdateTaskDialog.factory, this.taskdata);
+	this.createTasklistDialog = DialogManager(CreateTasklistDialog.factory, this.taskdata);
+	this.updateTasklistDialog = DialogManager(UpdateTasklistDialog.factory, this.taskdata);
 
 	// settings
 	this.offline = taskwalls.settings.offline;

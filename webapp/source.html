@@ -99,11 +99,11 @@
 		<!-- ko foreach: tasklists -->
 		<li><a data-bind="text: title,
 			attr: {'data-tasklistcolor': colorCode},
-			click: $root.updateTasklistDialog.create"
+			click: $root.updateTasklistDialog.open"
 			class="tasklist" href="#"></a></li>
 		<!-- /ko -->
 		<li class="divider"></li>
-		<li><a data-bind="click: createTasklistDialog.create" href="#">新しいタスクリスト</a></li>
+		<li><a data-bind="click: createTasklistDialog.open" href="#">新しいタスクリスト</a></li>
 	</ul>
 	</li>
 	<li class="dropdown">
@@ -337,7 +337,7 @@
 
 <script type="text/html" id="task-template">
 <div data-bind="draggableByClone: {},
-	click: $root.updateTaskDialog.create,
+	click: $root.updateTaskDialog.open,
 	event: {dropped: dropped},
 	attr: {
 		'data-status': status,
@@ -355,23 +355,22 @@
 </div>
 </script>
 
-<section class="dialogs">
-<!-- ko if: createTasklistDialog -->
-<!-- ko with: createTasklistDialog -->
-<form data-bind="submit: save, escKeydown: dispose">
+<!-- ko foreach: createTasklistDialog -->
+<section data-bind="visible: visible, escKeydown: close">
+<form data-bind="submit: save">
 	<div class="create-tasklist dialog">
 	<div><input data-bind="value: title, hasfocus: true" type="text" placeholder="タスクリストの名前" /></div>
 	<div><button type="submit" class="btn">タスクリストを作成</button></div>
 	</div>
 </form>
-<div data-bind="click: dispose" class="dialog-background"></div>
-<!-- /ko -->
+<div data-bind="click: close" class="dialog-background"></div>
+</section>
 <!-- /ko -->
 
-<!-- ko if: updateTasklistDialog -->
-<!-- ko with: updateTasklistDialog -->
+<!-- ko foreach: updateTasklistDialog -->
+<section data-bind="visible: visible, escKeydown: close">
 <div data-bind="style: {top: top}" class="update-tasklist dialog">
-	<form data-bind="submit: saveTitle, escKeydown: dispose">
+	<form data-bind="submit: saveTitle">
 	<input data-bind="value: title" type="text" placeholder="タスクリストの名前" />
 	</form>
 
@@ -389,8 +388,8 @@
 	<button data-bind="click: remove" class="btn btn-danger">タスクリストを削除する</button>
 	</div>
 </div>
-<div data-bind="click: dispose" class="dialog-background"></div>
-<!-- /ko -->
+<div data-bind="click: close" class="dialog-background"></div>
+</section>
 <!-- /ko -->
 
 <!-- ko foreach: createTaskDialog -->
@@ -418,8 +417,8 @@
 </section>
 <!-- /ko -->
 
-<!-- ko if: updateTaskDialog -->
-<!-- ko with: updateTaskDialog -->
+<!-- ko foreach: updateTaskDialog -->
+<section data-bind="visible: visible, escKeydown: close">
 <div data-bind="style: {top: top}" class="update-task dialog">
 	<!-- ko if: isCompleted -->
 	<p><i class="icon-ok"></i> このタスクは
@@ -436,7 +435,7 @@
 	<!-- /ko -->
 	<hr/>
 
-	<form data-bind="submit: save, escKeydown: dispose">
+	<form data-bind="submit: save">
 	<div><input data-bind="value: title, hasfocus: true" type="text" placeholder="タスクの件名" /></div>
 	<div><textarea data-bind="value: notes" placeholder="備考"></textarea></div>
 	<div data-bind="with: due" class="due">
@@ -450,7 +449,7 @@
 	</form>
 	<hr/>
 
-	<form data-bind="submit: move, escKeydown: dispose">
+	<form data-bind="submit: move">
 	<div data-bind="foreach: tasklists" class="tasklists">
 	<a data-bind="text: title,
 		attr: {'data-tasklistcolor': colorCode},
@@ -471,11 +470,10 @@
 	<button data-bind="click: remove" class="btn btn-danger">タスクを削除する</button>
 	<!-- /ko -->
 </div>
-<div data-bind="click: dispose" class="dialog-background"></div>
-<!-- /ko -->
+<div data-bind="click: close" class="dialog-background"></div>
+</section>
 <!-- /ko -->
 
-</section>
 </article>
 
 <div id="resources" style="display: none;">
