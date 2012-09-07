@@ -1,14 +1,101 @@
 /**
- * @class Dialog to create a task.
- * @param {Taskdata}
- *            taskdata
- * @param {Date}
- *            due
- * @param {Event}
- *            event
+ * Provides life cycle management of dialogs.
+ * 
+ * <p>Define a view model:</p>
+ * <code><pre>
+ * function PageViewModel () {
+ *   var factory = function (arg1, viewModel, event) {
+ *     return new SomeDialog();
+ *   };
+ *   this.dm = DialogManager(factory, arg1);
+ * }
+ * </pre></code>
+ * and bind it:
+ * <code><pre>
+ * &lt;!-- ko foreach: dm --&gt;
+ * &lt;div data-bind="visible: visible, escKeydown: close" --&gt;
+ *   &lt;div class="dialog"&gt;
+ *     dialog template here
+ *   &lt;/div&gt;
+ *   &lt;div data-bind="click: close" class="dialog-background"&gt;&lt;/div&gt;
+ * &lt;/div&gt;
+ * &lt;!-- /ko &gt;
+ * </pre></code>
+ * 
+ * <p>Open an new dialog:</p>
+ * <code><pre>
+ * &lt;button data-bind="click: dm.open"&gt;open&lt;/button&gt;
+ * </pre></code>
+ * 
+ * <p>Close the dialog:</p>
+ * <code><pre>
+ * &lt;!-- ko foreach: dm --&gt;
+ * &lt;div data-bind="visible: visible, escKeydown: close" --&gt;
+ *   &lt;div class="dialog"&gt;
+ *     &lt;button data-bind="click: close"&gt;&amp;times;&lt;/button&gt;
+ *     dialog template here
+ *   &lt;/div&gt;
+ *   &lt;div data-bind="click: close" class="dialog-background"&gt;&lt;/div&gt;
+ * &lt;/div&gt;
+ * &lt;!-- /ko &gt;
+ * </pre></code>
+ * 
+ * <p>Transactional operation:</p>
+ * <code><pre>
+ * function SomeDialog () {
+ *   this.save = function () {
+ *     this.transaction($.post('/save', data)));
+ *     // The dialog close immediately.
+ *     // If request has been success, the dialog will be closed.
+ *     // If request has been failed, the dialog will be appeared again.
+ *   };
+ * }
+ * </pre></code>
+ * 
+ * @param {Function}
+ *            factoryFunction
+ * @param {Object}
+ *            factoryArgs arguments for factoryFunction
+ * @returns observable array instance
  */
-function CreateTaskDialog (taskdata, due, event) {
+function DialogManager (factoryFunction, factoryArgs) {
+	var factoryArguments = Array.prototype.slice.call(arguments, 1);
+	var observableArray = ko.observableArray();
+	observableArray.open = function () {
+		var dialog = factoryFunction.apply(null,
+				factoryArguments.concat(Array.prototype.slice.call(arguments)));
+		dialog.visible = ko.observable(true);
+		dialog.show = function () {
+			dialog.visible(true);
+		};
+		dialog.hide = function () {
+			dialog.visible(false);
+		};
+		dialog.close = function () {
+			observableArray.remove(dialog);
+		};
+		dialog.transaction = function (deferred) {
+			dialog.hide();
+			deferred.done(function () {
+				dialog.close();
+			}).fail(function () {
+				dialog.show();
+			});
+		};
+		observableArray.push(dialog);
+	};
+	return observableArray;
+};
+
+/**
+ * @class Dialog to create a task.
+ */
+function CreateTaskDialog () {
 	this.initialize.apply(this, arguments);
+};
+
+CreateTaskDialog.factory = function (taskdata, row, event) {
+	return new CreateTaskDialog(taskdata, row.getDayForNewTask(), event);
 };
 
 /**
@@ -34,9 +121,12 @@ CreateTaskDialog.prototype.initialize = function (taskdata, due, event) {
 		this.titleFocus(true);
 	}.bind(this);
 
+	this.validate = function () {
+		return this.title();
+	}.bind(this);
 	this.save = function () {
-		if (this.title()) {
-			Tasks.create({
+		if (this.validate()) {
+			this.transaction(Tasks.create({
 				tasklistID: this.selectedTasklist().id(),
 				due: this.due(),
 				title: this.title(),
@@ -44,16 +134,9 @@ CreateTaskDialog.prototype.initialize = function (taskdata, due, event) {
 			}).done(function (task) {
 				task.tasklist(this.selectedTasklist());
 				taskdata.tasks.push(task);
-				this.dispose();
-			}.bind(this));
+			}.bind(this)));
 		}
 	}.bind(this);
-};
-
-/**
- * This method will be injected by <code>ko.disposableObservable()</code>.
- */
-CreateTaskDialog.prototype.dispose = function () {
 };
 
 /**

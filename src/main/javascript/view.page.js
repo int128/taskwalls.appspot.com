@@ -56,9 +56,8 @@ AuthorizedPageViewModel.prototype.initialize = function () {
 	this.pastTasks = new PastTasksViewModel(this.taskdata);
 
 	// dialogs
-	this.createTaskDialog = ko.disposableObservable(function (row, event) {
-		return new CreateTaskDialog(this.taskdata, row.getDayForNewTask(), event);
-	}, this);
+	this.createTaskDialog = DialogManager(CreateTaskDialog.factory, this.taskdata);
+
 	this.updateTaskDialog = ko.disposableObservable(function (task, event) {
 		return new UpdateTaskDialog(this.taskdata, task, event);
 	}, this);
