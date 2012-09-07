@@ -94,8 +94,8 @@ function CreateTaskDialog () {
 	this.initialize.apply(this, arguments);
 };
 
-CreateTaskDialog.factory = function (taskdata, row, event) {
-	return new CreateTaskDialog(taskdata, row.getDayForNewTask(), event);
+CreateTaskDialog.factory = function (taskdata, rowViewModel, event) {
+	return new CreateTaskDialog(taskdata, rowViewModel.getDayForNewTask(), event.pageY + 'px');
 };
 
 /**
@@ -103,11 +103,11 @@ CreateTaskDialog.factory = function (taskdata, row, event) {
  *            taskdata
  * @param {Date}
  *            due
- * @param {Event}
- *            event
+ * @param {String}
+ *            top
  */
-CreateTaskDialog.prototype.initialize = function (taskdata, due, event) {
-	this.top = event.pageY + 'px';
+CreateTaskDialog.prototype.initialize = function (taskdata, due, top) {
+	this.top = top;
 
 	this.due = ko.observable(due);
 	this.title = ko.observable();
@@ -142,12 +142,12 @@ CreateTaskDialog.prototype.initialize = function (taskdata, due, event) {
 /**
  * @class Dialog to update the task.
  */
-function UpdateTaskDialog (taskvm, event, tasklists) {
+function UpdateTaskDialog () {
 	this.initialize.apply(this, arguments);
 };
 
-UpdateTaskDialog.factory = function (taskdata, task, event) {
-	return new UpdateTaskDialog(taskdata, task, event);
+UpdateTaskDialog.factory = function (taskdata, taskViewModel, event) {
+	return new UpdateTaskDialog(taskdata, taskViewModel, event.pageY + 'px');
 };
 
 /**
@@ -155,11 +155,11 @@ UpdateTaskDialog.factory = function (taskdata, task, event) {
  *            taskdata
  * @param {Task}
  *            task
- * @param {Event}
- *            event
+ * @param {String}
+ *            top
  */
-UpdateTaskDialog.prototype.initialize = function (taskdata, task, event) {
-	this.top = event.pageY + 'px';
+UpdateTaskDialog.prototype.initialize = function (taskdata, task, top) {
+	this.top = top;
 	this.task = task;
 
 	this.completed = this.task.completed();
@@ -217,7 +217,7 @@ UpdateTaskDialog.prototype.initialize = function (taskdata, task, event) {
 /**
  * @class Dialog to create a tasklist.
  */
-function CreateTasklistDialog (taskdata) {
+function CreateTasklistDialog () {
 	this.initialize.apply(this, arguments);
 };
 
@@ -246,12 +246,12 @@ CreateTasklistDialog.prototype.initialize = function (taskdata) {
 /**
  * @class Dialog to update the tasklist.
  */
-function UpdateTasklistDialog (taskdata, tasklist, event) {
+function UpdateTasklistDialog () {
 	this.initialize.apply(this, arguments);
 };
 
-UpdateTasklistDialog.factory = function (taskdata, tasklist, event) {
-	return new UpdateTasklistDialog(taskdata, tasklist, event);
+UpdateTasklistDialog.factory = function (taskdata, tasklistViewModel, event) {
+	return new UpdateTasklistDialog(taskdata, tasklistViewModel, event.clientY + 'px');
 };
 
 /**
@@ -259,11 +259,11 @@ UpdateTasklistDialog.factory = function (taskdata, tasklist, event) {
  *            taskdata
  * @param {Tasklist}
  *            tasklist
- * @param {Event}
- *            event
+ * @param {String}
+ *            top
  */
-UpdateTasklistDialog.prototype.initialize = function (taskdata, tasklist, event) {
-	this.top = event.clientY + 'px';
+UpdateTasklistDialog.prototype.initialize = function (taskdata, tasklist, top) {
+	this.top = top;
 	this.tasklist = tasklist;
 	this.colors = (function () {
 		// generate color code array
