@@ -7,6 +7,10 @@ body {
 	font-family: 'trebuchet ms', arial, sans-serif;
 }
 
+form {
+	margin: 0;
+}
+
 /*
  * Welcome page.
  */
@@ -344,15 +348,16 @@ table.calendar {
 	background-color: rgba(0, 0, 0, 0.5);
 }
 
+.dialog h2,
+.dialog h3,
+.dialog h4 {
+	margin: 0;
+}
+
 .create-task.dialog,
 .update-task.dialog {
 	position: absolute;
 	right: 40px;
-}
-
-.create-task.dialog .due,
-.update-task.dialog .due {
-	margin-bottom: 5px;
 }
 
 .create-task.dialog input[type="text"],

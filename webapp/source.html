@@ -357,12 +357,13 @@
 
 <!-- ko foreach: createTasklistDialog -->
 <section data-bind="visible: visible, escKeydown: close">
-<form data-bind="submit: save">
-	<div class="create-tasklist dialog">
+<div class="create-tasklist dialog">
+	<h3>新しいタスクリスト</h3>
+	<form data-bind="submit: save">
 	<div><input data-bind="value: title, hasfocus: true" type="text" placeholder="タスクリストの名前" /></div>
 	<div><button type="submit" class="btn">タスクリストを作成</button></div>
-	</div>
-</form>
+	</form>
+</div>
 <div data-bind="click: close" class="dialog-background"></div>
 </section>
 <!-- /ko -->
@@ -395,11 +396,13 @@
 <!-- ko foreach: createTaskDialog -->
 <section data-bind="visible: visible, escKeydown: close">
 <div data-bind="style: {top: top}" class="create-task dialog">
-	<div data-bind="with: due" class="due">
+	<h3>新しいタスク</h3>
+	<p data-bind="with: due" class="due">
 	<span data-bind="text: getFullYear()"></span>年
 	<span data-bind="text: getMonth()+1"></span>月
 	<span data-bind="text: getDate()"></span>日
-	</div>
+	</p>
+
 	<form data-bind="submit: save">
 	<div><input data-bind="value: title, hasfocus: titleFocus" type="text" placeholder="タスクの件名" /></div>
 	<div><textarea data-bind="value: notes" placeholder="備考"></textarea></div>
@@ -420,6 +423,26 @@
 <!-- ko foreach: updateTaskDialog -->
 <section data-bind="visible: visible, escKeydown: close">
 <div data-bind="style: {top: top}" class="update-task dialog">
+	<!-- ko ifnot: isCompleted -->
+	<div><a data-bind="click: saveStatusAs('completed')" href="#" class="btn">
+		<i class="icon-ok"></i> タスクを完了に変更</a></div>
+	<hr/>
+	<!-- /ko -->
+
+	<form data-bind="submit: save">
+	<p data-bind="with: due" class="due">
+	<span data-bind="text: getFullYear()"></span>年
+	<span data-bind="text: getMonth()+1"></span>月
+	<span data-bind="text: getDate()"></span>日
+	<a data-bind="click: $.noop" href="#">期限を変更...</a>
+	</p>
+	<div><input data-bind="value: title, hasfocus: true" type="text" placeholder="タスクの件名" /></div>
+	<div><textarea data-bind="value: notes" placeholder="備考"></textarea></div>
+	<div class="datepicker"><!-- TODO: bind this --></div>
+	<button type="submit" class="btn">タスクを更新</button>
+	</form>
+	<hr/>
+
 	<!-- ko if: isCompleted -->
 	<p><i class="icon-ok"></i> このタスクは
 		<span data-bind="with: completed">
@@ -429,25 +452,8 @@
 		</span>
 	に完了しています</p>
 	<div><a data-bind="click: saveStatusAs('needsAction')" href="#" class="btn">未完了に戻す</a></div>
-	<!-- /ko -->
-	<!-- ko ifnot: isCompleted -->
-	<div><a data-bind="click: saveStatusAs('completed')" href="#" class="btn">完了に変更</a></div>
-	<!-- /ko -->
 	<hr/>
-
-	<form data-bind="submit: save">
-	<div><input data-bind="value: title, hasfocus: true" type="text" placeholder="タスクの件名" /></div>
-	<div><textarea data-bind="value: notes" placeholder="備考"></textarea></div>
-	<div data-bind="with: due" class="due">
-	<span data-bind="text: getFullYear()"></span>年
-	<span data-bind="text: getMonth()+1"></span>月
-	<span data-bind="text: getDate()"></span>日
-	<a data-bind="click: $.noop" href="#">期限を変更する...</a>
-	</div>
-	<div class="datepicker"><!-- TODO: bind this --></div>
-	<button type="submit" class="btn">タスクを更新</button>
-	</form>
-	<hr/>
+	<!-- /ko -->
 
 	<form data-bind="submit: move">
 	<div data-bind="foreach: tasklists" class="tasklists">
