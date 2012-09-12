@@ -18,7 +18,6 @@ Taskdata.prototype.initialize = function () {
  * Asynchronously load task data from server.
  */
 Taskdata.prototype.load = function () {
-	var self = this;
 	var defaultTasklist = new Tasklist({
 		id: '@default'
 	});
@@ -29,24 +28,24 @@ Taskdata.prototype.load = function () {
 	$.when(loadTasksInDefaultTasklist, loadTasklists).done(function () {
 		// extract ID of the default tasklist if possible
 		var defaultTasklistID = undefined;
-		if (self.tasks().length > 0) {
-			var p = self.tasks()[0].selfLink().split('/');
+		if (this.tasks().length > 0) {
+			var p = this.tasks()[0].selfLink().split('/');
 			defaultTasklistID = p[p.length - 3];
 		}
 
-		self.tasklists().forEach(function (tasklist, i) {
+		this.tasklists().forEach(function (tasklist, i) {
 			if (tasklist.id() == defaultTasklistID) {
 				// replace instance of the default tasklist
 				$.extend(defaultTasklist, tasklist);
-				self.tasklists()[i] = defaultTasklist;
+				this.tasklists()[i] = defaultTasklist;
 			} else {
 				// load remaining tasklists
 				Tasks.get(tasklist).done(function (tasks) {
-					self.tasks($.merge(self.tasks(), tasks));
-				});
+					this.tasks($.merge(this.tasks(), tasks));
+				}.bind(this));
 			}
-		});
-	});
+		}.bind(this));
+	}.bind(this));
 };
 
 /**
@@ -72,14 +71,13 @@ Taskdata.prototype.remove = function (item) {
  * Clear completed tasks.
  */
 Taskdata.prototype.clearCompletedTasks = function () {
-	var self = this;
 	this.tasklists().forEach(function (tasklist, i) {
 		tasklist.clearCompletedTasks().done(function () {
-			self.tasks.remove(function (task) {
+			this.tasks.remove(function (task) {
 				return task.tasklist().id() == tasklist.id() && task.isCompleted();
 			});
-		});
-	});
+		}.bind(this));
+	}.bind(this));
 };
 
 /**
@@ -180,22 +178,21 @@ Tasklist.prototype.initialize = function (object) {
  * @returns {Deferred}
  */
 Tasklist.prototype.update = function (data) {
-	var self = this;
 	if (!taskwalls.settings.offline()) {
 		var request = $.extend({
 			id: this.id()
 		}, data);
 		return $.post('/tasklists/update', request).done(function () {
-			ko.extendObservables(self, data);
-		}).fail(function () {
+			ko.extendObservables(this, data);
+		}.bind(this)).fail(function () {
 			// FIXME: view model should do this
-			ko.extendObservables(data, self);
-		});
+			ko.extendObservables(data, this);
+		}.bind(this));
 	} else {
 		// TODO: offline
 		return $.Deferred().done(function () {
-			ko.extendObservables(self, data);
-		}).resolve();
+			ko.extendObservables(this, data);
+		}.bind(this)).resolve();
 	}
 };
 
@@ -207,22 +204,21 @@ Tasklist.prototype.update = function (data) {
  * @returns {Deferred}
  */
 Tasklist.prototype.updateMetadata = function (data) {
-	var self = this;
 	if (!taskwalls.settings.offline()) {
 		var request = $.extend({
 			id: this.id()
 		}, data);
 		return $.post('/tasklists/options/update', request).done(function () {
-			ko.extendObservables(self, data);
-		}).fail(function () {
+			ko.extendObservables(this, data);
+		}.bind(this)).fail(function () {
 			// FIXME: view model should do this
-			ko.extendObservables(data, self);
-		});
+			ko.extendObservables(data, this);
+		}.bind(this));
 	} else {
 		// TODO: offline
 		return $.Deferred().done(function () {
-			ko.extendObservables(self, data);
-		}).resolve();
+			ko.extendObservables(this, data);
+		}.bind(this)).resolve();
 	}
 };
 
@@ -464,7 +460,6 @@ Task.prototype.initialize = function (object, tasklist) {
  * @returns {Deferred}
  */
 Task.prototype.update = function (data) {
-	var self = this;
 	if (!taskwalls.settings.offline()) {
 		var request = $.extend({}, data, {
 			id: this.id(),
@@ -474,16 +469,16 @@ Task.prototype.update = function (data) {
 			due: data.due ? DateUtil.calculateTimeInUTC(data.due) : 0
 		});
 		return $.post('/tasks/update', request).done(function () {
-			ko.extendObservables(self, data);
-		}).fail(function () {
+			ko.extendObservables(this, data);
+		}.bind(this)).fail(function () {
 			// TODO: view model should do this...
-			ko.extendObservables(data, self);
-		});
+			ko.extendObservables(data, this);
+		}.bind(this));
 	} else {
 		// TODO: offline
 		return $.Deferred().done(function () {
-			ko.extendObservables(self, data);
-		}).resolve();
+			ko.extendObservables(this, data);
+		}.bind(this)).resolve();
 	}
 };
 
@@ -495,7 +490,6 @@ Task.prototype.update = function (data) {
  * @returns {Deferred}
  */
 Task.prototype.move = function (tasklist) {
-	var self = this;
 	if (!taskwalls.settings.offline()) {
 		var request = {
 			id: this.id(),
@@ -503,13 +497,13 @@ Task.prototype.move = function (tasklist) {
 			destinationTasklistID: tasklist.id()
 		};
 		return $.post('/tasks/move', request).done(function () {
-			self.tasklist(tasklist);
-		});
+			this.tasklist(tasklist);
+		}.bind(this));
 	} else {
 		// TODO: offline
 		return $.Deferred().done(function () {
-			self.tasklist(tasklist);
-		}).resolve();
+			this.tasklist(tasklist);
+		}.bind(this)).resolve();
 	}
 };
 

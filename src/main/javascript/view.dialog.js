@@ -20,7 +20,6 @@ function CreateTaskDialog (taskdata, due, event) {
  *            event
  */
 CreateTaskDialog.prototype.initialize = function (taskdata, due, event) {
-	var self = this;
 	this.top = event.pageY + 'px';
 
 	this.due = ko.observable(due);
@@ -31,24 +30,24 @@ CreateTaskDialog.prototype.initialize = function (taskdata, due, event) {
 	this.tasklists = taskdata.tasklists();
 	this.selectedTasklist = ko.observable(this.tasklists[0]); // select first item
 	this.selectTasklist = function (tasklist) {
-		self.selectedTasklist(tasklist);
-		self.titleFocus(true);
-	};
+		this.selectedTasklist(tasklist);
+		this.titleFocus(true);
+	}.bind(this);
 
 	this.save = function () {
-		if (self.title()) {
+		if (this.title()) {
 			Tasks.create({
-				tasklistID: self.selectedTasklist().id(),
-				due: self.due(),
-				title: self.title(),
-				notes: self.notes()
+				tasklistID: this.selectedTasklist().id(),
+				due: this.due(),
+				title: this.title(),
+				notes: this.notes()
 			}).done(function (task) {
-				task.tasklist(self.selectedTasklist());
+				task.tasklist(this.selectedTasklist());
 				taskdata.tasks.push(task);
-				self.dispose();
-			});
+				this.dispose();
+			}.bind(this));
 		}
-	};
+	}.bind(this);
 };
 
 /**
@@ -73,7 +72,6 @@ function UpdateTaskDialog (taskvm, event, tasklists) {
  *            event
  */
 UpdateTaskDialog.prototype.initialize = function (taskdata, task, event) {
-	var self = this;
 	this.top = event.pageY + 'px';
 	this.task = task;
 
@@ -83,50 +81,50 @@ UpdateTaskDialog.prototype.initialize = function (taskdata, task, event) {
 		task.update({
 			status: status
 		}).done(function () {
-			self.dispose();
-		});
+			this.dispose();
+		}.bind(this));
 	};
 	this.saveStatusAs = function (status) {
 		return this.saveStatus.bind(this, status);
-	};
+	}.bind(this);
 
 	this.due = ko.observable(this.task.due());
 	this.title = ko.observable(this.task.title());
 	this.notes = ko.observable(this.task.notes());
 	this.save = function () {
-		if (self.title()) {
+		if (this.title()) {
 			task.update({
-				due: self.due(),
-				title: self.title(),
-				notes: self.notes()
+				due: this.due(),
+				title: this.title(),
+				notes: this.notes()
 			}).done(function () {
-				self.dispose();
-			});
+				this.dispose();
+			}.bind(this));
 		}
-	};
+	}.bind(this);
 
 	this.tasklists = taskdata.tasklists();
 	this.selectedTasklist = ko.observable(this.task.tasklist());
 	this.originalTasklist = ko.observable(this.task.tasklist());
 	this.selectTasklist = function (tasklist) {
-		self.selectedTasklist(tasklist);
-	};
+		this.selectedTasklist(tasklist);
+	}.bind(this);
 	this.move = function () {
-		self.task.move(self.selectedTasklist()).done(function () {
-			self.dispose();
-		});
-	};
+		this.task.move(this.selectedTasklist()).done(function () {
+			this.dispose();
+		}.bind(this));
+	}.bind(this);
 
 	this.removeConfirmed = ko.observable(false);
 	this.confirmRemove = function () {
-		self.removeConfirmed(true);
-	};
+		this.removeConfirmed(true);
+	}.bind(this);
 	this.remove = function () {
-		self.task.remove().done(function () {
-			taskdata.remove(self.task);
-			self.dispose();
-		});
-	};
+		this.task.remove().done(function () {
+			taskdata.remove(this.task);
+			this.dispose();
+		}.bind(this));
+	}.bind(this);
 };
 
 /**
@@ -147,18 +145,17 @@ function CreateTasklistDialog (taskdata) {
  *            taskdata
  */
 CreateTasklistDialog.prototype.initialize = function (taskdata) {
-	var self = this;
 	this.title = ko.observable();
 	this.save = function () {
-		if (self.title()) {
+		if (this.title()) {
 			Tasklists.create({
-				title: self.title()
+				title: this.title()
 			}).done(function (tasklist) {
 				taskdata.tasklists.push(tasklist);
-				self.dispose();
-			});
+				this.dispose();
+			}.bind(this));
 		}
-	};
+	}.bind(this);
 };
 
 /**
@@ -183,7 +180,6 @@ function UpdateTasklistDialog (taskdata, tasklist, event) {
  *            event
  */
 UpdateTasklistDialog.prototype.initialize = function (taskdata, tasklist, event) {
-	var self = this;
 	this.top = event.clientY + 'px';
 	this.tasklist = tasklist;
 	this.colors = (function () {
@@ -197,32 +193,32 @@ UpdateTasklistDialog.prototype.initialize = function (taskdata, tasklist, event)
 
 	this.title = ko.observable(this.tasklist.title());
 	this.saveTitle = function () {
-		if (self.title()) {
-			self.tasklist.update({
-				title: self.title
+		if (this.title()) {
+			this.tasklist.update({
+				title: this.title
 			});
-			self.dispose();
+			this.dispose();
 		}
-	};
+	}.bind(this);
 
 	this.selectedColor = ko.observable(this.tasklist.colorCode());
 	this.selectColor = function (colorCode) {
-		self.selectedColor(colorCode);
-		self.tasklist.updateMetadata({
-			colorCode: self.selectedColor
+		this.selectedColor(colorCode);
+		this.tasklist.updateMetadata({
+			colorCode: this.selectedColor
 		});
-	};
+	}.bind(this);
 
 	this.removeConfirmed = ko.observable(false);
 	this.confirmRemove = function () {
-		self.removeConfirmed(true);
-	};
+		this.removeConfirmed(true);
+	}.bind(this);
 	this.remove = function () {
-		self.tasklist.remove().done(function () {
-			taskdata.remove(self.tasklist);
-			self.dispose();
-		});
-	};
+		this.tasklist.remove().done(function () {
+			taskdata.remove(this.tasklist);
+			this.dispose();
+		}.bind(this));
+	}.bind(this);
 };
 
 /**

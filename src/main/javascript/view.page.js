@@ -44,9 +44,9 @@ AuthorizedPageViewModel.prototype.initialize = function () {
 	// views
 	this.viewMode = ko.observable(location.hash);
 	this.viewModeIs = FunctionUtil.match(this.viewMode);
-	$(window).bind('hashchange', $.proxy(function () {
+	$(window).bind('hashchange', function () {
 		this.viewMode(location.hash);
-	}, this));
+	}.bind(this));
 
 	this.overview = new TasksOverviewViewModel(this.taskdata);
 	this.dailyCalendar = new DailyCalendarViewModel(this.taskdata);
@@ -104,7 +104,7 @@ TryOutPageViewModel.prototype.initialize = function () {
 	this.offline(true);
 
 	// load example data
-	$.getJSON('/tryoutdata.json').done($.proxy(function (response) {
+	$.getJSON('/tryoutdata.json').done(function (response) {
 		var delta = DateUtil.thisWeek() - DateUtil.clearTimePart(new Date(response.baseTime)).getTime();
 
 		var tasklists = response.tasklists.items.map(function (item) {
@@ -128,5 +128,5 @@ TryOutPageViewModel.prototype.initialize = function () {
 			}
 			return task;
 		}));
-	}, this));
+	}.bind(this));
 };
