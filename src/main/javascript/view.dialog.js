@@ -74,7 +74,7 @@ function DialogManager (factoryFunction, factoryArgs) {
 		dialog.close = function () {
 			observableArray.remove(dialog);
 		};
-		dialog.transaction = function (deferred) {
+		dialog.dialogTransaction = function (deferred) {
 			dialog.hide();
 			deferred.done(function () {
 				dialog.close();
@@ -122,7 +122,7 @@ CreateTaskDialog.prototype.initialize = function (taskdata, due) {
 	}.bind(this);
 	this.save = function () {
 		if (this.validate()) {
-			this.transaction(Tasks.create({
+			this.dialogTransaction(Tasks.create({
 				tasklistID: this.selectedTasklist().id(),
 				due: this.due(),
 				title: this.title(),
