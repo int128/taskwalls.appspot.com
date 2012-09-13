@@ -370,7 +370,7 @@
 
 <!-- ko foreach: updateTasklistDialog -->
 <section data-bind="visible: visible, escKeydown: close">
-<div data-bind="style: {top: top}" class="update-tasklist dialog">
+<div class="update-tasklist dialog">
 	<form data-bind="submit: saveTitle">
 	<input data-bind="value: title" type="text" placeholder="タスクリストの名前" />
 	</form>
@@ -395,7 +395,7 @@
 
 <!-- ko foreach: createTaskDialog -->
 <section data-bind="visible: visible, escKeydown: close">
-<div data-bind="style: {top: top}" class="create-task dialog">
+<div class="create-task dialog">
 	<h3>新しいタスク</h3>
 	<p data-bind="with: due" class="due">
 	<span data-bind="text: getFullYear()"></span>年
@@ -406,12 +406,12 @@
 	<form data-bind="submit: save">
 	<div><input data-bind="value: title, hasfocus: titleFocus" type="text" placeholder="タスクの件名" /></div>
 	<div><textarea data-bind="value: notes" placeholder="備考"></textarea></div>
-	<div data-bind="foreach: tasklists" class="tasklists">
-	<a data-bind="text: title,
-		attr: {'data-tasklistcolor': colorCode},
-		css: {selected: $data == $parent.selectedTasklist()},
-		click: $parent.selectTasklist"
-		href="#" class="tasklist"></a>
+	<div data-bind="foreach: tasklists" class="tasklist-selection">
+		<a data-bind="text: title,
+			attr: {'data-tasklistcolor': colorCode},
+			css: {selected: $data == $parent.selectedTasklist()},
+			click: $parent.selectTasklist"
+			href="#" class="tasklist"></a>
 	</div>
 	<button type="submit" class="btn">タスクを作成</button>
 	</form>
@@ -422,7 +422,7 @@
 
 <!-- ko foreach: updateTaskDialog -->
 <section data-bind="visible: visible, escKeydown: close">
-<div data-bind="style: {top: top}" class="update-task dialog">
+<div class="update-task dialog">
 	<!-- ko ifnot: isCompleted -->
 	<div><a data-bind="click: saveStatusAs('completed')" href="#" class="btn">
 		<i class="icon-ok"></i> タスクを完了に変更</a></div>
@@ -456,15 +456,15 @@
 	<!-- /ko -->
 
 	<form data-bind="submit: move">
-	<div data-bind="foreach: tasklists" class="tasklists">
-	<a data-bind="text: title,
-		attr: {'data-tasklistcolor': colorCode},
-		css: {selected: $data == $parent.selectedTasklist()},
-		click: $parent.selectTasklist"
-		href="#" class="tasklist"></a>
+	<div data-bind="foreach: tasklists" class="tasklist-selection">
+		<a data-bind="text: title,
+			attr: {'data-tasklistcolor': colorCode},
+			css: {selected: $data == $parent.selectedTasklist()},
+			click: $parent.selectTasklist"
+			href="#" class="tasklist"></a>
 	</div>
 	<button data-bind="disable: selectedTasklist() == originalTasklist()" type="submit" class="btn">
-	別のタスクリストに移動
+		別のタスクリストに移動
 	</button>
 	</form>
 	<hr/>
