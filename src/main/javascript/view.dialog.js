@@ -122,15 +122,16 @@ CreateTaskDialog.prototype.initialize = function (taskdata, due) {
 	}.bind(this);
 	this.save = function () {
 		if (this.validate()) {
-			this.dialogTransaction(Tasks.create({
-				tasklistID: this.selectedTasklist().id(),
-				due: this.due(),
-				title: this.title(),
-				notes: this.notes()
-			}).done(function (task) {
-				task.tasklist(this.selectedTasklist());
-				taskdata.tasks.push(task);
-			}.bind(this)));
+			this.dialogTransaction(
+					Tasks.create({
+						tasklistID: this.selectedTasklist().id(),
+						due: this.due(),
+						title: this.title(),
+						notes: this.notes()
+					}).done(function (task) {
+						task.tasklist(this.selectedTasklist());
+						taskdata.tasks.push(task);
+					}.bind(this)));
 		}
 	}.bind(this);
 };
@@ -158,11 +159,10 @@ UpdateTaskDialog.prototype.initialize = function (taskdata, task) {
 	this.completed = this.task.completed();
 	this.isCompleted = this.task.isCompleted();
 	this.saveStatus = function (status) {
-		task.update({
-			status: status
-		}).done(function () {
-			this.dispose();
-		}.bind(this));
+		this.dialogTransaction(
+				task.update({
+					status: status
+				}));
 	};
 	this.saveStatusAs = function (status) {
 		return this.saveStatus.bind(this, status);
@@ -173,13 +173,12 @@ UpdateTaskDialog.prototype.initialize = function (taskdata, task) {
 	this.notes = ko.observable(this.task.notes());
 	this.save = function () {
 		if (this.title()) {
-			task.update({
-				due: this.due(),
-				title: this.title(),
-				notes: this.notes()
-			}).done(function () {
-				this.dispose();
-			}.bind(this));
+			this.dialogTransaction(
+					task.update({
+						due: this.due(),
+						title: this.title(),
+						notes: this.notes()
+					}));
 		}
 	}.bind(this);
 
@@ -190,9 +189,8 @@ UpdateTaskDialog.prototype.initialize = function (taskdata, task) {
 		this.selectedTasklist(tasklist);
 	}.bind(this);
 	this.move = function () {
-		this.task.move(this.selectedTasklist()).done(function () {
-			this.dispose();
-		}.bind(this));
+		this.dialogTransaction(
+				this.task.move(this.selectedTasklist()));
 	}.bind(this);
 
 	this.removeConfirmed = ko.observable(false);
@@ -200,10 +198,10 @@ UpdateTaskDialog.prototype.initialize = function (taskdata, task) {
 		this.removeConfirmed(true);
 	}.bind(this);
 	this.remove = function () {
-		this.task.remove().done(function () {
-			taskdata.remove(this.task);
-			this.dispose();
-		}.bind(this));
+		this.dialogTransaction(
+				this.task.remove().done(function () {
+					taskdata.remove(this.task);
+				}.bind(this)));
 	}.bind(this);
 };
 
@@ -226,12 +224,12 @@ CreateTasklistDialog.prototype.initialize = function (taskdata) {
 	this.title = ko.observable();
 	this.save = function () {
 		if (this.title()) {
-			Tasklists.create({
-				title: this.title()
-			}).done(function (tasklist) {
-				taskdata.tasklists.push(tasklist);
-				this.dispose();
-			}.bind(this));
+			this.dialogTransaction(
+					Tasklists.create({
+						title: this.title()
+					}).done(function (tasklist) {
+						taskdata.tasklists.push(tasklist);
+					}));
 		}
 	}.bind(this);
 };
@@ -267,19 +265,20 @@ UpdateTasklistDialog.prototype.initialize = function (taskdata, tasklist) {
 	this.title = ko.observable(this.tasklist.title());
 	this.saveTitle = function () {
 		if (this.title()) {
-			this.tasklist.update({
-				title: this.title
-			});
-			this.dispose();
+			this.dialogTransaction(
+					this.tasklist.update({
+						title: this.title
+					}));
 		}
 	}.bind(this);
 
 	this.selectedColor = ko.observable(this.tasklist.colorCode());
 	this.selectColor = function (colorCode) {
 		this.selectedColor(colorCode);
-		this.tasklist.updateMetadata({
-			colorCode: this.selectedColor
-		});
+		this.dialogTransaction(
+				this.tasklist.updateMetadata({
+					colorCode: this.selectedColor
+				}));
 	}.bind(this);
 
 	this.removeConfirmed = ko.observable(false);
@@ -287,9 +286,9 @@ UpdateTasklistDialog.prototype.initialize = function (taskdata, tasklist) {
 		this.removeConfirmed(true);
 	}.bind(this);
 	this.remove = function () {
-		this.tasklist.remove().done(function () {
-			taskdata.remove(this.tasklist);
-			this.dispose();
-		}.bind(this));
+		this.dialogTransaction(
+				this.tasklist.remove().done(function () {
+					taskdata.remove(this.tasklist);
+				}.bind(this)));
 	}.bind(this);
 };
