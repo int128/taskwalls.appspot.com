@@ -99,11 +99,11 @@
 		<!-- ko foreach: tasklists -->
 		<li><a data-bind="text: title,
 			attr: {'data-tasklistcolor': colorCode},
-			click: $root.updateTasklistDialog.create"
+			click: $root.updateTasklistDialog.open"
 			class="tasklist" href="#"></a></li>
 		<!-- /ko -->
 		<li class="divider"></li>
-		<li><a data-bind="click: createTasklistDialog.create" href="#">新しいタスクリスト</a></li>
+		<li><a data-bind="click: createTasklistDialog.open" href="#">新しいタスクリスト</a></li>
 	</ul>
 	</li>
 	<li class="dropdown">
@@ -198,7 +198,7 @@
 		</div>
 		</div>
 		<div class="create">
-		<a data-bind="click: $root.createTaskDialog.create"
+		<a data-bind="click: $root.createTaskDialog.open"
 			href="#" class="showtooltip"
 			title="新しいタスクを作成する"></a>
 		</div>
@@ -232,7 +232,7 @@
 		</div>
 		</div>
 		<div class="create">
-		<a data-bind="click: $root.createTaskDialog.create"
+		<a data-bind="click: $root.createTaskDialog.open"
 			href="#" class="showtooltip"
 			title="新しいタスクを作成する"></a>
 		</div>
@@ -266,7 +266,7 @@
 		</div>
 		</div>
 		<div class="create">
-		<a data-bind="click: $root.createTaskDialog.create"
+		<a data-bind="click: $root.createTaskDialog.open"
 			href="#" class="showtooltip"
 			title="新しいタスクを作成する"></a>
 		</div>
@@ -300,7 +300,7 @@
 		context: $data
 	}"
 	class="icebox">
-	<a data-bind="click: $root.createTaskDialog.create"
+	<a data-bind="click: $root.createTaskDialog.open"
 		href="#" class="create showtooltip" data-placement="left"
 		title="新しいタスクを作成する"></a>
 	<h3>未計画のタスク</h3>
@@ -337,7 +337,7 @@
 
 <script type="text/html" id="task-template">
 <div data-bind="draggableByClone: {},
-	click: $root.updateTaskDialog.create,
+	click: $root.updateTaskDialog.open,
 	event: {dropped: dropped},
 	attr: {
 		'data-status': status,
@@ -355,23 +355,23 @@
 </div>
 </script>
 
-<section class="dialogs">
-<!-- ko if: createTasklistDialog -->
-<!-- ko with: createTasklistDialog -->
-<form data-bind="submit: save, escKeydown: dispose">
-	<div class="create-tasklist dialog">
+<!-- ko foreach: createTasklistDialog -->
+<section data-bind="visible: visible, escKeydown: close">
+<div class="create-tasklist dialog">
+	<h3>新しいタスクリスト</h3>
+	<form data-bind="submit: save">
 	<div><input data-bind="value: title, hasfocus: true" type="text" placeholder="タスクリストの名前" /></div>
-	<div><button type="submit" class="btn">タスクリストを作成</button></div>
-	</div>
-</form>
-<div data-bind="click: dispose" class="dialog-background"></div>
-<!-- /ko -->
+	<div><button type="submit" class="btn btn-primary">タスクリストを作成</button></div>
+	</form>
+</div>
+<div data-bind="click: close" class="dialog-background"></div>
+</section>
 <!-- /ko -->
 
-<!-- ko if: updateTasklistDialog -->
-<!-- ko with: updateTasklistDialog -->
-<div data-bind="style: {top: top}" class="update-tasklist dialog">
-	<form data-bind="submit: saveTitle, escKeydown: dispose">
+<!-- ko foreach: updateTasklistDialog -->
+<section data-bind="visible: visible, escKeydown: close">
+<div class="update-tasklist dialog">
+	<form data-bind="submit: saveTitle">
 	<input data-bind="value: title" type="text" placeholder="タスクリストの名前" />
 	</form>
 
@@ -389,38 +389,60 @@
 	<button data-bind="click: remove" class="btn btn-danger">タスクリストを削除する</button>
 	</div>
 </div>
-<div data-bind="click: dispose" class="dialog-background"></div>
-<!-- /ko -->
+<div data-bind="click: close" class="dialog-background"></div>
+</section>
 <!-- /ko -->
 
-<!-- ko if: createTaskDialog -->
-<!-- ko with: createTaskDialog -->
-<form data-bind="submit: save, escKeydown: dispose">
-<div data-bind="style: {top: top}" class="create-task dialog">
-	<div data-bind="with: due" class="due">
+<!-- ko foreach: createTaskDialog -->
+<section data-bind="visible: visible, escKeydown: close">
+<div class="create-task dialog">
+	<h3>新しいタスク</h3>
+	<p data-bind="with: due" class="due">
 	<span data-bind="text: getFullYear()"></span>年
 	<span data-bind="text: getMonth()+1"></span>月
 	<span data-bind="text: getDate()"></span>日
-	</div>
+	</p>
+
+	<form data-bind="submit: save">
 	<div><input data-bind="value: title, hasfocus: titleFocus" type="text" placeholder="タスクの件名" /></div>
 	<div><textarea data-bind="value: notes" placeholder="備考"></textarea></div>
-	<div data-bind="foreach: tasklists" class="tasklists">
-	<a data-bind="text: title,
-		attr: {'data-tasklistcolor': colorCode},
-		css: {selected: $data == $parent.selectedTasklist()},
-		click: $parent.selectTasklist"
-		href="#" class="tasklist"></a>
+	<div data-bind="foreach: tasklists" class="tasklist-selection">
+		<a data-bind="text: title,
+			attr: {'data-tasklistcolor': colorCode},
+			css: {selected: $data == $parent.selectedTasklist()},
+			click: $parent.selectTasklist"
+			href="#" class="tasklist"></a>
 	</div>
-	<button type="submit" class="btn">タスクを作成</button>
-	</div>
-</form>
-<div data-bind="click: dispose" class="dialog-background"></div>
-<!-- /ko -->
+	<button type="submit" class="btn btn-primary">タスクを作成</button>
+	</form>
+</div>
+<div data-bind="click: close" class="dialog-background"></div>
+</section>
 <!-- /ko -->
 
-<!-- ko if: updateTaskDialog -->
-<!-- ko with: updateTaskDialog -->
-<div data-bind="style: {top: top}" class="update-task dialog">
+<!-- ko foreach: updateTaskDialog -->
+<section data-bind="visible: visible, escKeydown: close">
+<div class="update-task dialog">
+	<form data-bind="submit: save">
+	<p data-bind="with: due" class="due">
+	<span data-bind="text: getFullYear()"></span>年
+	<span data-bind="text: getMonth()+1"></span>月
+	<span data-bind="text: getDate()"></span>日
+	<a data-bind="click: $.noop" href="#">期限を変更...</a>
+	</p>
+	<div><input data-bind="value: title, hasfocus: true" type="text" placeholder="タスクの件名" /></div>
+	<div><textarea data-bind="value: notes" placeholder="備考"></textarea></div>
+	<div class="datepicker"><!-- TODO: bind this --></div>
+	<button type="submit" class="btn btn-primary">タスクを更新</button>
+	</form>
+	<hr/>
+
+	<!-- ko ifnot: isCompleted -->
+	<div><a data-bind="click: saveStatusAs('completed')" href="#" class="btn">
+		<i class="icon-ok"></i> タスクを完了にする</a></div>
+	<hr/>
+	<!-- /ko -->
+
 	<!-- ko if: isCompleted -->
 	<p><i class="icon-ok"></i> このタスクは
 		<span data-bind="with: completed">
@@ -428,38 +450,21 @@
 		<span data-bind="text: getMonth()+1"></span>月
 		<span data-bind="text: getDate()"></span>日
 		</span>
-	に完了しています</p>
+	に完了しました</p>
 	<div><a data-bind="click: saveStatusAs('needsAction')" href="#" class="btn">未完了に戻す</a></div>
-	<!-- /ko -->
-	<!-- ko ifnot: isCompleted -->
-	<div><a data-bind="click: saveStatusAs('completed')" href="#" class="btn">完了に変更</a></div>
-	<!-- /ko -->
 	<hr/>
+	<!-- /ko -->
 
-	<form data-bind="submit: save, escKeydown: dispose">
-	<div><input data-bind="value: title, hasfocus: true" type="text" placeholder="タスクの件名" /></div>
-	<div><textarea data-bind="value: notes" placeholder="備考"></textarea></div>
-	<div data-bind="with: due" class="due">
-	<span data-bind="text: getFullYear()"></span>年
-	<span data-bind="text: getMonth()+1"></span>月
-	<span data-bind="text: getDate()"></span>日
-	<a data-bind="click: $.noop" href="#">期限を変更する...</a>
-	</div>
-	<div class="datepicker"><!-- TODO: bind this --></div>
-	<button type="submit" class="btn">タスクを更新</button>
-	</form>
-	<hr/>
-
-	<form data-bind="submit: move, escKeydown: dispose">
-	<div data-bind="foreach: tasklists" class="tasklists">
-	<a data-bind="text: title,
-		attr: {'data-tasklistcolor': colorCode},
-		css: {selected: $data == $parent.selectedTasklist()},
-		click: $parent.selectTasklist"
-		href="#" class="tasklist"></a>
+	<form data-bind="submit: move">
+	<div data-bind="foreach: tasklists" class="tasklist-selection">
+		<a data-bind="text: title,
+			attr: {'data-tasklistcolor': colorCode},
+			css: {selected: $data == $parent.selectedTasklist()},
+			click: $parent.selectTasklist"
+			href="#" class="tasklist"></a>
 	</div>
 	<button data-bind="disable: selectedTasklist() == originalTasklist()" type="submit" class="btn">
-	別のタスクリストに移動
+		別のタスクリストに移動
 	</button>
 	</form>
 	<hr/>
@@ -471,11 +476,10 @@
 	<button data-bind="click: remove" class="btn btn-danger">タスクを削除する</button>
 	<!-- /ko -->
 </div>
-<div data-bind="click: dispose" class="dialog-background"></div>
-<!-- /ko -->
+<div data-bind="click: close" class="dialog-background"></div>
+</section>
 <!-- /ko -->
 
-</section>
 </article>
 
 <div id="resources" style="display: none;">
