@@ -45,7 +45,7 @@ TasksOverviewViewModel.Completed.prototype.initialize = function (tasksInThisWee
  * @param {Task}
  *            task dropped task
  */
-TasksOverviewViewModel.Completed.prototype.dropped = function (task) {
+TasksOverviewViewModel.Completed.prototype.drop = function (task) {
 	TaskService.update(task, {
 		status: 'completed'
 	});
@@ -73,7 +73,7 @@ TasksOverviewViewModel.NeedsAction.prototype.initialize = function (tasksInThisW
  * @param {Task}
  *            task dropped task
  */
-TasksOverviewViewModel.NeedsAction.prototype.dropped = function (task) {
+TasksOverviewViewModel.NeedsAction.prototype.drop = function (task) {
 	TaskService.update(task, {
 		status: 'needsAction'
 	});
@@ -122,7 +122,7 @@ CalendarRow.prototype.getDayForNewTask = function () {
  * @param {Task}
  *            task dropped task
  */
-CalendarRow.prototype.dropped = function (task) {
+CalendarRow.prototype.drop = function (task) {
 	TaskService.update(task, {
 		due: this.day
 	});
@@ -285,7 +285,7 @@ IceboxTasksViewModel.prototype.getDayForNewTask = function () {
  * @param {Task}
  *            task dropped task
  */
-IceboxTasksViewModel.prototype.dropped = function (task) {
+IceboxTasksViewModel.prototype.drop = function (task) {
 	TaskService.update(task, {
 		due: null
 	});
@@ -307,25 +307,5 @@ function PastTasksViewModel (taskdata) {
 PastTasksViewModel.prototype.initialize = function (taskdata) {
 	this.tasklists = ko.computed(function () {
 		return Tasks.groupByTasklist(taskdata.tasks().filter(TaskFilters.dueBefore(DateUtil.thisWeek())));
-	});
-};
-
-/**
- * Dropped.
- * 
- * @param {Task}
- *            task
- * @param {Event}
- *            e
- * @param {Object}
- *            viewModel target view model
- */
-Task.prototype.dropped = function (task, e, viewModel) {
-	// execute asynchronously to prevent exception:
-	// TypeError: Cannot read property 'options' of undefined
-	window.setTimeout(function () {
-		if ($.isFunction(viewModel.dropped)) {
-			viewModel.dropped(task);
-		}
 	});
 };

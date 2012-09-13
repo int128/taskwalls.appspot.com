@@ -152,8 +152,8 @@
 	<div data-bind="with: needsAction" class="span5">
 		<h3>実施中のタスク <span data-bind="text: tasks().length" class="badge"></span></h3>
 		<div data-bind="droppable: {
-				accept: '.task',
-				hoverClass: 'dropping'
+				acceptableKind: 'task',
+				drop: drop
 			}">
 		<div data-bind="foreach: tasklists">
 			<div class="tasklist">
@@ -167,8 +167,8 @@
 	<div data-bind="with: completed" class="span5">
 		<h3>完了したタスク <span data-bind="text: tasks().length" class="badge"></span></h3>
 		<div data-bind="droppable: {
-				accept: '.task',
-				hoverClass: 'dropping'
+				acceptableKind: 'task',
+				drop: drop
 			}">
 		<div data-bind="foreach: tasklists">
 			<div class="tasklist">
@@ -193,13 +193,14 @@
 	<table class="calendar">
 	<tbody data-bind="foreach: rows">
 	<tr data-bind="droppable: {
-			accept: '.task',
-			hoverClass: 'dropping'
+			acceptableKind: 'task',
+			drop: drop
 		},
 		css: {
 			past: past,
 			thisweek: thisweek
-		}, attr: {
+		},
+		attr: {
 			'data-day': day.getDate(),
 			'data-weekday': day.getDay()
 		}">
@@ -231,8 +232,8 @@
 	<table class="calendar">
 	<tbody data-bind="foreach: rows">
 	<tr data-bind="droppable: {
-			accept: '.task',
-			hoverClass: 'dropping'
+			acceptableKind: 'task',
+			drop: drop
 		},
 		css: {
 			thisweek: thisweek
@@ -265,8 +266,8 @@
 	<table class="calendar">
 	<tbody data-bind="foreach: rows">
 	<tr data-bind="droppable: {
-			accept: '.task',
-			hoverClass: 'dropping'
+			acceptableKind: 'task',
+			drop: drop
 		},
 		css: {
 			thisweek: thisweek
@@ -310,9 +311,8 @@
 <!-- ko if: viewModeIs('#daily', '#weekly', '#monthly') -->
 <!-- ko with: iceboxTasks -->
 <section data-bind="droppable: {
-		accept: '.task',
-		hoverClass: 'dropping',
-		context: $data
+		acceptableKind: 'task',
+		drop: drop
 	}"
 	class="icebox">
 	<a data-bind="click: $root.createTaskDialog.open"
@@ -402,9 +402,10 @@
 </script>
 
 <script type="text/html" id="task-template">
-<div data-bind="draggableByClone: {},
-	click: $root.updateTaskDialog.open,
-	event: {dropped: dropped},
+<div data-bind="click: $root.updateTaskDialog.open,
+	draggable: {
+		kind: 'task'
+	},
 	attr: {
 		'data-status': status,
 		'data-tasklistcolor': tasklist().colorCode
@@ -412,6 +413,7 @@
 	css: {
 		past: past
 	}"
+	draggable="true"
 	class="task">
 <!-- ko if: isCompleted -->
 <i class="icon-ok"/>

@@ -1,7 +1,10 @@
 /**
- * Drag and drop binding.
+ * HTML5 native drag binding.
+ * <ul>
+ * <li>Specify <code>kind</code>.</li>
+ * </ul>
  */
-ko.bindingHandlers.draggableByClone = {
+ko.bindingHandlers.draggable = {
 	/**
 	 * Initialize binding.
 	 * 
@@ -13,27 +16,29 @@ ko.bindingHandlers.draggableByClone = {
 	 * @returns
 	 */
 	init: function (element, valueAccessor, allBindingsAccessor, viewModel) {
-		var $element = $(element), options = ko.utils.unwrapObservable(valueAccessor());
-		$element.draggable($.extend({
-			addClasses: false,
-			helper: 'clone',
-			appendTo: 'body',
-			start: function (e, ui) {
-				// hide original element
-				$(this).css('visibility', 'hidden');
-			},
-			stop: function (e, ui) {
-				// restore original element
-				$(this).css('visibility', 'visible');
-			}
-		}, options));
-	}
+		var $element = $(element);
+		var options = ko.utils.unwrapObservable(valueAccessor());
+		var events = ko.bindingHandlers.draggable.events;
+		$element.on('dragstart', events.dragstart.bind(element, options, viewModel));
+	},
+	events: {
+		dragstart: function (options, viewModel, event) {
+			event.originalEvent.dataTransfer.effectAllowed = 'move';
+			event.originalEvent.dataTransfer.setData('text/x-drag-kind', options.kind);
+			ko.bindingHandlers.draggable.sourceViewModel = viewModel;
+		}
+	},
+	sourceViewModel: undefined
 };
 
 /**
- * Droppable binding. <code>
- * droppable: {context: hoge, hoverClass: 'dropping'}
- * </code>
+ * HTML5 native drop binding.
+ * <ul>
+ * <li>Specify <code>acceptableKind</code> to accept sources.</li>
+ * <li>Specify a function as <code>drop</code> to handle events.</li>
+ * <li>CSS class <code>dropover</code> is added while dropped over.</li>
+ * <li></li>
+ * </ul>
  */
 ko.bindingHandlers.droppable = {
 	/**
@@ -49,18 +54,35 @@ ko.bindingHandlers.droppable = {
 	init: function (element, valueAccessor, allBindingsAccessor, viewModel) {
 		var $element = $(element);
 		var options = ko.utils.unwrapObservable(valueAccessor());
-		var context = options.context; // pass to draggable event handler
-		if (context === undefined) {
-			context = viewModel;
-		}
-		delete options.context;
-		$element.droppable($.extend({
-			addClasses: false,
-			tolerance: 'pointer',
-			drop: function (e, ui) {
-				ui.draggable.trigger('dropped', [ context ]);
+		var events = ko.bindingHandlers.droppable.events;
+		$element.on('dragover', events.dragover);
+		$element.on('dragenter', events.dragenter);
+		$element.on('dragleave', events.dragleave);
+		//$element.on('dragend', events.dragend);
+		$element.on('drop', events.drop.bind(element, options, viewModel));
+	},
+	events: {
+		dragover: function (event) {
+			event.originalEvent.dataTransfer.dropEffect = 'move';
+			event.originalEvent.preventDefault();
+			return false;
+		},
+		dragenter: function (event) {
+			$(this).addClass('dropover');
+		},
+		dragleave: function () {
+			$(this).removeClass('dropover');
+		},
+		drop: function (options, viewModel, event) {
+			$(this).removeClass('dropover');
+			var kind = event.originalEvent.dataTransfer.getData('text/x-drag-kind');
+			if (kind == options.acceptableKind) {
+				options.drop.call(viewModel, ko.bindingHandlers.draggable.sourceViewModel, event);
+				ko.bindingHandlers.draggable.sourceViewModel = undefined;
 			}
-		}, options));
+			event.originalEvent.stopPropagation();
+			return false;
+		}
 	}
 };
 
