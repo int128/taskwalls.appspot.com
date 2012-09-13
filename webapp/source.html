@@ -84,7 +84,7 @@
 <div class="container">
 	<a class="brand" href="/">Task Wall</a>
 	<ul class="nav nav-tabs">
-	<li data-bind="css: {active: viewModeIs('')}"><a href="">概況</a></li>
+	<li data-bind="css: {active: viewModeIs('', '#overview')}"><a href="#overview">概況</a></li>
 	<li data-bind="css: {active: viewModeIs('#daily')}"><a href="#daily">今週の計画</a></li>
 	<li data-bind="css: {active: viewModeIs('#weekly')}"><a href="#weekly">
 		<span data-bind="text: today().getMonth()+1"></span>月の計画</a></li>
@@ -119,7 +119,7 @@
 </div>
 </div>
 
-<!-- ko if: viewModeIs('') -->
+<!-- ko if: viewModeIs('', '#overview') -->
 <!-- ko with: overview -->
 <section class="overview board nav-tabs-content container">
 	<div data-bind="template: {name: 'expired-tasks-template'}"></div>
