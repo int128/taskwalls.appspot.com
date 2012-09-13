@@ -71,7 +71,7 @@ OAuth2Controller.setUpAjaxSession = function (sessionId) {
 	$(document).ajaxSend(function (event, xhr) {
 		xhr.setRequestHeader('X-TaskWall-Session', sessionId);
 	});
-	$(document).ajaxError(function (event, xhr) {
+	$(document).ajaxError(function (event, xhr, e) {
 		if (xhr.status == 403) {
 			// session has been expired
 			location.replace(OAuth2Controller.getAuthorizationURL());
