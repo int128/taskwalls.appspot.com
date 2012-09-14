@@ -197,18 +197,18 @@ Tasklist.prototype.update = function (data) {
 };
 
 /**
- * Save and update myself if succeeded.
+ * Save extension data of the task list.
  * 
  * @param {Object}
  *            data
  * @returns {Deferred}
  */
-Tasklist.prototype.updateMetadata = function (data) {
+Tasklist.prototype.updateExtension = function (data) {
 	if (!taskwalls.settings.offline()) {
 		var request = $.extend({
 			id: this.id()
 		}, data);
-		return $.post('/tasklists/options/update', request).done(function () {
+		return $.post('/tasklists/extension/update', request).done(function () {
 			ko.extendObservables(this, data);
 		}.bind(this)).fail(function () {
 			// FIXME: view model should do this

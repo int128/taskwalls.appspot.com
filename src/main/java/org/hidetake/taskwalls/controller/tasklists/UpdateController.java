@@ -1,7 +1,7 @@
 package org.hidetake.taskwalls.controller.tasklists;
 
 import org.hidetake.taskwalls.controller.ControllerBase;
-import org.hidetake.taskwalls.model.TasklistOptions;
+import org.hidetake.taskwalls.service.TasklistExtensionService;
 import org.slim3.controller.validator.Validators;
 
 import com.google.api.client.json.GenericJson;
@@ -31,7 +31,7 @@ public class UpdateController extends ControllerBase {
 		Patch patch = tasksService.tasklists().patch(asString("id"), taskList);
 		TaskList patched = patch.execute();
 
-		TasklistOptions.mergeTo(patched);
+		TasklistExtensionService.extend(patched);
 		return patched;
 	}
 
