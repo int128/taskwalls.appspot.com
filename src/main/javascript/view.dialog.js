@@ -253,32 +253,15 @@ UpdateTasklistDialog.factory = function (taskdata, tasklistViewModel, event) {
  */
 UpdateTasklistDialog.prototype.initialize = function (taskdata, tasklist) {
 	this.tasklist = tasklist;
-	this.colors = (function () {
-		// generate color code array
-		var a = [];
-		for (var i = 0; i < taskwalls.settings.tasklistColors; i++) {
-			a[i] = i;
-		}
-		return a;
-	})();
 
 	this.title = ko.observable(this.tasklist.title());
-	this.saveTitle = function () {
+	this.save = function () {
 		if (this.title()) {
 			this.dialogTransaction(
 					this.tasklist.update({
 						title: this.title
 					}));
 		}
-	}.bind(this);
-
-	this.selectedColor = ko.observable(this.tasklist.colorCode());
-	this.selectColor = function (colorCode) {
-		this.selectedColor(colorCode);
-		this.dialogTransaction(
-				this.tasklist.updateExtension({
-					colorCode: this.selectedColor
-				}));
 	}.bind(this);
 
 	this.removeConfirmed = ko.observable(false);

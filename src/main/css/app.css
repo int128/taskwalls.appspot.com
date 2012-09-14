@@ -72,7 +72,7 @@ form {
 /*
  * Board.
  */
-.board:not(.container) .expired {
+.board:not(.container) .alert {
 	margin-left: 60px;
 	margin-right: 60px;
 }
@@ -107,92 +107,42 @@ table.calendar {
 	width: 100%;
 }
 
-.calendar tr:FIRST-CHILD>td.border {
+.calendar tr.past {
+	background-color: #eee;
+}
+
+.calendar tr:FIRST-CHILD td,
+.calendar tr:FIRST-CHILD th {
 	/* hide border to fit with tabs */
 	border-top: none;
 }
 
-.calendar td.border {
+.calendar tr td,
+.calendar tr th {
 	border-top: solid 1px #ccc;
 }
 
-.calendar td.month {
-	width: 30px;
-}
-
-.calendar td.weekday {
-	width: 30px;
-	text-align: center;
-	color: dimgray;
-	text-shadow: #ccc 1px 1px 1px;
-}
-
-.calendar td.day {
-	width: 30px;
-	text-align: center;
-	font-size: 130%;
-	text-shadow: #ccc 1px 1px 1px;
-}
-
-.calendar td.tasks {
+.calendar tr td.tasks {
 	width: auto;
 	padding-left: 20px;
 	border-left: solid 1px #888;
 }
 
-.calendar td.tasks .tasklist {
+.calendar tr.thisweek td.tasks {
+	border-left: solid 1px #f00;
+}
+
+.calendar tr td.tasks .tasklist {
 	/* fix box-shadow for IE */
 	border-collapse: separate;
 }
 
-/* first day of month, first row */
-.calendar tr[data-day="1"]>td.month>div,
-.calendar tr:FIRST-CHILD>td.month>div {
-	display: block;
-	text-shadow: #ccc 1px 1px 1px;
-}
-
-.calendar td.month>div>span:FIRST-CHILD {
-	font-size: 130%;
-}
-
-.calendar td.month>div {
-	display: none;
-}
-
-/* Sunday */
-.calendar tr[data-weekday="0"]>td.weekday,
-.calendar tr[data-weekday="0"]>td.day {
-	color: #f00;
-}
-
-.calendar tr[data-weekday="0"]>td {
-	border-bottom: solid 1px #888;
-}
-
-/* Saturday */
-.calendar tr[data-weekday="6"]>td.weekday,
-.calendar tr[data-weekday="6"]>td.day {
-	color: #11d;
-}
-
-/* rows in this week */
-.calendar tr.thisweek>td.tasks {
-	border-left: solid 1px #f00;
-}
-
-/* past rows */
-.calendar tr.past {
-	background-color: #eee;
-}
-
-/* buttons */
-.calendar td.tasks .create {
+.calendar tr td.tasks .create {
 	float: right;
 	margin: 10px;
 }
 
-.calendar td.tasks .create a {
+.calendar tr td.tasks .create a {
 	display: inline-block;
 	background: url('/img/plus24.png') no-repeat center;
 	width: 24px;
@@ -200,19 +150,63 @@ table.calendar {
 	opacity: 0.3;
 }
 
-.calendar td.tasks .create a:HOVER {
+.calendar tr td.tasks .create a:HOVER {
 	opacity: 1.0;
 }
 
 /*
- * Calendar misc.
+ * Calendar specific styles.
  */
-.cache-status {
-	position: fixed;
-	bottom: 0;
-	left: 0;
-	z-index: 100;
+.daily .calendar tr td.month {
+	width: 40px;
+	text-align: center;
+	border-top: none;
+}
+
+.daily .calendar tr td.weekday {
+	width: 40px;
+	text-align: center;
 	color: dimgray;
+	text-shadow: #ccc 1px 1px 1px;
+}
+
+.daily .calendar tr td.day {
+	width: 30px;
+	text-align: center;
+	font-size: 130%;
+	text-shadow: #ccc 1px 1px 1px;
+}
+
+.daily .calendar tr[data-weekday="0"] td.weekday, /* Sunday */
+.daily .calendar tr[data-weekday="0"] td.day {
+	color: #f00;
+}
+
+.daily .calendar tr[data-weekday="0"] td {  /* Sunday */
+	border-bottom: solid 1px #888;
+}
+
+.daily .calendar tr[data-weekday="6"] td.weekday, /* Saturday */
+.daily .calendar tr[data-weekday="6"] td.day {
+	color: #11d;
+}
+
+.daily .calendar tr td.month div {
+	display: none;
+}
+
+.daily .calendar tr[data-day="1"] td.month div, /* first day of month */
+.daily .calendar tr:FIRST-CHILD td.month div { /* first row */
+	display: block;
+	text-shadow: #ccc 1px 1px 1px;
+}
+
+.weekly .calendar tr th.week {
+	width: 100px;
+}
+
+.monthly .calendar tr th.month {
+	width: 100px;
 }
 
 /*

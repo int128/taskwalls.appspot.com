@@ -10,9 +10,8 @@ function AuthorizedPageViewModel () {
 AuthorizedPageViewModel.prototype.initialize = function () {
 	this.taskdata = new Taskdata();
 
-	this.tasklists = this.taskdata.tasklists;
-
-	// common date
+	// misc
+	this.settings = taskwalls.settings;
 	this.today = ko.computed(function () {
 		return new Date(DateUtil.today());
 	});
@@ -61,10 +60,12 @@ AuthorizedPageViewModel.prototype.initialize = function () {
 	this.createTasklistDialog = DialogManager(CreateTasklistDialog.factory, this.taskdata);
 	this.updateTasklistDialog = DialogManager(UpdateTasklistDialog.factory, this.taskdata);
 
-	// settings
-	this.offline = taskwalls.settings.offline;
-	this.lastCached = taskwalls.settings.lastCached;
-	this.development = taskwalls.settings.development;
+	// menus
+	this.tasklists = ko.computed(function () {
+		return this.taskdata.tasklists().map(function (tasklist) {
+			return new TasklistMenuItemViewModel(tasklist);
+		});
+	}, this);
 
 	// session
 	this.logout = function () {
@@ -122,3 +123,39 @@ TryOutPageViewModel.prototype.initialize = function () {
 		}));
 	}.bind(this));
 };
+
+/**
+ * @class item of task lists menu
+ */
+function TasklistMenuItemViewModel () {
+	this.initialize.apply(this, arguments);
+};
+
+/**
+ * @param {Tasklist} tasklist
+ */
+TasklistMenuItemViewModel.prototype.initialize = function (tasklist) {
+	this.tasklist = tasklist;
+	this.colors = this.colorCodeArray.map(function (colorCode) {
+		return {
+			colorCode: colorCode,
+			update: this.updateColor.bind(this, colorCode)
+		};
+	}.bind(this));
+};
+
+TasklistMenuItemViewModel.prototype.updateColor = function (colorCode) {
+	this.tasklist.updateExtension({
+		colorCode: colorCode
+	});
+};
+
+$(function () {
+	TasklistMenuItemViewModel.prototype.colorCodeArray = (function () {
+		var a = [];
+		for (var i = 0; i < taskwalls.settings.tasklistColors; i++) {
+			a[i] = i;
+		}
+		return a;
+	})();
+});
