@@ -12,7 +12,8 @@ AuthorizedPageViewModel.prototype.initialize = function () {
 
 	this.tasklists = this.taskdata.tasklists;
 
-	// common date
+	// misc
+	this.settings = taskwalls.settings;
 	this.today = ko.computed(function () {
 		return new Date(DateUtil.today());
 	});
@@ -60,11 +61,6 @@ AuthorizedPageViewModel.prototype.initialize = function () {
 	this.updateTaskDialog = DialogManager(UpdateTaskDialog.factory, this.taskdata);
 	this.createTasklistDialog = DialogManager(CreateTasklistDialog.factory, this.taskdata);
 	this.updateTasklistDialog = DialogManager(UpdateTasklistDialog.factory, this.taskdata);
-
-	// settings
-	this.offline = taskwalls.settings.offline;
-	this.lastCached = taskwalls.settings.lastCached;
-	this.development = taskwalls.settings.development;
 
 	// session
 	this.logout = function () {
