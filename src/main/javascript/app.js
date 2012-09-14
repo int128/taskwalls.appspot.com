@@ -57,7 +57,8 @@ ko.computed(function () {
 	localStorage['cachedDate'] = taskwalls.settings.lastCached().getTime();
 });
 // is offline mode?
-taskwalls.settings.offline = ko.observable(sessionStorage['offline'] == 'true');
+taskwalls.settings.offline = ko.observable(
+		sessionStorage['offline'] == 'true' || navigator.onLine == false);
 ko.computed(function () {
 	sessionStorage['offline'] = taskwalls.settings.offline();
 });
