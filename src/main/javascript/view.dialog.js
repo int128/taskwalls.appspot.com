@@ -276,7 +276,7 @@ UpdateTasklistDialog.prototype.initialize = function (taskdata, tasklist) {
 	this.selectColor = function (colorCode) {
 		this.selectedColor(colorCode);
 		this.dialogTransaction(
-				this.tasklist.updateMetadata({
+				this.tasklist.updateExtension({
 					colorCode: this.selectedColor
 				}));
 	}.bind(this);
