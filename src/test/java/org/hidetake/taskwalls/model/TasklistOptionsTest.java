@@ -8,7 +8,7 @@ import static org.hamcrest.CoreMatchers.*;
 public class TasklistOptionsTest extends AppEngineTestCase {
 
 	@Test
-	public void createKey() throws Exception {
+	public void test_createKey() throws Exception {
 		assertThat(TasklistOptions.createKey("xxx"), is(notNullValue()));
 	}
 

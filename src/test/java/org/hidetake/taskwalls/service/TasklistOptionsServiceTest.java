@@ -16,7 +16,7 @@ import static org.junit.Assert.*;
 public class TasklistOptionsServiceTest extends AppEngineTestCase {
 
 	@Test
-	public void put() throws Exception {
+	public void test_put_and_get() throws Exception {
 		TasklistOptions tasklistOptions = new TasklistOptions();
 		tasklistOptions.setKey(TasklistOptions.createKey("hogeKey"));
 		tasklistOptions.setColorCode(3);
