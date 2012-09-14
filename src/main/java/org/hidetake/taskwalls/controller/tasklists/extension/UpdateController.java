@@ -1,4 +1,4 @@
-package org.hidetake.taskwalls.controller.tasklists.options;
+package org.hidetake.taskwalls.controller.tasklists.extension;
 
 import org.hidetake.taskwalls.controller.ControllerBase;
 import org.hidetake.taskwalls.meta.TasklistExtensionMeta;

@@ -1,4 +1,4 @@
-package org.hidetake.taskwalls.controller.tasklists.options;
+package org.hidetake.taskwalls.controller.tasklists.extension;
 
 import static org.hamcrest.CoreMatchers.*;
 import static org.hidetake.taskwalls.controller.RequestTestUtil.*;
@@ -7,6 +7,7 @@ import static org.junit.Assert.*;
 import javax.servlet.http.HttpServletResponse;
 
 import org.hidetake.taskwalls.Constants;
+import org.hidetake.taskwalls.controller.tasklists.extension.UpdateController;
 import org.hidetake.taskwalls.meta.TasklistExtensionMeta;
 import org.hidetake.taskwalls.model.TasklistExtension;
 import org.junit.Test;

@@ -208,7 +208,7 @@ Tasklist.prototype.updateMetadata = function (data) {
 		var request = $.extend({
 			id: this.id()
 		}, data);
-		return $.post('/tasklists/options/update', request).done(function () {
+		return $.post('/tasklists/extension/update', request).done(function () {
 			ko.extendObservables(this, data);
 		}.bind(this)).fail(function () {
 			// FIXME: view model should do this
