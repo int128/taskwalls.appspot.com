@@ -87,13 +87,25 @@
 	<a href="#" class="dropdown-toggle" data-toggle="dropdown">タスクリスト <b class="caret"></b></a>
 	<ul class="dropdown-menu">
 		<!-- ko foreach: tasklists -->
-		<li><a data-bind="text: title,
-			attr: {'data-tasklistcolor': colorCode},
-			click: $root.updateTasklistDialog.open"
-			class="tasklist" href="#"></a></li>
+		<li class="dropdown-submenu">
+			<!-- ko with: tasklist -->
+			<a data-bind="text: title, attr: {'data-tasklistcolor': colorCode}, click: $.noop"
+				class="tasklist" href="#"></a>
+			<!-- /ko -->
+			<ul class="dropdown-menu">
+				<!-- ko with: tasklist -->
+				<li><a data-bind="click: $root.updateTasklistDialog.open" href="#">名前を変更...</a></li>
+				<!-- /ko -->
+				<li class="divider"></li>
+				<!-- ko foreach: colors -->
+				<li><a data-bind="attr: {'data-tasklistcolor': colorCode}, click: update"
+					href="#" class="tasklist">この色に変更</a></li>
+				<!-- /ko -->
+			</ul>
+		</li>
 		<!-- /ko -->
 		<li class="divider"></li>
-		<li><a data-bind="click: createTasklistDialog.open" href="#">新しいタスクリスト</a></li>
+		<li><a data-bind="click: createTasklistDialog.open" href="#">新しいタスクリスト...</a></li>
 	</ul>
 	</li>
 	<li class="dropdown">
