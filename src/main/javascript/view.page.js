@@ -94,7 +94,7 @@ TryOutPageViewModel.prototype.initialize = function () {
 	this.prototype.initialize.apply(this, arguments);
 
 	// behave as offline
-	this.offline(true);
+	taskwalls.settings.offline(true);
 
 	// load example data
 	$.getJSON('/tryoutdata.json').done(function (response) {
