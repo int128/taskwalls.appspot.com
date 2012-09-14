@@ -22,29 +22,61 @@ Taskdata.prototype.load = function () {
 		id: '@default'
 	});
 
-	var loadTasksInDefaultTasklist = Tasks.get(defaultTasklist).done(this.tasks.bind(this));
-	var loadTasklists = Tasklists.get().done(this.tasklists.bind(this));
-
-	$.when(loadTasksInDefaultTasklist, loadTasklists).done(function () {
-		// extract ID of the default tasklist if possible
-		var defaultTasklistID = undefined;
-		if (this.tasks().length > 0) {
-			var p = this.tasks()[0].selfLink().split('/');
-			defaultTasklistID = p[p.length - 3];
-		}
-
-		this.tasklists().forEach(function (tasklist, i) {
-			if (tasklist.id() == defaultTasklistID) {
-				// replace instance of the default tasklist
-				$.extend(defaultTasklist, tasklist);
-				this.tasklists()[i] = defaultTasklist;
+	$.when(this._loadTasks(defaultTasklist), this._loadTasklists()).done(function () {
+		$.when.apply(null, this._loadRemainingTasks(defaultTasklist)).done(function () {
+			if (taskwalls.settings.offline()) {
+				taskwalls.settings.offlineLoaded(true);
 			} else {
-				// load remaining tasklists
-				Tasks.get(tasklist).done(function (tasks) {
-					this.tasks($.merge(this.tasks(), tasks));
-				}.bind(this));
+				taskwalls.settings.lastCached(new Date());
 			}
-		}.bind(this));
+		});
+	}.bind(this));
+};
+
+/**
+ * Load tasks in the default task list.
+ * 
+ * @param {Tasklist} defaultTasklist
+ * @returns {Deferred}
+ */
+Taskdata.prototype._loadTasks = function (defaultTasklist) {
+	return Tasks.get(defaultTasklist).done(this.tasks.bind(this));
+};
+
+/**
+ * Load list of task lists.
+ * 
+ * @returns {Deferred}
+ */
+Taskdata.prototype._loadTasklists = function () {
+	return Tasklists.get().done(this.tasklists.bind(this));
+};
+
+/**
+ * Load remaining tasks.
+ * 
+ * @param {Tasklist} defaultTasklist
+ * @returns {Array} array of {Deferred}s.
+ */
+Taskdata.prototype._loadRemainingTasks = function (defaultTasklist) {
+	// extract ID of the default tasklist if possible
+	var defaultTasklistID = undefined;
+	if (this.tasks().length > 0) {
+		var p = this.tasks()[0].selfLink().split('/');
+		defaultTasklistID = p[p.length - 3];
+	}
+
+	return this.tasklists().map(function (tasklist, i) {
+		if (tasklist.id() == defaultTasklistID) {
+			// replace instance of the default tasklist
+			$.extend(defaultTasklist, tasklist);
+			this.tasklists()[i] = defaultTasklist;
+		} else {
+			// load remaining tasklists
+			return Tasks.get(tasklist).done(function (tasks) {
+				this.tasks($.merge(this.tasks(), tasks));
+			}.bind(this));
+		}
 	}.bind(this));
 };
 
@@ -99,7 +131,6 @@ Tasklists.get = function () {
 				var items = response.items;
 				if ($.isArray(items)) {
 					localStorage['Tasklists.get'] = xhr.responseText;
-					taskwalls.settings.lastCached(new Date());
 					return items.map(function (item) {
 						return new Tasklist(item);
 					});
