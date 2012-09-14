@@ -112,6 +112,7 @@
 <!-- ko if: viewModeIs('', '#overview') -->
 <!-- ko with: overview -->
 <section class="overview board nav-tabs-content container">
+	<div data-bind="template: {name: 'offline-status-template'}"></div>
 	<div data-bind="template: {name: 'expired-tasks-template'}"></div>
 	<h2>今週</h2>
 	<div>
@@ -164,6 +165,7 @@
 <!-- ko if: viewModeIs('#daily') -->
 <!-- ko with: dailyCalendar -->
 <section class="daily board nav-tabs-content margin-for-icebox">
+	<div data-bind="template: {name: 'offline-status-template'}"></div>
 	<div data-bind="template: {name: 'expired-tasks-template'}"></div>
 	<table class="calendar">
 	<tbody data-bind="foreach: rows">
@@ -179,9 +181,9 @@
 			'data-weekday': day.getDay()
 		}">
 	<td class="month"><div><span data-bind="text: day.getMonth()+1"></span>月</div></td>
-	<td class="border day"><div data-bind="text: day.getDate()"></div></td>
-	<td class="border weekday"><div data-bind="text: weekdayName"></div></td>
-	<td class="border tasks">
+	<td class="day"><div data-bind="text: day.getDate()"></div></td>
+	<td class="weekday"><div data-bind="text: weekdayName"></div></td>
+	<td class="tasks">
 		<div data-bind="foreach: tasklists">
 		<div data-bind="template: {name: 'task-template', foreach: tasks}, visible: tasklist.visible"
 			class="tasklist">
@@ -203,6 +205,7 @@
 <!-- ko if: viewModeIs('#weekly') -->
 <!-- ko with: weeklyCalendar -->
 <section class="weekly board nav-tabs-content margin-for-icebox">
+	<div data-bind="template: {name: 'offline-status-template'}"></div>
 	<table class="calendar">
 	<tbody data-bind="foreach: rows">
 	<tr data-bind="droppable: {
@@ -212,10 +215,10 @@
 		css: {
 			thisweek: thisweek
 		}">
-	<td class="month"><div><span data-bind="text: day.getMonth()+1"></span>月</div></td>
-	<td class="border day"><div data-bind="text: day.getDate()"></div></td>
-	<td class="border weekday">週</td>
-	<td class="border tasks">
+	<th class="week">
+		<span data-bind="text: day.getMonth()+1"></span>月&nbsp;<span data-bind="text: day.getDate()"></span>日
+	</th>
+	<td class="tasks">
 		<div data-bind="foreach: tasklists">
 		<div data-bind="template: {name: 'task-template', foreach: tasks}, visible: tasklist.visible"
 			class="tasklist">
@@ -237,6 +240,7 @@
 <!-- ko if: viewModeIs('#monthly') -->
 <!-- ko with: monthlyCalendar -->
 <section class="monthly board nav-tabs-content margin-for-icebox">
+	<div data-bind="template: {name: 'offline-status-template'}"></div>
 	<table class="calendar">
 	<tbody data-bind="foreach: rows">
 	<tr data-bind="droppable: {
@@ -246,10 +250,10 @@
 		css: {
 			thisweek: thisweek
 		}">
-	<td class="month"><div><span data-bind="text: day.getFullYear()"></span>年</div></td>
-	<td class="border day"><div><span data-bind="text: day.getMonth()+1"></span></div></td>
-	<td class="border weekday">月</td>
-	<td class="border tasks">
+	<th class="month">
+		<span data-bind="text: day.getFullYear()"></span>年&nbsp;<span data-bind="text: day.getMonth()+1"></span>月
+	</th>
+	<td class="tasks">
 		<div data-bind="foreach: tasklists">
 		<div data-bind="template: {name: 'task-template', foreach: tasks}, visible: tasklist.visible"
 			class="tasklist">
@@ -271,6 +275,7 @@
 <!-- ko if: viewModeIs('#past') -->
 <!-- ko with: pastTasks -->
 <section class="past board nav-tabs-content container">
+	<div data-bind="template: {name: 'offline-status-template'}"></div>
 	<div data-bind="foreach: tasklists">
 	<div class="tasklist">
 	<div class="count"><span data-bind="text: tasks.length" class="badge"></span></div>
@@ -305,6 +310,23 @@
 </section>
 <!-- /ko -->
 <!-- /ko -->
+
+<script type="text/html" id="offline-status-template">
+	<!-- ko with: $root -->
+	<!-- ko if: settings.offlineLoaded -->
+	<div class="alert alert-info">
+		<button type="button" class="close" data-dismiss="alert">&times;</button>
+		<strong>オフライン</strong>&nbsp;
+		<span data-bind="with: settings.lastCached">
+			<span data-bind="text: getMonth()+1"></span>月<!--
+			--><span data-bind="text: getDate()"></span>日&nbsp;<!--
+			--><span data-bind="text: getHours()"></span>:<!--
+			--><span data-bind="text: getMinutes()"></span>に読み込んだタスクを表示しています。
+		</span>
+	</div>
+	<!-- /ko -->
+	<!-- /ko -->
+</script>
 
 <script type="text/html" id="expired-tasks-template">
 	<!-- ko with: $root -->
