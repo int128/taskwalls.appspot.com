@@ -398,9 +398,9 @@
 <div class="create-task dialog">
 	<h3>新しいタスク</h3>
 	<p data-bind="with: due" class="due">
-	<span data-bind="text: getFullYear()"></span>年
-	<span data-bind="text: getMonth()+1"></span>月
-	<span data-bind="text: getDate()"></span>日
+	<span data-bind="text: getFullYear()"></span>年<!--
+	--><span data-bind="text: getMonth()+1"></span>月<!--
+	--><span data-bind="text: getDate()"></span>日
 	</p>
 
 	<form data-bind="submit: save">
@@ -425,9 +425,9 @@
 <div class="update-task dialog">
 	<form data-bind="submit: save">
 	<p data-bind="with: due" class="due">
-	<span data-bind="text: getFullYear()"></span>年
-	<span data-bind="text: getMonth()+1"></span>月
-	<span data-bind="text: getDate()"></span>日
+	<span data-bind="text: getFullYear()"></span>年<!--
+	--><span data-bind="text: getMonth()+1"></span>月<!--
+	--><span data-bind="text: getDate()"></span>日
 	</p>
 	<div><input data-bind="value: title, hasfocus: true" type="text" placeholder="タスクの件名" /></div>
 	<div><textarea data-bind="value: notes" placeholder="備考"></textarea></div>
@@ -444,9 +444,9 @@
 	<!-- ko if: isCompleted -->
 	<p><i class="icon-ok"></i> このタスクは
 		<span data-bind="with: completed">
-		<span data-bind="text: getFullYear()"></span>年
-		<span data-bind="text: getMonth()+1"></span>月
-		<span data-bind="text: getDate()"></span>日
+		<span data-bind="text: getFullYear()"></span>年<!--
+		--><span data-bind="text: getMonth()+1"></span>月<!--
+		--><span data-bind="text: getDate()"></span>日
 		</span>
 	に完了しました</p>
 	<div><a data-bind="click: saveStatusAs('needsAction')" href="#" class="btn">未完了に戻す</a></div>
