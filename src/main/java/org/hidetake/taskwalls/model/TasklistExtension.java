@@ -2,7 +2,7 @@ package org.hidetake.taskwalls.model;
 
 import java.io.Serializable;
 
-import org.hidetake.taskwalls.meta.TasklistOptionsMeta;
+import org.hidetake.taskwalls.meta.TasklistExtensionMeta;
 import org.slim3.datastore.Attribute;
 import org.slim3.datastore.Datastore;
 import org.slim3.datastore.Model;
@@ -10,12 +10,12 @@ import org.slim3.datastore.Model;
 import com.google.appengine.api.datastore.Key;
 
 /**
- * Tasklist options model.
+ * Extension model for a task list.
  * 
  * @author hidetake.org
  */
 @Model(schemaVersion = 1)
-public class TasklistOptions implements Serializable {
+public class TasklistExtension implements Serializable {
 
 	private static final long serialVersionUID = 1L;
 
@@ -24,7 +24,7 @@ public class TasklistOptions implements Serializable {
 	private Integer colorCode;
 
 	public static Key createKey(String id) {
-		return Datastore.createKey(TasklistOptionsMeta.get(), id);
+		return Datastore.createKey(TasklistExtensionMeta.get(), id);
 	}
 
 	/**
