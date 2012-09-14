@@ -205,17 +205,6 @@ table.calendar {
 }
 
 /*
- * Calendar misc.
- */
-.cache-status {
-	position: fixed;
-	bottom: 0;
-	left: 0;
-	z-index: 100;
-	color: dimgray;
-}
-
-/*
  * Icebox.
  */
 .icebox {
