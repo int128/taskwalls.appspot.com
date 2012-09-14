@@ -72,7 +72,7 @@ form {
 /*
  * Board.
  */
-.board:not(.container) .expired {
+.board:not(.container) .alert {
 	margin-left: 60px;
 	margin-right: 60px;
 }

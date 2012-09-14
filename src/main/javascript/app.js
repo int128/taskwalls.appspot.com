@@ -61,5 +61,7 @@ taskwalls.settings.offline = ko.observable(sessionStorage['offline'] == 'true');
 ko.computed(function () {
 	sessionStorage['offline'] = taskwalls.settings.offline();
 });
+// is this session loaded by offline?
+taskwalls.settings.offlineLoaded = ko.observable(false);
 // is development environment?
 taskwalls.settings.development = ko.observable(location.hostname.search('.appspot.com') == -1);
