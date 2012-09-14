@@ -395,16 +395,10 @@
 <!-- ko foreach: updateTasklistDialog -->
 <section data-bind="visible: visible, escKeydown: close">
 <div class="update-tasklist dialog">
-	<form data-bind="submit: saveTitle">
-	<input data-bind="value: title" type="text" placeholder="タスクリストの名前" />
+	<form data-bind="submit: save">
+	<div><input data-bind="value: title, hasfocus: true" type="text" placeholder="タスクリストの名前" /></div>
+	<div><button type="submit" class="btn btn-primary">タスクリストを作成</button></div>
 	</form>
-
-	<div data-bind="foreach: colors">
-	<div data-bind="css: {selected: $data==$parent.selectedColor()}" class="color">
-	<div data-bind="attr: {'data-tasklistcolor': $data}, click: $parent.selectColor"></div>
-	</div>
-	</div>
-	<div style="clear: both;"></div>
 	<hr/>
 
 	<a data-bind="visible: !removeConfirmed(), click: confirmRemove" href="#">タスクリストを削除する...</a>
