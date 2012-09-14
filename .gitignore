@@ -2,7 +2,7 @@
 /webapp/WEB-INF/lib
 /webapp/WEB-INF/classes
 /webapp/WEB-INF/appengine-generated
-/webapp/min.js
-/webapp/min.css
-/webapp/min.html
+/webapp/production.js
+/webapp/production.css
+/webapp/production.html
 /www-test

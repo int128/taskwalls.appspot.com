@@ -7,6 +7,10 @@ body {
 	font-family: 'trebuchet ms', arial, sans-serif;
 }
 
+form {
+	margin: 0;
+}
+
 /*
  * Welcome page.
  */
@@ -88,6 +92,10 @@ body {
 .overview .tasklist>.title {
 	margin-top: 10px;
 	text-shadow: 0 1px 0 #ccc;
+}
+
+.overview .dropping {
+	background-color: #eee;
 }
 
 /*
@@ -226,7 +234,7 @@ table.calendar {
 	margin-right: 240px;
 }
 
-.icebox h2 {
+.icebox h3 {
 	margin-left: 5px;
 }
 
@@ -288,6 +296,7 @@ table.calendar {
 	background: none;
 	box-shadow: none;
 	-ms-filter: 'progid:DXImageTransform.Microsoft.gradient(enabled=false)';
+	color: #888;
 }
 
 .task[data-status='needsAction'].past {
@@ -297,7 +306,11 @@ table.calendar {
 .task .notes {
 	max-height: 3em;
 	font-size: 90%;
-	color: dimgray;
+	color: #444;
+}
+
+.task[data-status='completed'] .notes {
+	color: #888;
 }
 
 /*
@@ -318,6 +331,10 @@ table.calendar {
  */
 .dialog {
 	z-index: 400;
+	position: fixed;
+	width: 320px;
+	top: 10%;
+	right: 40px;
 	padding: 10px;
 	border-radius: 5px;
 	-moz-border-radius: 5px;
@@ -335,36 +352,23 @@ table.calendar {
 	background-color: rgba(0, 0, 0, 0.5);
 }
 
-.create-task.dialog,
-.update-task.dialog {
-	position: absolute;
-	right: 40px;
+.dialog h2,
+.dialog h3,
+.dialog h4 {
+	margin: 0;
 }
 
-.create-task.dialog .due,
-.update-task.dialog .due {
-	margin-bottom: 5px;
-}
-
-.create-task.dialog input[type="text"],
-.update-task.dialog input[type="text"] {
+.dialog input[type="text"],
+.dialog textarea {
 	width: 300px;
 }
 
-.create-task.dialog textarea,
-.update-task.dialog textarea {
-	width: 300px;
-	height: 100px;
-}
-
-.create-task.dialog .tasklists,
-.update-task.dialog .tasklists {
+.dialog .tasklist-selection {
 	margin-top: 5px;
 	margin-bottom: 15px;
 }
 
-.create-task.dialog .tasklists .tasklist,
-.update-task.dialog .tasklists .tasklist {
+.dialog .tasklist-selection .tasklist {
 	margin-right: 3px;
 	padding: 5px;
 	border-style: solid;
@@ -379,37 +383,13 @@ table.calendar {
 	text-decoration: none;
 }
 
-.create-task.dialog .tasklists .tasklist:not(.selected),
-.update-task.dialog .tasklists .tasklist:not(.selected) {
+.dialog .tasklist-selection .tasklist:not(.selected) {
 	border-left-width: 1px;
 	border-left-color: #ddd;
 }
 
-.create-task.dialog .tasklists .tasklist.selected,
-.update-task.dialog .tasklists .tasklist.selected {
+.dialog .tasklist-selection .tasklist.selected {
 	font-weight: bold;
-}
-
-.create-tasklist.dialog {
-	position: fixed;
-	top: 30%;
-	left: 50%;
-	margin-left: -160px;
-}
-
-.create-tasklist.dialog input[type="text"] {
-	width: 300px;
-	margin-bottom: 5px;
-}
-
-.update-tasklist.dialog {
-	position: fixed;
-	left: 120px;
-	width: 180px;
-}
-
-.update-tasklist.dialog input[type="text"] {
-	width: 170px;
 }
 
 .update-tasklist.dialog .color {

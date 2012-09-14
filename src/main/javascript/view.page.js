@@ -12,6 +12,17 @@ AuthorizedPageViewModel.prototype.initialize = function () {
 
 	this.tasklists = this.taskdata.tasklists;
 
+	// common date
+	this.today = ko.computed(function () {
+		return new Date(DateUtil.today());
+	});
+	this.thisWeek = ko.computed(function () {
+		return new Date(DateUtil.thisWeek());
+	});
+	this.lastDayOfThisWeek = ko.computed(function () {
+		return new Date(DateUtil.thisWeek() + DateUtil.DAY_UNIT * 6);
+	});
+
 	// expired tasks
 	var expiredTasks = ko.computed(function () {
 		return this.taskdata.tasks()
@@ -22,20 +33,20 @@ AuthorizedPageViewModel.prototype.initialize = function () {
 		return Tasks.groupByTasklist(expiredTasks());
 	});
 	this.moveExpiredTasks = function () {
-		var lastDayOfThisWeek = new Date(DateUtil.thisWeek() + DateUtil.DAY_UNIT * 6);
+		var due = this.lastDayOfThisWeek();
 		expiredTasks().forEach(function (task) {
 			task.update({
-				due: lastDayOfThisWeek
+				due: due
 			});
 		});
 	};
 
 	// views
-	this.viewMode = ko.observable('overview');
+	this.viewMode = ko.observable(location.hash);
 	this.viewModeIs = FunctionUtil.match(this.viewMode);
-	this.switchView = function (name) {
-		return this.viewMode.bind(null, name);
-	};
+	$(window).bind('hashchange', function () {
+		this.viewMode(location.hash);
+	}.bind(this));
 
 	this.overview = new TasksOverviewViewModel(this.taskdata);
 	this.dailyCalendar = new DailyCalendarViewModel(this.taskdata);
@@ -45,18 +56,10 @@ AuthorizedPageViewModel.prototype.initialize = function () {
 	this.pastTasks = new PastTasksViewModel(this.taskdata);
 
 	// dialogs
-	this.createTaskDialog = ko.disposableObservable(function (row, event) {
-		return new CreateTaskDialog(this.taskdata, row.getDayForNewTask(), event);
-	}, this);
-	this.updateTaskDialog = ko.disposableObservable(function (task, event) {
-		return new UpdateTaskDialog(this.taskdata, task, event);
-	}, this);
-	this.createTasklistDialog = ko.disposableObservable(function () {
-		return new CreateTasklistDialog(this.taskdata);
-	}, this);
-	this.updateTasklistDialog = ko.disposableObservable(function (tasklist, event) {
-		return new UpdateTasklistDialog(this.taskdata, tasklist, event);
-	}, this);
+	this.createTaskDialog = DialogManager(CreateTaskDialog.factory, this.taskdata);
+	this.updateTaskDialog = DialogManager(UpdateTaskDialog.factory, this.taskdata);
+	this.createTasklistDialog = DialogManager(CreateTasklistDialog.factory, this.taskdata);
+	this.updateTasklistDialog = DialogManager(UpdateTasklistDialog.factory, this.taskdata);
 
 	// settings
 	this.offline = taskwalls.settings.offline;
@@ -93,7 +96,7 @@ TryOutPageViewModel.prototype.initialize = function () {
 	this.offline(true);
 
 	// load example data
-	$.getJSON('/tryoutdata.json').done($.proxy(function (response) {
+	$.getJSON('/tryoutdata.json').done(function (response) {
 		var delta = DateUtil.thisWeek() - DateUtil.clearTimePart(new Date(response.baseTime)).getTime();
 
 		var tasklists = response.tasklists.items.map(function (item) {
@@ -117,5 +120,5 @@ TryOutPageViewModel.prototype.initialize = function () {
 			}
 			return task;
 		}));
-	}, this));
+	}.bind(this));
 };

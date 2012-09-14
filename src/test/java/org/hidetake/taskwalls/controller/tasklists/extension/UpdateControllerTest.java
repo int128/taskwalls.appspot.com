@@ -1,4 +1,4 @@
-package org.hidetake.taskwalls.controller.tasklists.options;
+package org.hidetake.taskwalls.controller.tasklists.extension;
 
 import static org.hamcrest.CoreMatchers.*;
 import static org.hidetake.taskwalls.controller.RequestTestUtil.*;
@@ -7,8 +7,9 @@ import static org.junit.Assert.*;
 import javax.servlet.http.HttpServletResponse;
 
 import org.hidetake.taskwalls.Constants;
-import org.hidetake.taskwalls.meta.TasklistOptionsMeta;
-import org.hidetake.taskwalls.model.TasklistOptions;
+import org.hidetake.taskwalls.controller.tasklists.extension.UpdateController;
+import org.hidetake.taskwalls.meta.TasklistExtensionMeta;
+import org.hidetake.taskwalls.model.TasklistExtension;
 import org.junit.Test;
 import org.slim3.datastore.Datastore;
 import org.slim3.tester.ControllerTestCase;
@@ -19,7 +20,7 @@ public class UpdateControllerTest extends ControllerTestCase {
 	public void xhr() throws Exception {
 		enableSession(tester);
 		setMethodAsPost(tester);
-		tester.start("/tasklists/options/update");
+		tester.start("/tasklists/extension/update");
 		UpdateController controller = tester.getController();
 		assertThat(controller, is(notNullValue()));
 		assertThat(tester.isRedirect(), is(false));
@@ -32,7 +33,7 @@ public class UpdateControllerTest extends ControllerTestCase {
 		enableSession(tester);
 		setMethodAsPost(tester);
 		setXHR(tester);
-		tester.start("/tasklists/options/update");
+		tester.start("/tasklists/extension/update");
 		UpdateController controller = tester.getController();
 		assertThat(controller, is(notNullValue()));
 		assertThat(tester.isRedirect(), is(false));
@@ -45,16 +46,16 @@ public class UpdateControllerTest extends ControllerTestCase {
 		enableSession(tester);
 		setMethodAsPost(tester);
 		setXHR(tester);
-		TasklistOptionsMeta m = TasklistOptionsMeta.get();
+		TasklistExtensionMeta m = TasklistExtensionMeta.get();
 		tester.param("id", "hogeId");
 		tester.param(m.colorCode, "5");
-		tester.start("/tasklists/options/update");
+		tester.start("/tasklists/extension/update");
 		UpdateController controller = tester.getController();
 		assertThat(controller, is(notNullValue()));
 		assertThat(tester.isRedirect(), is(false));
 		assertThat(tester.getDestinationPath(), is(nullValue()));
 		assertThat(tester.response.getStatus(), is(HttpServletResponse.SC_OK));
-		TasklistOptions actual = Datastore.get(m, TasklistOptions.createKey("hogeId"));
+		TasklistExtension actual = Datastore.get(m, TasklistExtension.createKey("hogeId"));
 		assertThat(actual.getColorCode(), is(5));
 	}
 

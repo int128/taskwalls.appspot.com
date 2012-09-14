@@ -1,20 +1,23 @@
 package org.hidetake.taskwalls.tools.deployment;
 
-import java.io.BufferedWriter;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileReader;
+import java.io.FileWriter;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.io.OutputStream;
-import java.io.OutputStreamWriter;
 import java.io.SequenceInputStream;
 import java.io.Writer;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.logging.Logger;
+import java.util.regex.Pattern;
 
 import org.apache.commons.io.FileUtils;
+import org.apache.commons.io.IOUtils;
+import org.hidetake.taskwalls.controller.assets.Constants;
 import org.mozilla.javascript.ErrorReporter;
 
 import com.googlecode.htmlcompressor.compressor.HtmlCompressor;
@@ -24,20 +27,37 @@ import com.yahoo.platform.yui.compressor.JavaScriptCompressor;
 /**
  * Compress application assets.
  * 
+ * <ul>
+ * <li>HTML, compressed by HtmlCompressor.</li>
+ * <li>CSS, compressed by YUICompressor.</li>
+ * <li>JavaScript, compressed by YUICompressor. Minified sources (*.min.js) are written at first.</li>
+ * </ul>
+ * 
  * @author hidetake.org
  */
 public class CompressAssets {
 
-	private static final String WEBAPP_BASE = "webapp/";
-	private static final String ASSETS_CONF_CSS = "webapp/WEB-INF/assets.css.conf";
-	private static final String ASSETS_CONF_JS = "webapp/WEB-INF/assets.js.conf";
-	private static final String ASSETS_HTML = "webapp/common.html";
+	private static final File PROJECT_BASE = new File(".");
+	private static final File WEBAPP_BASE = new File(PROJECT_BASE, Constants.WEBAPP_BASE);
+	private static final File CSS_BASE = new File(PROJECT_BASE, Constants.SOURCE_CSS);
+	private static final File JS_BASE = new File(PROJECT_BASE, Constants.SOURCE_JS);
 
-	private static final String DESTINATION_CSS = "webapp/min.css";
-	private static final String DESTINATION_JS = "webapp/min.js";
-	private static final String DESTINATION_HTML = "webapp/min.html";
+	private static final File ASSETS_CONF_CSS = new File(CSS_BASE, "/assets.conf");
+	private static final File ASSETS_CONF_JS = new File(JS_BASE, "/assets.conf");
+	private static final File ASSETS_HTML = new File(WEBAPP_BASE, "/source.html");
+
+	private static final File OUTPUT_CSS = new File(WEBAPP_BASE, "/production.css");
+	private static final File OUTPUT_JS = new File(WEBAPP_BASE, "/production.js");
+	private static final File OUTPUT_HTML = new File(WEBAPP_BASE, "/production.html");
 
 	private static final Logger logger = Logger.getLogger(CompressAssets.class.getName());
+
+	private static final List<Pattern> HTML_PRESERVE_PATTERNS = Arrays.asList(new Pattern[] {
+			// preserve knockout.js instructions
+			Pattern.compile("<!-- */?ko .*?-->", Pattern.DOTALL),
+			// preserve HTML templates
+			Pattern.compile("<script +?type=\"text/html\".*?>", Pattern.DOTALL),
+	});
 
 	public static void main(String[] args) throws Exception {
 		compressHtml();
@@ -52,38 +72,36 @@ public class CompressAssets {
 		HtmlCompressor compressor = new HtmlCompressor();
 		compressor.setRemoveComments(false);
 		compressor.setCompressCss(true);
-		compressor.setCompressJavaScript(false);
+		compressor.setCompressJavaScript(true);
 		compressor.setRemoveIntertagSpaces(true);
+		compressor.setPreservePatterns(HTML_PRESERVE_PATTERNS);
 		compressor.setYuiErrorReporter(new YUICompressorErrorReporter());
 
-		File sourceFile = new File(ASSETS_HTML);
-		String source = FileUtils.readFileToString(sourceFile);
+		String source = FileUtils.readFileToString(ASSETS_HTML);
 		String result = compressor.compress(source);
-		File resultFile = new File(DESTINATION_HTML);
-		FileUtils.writeStringToFile(resultFile, result);
+		FileUtils.writeStringToFile(OUTPUT_HTML, result);
+
 		logger.info(String.format("Compressed HTML (%,d bytes -> %,d bytes)",
-				sourceFile.length(), resultFile.length()));
+				ASSETS_HTML.length(), OUTPUT_HTML.length()));
 	}
 
 	/**
 	 * Compress CSS sources.
 	 */
 	private static void compressCss() throws Exception {
-		OutputStream destination = FileUtils.openOutputStream(new File(DESTINATION_CSS));
+		List<File> sources = new ArrayList<File>();
+		for (String line : FileUtils.readLines(ASSETS_CONF_CSS)) {
+			sources.add(new File(CSS_BASE, line));
+		}
+
+		Writer writer = new FileWriter(OUTPUT_CSS);
 		try {
-			List<File> sources = new ArrayList<File>();
-			File conf = new File(ASSETS_CONF_CSS);
-			for (String line : FileUtils.readLines(conf)) {
-				sources.add(new File(WEBAPP_BASE + line));
+			for (File source : sources) {
+				logger.info(String.format("Compressing %s (%,d bytes)", source.getName(), source.length()));
+				new CssCompressor(new FileReader(source)).compress(writer, -1);
 			}
-			Writer writer = new BufferedWriter(new OutputStreamWriter(destination));
-			for (File file : sources) {
-				logger.info(String.format("Compressing %s (%,d bytes)", file.getName(), file.length()));
-				new CssCompressor(new FileReader(file)).compress(writer, -1);
-			}
-			writer.close();
 		} finally {
-			destination.close();
+			IOUtils.closeQuietly(writer);
 		}
 	}
 
@@ -91,43 +109,40 @@ public class CompressAssets {
 	 * Compress JavaScript sources.
 	 */
 	private static void compressJs() throws Exception {
-		OutputStream destination = FileUtils.openOutputStream(new File(DESTINATION_JS));
+		List<File> rawSourceFiles = new ArrayList<File>();
+		List<File> compressingSourceFiles = new ArrayList<File>();
+		for (String line : FileUtils.readLines(ASSETS_CONF_JS)) {
+			if (line.endsWith(".min.js")) {
+				rawSourceFiles.add(new File(JS_BASE, line));
+			} else {
+				compressingSourceFiles.add(new File(JS_BASE, line));
+			}
+		}
+
+		List<InputStream> compressingSources = new ArrayList<InputStream>();
+		compressingSources.add(CompressAssets.class.getResourceAsStream("compress-header"));
+		for (File source : compressingSourceFiles) {
+			compressingSources.add(new FileInputStream(source));
+		}
+		compressingSources.add(CompressAssets.class.getResourceAsStream("compress-footer"));
+
+		Writer writer = new FileWriter(OUTPUT_JS);
 		try {
-			List<File> sources = new ArrayList<File>();
-
-			File conf = new File(ASSETS_CONF_JS);
-			for (String line : FileUtils.readLines(conf)) {
-				sources.add(new File(WEBAPP_BASE + line));
+			for (File source : rawSourceFiles) {
+				IOUtils.copy(new FileReader(source), writer);
 			}
 
-			long sourceStreamsSize = 0L;
-			List<InputStream> sourceStreams = new ArrayList<InputStream>();
-			sourceStreams.add(CompressAssets.class.getResourceAsStream("compress-header"));
-			for (File file : sources) {
-				if (file.getName().endsWith(".min.js")) {
-					logger.info(String.format("Copying %s (%,d bytes)", file.getName(), file.length()));
-					FileUtils.copyFile(file, destination);
-				} else {
-					sourceStreams.add(FileUtils.openInputStream(file));
-					sourceStreamsSize += file.length();
-				}
-			}
-			sourceStreams.add(CompressAssets.class.getResourceAsStream("compress-footer"));
-
-			logger.info(String.format("Compressing (%,d bytes)", sourceStreamsSize));
-			SequenceInputStream sourceStream = new SequenceInputStream(Collections.enumeration(sourceStreams));
+			ErrorReporter errorReporter = new YUICompressorErrorReporter();
+			InputStreamReader source = new InputStreamReader(
+					new SequenceInputStream(Collections.enumeration(compressingSources)));
 			try {
-				// compress
-				ErrorReporter errorReporter = new YUICompressorErrorReporter();
-				Writer writer = new BufferedWriter(new OutputStreamWriter(destination));
-				new JavaScriptCompressor(new InputStreamReader(sourceStream), errorReporter).compress(
-						writer, -1, true, true, false, false);
-				writer.flush();
+				JavaScriptCompressor compressor = new JavaScriptCompressor(source, errorReporter);
+				compressor.compress(writer, -1, true, true, false, false);
 			} finally {
-				sourceStream.close();
+				IOUtils.closeQuietly(source);
 			}
 		} finally {
-			destination.close();
+			IOUtils.closeQuietly(writer);
 		}
 	}
 
