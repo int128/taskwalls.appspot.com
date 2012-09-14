@@ -20,7 +20,7 @@ public class UpdateControllerTest extends ControllerTestCase {
 	public void xhr() throws Exception {
 		enableSession(tester);
 		setMethodAsPost(tester);
-		tester.start("/tasklists/options/update");
+		tester.start("/tasklists/extension/update");
 		UpdateController controller = tester.getController();
 		assertThat(controller, is(notNullValue()));
 		assertThat(tester.isRedirect(), is(false));
@@ -33,7 +33,7 @@ public class UpdateControllerTest extends ControllerTestCase {
 		enableSession(tester);
 		setMethodAsPost(tester);
 		setXHR(tester);
-		tester.start("/tasklists/options/update");
+		tester.start("/tasklists/extension/update");
 		UpdateController controller = tester.getController();
 		assertThat(controller, is(notNullValue()));
 		assertThat(tester.isRedirect(), is(false));
@@ -49,7 +49,7 @@ public class UpdateControllerTest extends ControllerTestCase {
 		TasklistExtensionMeta m = TasklistExtensionMeta.get();
 		tester.param("id", "hogeId");
 		tester.param(m.colorCode, "5");
-		tester.start("/tasklists/options/update");
+		tester.start("/tasklists/extension/update");
 		UpdateController controller = tester.getController();
 		assertThat(controller, is(notNullValue()));
 		assertThat(tester.isRedirect(), is(false));
