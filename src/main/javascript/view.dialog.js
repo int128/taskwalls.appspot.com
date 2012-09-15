@@ -123,7 +123,7 @@ CreateTaskDialog.prototype.initialize = function (taskdata, due) {
 	this.save = function () {
 		if (this.validate()) {
 			this.dialogTransaction(
-					Tasks.create({
+					TaskService.create({
 						tasklistID: this.selectedTasklist().id(),
 						due: this.due(),
 						title: this.title(),
@@ -160,7 +160,7 @@ UpdateTaskDialog.prototype.initialize = function (taskdata, task) {
 	this.isCompleted = this.task.isCompleted();
 	this.saveStatus = function (status) {
 		this.dialogTransaction(
-				task.update({
+				TaskService.update(this.task, {
 					status: status
 				}));
 	};
@@ -174,7 +174,7 @@ UpdateTaskDialog.prototype.initialize = function (taskdata, task) {
 	this.save = function () {
 		if (this.title()) {
 			this.dialogTransaction(
-					task.update({
+					TaskService.update(this.task, {
 						due: this.due(),
 						title: this.title(),
 						notes: this.notes()
@@ -190,7 +190,7 @@ UpdateTaskDialog.prototype.initialize = function (taskdata, task) {
 	}.bind(this);
 	this.move = function () {
 		this.dialogTransaction(
-				this.task.move(this.selectedTasklist()));
+				TaskService.move(this.task, this.selectedTasklist()));
 	}.bind(this);
 
 	this.removeConfirmed = ko.observable(false);
@@ -199,7 +199,7 @@ UpdateTaskDialog.prototype.initialize = function (taskdata, task) {
 	}.bind(this);
 	this.remove = function () {
 		this.dialogTransaction(
-				this.task.remove().done(function () {
+				TaskService.remove(this.task).done(function () {
 					taskdata.remove(this.task);
 				}.bind(this)));
 	}.bind(this);
@@ -225,7 +225,7 @@ CreateTasklistDialog.prototype.initialize = function (taskdata) {
 	this.save = function () {
 		if (this.title()) {
 			this.dialogTransaction(
-					Tasklists.create({
+					TasklistService.create({
 						title: this.title()
 					}).done(function (tasklist) {
 						taskdata.tasklists.push(tasklist);
@@ -258,7 +258,7 @@ UpdateTasklistDialog.prototype.initialize = function (taskdata, tasklist) {
 	this.save = function () {
 		if (this.title()) {
 			this.dialogTransaction(
-					this.tasklist.update({
+					TasklistService.update(this.tasklist, {
 						title: this.title
 					}));
 		}
@@ -270,7 +270,7 @@ UpdateTasklistDialog.prototype.initialize = function (taskdata, tasklist) {
 	}.bind(this);
 	this.remove = function () {
 		this.dialogTransaction(
-				this.tasklist.remove().done(function () {
+				TasklistService.remove(this.tasklist).done(function () {
 					taskdata.remove(this.tasklist);
 				}.bind(this)));
 	}.bind(this);

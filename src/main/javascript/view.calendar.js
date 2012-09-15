@@ -46,7 +46,7 @@ TasksOverviewViewModel.Completed.prototype.initialize = function (tasksInThisWee
  *            task dropped task
  */
 TasksOverviewViewModel.Completed.prototype.dropped = function (task) {
-	task.update({
+	TaskService.update(task, {
 		status: 'completed'
 	});
 };
@@ -74,7 +74,7 @@ TasksOverviewViewModel.NeedsAction.prototype.initialize = function (tasksInThisW
  *            task dropped task
  */
 TasksOverviewViewModel.NeedsAction.prototype.dropped = function (task) {
-	task.update({
+	TaskService.update(task, {
 		status: 'needsAction'
 	});
 };
@@ -123,9 +123,9 @@ CalendarRow.prototype.getDayForNewTask = function () {
  *            task dropped task
  */
 CalendarRow.prototype.dropped = function (task) {
-	task.update({
+	TaskService.update(task, {
 		due: this.day
-	}); // TODO: failed?
+	});
 };
 
 /**
@@ -286,9 +286,9 @@ IceboxTasksViewModel.prototype.getDayForNewTask = function () {
  *            task dropped task
  */
 IceboxTasksViewModel.prototype.dropped = function (task) {
-	task.update({
+	TaskService.update(task, {
 		due: null
-	}); // TODO: failed?
+	});
 };
 
 /**

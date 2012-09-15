@@ -34,7 +34,7 @@ AuthorizedPageViewModel.prototype.initialize = function () {
 	this.moveExpiredTasks = function () {
 		var due = this.lastDayOfThisWeek();
 		expiredTasks().forEach(function (task) {
-			task.update({
+			TaskService.update(task, {
 				due: due
 			});
 		});
@@ -77,7 +77,7 @@ AuthorizedPageViewModel.prototype.initialize = function () {
  * Load task data.
  */
 AuthorizedPageViewModel.prototype.load = function () {
-	this.taskdata.load();
+	TaskdataService.fetch(this.taskdata);
 };
 
 /**
@@ -145,7 +145,7 @@ TasklistMenuItemViewModel.prototype.initialize = function (tasklist) {
 };
 
 TasklistMenuItemViewModel.prototype.updateColor = function (colorCode) {
-	this.tasklist.updateExtension({
+	TasklistService.updateExtension(this.tasklist, {
 		colorCode: colorCode
 	});
 };
