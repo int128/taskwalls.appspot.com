@@ -117,22 +117,28 @@ TasklistService.fetch.offline = function () {
 /**
  * Create a tasklist.
  * 
+ * @param {Taskdata}
+ *            taskdata
  * @param {Object}
  *            data
  * @returns {Deferred} call with new instance of {@link Tasklist}
  */
 TasklistService.create = ServiceOperation();
 
-TasklistService.create.online = function (data) {
+TasklistService.create.online = function (taskdata, data) {
 	return $.post('/tasklists/create', data).pipe(function (object) {
 		return new Tasklist(object);
+	}).done(function (tasklist) {
+		taskdata.tasklists.push(tasklist);
 	});
 };
 
-TasklistService.create.offline = function (data) {
+TasklistService.create.offline = function (taskdata, data) {
 	return $.Deferred().resolve(new Tasklist($.extend({
 		id: 'tasklist__' + $.now()
-	}, data)));
+	}, data))).done(function (tasklist) {
+		taskdata.tasklists.push(tasklist);
+	});
 };
 
 /**
@@ -192,19 +198,24 @@ TasklistService.updateExtension.offline = function (tasklist, data) {
 /**
  * Remove myself.
  * 
+ * @param {Taskdata}
+ *            taskdata
  * @param {Tasklist}
  *            tasklist
  * @returns {Deferred}
  */
 TasklistService.remove = ServiceOperation();
 
-TasklistService.remove.online = function (tasklist) {
+TasklistService.remove.online = function (taskdata, tasklist) {
 	return $.post('/tasklists/delete', {
 		id: tasklist.id()
+	}).done(function () {
+		taskdata.remove(tasklist);
 	});
 };
 
-TasklistService.remove.offline = function (tasklist) {
+TasklistService.remove.offline = function (taskdata, tasklist) {
+	taskdata.remove(tasklist);
 	return $.Deferred().resolve();
 };
 
@@ -219,6 +230,7 @@ TaskService.prototype = {};
  * Asynchronously fetch tasks from server.
  * 
  * @param {Tasklist}
+ *            tasklist
  * @returns {Deferred}
  */
 TaskService.fetch = ServiceOperation();
@@ -260,26 +272,42 @@ TaskService.fetch.offline = function (tasklist) {
 /**
  * Create a task.
  * 
+ * @param {Taskdata}
+ *            taskdata
  * @param {Object}
  *            data
  * @returns {Deferred} call with new instance of {@link Task}
  */
 TaskService.create = ServiceOperation();
 
-TaskService.create.online = function (data) {
+TaskService.create.online = function (taskdata, data) {
 	return $.post('/tasks/create', $.extend({}, data, {
 		// specify zero for icebox
 		due: data.due ? DateUtil.calculateTimeInUTC(data.due) : 0
 	})).pipe(function (object) {
-		return new Task(object);
+		var task = new Task(object);
+		TaskService.create.fixTasklistReference(task, data, taskdata);
+		return task;
+	}).done(function (task) {
+		taskdata.tasks.push(task);
 	});
 };
 
-TaskService.create.offline = function (data) {
-	return $.Deferred().resolve(new Task($.extend({
+TaskService.create.offline = function (taskdata, data) {
+	var task = new Task($.extend({
 		id: 'task__' + $.now(),
 		status: 'needsAction'
-	}, data)));
+	}, data));
+	TaskService.create.fixTasklistReference(task, data, taskdata);
+	taskdata.tasks.push(task);
+	return $.Deferred().resolve(task);
+};
+
+TaskService.create.fixTasklistReference = function (task, data, taskdata) {
+	var tasklist = taskdata.tasklists().filter(function (tasklist) {
+		return tasklist.id() == data.tasklistID;
+	})[0];
+	task.tasklist(tasklist);
 };
 
 /**
@@ -345,19 +373,24 @@ TaskService.move.offline = function (task, tasklist) {
 /**
  * Remove the task.
  * 
+ * @param {Taskdata}
+ *            taskdata
  * @param {Task}
  *            task
  * @returns {Deferred}
  */
 TaskService.remove = ServiceOperation();
 
-TaskService.remove.online = function (task) {
+TaskService.remove.online = function (taskdata, task) {
 	return $.post('/tasks/delete', {
 		id: task.id(),
 		tasklistID: task.tasklist().id()
+	}).done(function () {
+		taskdata.remove(task);
 	});
 };
 
-TaskService.remove.offline = function () {
+TaskService.remove.offline = function (taskdata, task) {
+	taskdata.remove(task);
 	return $.Deferred().resolve();
 };

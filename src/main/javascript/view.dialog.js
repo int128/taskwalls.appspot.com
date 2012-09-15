@@ -123,15 +123,12 @@ CreateTaskDialog.prototype.initialize = function (taskdata, due) {
 	this.save = function () {
 		if (this.validate()) {
 			this.dialogTransaction(
-					TaskService.create({
+					TaskService.create(taskdata, {
 						tasklistID: this.selectedTasklist().id(),
 						due: this.due(),
 						title: this.title(),
 						notes: this.notes()
-					}).done(function (task) {
-						task.tasklist(this.selectedTasklist());
-						taskdata.tasks.push(task);
-					}.bind(this)));
+					}));
 		}
 	}.bind(this);
 };
@@ -199,9 +196,7 @@ UpdateTaskDialog.prototype.initialize = function (taskdata, task) {
 	}.bind(this);
 	this.remove = function () {
 		this.dialogTransaction(
-				TaskService.remove(this.task).done(function () {
-					taskdata.remove(this.task);
-				}.bind(this)));
+				TaskService.remove(taskdata, this.task));
 	}.bind(this);
 };
 
@@ -225,10 +220,8 @@ CreateTasklistDialog.prototype.initialize = function (taskdata) {
 	this.save = function () {
 		if (this.title()) {
 			this.dialogTransaction(
-					TasklistService.create({
+					TasklistService.create(taskdata, {
 						title: this.title()
-					}).done(function (tasklist) {
-						taskdata.tasklists.push(tasklist);
 					}));
 		}
 	}.bind(this);
@@ -270,8 +263,6 @@ UpdateTasklistDialog.prototype.initialize = function (taskdata, tasklist) {
 	}.bind(this);
 	this.remove = function () {
 		this.dialogTransaction(
-				TasklistService.remove(this.tasklist).done(function () {
-					taskdata.remove(this.tasklist);
-				}.bind(this)));
+				TasklistService.remove(taskdata, this.tasklist));
 	}.bind(this);
 };
