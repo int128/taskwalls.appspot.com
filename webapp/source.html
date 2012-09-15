@@ -90,7 +90,7 @@
 	</a>
 	<ul class="dropdown-menu">
 		<!-- ko foreach: tasklists -->
-		<li class="dropdown-submenu">
+		<li data-bind="css: {'dropdown-submenu': !$root.settings.offline()}">
 			<!-- ko with: tasklist -->
 			<a data-bind="text: title, attr: {'data-tasklistcolor': colorCode}, click: $.noop"
 				class="tasklist" href="#"></a>
@@ -107,8 +107,10 @@
 			</ul>
 		</li>
 		<!-- /ko -->
+		<!-- ko ifnot: settings.offline -->
 		<li class="divider"></li>
 		<li><a data-bind="click: createTasklistDialog.open" href="#">新しいタスクリスト...</a></li>
+		<!-- /ko -->
 	</ul>
 	</li>
 	<li><a data-bind="click: toggleOffline" href="#"
