@@ -299,6 +299,7 @@ TaskService.create.offline = function (taskdata, data) {
 		status: 'needsAction'
 	}, data));
 	TaskService.create.fixTasklistReference(task, data, taskdata);
+	task.operationQueued(true);
 	taskdata.tasks.push(task);
 	return $.Deferred().resolve(task);
 };
@@ -337,9 +338,9 @@ TaskService.update.online = function (task, data) {
 };
 
 TaskService.update.offline = function (task, data) {
-	return $.Deferred().done(function () {
-		ko.extendObservables(task, data);
-	}).resolve();
+	ko.extendObservables(task, data);
+	task.operationQueued(true);
+	return $.Deferred().resolve();
 };
 
 /**
@@ -365,9 +366,9 @@ TaskService.move.online = function (task, tasklist) {
 };
 
 TaskService.move.offline = function (task, tasklist) {
-	return $.Deferred().done(function () {
-		task.tasklist(tasklist);
-	}).resolve();
+	task.tasklist(tasklist);
+	task.operationQueued(true);
+	return $.Deferred().resolve();
 };
 
 /**
@@ -391,6 +392,7 @@ TaskService.remove.online = function (taskdata, task) {
 };
 
 TaskService.remove.offline = function (taskdata, task) {
-	taskdata.remove(task);
+//	taskdata.remove(task);
+	task.operationQueued(true);
 	return $.Deferred().resolve();
 };
