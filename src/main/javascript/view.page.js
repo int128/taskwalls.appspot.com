@@ -66,18 +66,18 @@ AuthorizedPageViewModel.prototype.initialize = function () {
 			return new TasklistMenuItemViewModel(tasklist);
 		});
 	}, this);
-
-	// session
-	this.logout = function () {
-		OAuth2Controller.logout();
-	};
 };
 
-/**
- * Load task data.
- */
 AuthorizedPageViewModel.prototype.load = function () {
 	TaskdataService.fetch(this.taskdata);
+};
+
+AuthorizedPageViewModel.prototype.toggleOffline = function () {
+	taskwalls.settings.offline(!taskwalls.settings.offline());
+};
+
+AuthorizedPageViewModel.prototype.logout = function () {
+	OAuth2Controller.logout();
 };
 
 /**

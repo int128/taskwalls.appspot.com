@@ -84,7 +84,10 @@
 	</ul>
 	<ul class="nav pull-right">
 	<li class="dropdown">
-	<a href="#" class="dropdown-toggle" data-toggle="dropdown">タスクリスト <b class="caret"></b></a>
+	<a href="#" class="dropdown-toggle showtooltip" data-toggle="dropdown"
+		data-placement="bottom" title="タスクリスト">
+		<i class="icon-list"></i>&nbsp;<b class="caret"></b>
+	</a>
 	<ul class="dropdown-menu">
 		<!-- ko foreach: tasklists -->
 		<li class="dropdown-submenu">
@@ -108,14 +111,18 @@
 		<li><a data-bind="click: createTasklistDialog.open" href="#">新しいタスクリスト...</a></li>
 	</ul>
 	</li>
-	<li class="dropdown">
-	<a href="#" class="dropdown-toggle" data-toggle="dropdown">設定 <b class="caret"></b></a>
-	<ul class="dropdown-menu">
-		<li><label class="checkbox"><input data-bind="checked: settings.offline" type="checkbox"/>オフライン</label></li>
-		<li class="divider"></li>
-		<li><a data-bind="click: logout" href="#">ログアウト</a></li>
-	</ul>
-	</li>
+	<li><a data-bind="click: toggleOffline" href="#"
+			class="showtooltip" data-placement="bottom" title="オンラインとオフラインを<br/>切り替える">
+		<!-- ko ifnot: settings.offline -->
+		<i class="icon-signal"></i>
+		<!-- /ko -->
+		<!-- ko if: settings.offline -->
+		<i class="icon-circle-arrow-down"></i>
+		<!-- /ko -->
+		</a></li>
+	<li><a data-bind="click: logout" href="#"
+			class="showtooltip" data-placement="bottom" title="ログアウト">
+			<i class="icon-off"></i></a></li>
 	</ul>
 </div>
 </div>
