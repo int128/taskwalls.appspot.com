@@ -314,11 +314,13 @@ PastTasksViewModel.prototype.initialize = function (taskdata) {
  * inject initializer to class {@link Tasklist}
  */
 Tasklist.prototype.initialize = FunctionUtil.seq(Tasklist.prototype.initialize, function () {
+	// TODO: not needed
 	this.visible = ko.observable(true);
 });
 
 /**
  * Toggle visibility of the tasklist and its tasks.
+ * @deprecated
  */
 Tasklist.prototype.toggleVisibility = function () {
 	this.visible(!this.visible());
@@ -328,6 +330,7 @@ Tasklist.prototype.toggleVisibility = function () {
  * inject initializer to class {@link Task}
  */
 Task.prototype.initialize = FunctionUtil.seq(Task.prototype.initialize, function () {
+	// TODO: move to model class
 	this.past = ko.computed(function () {
 		return this.due() < DateUtil.today();
 	}, this);
