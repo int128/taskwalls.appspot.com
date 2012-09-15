@@ -62,6 +62,8 @@ taskwalls.settings.offline = ko.observable(
 ko.computed(function () {
 	sessionStorage['offline'] = taskwalls.settings.offline();
 });
+$(window).on('online', taskwalls.settings.offline.bind(null, false));
+$(window).on('offline', taskwalls.settings.offline.bind(null, true));
 // is this session loaded by offline?
 taskwalls.settings.offlineLoaded = ko.observable(false);
 // is development environment?
