@@ -163,7 +163,7 @@ TasklistService.create = function (taskdata, data) {
 			TasklistService.create.executeFunction(taskdata, data, mock),
 			TasklistService.create.rollbackFunction(taskdata, data, mock));
 
-	return transaction.promise(tasklist.transactions);
+	return transaction.promise(mock.transactions);
 };
 
 TasklistService.create.executeFunction = function (taskdata, data, mock) {
@@ -360,7 +360,7 @@ TaskService.create = function (taskdata, data) {
 	var transaction = new ServiceTransaction(
 			TaskService.create.executeFunction(taskdata, data, mock),
 			TaskService.create.rollbackFunction(taskdata, data, mock));
-	return transaction.promise(task.transactions);
+	return transaction.promise(mock.transactions);
 };
 
 TaskService.create.executeFunction = function (taskdata, data, mock) {
