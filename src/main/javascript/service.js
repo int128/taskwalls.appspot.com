@@ -1,18 +1,31 @@
 /**
- * Generate a service function that supports on-line and off-line.
- * 
- * @returns {Function}
+ * @class transaction of service operation
+ * @param {Function}
+ *            operation operation function
+ * @param {Function}
+ *            rollback rollback function
  */
-function ServiceOperation () {
-	var f = undefined;
-	f = function () {
-		if (taskwalls.settings.offline()) {
-			return f.offline.apply(this, arguments);
-		} else {
-			return f.online.apply(this, arguments);
-		}
-	};
-	return f;
+function ServiceTransaction (operation, rollback) {
+	this.operation = operation;
+	this.rollback = rollback;
+	this.deferred = $.Deferred();
+	this.pending = ko.observable(true);
+};
+
+ServiceTransaction.prototype.promise = function () {
+	if (taskwalls.settings.offline()) {
+		return this.deferred;
+	} else {
+		return this.execute();
+	}
+};
+
+ServiceTransaction.prototype.execute = function () {
+	return this.operation()
+		.fail(this.rollback)
+		.then(this.pending.bind(this, false))
+		.done(this.deferred.resolve)
+		.fail(this.deferred.reject);
 };
 
 /**
@@ -80,7 +93,13 @@ TasklistService.prototype = {};
  * 
  * @returns {Deferred}
  */
-TasklistService.fetch = ServiceOperation();
+TasklistService.fetch = function () {
+	if (taskwalls.settings.offline()) {
+		return TasklistService.fetch.offline();
+	} else {
+		return TasklistService.fetch.online();
+	}
+};
 
 TasklistService.fetch.online = function () {
 	return $.getJSON('/tasklists/list').pipe(function (response, status, xhr) {
@@ -115,34 +134,47 @@ TasklistService.fetch.offline = function () {
 };
 
 /**
- * Create a tasklist.
+ * Create a task list.
  * 
  * @param {Taskdata}
  *            taskdata
  * @param {Object}
  *            data
- * @returns {Deferred} call with new instance of {@link Tasklist}
+ * @returns {Deferred} call with an new instance of {@link Tasklist}
  */
-TasklistService.create = ServiceOperation();
+TasklistService.create = function (taskdata, data) {
+	var mock = new Tasklist($.extend({
+		id: 'tasklist__' + $.now()
+	}, data));
+	taskdata.tasklists.push(mock);
 
-TasklistService.create.online = function (taskdata, data) {
-	return $.post('/tasklists/create', data).pipe(function (object) {
-		return new Tasklist(object);
-	}).done(function (tasklist) {
-		taskdata.tasklists.push(tasklist);
-	});
+	var transaction = new ServiceTransaction(
+			TasklistService.create.executeFunction(taskdata, data, mock),
+			TasklistService.create.rollbackFunction(taskdata, data, mock));
+
+	mock.transactions.push(transaction);
+	return transaction.promise();
 };
 
-TasklistService.create.offline = function (taskdata, data) {
-	return $.Deferred().resolve(new Tasklist($.extend({
-		id: 'tasklist__' + $.now()
-	}, data))).done(function (tasklist) {
-		taskdata.tasklists.push(tasklist);
-	});
+TasklistService.create.executeFunction = function (taskdata, data, mock) {
+	return function () {
+		return $.post('/tasklists/create', data).pipe(function (object) {
+			return new Tasklist(object);
+		}).done(function (tasklist) {
+			taskdata.tasklists.push(tasklist);
+			taskdata.tasklists.remove(mock);
+		});
+	};
+};
+
+TasklistService.create.rollbackFunction = function (taskdata, data, mock) {
+	return function () {
+		return taskdata.tasklists.remove(mock);
+	};
 };
 
 /**
- * Save and update myself if succeeded.
+ * Save the task list.
  * 
  * @param {Tasklist}
  *            tasklist
@@ -150,22 +182,30 @@ TasklistService.create.offline = function (taskdata, data) {
  *            data
  * @returns {Deferred}
  */
-TasklistService.update = ServiceOperation();
+TasklistService.update = function (tasklist, data) {
+	var transaction = new ServiceTransaction(
+			TasklistService.update.executeFunction(tasklist, data),
+			TasklistService.update.rollbackFunction(tasklist, data));
 
-TasklistService.update.online = function (tasklist, data) {
+	ko.extendObservables(tasklist, data);
+
+	tasklist.transactions.push(transaction);
+	return transaction.promise();
+};
+
+TasklistService.update.executeFunction = function (tasklist, data) {
 	var request = $.extend({
 		id: tasklist.id()
 	}, data);
-	return $.post('/tasklists/update', request).done(function () {
-		ko.extendObservables(tasklist, data);
-	}).fail(function () {
-		ko.extendObservables(data, tasklist);
-	});
+	return $.post.bind(null, '/tasklists/update', request);
 };
 
-TasklistService.update.offline = function (tasklist, data) {
-	ko.extendObservables(tasklist, data);
-	return $.Deferred().resolve();
+TasklistService.update.rollbackFunction = function (tasklist, data) {
+	var originalData = {};
+	$.each(data, function (k, v) {
+		originalData[k] = tasklist[k]();
+	});
+	return ko.extendObservables.bind(null, tasklist, originalData);
 };
 
 /**
@@ -177,26 +217,34 @@ TasklistService.update.offline = function (tasklist, data) {
  *            data
  * @returns {Deferred}
  */
-TasklistService.updateExtension = ServiceOperation();
+TasklistService.updateExtension = function (tasklist, data) {
+	var transaction = new ServiceTransaction(
+			TasklistService.updateExtension.executeFunction(tasklist, data),
+			TasklistService.updateExtension.rollbackFunction(tasklist, data));
 
-TasklistService.updateExtension.online = function (tasklist, data) {
+	ko.extendObservables(tasklist, data);
+
+	tasklist.transactions.push(transaction);
+	return transaction.promise();
+};
+
+TasklistService.updateExtension.executeFunction = function (tasklist, data) {
 	var request = $.extend({
 		id: tasklist.id()
 	}, data);
-	return $.post('/tasklists/extension/update', request).done(function () {
-		ko.extendObservables(tasklist, data);
-	}).fail(function () {
-		ko.extendObservables(data, tasklist);
-	});
+	return $.post.bind(null, '/tasklists/extension/update', request);
 };
 
-TasklistService.updateExtension.offline = function (tasklist, data) {
-	ko.extendObservables(tasklist, data);
-	return $.Deferred().resolve();
+TasklistService.updateExtension.rollbackFunction = function (tasklist, data) {
+	var originalData = {};
+	$.each(data, function (k, v) {
+		originalData[k] = tasklist[k]();
+	});
+	return ko.extendObservables.bind(null, tasklist, originalData);
 };
 
 /**
- * Remove myself.
+ * Remove the task list.
  * 
  * @param {Taskdata}
  *            taskdata
@@ -204,19 +252,30 @@ TasklistService.updateExtension.offline = function (tasklist, data) {
  *            tasklist
  * @returns {Deferred}
  */
-TasklistService.remove = ServiceOperation();
+TasklistService.remove = function (taskdata, tasklist) {
+	var transaction = new ServiceTransaction(
+			TasklistService.remove.executeFunction(taskdata, tasklist),
+			TasklistService.remove.rollbackFunction(taskdata, tasklist));
 
-TasklistService.remove.online = function (taskdata, tasklist) {
-	return $.post('/tasklists/delete', {
-		id: tasklist.id()
-	}).done(function () {
-		taskdata.remove(tasklist);
-	});
+	tasklist.transactions.push(transaction);
+	return transaction.promise();
 };
 
-TasklistService.remove.offline = function (taskdata, tasklist) {
-	taskdata.remove(tasklist);
-	return $.Deferred().resolve();
+TasklistService.remove.executeFunction = function (taskdata, tasklist) {
+	var identity = {
+		id: tasklist.id()
+	};
+	return function () {
+		return $.post('/tasklists/delete', identity).done(function () {
+			taskdata.tasklists.remove(tasklist);
+		});
+	};
+};
+
+TasklistService.remove.rollbackFunction = function (taskdata, tasklist) {
+	return function () {
+		return taskdata.tasklists.push(tasklist);
+	};
 };
 
 /**
@@ -233,7 +292,13 @@ TaskService.prototype = {};
  *            tasklist
  * @returns {Deferred}
  */
-TaskService.fetch = ServiceOperation();
+TaskService.fetch = function (tasklist) {
+	if (taskwalls.settings.offline()) {
+		return TaskService.fetch.offline(tasklist);
+	} else {
+		return TaskService.fetch.online(tasklist);
+	}
+};
 
 TaskService.fetch.online = function (tasklist) {
 	return $.getJSON('/tasks/list', {
@@ -278,41 +343,54 @@ TaskService.fetch.offline = function (tasklist) {
  *            data
  * @returns {Deferred} call with new instance of {@link Task}
  */
-TaskService.create = ServiceOperation();
-
-TaskService.create.online = function (taskdata, data) {
-	return $.post('/tasks/create', $.extend({}, data, {
-		// specify zero for icebox
-		due: data.due ? DateUtil.calculateTimeInUTC(data.due) : 0
-	})).pipe(function (object) {
-		var task = new Task(object);
-		TaskService.create.fixTasklistReference(task, data, taskdata);
-		return task;
-	}).done(function (task) {
-		taskdata.tasks.push(task);
-	});
-};
-
-TaskService.create.offline = function (taskdata, data) {
-	var task = new Task($.extend({
+TaskService.create = function (taskdata, data) {
+	var mock = new Task($.extend({
 		id: 'task__' + $.now(),
 		status: 'needsAction'
 	}, data));
-	TaskService.create.fixTasklistReference(task, data, taskdata);
-	task.operationQueued(true);
-	taskdata.tasks.push(task);
-	return $.Deferred().resolve(task);
+	TaskService.create.fixTasklistReference(mock, data.tasklistID, taskdata);
+	taskdata.tasks.push(mock);
+
+	var transaction = new ServiceTransaction(
+			TaskService.create.executeFunction(taskdata, data, mock),
+			TaskService.create.rollbackFunction(taskdata, data, mock));
+
+	mock.transactions.push(transaction);
+	return transaction.promise();
 };
 
-TaskService.create.fixTasklistReference = function (task, data, taskdata) {
+TaskService.create.executeFunction = function (taskdata, data, mock) {
+	var due = {
+		// specify zero for icebox
+		due: data.due ? DateUtil.calculateTimeInUTC(data.due) : 0
+	};
+	return function () {
+		return $.post('/tasks/create', $.extend({}, data, due)).pipe(function (object) {
+			var task = new Task(object);
+			TaskService.create.fixTasklistReference(task, data.tasklistID, taskdata);
+			return task;
+		}).done(function (task) {
+			taskdata.tasks.push(task);
+			taskdata.tasks.remove(mock);
+		});
+	};
+};
+
+TaskService.create.rollbackFunction = function (taskdata, data, mock) {
+	return function () {
+		return taskdata.tasks.remove(mock);
+	};
+};
+
+TaskService.create.fixTasklistReference = function (task, tasklistID, taskdata) {
 	var tasklist = taskdata.tasklists().filter(function (tasklist) {
-		return tasklist.id() == data.tasklistID;
+		return tasklist.id() == tasklistID;
 	})[0];
 	task.tasklist(tasklist);
 };
 
 /**
- * Save and update myself if succeeded.
+ * Update the task.
  * 
  * @param {Task}
  *            task
@@ -320,27 +398,36 @@ TaskService.create.fixTasklistReference = function (task, data, taskdata) {
  *            data
  * @returns {Deferred}
  */
-TaskService.update = ServiceOperation();
+TaskService.update = function (task, data) {
+	var transaction = new ServiceTransaction(
+			TaskService.update.executeFunction(task, data),
+			TaskService.update.rollbackFunction(task, data));
 
-TaskService.update.online = function (task, data) {
-	var request = $.extend({}, data, {
-		id: task.id(),
-		tasklistID: task.tasklist().id(),
-	}, data.due === undefined ? {} : {
-		// specify zero if for icebox
-		due: data.due ? DateUtil.calculateTimeInUTC(data.due) : 0
-	});
-	return $.post('/tasks/update', request).done(function () {
-		ko.extendObservables(task, data);
-	}).fail(function () {
-		ko.extendObservables(data, task);
-	});
+	ko.extendObservables(task, data);
+
+	task.transactions.push(transaction);
+	return transaction.promise();
 };
 
-TaskService.update.offline = function (task, data) {
-	ko.extendObservables(task, data);
-	task.operationQueued(true);
-	return $.Deferred().resolve();
+TaskService.update.executeFunction = function (task, data) {
+	var identity = {
+		id: task.id(),
+		tasklistID: task.tasklist().id()
+	};
+	var due = data.due === undefined ? {} : {
+		// set due=0 for the ice box
+		due: data.due ? DateUtil.calculateTimeInUTC(data.due) : 0
+	};
+	var request = $.extend(identity, data, due);
+	return $.post.bind(null, '/tasks/update', request);
+};
+
+TaskService.update.rollbackFunction = function (task, data) {
+	var originalData = {};
+	$.each(data, function (k, v) {
+		originalData[k] = task[k]();
+	});
+	return ko.extendObservables.bind(null, task, originalData);
 };
 
 /**
@@ -352,23 +439,28 @@ TaskService.update.offline = function (task, data) {
  *            tasklist destination
  * @returns {Deferred}
  */
-TaskService.move = ServiceOperation();
+TaskService.move = function (task, tasklist) {
+	var transaction = new ServiceTransaction(
+			TaskService.move.executeFunction(task, tasklist),
+			TaskService.move.rollbackFunction(task));
 
-TaskService.move.online = function (task, tasklist) {
+	task.tasklist(tasklist);
+
+	task.transactions.push(transaction);
+	return transaction.promise();
+};
+
+TaskService.move.executeFunction = function (task, tasklist) {
 	var request = {
 		id: task.id(),
 		tasklistID: task.tasklist().id(),
 		destinationTasklistID: tasklist.id()
 	};
-	return $.post('/tasks/move', request).done(function () {
-		task.tasklist(tasklist);
-	});
+	return $.post.bind(null, '/tasks/move', request);
 };
 
-TaskService.move.offline = function (task, tasklist) {
-	task.tasklist(tasklist);
-	task.operationQueued(true);
-	return $.Deferred().resolve();
+TaskService.move.rollbackFunction = function (task) {
+	return task.tasklist.bind(null, task.tasklist());
 };
 
 /**
@@ -380,19 +472,29 @@ TaskService.move.offline = function (task, tasklist) {
  *            task
  * @returns {Deferred}
  */
-TaskService.remove = ServiceOperation();
+TaskService.remove = function (taskdata, task) {
+	var transaction = new ServiceTransaction(
+			TaskService.remove.executeFunction(taskdata, task),
+			TaskService.remove.rollbackFunction(taskdata, task));
 
-TaskService.remove.online = function (taskdata, task) {
-	return $.post('/tasks/delete', {
-		id: task.id(),
-		tasklistID: task.tasklist().id()
-	}).done(function () {
-		taskdata.remove(task);
-	});
+	task.transactions.push(transaction);
+	return transaction.promise();
 };
 
-TaskService.remove.offline = function (taskdata, task) {
-//	taskdata.remove(task);
-	task.operationQueued(true);
-	return $.Deferred().resolve();
+TaskService.remove.executeFunction = function (taskdata, task) {
+	var request = {
+		id: task.id(),
+		tasklistID: task.tasklist().id()
+	};
+	return function () {
+		return $.post('/tasks/delete', request).done(function () {
+			taskdata.tasks.remove(task);
+		});
+	};
+};
+
+TaskService.remove.rollbackFunction = function (taskdata, task) {
+	return function () {
+		return taskdata.tasks.push(task);
+	};
 };

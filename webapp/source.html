@@ -386,8 +386,9 @@
 <span data-bind="text: title" class="title"></span>
 <div data-bind="autolinkText: notes" class="notes"></div>
 <div class="icons">
-<!-- ko if: operationQueued -->
-<span class="showtooltip" title="保留中の変更"><i class="icon-refresh"/></span>
+<!-- ko foreach: transactions -->
+<span data-bind="click: execute, clickBubble: false, visible: pending"
+	class="showtooltip" title="未送信の変更"><i class="icon-refresh"/></span>
 <!-- /ko -->
 </div>
 <div style="clear: both;"></div>

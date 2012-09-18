@@ -314,6 +314,7 @@ PastTasksViewModel.prototype.initialize = function (taskdata) {
  * inject initializer to class {@link Tasklist}
  */
 Tasklist.prototype.initialize = FunctionUtil.seq(Tasklist.prototype.initialize, function () {
+	this.transactions = ko.observableArray();
 	// TODO: not needed
 	this.visible = ko.observable(true);
 });
@@ -334,7 +335,7 @@ Task.prototype.initialize = FunctionUtil.seq(Task.prototype.initialize, function
 	this.past = ko.computed(function () {
 		return this.due() < DateUtil.today();
 	}, this);
-	this.operationQueued = ko.observable(false);
+	this.transactions = ko.observableArray();
 });
 
 /**
