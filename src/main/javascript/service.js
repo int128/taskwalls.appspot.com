@@ -9,21 +9,32 @@ function ServiceTransaction (operation, rollback) {
 	this.operation = operation;
 	this.rollback = rollback;
 	this.deferred = $.Deferred();
-	this.pending = ko.observable(true);
 };
 
-ServiceTransaction.prototype.promise = function () {
-	if (taskwalls.settings.offline()) {
-		return this.deferred;
-	} else {
-		return this.execute();
-	}
+/**
+ * Execute this transaction if on-line. Otherwise, keep pending.
+ * 
+ * @param {Array}
+ *            transactions Array of transactions. The instance is added to the array at first, and removed when done
+ *            even if failed.
+ * @returns {Deferred}
+ */
+ServiceTransaction.prototype.promise = function (transactions) {
+	transactions.push(this);
+	return (taskwalls.settings.offline() ? this.deferred : this.execute())
+			.always(function () {
+				transactions.remove(this);
+			}.bind(this));
 };
 
+/**
+ * Execute this transaction.
+ * 
+ * @returns {Deferred}
+ */
 ServiceTransaction.prototype.execute = function () {
 	return this.operation()
 		.fail(this.rollback)
-		.then(this.pending.bind(this, false))
 		.done(this.deferred.resolve)
 		.fail(this.deferred.reject);
 };
@@ -152,8 +163,7 @@ TasklistService.create = function (taskdata, data) {
 			TasklistService.create.executeFunction(taskdata, data, mock),
 			TasklistService.create.rollbackFunction(taskdata, data, mock));
 
-	mock.transactions.push(transaction);
-	return transaction.promise();
+	return transaction.promise(tasklist.transactions);
 };
 
 TasklistService.create.executeFunction = function (taskdata, data, mock) {
@@ -189,8 +199,7 @@ TasklistService.update = function (tasklist, data) {
 
 	ko.extendObservables(tasklist, data);
 
-	tasklist.transactions.push(transaction);
-	return transaction.promise();
+	return transaction.promise(tasklist.transactions);
 };
 
 TasklistService.update.executeFunction = function (tasklist, data) {
@@ -224,8 +233,7 @@ TasklistService.updateExtension = function (tasklist, data) {
 
 	ko.extendObservables(tasklist, data);
 
-	tasklist.transactions.push(transaction);
-	return transaction.promise();
+	return transaction.promise(tasklist.transactions);
 };
 
 TasklistService.updateExtension.executeFunction = function (tasklist, data) {
@@ -256,9 +264,7 @@ TasklistService.remove = function (taskdata, tasklist) {
 	var transaction = new ServiceTransaction(
 			TasklistService.remove.executeFunction(taskdata, tasklist),
 			TasklistService.remove.rollbackFunction(taskdata, tasklist));
-
-	tasklist.transactions.push(transaction);
-	return transaction.promise();
+	return transaction.promise(tasklist.transactions);
 };
 
 TasklistService.remove.executeFunction = function (taskdata, tasklist) {
@@ -354,9 +360,7 @@ TaskService.create = function (taskdata, data) {
 	var transaction = new ServiceTransaction(
 			TaskService.create.executeFunction(taskdata, data, mock),
 			TaskService.create.rollbackFunction(taskdata, data, mock));
-
-	mock.transactions.push(transaction);
-	return transaction.promise();
+	return transaction.promise(task.transactions);
 };
 
 TaskService.create.executeFunction = function (taskdata, data, mock) {
@@ -405,8 +409,7 @@ TaskService.update = function (task, data) {
 
 	ko.extendObservables(task, data);
 
-	task.transactions.push(transaction);
-	return transaction.promise();
+	return transaction.promise(task.transactions);
 };
 
 TaskService.update.executeFunction = function (task, data) {
@@ -446,8 +449,7 @@ TaskService.move = function (task, tasklist) {
 
 	task.tasklist(tasklist);
 
-	task.transactions.push(transaction);
-	return transaction.promise();
+	return transaction.promise(task.transactions);
 };
 
 TaskService.move.executeFunction = function (task, tasklist) {
@@ -476,9 +478,7 @@ TaskService.remove = function (taskdata, task) {
 	var transaction = new ServiceTransaction(
 			TaskService.remove.executeFunction(taskdata, task),
 			TaskService.remove.rollbackFunction(taskdata, task));
-
-	task.transactions.push(transaction);
-	return transaction.promise();
+	return transaction.promise(task.transactions);
 };
 
 TaskService.remove.executeFunction = function (taskdata, task) {
