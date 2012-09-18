@@ -1,42 +1,55 @@
 /**
  * @class transaction of service operation
  * @param {Function}
- *            operation operation function
+ *            operation operation function (must return {Deferred})
  * @param {Function}
  *            rollback rollback function
  */
 function ServiceTransaction (operation, rollback) {
-	this.operation = operation;
-	this.rollback = rollback;
-	this.deferred = $.Deferred();
+	this.signal = $.Deferred();
+	this.responder = $.Deferred();
+
+	this.signal.done(function () {
+		operation.call(this).done(this.responder.resolve).fail(this.responder.reject);
+	}.bind(this));
+	this.signal.fail(this.responder.reject);
+	this.responder.fail(rollback.bind(this));
+};
+
+/**
+ * Register this transaction to the collection.
+ * The instance is added to the array at first, and removed when done even if failed.
+ * 
+ * @param {Array}
+ *            transactions Array of transactions
+ */
+ServiceTransaction.prototype.register = function (transactions) {
+	transactions.push(this);
+	this.responder.always(function () {
+		transactions.remove(this);
+	}.bind(this));
 };
 
 /**
  * Execute this transaction if on-line. Otherwise, keep pending.
  * 
- * @param {Array}
- *            transactions Array of transactions. The instance is added to the array at first, and removed when done
- *            even if failed.
- * @returns {Deferred}
+ * @returns {Deferred} done if operation succeeded, fails otherwise
  */
-ServiceTransaction.prototype.promise = function (transactions) {
-	transactions.push(this);
-	return (taskwalls.settings.offline() ? this.deferred : this.execute())
-			.always(function () {
-				transactions.remove(this);
-			}.bind(this));
+ServiceTransaction.prototype.promise = function () {
+	if (!taskwalls.settings.offline()) {
+		this.signal.resolve();
+	}
+	return this.responder;
 };
 
 /**
  * Execute this transaction.
  * 
- * @returns {Deferred}
+ * @returns {Deferred} done if operation succeeded, fails otherwise
  */
 ServiceTransaction.prototype.execute = function () {
-	return this.operation()
-		.fail(this.rollback)
-		.done(this.deferred.resolve)
-		.fail(this.deferred.reject);
+	this.signal.resolve();
+	return this.responder;
 };
 
 /**
@@ -163,7 +176,8 @@ TasklistService.create = function (taskdata, data) {
 			TasklistService.create.executeFunction(taskdata, data, mock),
 			TasklistService.create.rollbackFunction(taskdata, data, mock));
 
-	return transaction.promise(mock.transactions);
+	transaction.register(mock.transactions);
+	return transaction.promise();
 };
 
 TasklistService.create.executeFunction = function (taskdata, data, mock) {
@@ -199,7 +213,8 @@ TasklistService.update = function (tasklist, data) {
 
 	ko.extendObservables(tasklist, data);
 
-	return transaction.promise(tasklist.transactions);
+	transaction.register(tasklist.transactions);
+	return transaction.promise();
 };
 
 TasklistService.update.executeFunction = function (tasklist, data) {
@@ -233,7 +248,8 @@ TasklistService.updateExtension = function (tasklist, data) {
 
 	ko.extendObservables(tasklist, data);
 
-	return transaction.promise(tasklist.transactions);
+	transaction.register(tasklist.transactions);
+	return transaction.promise();
 };
 
 TasklistService.updateExtension.executeFunction = function (tasklist, data) {
@@ -264,7 +280,9 @@ TasklistService.remove = function (taskdata, tasklist) {
 	var transaction = new ServiceTransaction(
 			TasklistService.remove.executeFunction(taskdata, tasklist),
 			TasklistService.remove.rollbackFunction(taskdata, tasklist));
-	return transaction.promise(tasklist.transactions);
+
+	transaction.register(tasklist.transactions);
+	return transaction.promise();
 };
 
 TasklistService.remove.executeFunction = function (taskdata, tasklist) {
@@ -360,7 +378,8 @@ TaskService.create = function (taskdata, data) {
 	var transaction = new ServiceTransaction(
 			TaskService.create.executeFunction(taskdata, data, mock),
 			TaskService.create.rollbackFunction(taskdata, data, mock));
-	return transaction.promise(mock.transactions);
+	transaction.register(mock.transactions);
+	return transaction.promise();
 };
 
 TaskService.create.executeFunction = function (taskdata, data, mock) {
@@ -409,7 +428,8 @@ TaskService.update = function (task, data) {
 
 	ko.extendObservables(task, data);
 
-	return transaction.promise(task.transactions);
+	transaction.register(task.transactions);
+	return transaction.promise();
 };
 
 TaskService.update.executeFunction = function (task, data) {
@@ -449,7 +469,8 @@ TaskService.move = function (task, tasklist) {
 
 	task.tasklist(tasklist);
 
-	return transaction.promise(task.transactions);
+	transaction.register(task.transactions);
+	return transaction.promise();
 };
 
 TaskService.move.executeFunction = function (task, tasklist) {
@@ -478,7 +499,9 @@ TaskService.remove = function (taskdata, task) {
 	var transaction = new ServiceTransaction(
 			TaskService.remove.executeFunction(taskdata, task),
 			TaskService.remove.rollbackFunction(taskdata, task));
-	return transaction.promise(task.transactions);
+
+	transaction.register(task.transactions);
+	return transaction.promise();
 };
 
 TaskService.remove.executeFunction = function (taskdata, task) {
