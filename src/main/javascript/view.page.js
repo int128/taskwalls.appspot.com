@@ -40,6 +40,13 @@ AuthorizedPageViewModel.prototype.initialize = function () {
 		});
 	};
 
+	// pending transactions
+	this.pendingTasks = ko.computed(function () {
+		return this.taskdata.tasks().filter(function (task) {
+			return task.transactions().length > 0;
+		});
+	}, this);
+
 	// views
 	this.viewMode = ko.observable(location.hash);
 	this.viewModeIs = FunctionUtil.match(this.viewMode);

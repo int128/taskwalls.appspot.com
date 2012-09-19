@@ -135,6 +135,7 @@
 <section class="overview board nav-tabs-content container">
 	<div data-bind="template: {name: 'offline-status-template'}"></div>
 	<div data-bind="template: {name: 'expired-tasks-template'}"></div>
+	<div data-bind="template: {name: 'pending-transactions-template'}"></div>
 	<h2>今週</h2>
 	<div>
 		<!-- ko with: $root.thisWeek -->
@@ -368,6 +369,42 @@
 	<!-- /ko -->
 </script>
 
+<script type="text/html" id="pending-transactions-template">
+	<!-- ko with: $root -->
+	<!-- ko if: pendingTasks().length > 0 -->
+	<div class="alert">
+		<div><strong>保留中の変更</strong>&nbsp;</div>
+		<!-- ko foreach: pendingTasks -->
+		<hr/>
+		<div class="pull-right">
+			<button data-bind="click: rollbackTransactions" class="btn">取り消す</button>
+			<button data-bind="click: executeTransactions, disable: $root.settings.offline"
+				class="btn">変更を送信</button>
+		</div>
+		<ul data-bind="foreach: transactions">
+			<li>
+			<span data-bind="text: $parent.title"></span>
+			<!-- ko if: meta.kind == 'create' -->
+				を作成します。
+			<!-- /ko -->
+			<!-- ko if: meta.kind == 'update' -->
+				を更新します。
+			<!-- /ko -->
+			<!-- ko if: meta.kind == 'move' -->
+				を別のタスクリストに移動します。
+			<!-- /ko -->
+			<!-- ko if: meta.kind == 'remove' -->
+				を削除します。
+			<!-- /ko -->
+			</li>
+		</ul>
+		<div style="clear: both;"></div>
+		<!-- /ko -->
+	</div>
+	<!-- /ko -->
+	<!-- /ko -->
+</script>
+
 <script type="text/html" id="task-template">
 <div data-bind="draggableByClone: {},
 	click: $root.updateTaskDialog.open,
@@ -387,8 +424,7 @@
 <div data-bind="autolinkText: notes" class="notes"></div>
 <div class="icons">
 <!-- ko foreach: transactions -->
-<span data-bind="click: execute, clickBubble: false"
-	class="showtooltip" title="未送信の変更"><i class="icon-refresh"/></span>
+<span class="showtooltip" title="保留中の変更"><i class="icon-refresh"/></span>
 <!-- /ko -->
 </div>
 <div style="clear: both;"></div>

@@ -1,19 +1,32 @@
 /**
- * @class transaction of service operation
+ * @constructor transaction of service operation
  * @param {Function}
  *            operation operation function (must return {Deferred})
  * @param {Function}
  *            rollback rollback function
+ * @param {Object}
+ *            meta meta data
  */
-function ServiceTransaction (operation, rollback) {
+function ServiceTransaction (operation, rollback, meta) {
+	this.meta = meta;
+
+	// signal to start the operation
 	this.signal = $.Deferred();
+
+	// deferred for caller (see promise())
 	this.responder = $.Deferred();
 
 	this.signal.done(function () {
-		operation.call(this).done(this.responder.resolve).fail(this.responder.reject);
+		operation.call(this)
+			.done(this.responder.resolve)
+			.fail(this.responder.reject)
+			.fail(rollback.bind(this));
 	}.bind(this));
-	this.signal.fail(this.responder.reject);
-	this.responder.fail(rollback.bind(this));
+
+	this.signal.fail(function () {
+		this.responder.resolve();
+		rollback.call(this);
+	}.bind(this));
 };
 
 /**
@@ -31,9 +44,15 @@ ServiceTransaction.prototype.register = function (transactions) {
 };
 
 /**
- * Execute this transaction if on-line. Otherwise, keep pending.
+ * Execute this transaction if on-line, or keep pending if off-line.
  * 
- * @returns {Deferred} done if operation succeeded, fails otherwise
+ * <ol>
+ * <li>Deferred will be resolved if the operation succeeded.</li>
+ * <li>Deferred will be rejected if the operation failed.</li>
+ * <li>Deferred will be resolved if <code>rollback()</code> called.</li>
+ * </ol>
+ * 
+ * @returns {Deferred} deferred
  */
 ServiceTransaction.prototype.promise = function () {
 	if (!taskwalls.settings.offline()) {
@@ -44,11 +63,25 @@ ServiceTransaction.prototype.promise = function () {
 
 /**
  * Execute this transaction.
+ * Nothing happen if this transaction is already executed.
  * 
- * @returns {Deferred} done if operation succeeded, fails otherwise
+ * @returns {Deferred} deferred
+ * @see ServiceTransaction#promise()
  */
 ServiceTransaction.prototype.execute = function () {
 	this.signal.resolve();
+	return this.responder;
+};
+
+/**
+ * Roll back this transaction.
+ * Nothing happen if this transaction is already executed.
+ * 
+ * @returns {Deferred} deferred
+ * @see ServiceTransaction#promise()
+ */
+ServiceTransaction.prototype.rollback = function () {
+	this.signal.reject();
 	return this.responder;
 };
 
@@ -377,7 +410,9 @@ TaskService.create = function (taskdata, data) {
 
 	var transaction = new ServiceTransaction(
 			TaskService.create.executeFunction(taskdata, data, mock),
-			TaskService.create.rollbackFunction(taskdata, data, mock));
+			TaskService.create.rollbackFunction(taskdata, data, mock),
+			{kind: 'create'});
+
 	transaction.register(mock.transactions);
 	return transaction.promise();
 };
@@ -424,7 +459,8 @@ TaskService.create.fixTasklistReference = function (task, tasklistID, taskdata) 
 TaskService.update = function (task, data) {
 	var transaction = new ServiceTransaction(
 			TaskService.update.executeFunction(task, data),
-			TaskService.update.rollbackFunction(task, data));
+			TaskService.update.rollbackFunction(task, data),
+			{kind: 'update'});
 
 	ko.extendObservables(task, data);
 
@@ -465,7 +501,8 @@ TaskService.update.rollbackFunction = function (task, data) {
 TaskService.move = function (task, tasklist) {
 	var transaction = new ServiceTransaction(
 			TaskService.move.executeFunction(task, tasklist),
-			TaskService.move.rollbackFunction(task));
+			TaskService.move.rollbackFunction(task),
+			{kind: 'move'});
 
 	task.tasklist(tasklist);
 
@@ -498,7 +535,8 @@ TaskService.move.rollbackFunction = function (task) {
 TaskService.remove = function (taskdata, task) {
 	var transaction = new ServiceTransaction(
 			TaskService.remove.executeFunction(taskdata, task),
-			TaskService.remove.rollbackFunction(taskdata, task));
+			TaskService.remove.rollbackFunction(taskdata, task),
+			{kind: 'remove'});
 
 	transaction.register(task.transactions);
 	return transaction.promise();
