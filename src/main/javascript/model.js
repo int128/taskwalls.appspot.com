@@ -15,72 +15,6 @@ Taskdata.prototype.initialize = function () {
 };
 
 /**
- * Asynchronously load task data from server.
- */
-Taskdata.prototype.load = function () {
-	var defaultTasklist = new Tasklist({
-		id: '@default'
-	});
-
-	$.when(this._loadTasks(defaultTasklist), this._loadTasklists()).done(function () {
-		$.when.apply(null, this._loadRemainingTasks(defaultTasklist)).done(function () {
-			if (taskwalls.settings.offline()) {
-				taskwalls.settings.offlineLoaded(true);
-			} else {
-				taskwalls.settings.lastCached(new Date());
-			}
-		});
-	}.bind(this));
-};
-
-/**
- * Load tasks in the default task list.
- * 
- * @param {Tasklist} defaultTasklist
- * @returns {Deferred}
- */
-Taskdata.prototype._loadTasks = function (defaultTasklist) {
-	return Tasks.get(defaultTasklist).done(this.tasks.bind(this));
-};
-
-/**
- * Load list of task lists.
- * 
- * @returns {Deferred}
- */
-Taskdata.prototype._loadTasklists = function () {
-	return Tasklists.get().done(this.tasklists.bind(this));
-};
-
-/**
- * Load remaining tasks.
- * 
- * @param {Tasklist} defaultTasklist
- * @returns {Array} array of {Deferred}s.
- */
-Taskdata.prototype._loadRemainingTasks = function (defaultTasklist) {
-	// extract ID of the default tasklist if possible
-	var defaultTasklistID = undefined;
-	if (this.tasks().length > 0) {
-		var p = this.tasks()[0].selfLink().split('/');
-		defaultTasklistID = p[p.length - 3];
-	}
-
-	return this.tasklists().map(function (tasklist, i) {
-		if (tasklist.id() == defaultTasklistID) {
-			// replace instance of the default tasklist
-			$.extend(defaultTasklist, tasklist);
-			this.tasklists()[i] = defaultTasklist;
-		} else {
-			// load remaining tasklists
-			return Tasks.get(tasklist).done(function (tasks) {
-				this.tasks($.merge(this.tasks(), tasks));
-			}.bind(this));
-		}
-	}.bind(this));
-};
-
-/**
  * Remove the item from collection.
  * 
  * @param {Object}
@@ -96,83 +30,6 @@ Taskdata.prototype.remove = function (item) {
 		this.tasklists.remove(item);
 	} else {
 		throw new TypeError('argument should be Task or Tasklist');
-	}
-};
-
-/**
- * Clear completed tasks.
- */
-Taskdata.prototype.clearCompletedTasks = function () {
-	this.tasklists().forEach(function (tasklist, i) {
-		tasklist.clearCompletedTasks().done(function () {
-			this.tasks.remove(function (task) {
-				return task.tasklist().id() == tasklist.id() && task.isCompleted();
-			});
-		}.bind(this));
-	}.bind(this));
-};
-
-/**
- * @class set of tasklist
- */
-function Tasklists () {
-};
-Tasklists.prototype = {};
-
-/**
- * Asynchronously get tasklists from server.
- * 
- * @returns {Deferred}
- */
-Tasklists.get = function () {
-	if (!taskwalls.settings.offline()) {
-		return $.getJSON('/tasklists/list').pipe(function (response, status, xhr) {
-			if (response) {
-				var items = response.items;
-				if ($.isArray(items)) {
-					localStorage['Tasklists.get'] = xhr.responseText;
-					return items.map(function (item) {
-						return new Tasklist(item);
-					});
-				}
-			}
-			// ignore empty or bad data
-			return [];
-		});
-	} else {
-		return $.Deferred().resolve((function () {
-			var response = $.parseJSON(localStorage['Tasklists.get']);
-			if (response) {
-				var items = response.items;
-				if ($.isArray(items)) {
-					return items.map(function (item) {
-						return new Tasklist(item);
-					});
-				}
-			}
-			// ignore empty or bad data
-			return [];
-		})());
-	}
-};
-
-/**
- * Create a tasklist.
- * 
- * @param {Object}
- *            data
- * @returns {Deferred} call with new instance of {@link Tasklist}
- */
-Tasklists.create = function (data) {
-	if (!taskwalls.settings.offline()) {
-		return $.post('/tasklists/create', data).pipe(function (object) {
-			return new Tasklist(object);
-		});
-	} else {
-		// TODO: offline
-		return $.Deferred().resolve(new Tasklist($.extend({
-			id: 'tasklist__' + $.now()
-		}, data)));
 	}
 };
 
@@ -199,74 +56,8 @@ Tasklist.prototype.initialize = function (object) {
 			return Math.abs(new String(object.id).hashCode()); // auto generate
 		}
 	})() % taskwalls.settings.tasklistColors);
-};
 
-/**
- * Save and update myself if succeeded.
- * 
- * @param {Object}
- *            data
- * @returns {Deferred}
- */
-Tasklist.prototype.update = function (data) {
-	if (!taskwalls.settings.offline()) {
-		var request = $.extend({
-			id: this.id()
-		}, data);
-		return $.post('/tasklists/update', request).done(function () {
-			ko.extendObservables(this, data);
-		}.bind(this)).fail(function () {
-			// FIXME: view model should do this
-			ko.extendObservables(data, this);
-		}.bind(this));
-	} else {
-		// TODO: offline
-		return $.Deferred().done(function () {
-			ko.extendObservables(this, data);
-		}.bind(this)).resolve();
-	}
-};
-
-/**
- * Save extension data of the task list.
- * 
- * @param {Object}
- *            data
- * @returns {Deferred}
- */
-Tasklist.prototype.updateExtension = function (data) {
-	if (!taskwalls.settings.offline()) {
-		var request = $.extend({
-			id: this.id()
-		}, data);
-		return $.post('/tasklists/extension/update', request).done(function () {
-			ko.extendObservables(this, data);
-		}.bind(this)).fail(function () {
-			// FIXME: view model should do this
-			ko.extendObservables(data, this);
-		}.bind(this));
-	} else {
-		// TODO: offline
-		return $.Deferred().done(function () {
-			ko.extendObservables(this, data);
-		}.bind(this)).resolve();
-	}
-};
-
-/**
- * Remove myself.
- * 
- * @returns {Deferred}
- */
-Tasklist.prototype.remove = function () {
-	if (!taskwalls.settings.offline()) {
-		return $.post('/tasklists/delete', {
-			id: this.id()
-		});
-	} else {
-		// TODO: offline
-		return $.Deferred().resolve();
-	}
+	this.transactions = ko.observableArray();
 };
 
 /**
@@ -275,70 +66,6 @@ Tasklist.prototype.remove = function () {
 function Tasks () {
 };
 Tasks.prototype = {};
-
-/**
- * Asynchronously get tasks from server.
- * 
- * @param {Tasklist}
- * @returns {Deferred}
- */
-Tasks.get = function (tasklist) {
-	if (!taskwalls.settings.offline()) {
-		return $.getJSON('/tasks/list', {
-			tasklistID: tasklist.id()
-		}).pipe(function (response, status, xhr) {
-			if (response) {
-				var items = response.items;
-				if ($.isArray(items)) {
-					localStorage['Tasks.get.' + tasklist.id()] = xhr.responseText;
-					return items.map(function (item) {
-						return new Task(item, tasklist);
-					});
-				}
-			}
-			// ignore empty or bad data
-			return [];
-		});
-	} else {
-		return $.Deferred().resolve((function () {
-			var response = $.parseJSON(localStorage['Tasks.get.' + tasklist.id()]);
-			if (response) {
-				var items = response.items;
-				if ($.isArray(items)) {
-					return items.map(function (item) {
-						return new Task(item, tasklist);
-					});
-				}
-			}
-			// ignore empty or bad data
-			return [];
-		})());
-	}
-};
-
-/**
- * Create a task.
- * 
- * @param {Object}
- *            data
- * @returns {Deferred} call with new instance of {@link Task}
- */
-Tasks.create = function (data) {
-	if (!taskwalls.settings.offline()) {
-		return $.post('/tasks/create', $.extend({}, data, {
-			// specify zero for icebox
-			due: data.due ? DateUtil.calculateTimeInUTC(data.due) : 0
-		})).pipe(function (object) {
-			return new Task(object);
-		});
-	} else {
-		// TODO: offline
-		return $.Deferred().resolve(new Task($.extend({
-			id: 'task__' + $.now(),
-			status: 'needsAction'
-		}, data)));
-	}
-};
 
 /**
  * Returns array of tasklist groups.
@@ -481,78 +208,60 @@ Task.prototype.initialize = function (object, tasklist) {
 		},
 		owner: this
 	});
+
+	this.past = ko.computed(function () {
+		return this.due() < DateUtil.today();
+	}, this);
+
+	this.transactions = ko.observableArray();
 };
 
 /**
- * Save and update myself if succeeded.
+ * Execute all transactions of this task sequentially.
  * 
- * @param {Object}
- *            data
- * @returns {Deferred}
+ * If transactions <code>[t1, t2, t3]</code> are given:
+ * <code><pre>
+ * t1.execute().done(function () {
+ *   t2.execute().done(function () {
+ *     t3.execute();
+ *   });
+ * });
+ * </pre></code>
  */
-Task.prototype.update = function (data) {
-	if (!taskwalls.settings.offline()) {
-		var request = $.extend({}, data, {
-			id: this.id(),
-			tasklistID: this.tasklist().id(),
-		}, data.due === undefined ? {} : {
-			// specify zero if for icebox
-			due: data.due ? DateUtil.calculateTimeInUTC(data.due) : 0
-		});
-		return $.post('/tasks/update', request).done(function () {
-			ko.extendObservables(this, data);
-		}.bind(this)).fail(function () {
-			// TODO: view model should do this...
-			ko.extendObservables(data, this);
-		}.bind(this));
-	} else {
-		// TODO: offline
-		return $.Deferred().done(function () {
-			ko.extendObservables(this, data);
-		}.bind(this)).resolve();
-	}
+Task.prototype.executeTransactions = function () {
+	this.transactions()
+		.map(function (transaction) {
+			return transaction.execute.bind(transaction);
+		})
+		.reduceRight(function (x, y) {
+			return function () {
+				y().done(x);
+			};
+		})();
 };
 
 /**
- * Move the task to another tasklist.
+ * Roll back all transactions of this task sequentially.
  * 
- * @param {Tasklist}
- *            tasklist destination
- * @returns {Deferred}
+ * If transactions <code>[t1, t2, t3]</code> are given:
+ * <code><pre>
+ * t3.rollback().done(function () {
+ *   t2.rollback().done(function () {
+ *     t1.rollback();
+ *   });
+ * });
+ * </pre></code>
  */
-Task.prototype.move = function (tasklist) {
-	if (!taskwalls.settings.offline()) {
-		var request = {
-			id: this.id(),
-			tasklistID: this.tasklist().id(),
-			destinationTasklistID: tasklist.id()
-		};
-		return $.post('/tasks/move', request).done(function () {
-			this.tasklist(tasklist);
-		}.bind(this));
-	} else {
-		// TODO: offline
-		return $.Deferred().done(function () {
-			this.tasklist(tasklist);
-		}.bind(this)).resolve();
-	}
-};
-
-/**
- * Remove the task.
- * 
- * @returns {Deferred}
- */
-Task.prototype.remove = function () {
-	if (!taskwalls.settings.offline()) {
-		return $.post('/tasks/delete', {
-			id: this.id(),
-			tasklistID: this.tasklist().id()
-		});
-	} else {
-		// TODO: offline
-		return $.Deferred().resolve();
-	}
+Task.prototype.rollbackTransactions = function () {
+	this.transactions()
+		.map(function (transaction) {
+			return transaction.rollback.bind(transaction);
+		})
+		.reduce(function (x, y) {
+			return function () {
+				y().done(x);
+			};
+		})();
 };
 
 /**

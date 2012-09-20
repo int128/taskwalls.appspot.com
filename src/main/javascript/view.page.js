@@ -34,11 +34,22 @@ AuthorizedPageViewModel.prototype.initialize = function () {
 	this.moveExpiredTasks = function () {
 		var due = this.lastDayOfThisWeek();
 		expiredTasks().forEach(function (task) {
-			task.update({
+			TaskService.update(task, {
 				due: due
 			});
 		});
 	};
+
+	// pending transactions (off-line only)
+	this.pendingTasks = ko.computed(function () {
+		if (taskwalls.settings.offline()) {
+			return this.taskdata.tasks().filter(function (task) {
+				return task.transactions().length > 0;
+			});
+		} else {
+			return [];
+		}
+	}, this);
 
 	// views
 	this.viewMode = ko.observable(location.hash);
@@ -66,18 +77,18 @@ AuthorizedPageViewModel.prototype.initialize = function () {
 			return new TasklistMenuItemViewModel(tasklist);
 		});
 	}, this);
-
-	// session
-	this.logout = function () {
-		OAuth2Controller.logout();
-	};
 };
 
-/**
- * Load task data.
- */
 AuthorizedPageViewModel.prototype.load = function () {
-	this.taskdata.load();
+	TaskdataService.fetch(this.taskdata);
+};
+
+AuthorizedPageViewModel.prototype.toggleOffline = function () {
+	taskwalls.settings.offline(!taskwalls.settings.offline());
+};
+
+AuthorizedPageViewModel.prototype.logout = function () {
+	OAuth2Controller.logout();
 };
 
 /**
@@ -145,7 +156,7 @@ TasklistMenuItemViewModel.prototype.initialize = function (tasklist) {
 };
 
 TasklistMenuItemViewModel.prototype.updateColor = function (colorCode) {
-	this.tasklist.updateExtension({
+	TasklistService.updateExtension(this.tasklist, {
 		colorCode: colorCode
 	});
 };

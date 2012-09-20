@@ -11,7 +11,7 @@
 </script>
 <![endif]-->
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
-<title>Task Wall</title>
+<title>TaskWall</title>
 <link rel="stylesheet" href="/production.css"/>
 <style>
 /* loading indicator */
@@ -39,12 +39,12 @@
 
 <article class="oauth2state unauthorized" style="display: none;">
 	<div class="container">
-		<h1>Task Wall</h1>
+		<h1>TaskWall</h1>
 		<div class="lead">成果は日々の積み重ねから</div>
 		<div class="row">
 		<div class="span8">
 		<p>
-		Task WallはGoogleタスクと連携するタスク管理アプリです。<br/>
+		TaskWallはGoogleタスクと連携するタスク管理アプリです。<br/>
 		壁に付箋を貼る感覚でタスクを管理できます。
 		</p>
 		<div><img src="/img/todo.png" alt="icon" width="128" height="128" /></div>
@@ -64,7 +64,7 @@
 </article>
 
 <article class="oauth2state authorizing" style="display: none;">
-	<h1>Task Wall<span style="color: gold;">*</span></h1>
+	<h1>TaskWall<span style="color: gold;">*</span></h1>
 	<p>Google APIと通信しています...</p>
 </article>
 
@@ -72,7 +72,7 @@
 <div class="navbar navbar-fixed-top">
 <div class="navbar-inner">
 <div class="container">
-	<a class="brand" href="/">Task Wall</a>
+	<a class="brand" href="/">TaskWall</a>
 	<ul class="nav nav-tabs">
 	<li data-bind="css: {active: viewModeIs('', '#overview')}"><a href="#overview">概況</a></li>
 	<li data-bind="css: {active: viewModeIs('#daily')}"><a href="#daily">今週の計画</a></li>
@@ -84,10 +84,13 @@
 	</ul>
 	<ul class="nav pull-right">
 	<li class="dropdown">
-	<a href="#" class="dropdown-toggle" data-toggle="dropdown">タスクリスト <b class="caret"></b></a>
+	<a href="#" class="dropdown-toggle showtooltip" data-toggle="dropdown"
+		data-placement="bottom" title="タスクリスト">
+		<i class="icon-list"></i>&nbsp;<b class="caret"></b>
+	</a>
 	<ul class="dropdown-menu">
 		<!-- ko foreach: tasklists -->
-		<li class="dropdown-submenu">
+		<li data-bind="css: {'dropdown-submenu': !$root.settings.offline()}">
 			<!-- ko with: tasklist -->
 			<a data-bind="text: title, attr: {'data-tasklistcolor': colorCode}, click: $.noop"
 				class="tasklist" href="#"></a>
@@ -104,18 +107,24 @@
 			</ul>
 		</li>
 		<!-- /ko -->
+		<!-- ko ifnot: settings.offline -->
 		<li class="divider"></li>
 		<li><a data-bind="click: createTasklistDialog.open" href="#">新しいタスクリスト...</a></li>
+		<!-- /ko -->
 	</ul>
 	</li>
-	<li class="dropdown">
-	<a href="#" class="dropdown-toggle" data-toggle="dropdown">設定 <b class="caret"></b></a>
-	<ul class="dropdown-menu">
-		<li><label class="checkbox"><input data-bind="checked: settings.offline" type="checkbox"/>オフライン</label></li>
-		<li class="divider"></li>
-		<li><a data-bind="click: logout" href="#">ログアウト</a></li>
-	</ul>
-	</li>
+	<li><a data-bind="click: toggleOffline" href="#"
+			class="showtooltip" data-placement="bottom" title="オンラインとオフラインを<br/>切り替える">
+		<!-- ko ifnot: settings.offline -->
+		<i class="icon-signal"></i>
+		<!-- /ko -->
+		<!-- ko if: settings.offline -->
+		<i class="icon-circle-arrow-down"></i>
+		<!-- /ko -->
+		</a></li>
+	<li><a data-bind="click: logout" href="#"
+			class="showtooltip" data-placement="bottom" title="ログアウト">
+			<i class="icon-off"></i></a></li>
 	</ul>
 </div>
 </div>
@@ -126,6 +135,7 @@
 <section class="overview board nav-tabs-content container">
 	<div data-bind="template: {name: 'offline-status-template'}"></div>
 	<div data-bind="template: {name: 'expired-tasks-template'}"></div>
+	<div data-bind="template: {name: 'pending-transactions-template'}"></div>
 	<h2>今週</h2>
 	<div>
 		<!-- ko with: $root.thisWeek -->
@@ -148,7 +158,7 @@
 		<div data-bind="foreach: tasklists">
 			<div class="tasklist">
 			<div data-bind="text: tasklist.title" class="title"></div>
-			<div data-bind="template: {name: 'task-template', foreach: tasks}, visible: tasklist.visible"></div>
+			<div data-bind="template: {name: 'task-template', foreach: tasks}"></div>
 			</div>
 		</div>
 		<div style="clear: both;"></div>
@@ -163,7 +173,7 @@
 		<div data-bind="foreach: tasklists">
 			<div class="tasklist">
 			<div data-bind="text: tasklist.title" class="title"></div>
-			<div data-bind="template: {name: 'task-template', foreach: tasks}, visible: tasklist.visible"></div>
+			<div data-bind="template: {name: 'task-template', foreach: tasks}"></div>
 			</div>
 		</div>
 		<div style="clear: both;"></div>
@@ -179,6 +189,7 @@
 <section class="daily board nav-tabs-content margin-for-icebox">
 	<div data-bind="template: {name: 'offline-status-template'}"></div>
 	<div data-bind="template: {name: 'expired-tasks-template'}"></div>
+	<div data-bind="template: {name: 'pending-transactions-template'}"></div>
 	<table class="calendar">
 	<tbody data-bind="foreach: rows">
 	<tr data-bind="droppable: {
@@ -197,9 +208,7 @@
 	<td class="weekday"><div data-bind="text: weekdayName"></div></td>
 	<td class="tasks">
 		<div data-bind="foreach: tasklists">
-		<div data-bind="template: {name: 'task-template', foreach: tasks}, visible: tasklist.visible"
-			class="tasklist">
-		</div>
+		<div data-bind="template: {name: 'task-template', foreach: tasks}" class="tasklist"></div>
 		</div>
 		<div class="create">
 		<a data-bind="click: $root.createTaskDialog.open"
@@ -218,6 +227,7 @@
 <!-- ko with: weeklyCalendar -->
 <section class="weekly board nav-tabs-content margin-for-icebox">
 	<div data-bind="template: {name: 'offline-status-template'}"></div>
+	<div data-bind="template: {name: 'pending-transactions-template'}"></div>
 	<table class="calendar">
 	<tbody data-bind="foreach: rows">
 	<tr data-bind="droppable: {
@@ -232,9 +242,7 @@
 	</th>
 	<td class="tasks">
 		<div data-bind="foreach: tasklists">
-		<div data-bind="template: {name: 'task-template', foreach: tasks}, visible: tasklist.visible"
-			class="tasklist">
-		</div>
+		<div data-bind="template: {name: 'task-template', foreach: tasks}" class="tasklist"></div>
 		</div>
 		<div class="create">
 		<a data-bind="click: $root.createTaskDialog.open"
@@ -253,6 +261,7 @@
 <!-- ko with: monthlyCalendar -->
 <section class="monthly board nav-tabs-content margin-for-icebox">
 	<div data-bind="template: {name: 'offline-status-template'}"></div>
+	<div data-bind="template: {name: 'pending-transactions-template'}"></div>
 	<table class="calendar">
 	<tbody data-bind="foreach: rows">
 	<tr data-bind="droppable: {
@@ -267,9 +276,7 @@
 	</th>
 	<td class="tasks">
 		<div data-bind="foreach: tasklists">
-		<div data-bind="template: {name: 'task-template', foreach: tasks}, visible: tasklist.visible"
-			class="tasklist">
-		</div>
+		<div data-bind="template: {name: 'task-template', foreach: tasks}" class="tasklist"></div>
 		</div>
 		<div class="create">
 		<a data-bind="click: $root.createTaskDialog.open"
@@ -288,10 +295,11 @@
 <!-- ko with: pastTasks -->
 <section class="past board nav-tabs-content container">
 	<div data-bind="template: {name: 'offline-status-template'}"></div>
+	<div data-bind="template: {name: 'pending-transactions-template'}"></div>
 	<div data-bind="foreach: tasklists">
 	<div class="tasklist">
 	<div class="count"><span data-bind="text: tasks.length" class="badge"></span></div>
-	<div data-bind="template: {name: 'task-template', foreach: tasks}, visible: tasklist.visible"></div>
+	<div data-bind="template: {name: 'task-template', foreach: tasks}"></div>
 	</div>
 	</div>
 	<div style="clear: both;"></div>
@@ -315,9 +323,7 @@
 	<div class="tasklist-header">
 	<span data-bind="text: tasks.length" class="badge"></span>
 	</div>
-	<div data-bind="template: {name: 'task-template', foreach: tasks}, visible: tasklist.visible"
-		class="tasklist">
-	</div>
+	<div data-bind="template: {name: 'task-template', foreach: tasks}" class="tasklist"></div>
 	</div>
 </section>
 <!-- /ko -->
@@ -347,13 +353,49 @@
 		<h4>期限切れのタスクをリスケしてください</h4>
 		<div data-bind="foreach: $root.expiredTasksGroups" class="tasklists">
 		<div class="tasklist">
-		<div data-bind="template: {name: 'task-template', foreach: tasks}, visible: tasklist.visible"></div>
+		<div data-bind="template: {name: 'task-template', foreach: tasks}"></div>
 		</div>
 		<div style="clear: both;"></div>
 		</div>
 		<div class="move"><a data-bind="click: moveExpiredTasks" href="#">
 			<i class="icon-arrow-down"></i>今週のタスクに移動する
 		</a></div>
+	</div>
+	<!-- /ko -->
+	<!-- /ko -->
+</script>
+
+<script type="text/html" id="pending-transactions-template">
+	<!-- ko with: $root -->
+	<!-- ko if: pendingTasks().length > 0 -->
+	<div class="alert">
+		<div><strong>保留中の変更</strong>&nbsp;</div>
+		<!-- ko foreach: pendingTasks -->
+		<hr/>
+		<div class="pull-right">
+			<button data-bind="click: rollbackTransactions" class="btn">取り消す</button>
+			<button data-bind="click: executeTransactions, disable: $root.settings.offline"
+				class="btn">変更を送信</button>
+		</div>
+		<ul data-bind="foreach: transactions">
+			<li>
+			<span data-bind="text: $parent.title"></span>
+			<!-- ko if: meta.kind == 'create' -->
+				を作成します。
+			<!-- /ko -->
+			<!-- ko if: meta.kind == 'update' -->
+				を更新します。
+			<!-- /ko -->
+			<!-- ko if: meta.kind == 'move' -->
+				を別のタスクリストに移動します。
+			<!-- /ko -->
+			<!-- ko if: meta.kind == 'remove' -->
+				を削除します。
+			<!-- /ko -->
+			</li>
+		</ul>
+		<div style="clear: both;"></div>
+		<!-- /ko -->
 	</div>
 	<!-- /ko -->
 	<!-- /ko -->
@@ -376,6 +418,12 @@
 <!-- /ko -->
 <span data-bind="text: title" class="title"></span>
 <div data-bind="autolinkText: notes" class="notes"></div>
+<div class="icons">
+<!-- ko foreach: transactions -->
+<span class="showtooltip" title="保留中の変更"><i class="icon-refresh"/></span>
+<!-- /ko -->
+</div>
+<div style="clear: both;"></div>
 </div>
 </script>
 
@@ -385,7 +433,7 @@
 	<h3>新しいタスクリスト</h3>
 	<form data-bind="submit: save">
 	<div><input data-bind="value: title, hasfocus: true" type="text" placeholder="タスクリストの名前" /></div>
-	<div><button type="submit" class="btn btn-primary">タスクリストを作成</button></div>
+	<div><button type="submit" class="btn btn-primary">作成</button></div>
 	</form>
 </div>
 <div data-bind="click: close" class="dialog-background"></div>
@@ -397,7 +445,7 @@
 <div class="update-tasklist dialog">
 	<form data-bind="submit: save">
 	<div><input data-bind="value: title, hasfocus: true" type="text" placeholder="タスクリストの名前" /></div>
-	<div><button type="submit" class="btn btn-primary">タスクリストを作成</button></div>
+	<div><button type="submit" class="btn btn-primary">変更</button></div>
 	</form>
 	<hr/>
 

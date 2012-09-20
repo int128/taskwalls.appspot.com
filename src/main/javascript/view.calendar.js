@@ -46,7 +46,7 @@ TasksOverviewViewModel.Completed.prototype.initialize = function (tasksInThisWee
  *            task dropped task
  */
 TasksOverviewViewModel.Completed.prototype.dropped = function (task) {
-	task.update({
+	TaskService.update(task, {
 		status: 'completed'
 	});
 };
@@ -74,7 +74,7 @@ TasksOverviewViewModel.NeedsAction.prototype.initialize = function (tasksInThisW
  *            task dropped task
  */
 TasksOverviewViewModel.NeedsAction.prototype.dropped = function (task) {
-	task.update({
+	TaskService.update(task, {
 		status: 'needsAction'
 	});
 };
@@ -123,9 +123,9 @@ CalendarRow.prototype.getDayForNewTask = function () {
  *            task dropped task
  */
 CalendarRow.prototype.dropped = function (task) {
-	task.update({
+	TaskService.update(task, {
 		due: this.day
-	}); // TODO: failed?
+	});
 };
 
 /**
@@ -286,9 +286,9 @@ IceboxTasksViewModel.prototype.getDayForNewTask = function () {
  *            task dropped task
  */
 IceboxTasksViewModel.prototype.dropped = function (task) {
-	task.update({
+	TaskService.update(task, {
 		due: null
-	}); // TODO: failed?
+	});
 };
 
 /**
@@ -309,29 +309,6 @@ PastTasksViewModel.prototype.initialize = function (taskdata) {
 		return Tasks.groupByTasklist(taskdata.tasks().filter(TaskFilters.dueBefore(DateUtil.thisWeek())));
 	});
 };
-
-/**
- * inject initializer to class {@link Tasklist}
- */
-Tasklist.prototype.initialize = FunctionUtil.seq(Tasklist.prototype.initialize, function () {
-	this.visible = ko.observable(true);
-});
-
-/**
- * Toggle visibility of the tasklist and its tasks.
- */
-Tasklist.prototype.toggleVisibility = function () {
-	this.visible(!this.visible());
-};
-
-/**
- * inject initializer to class {@link Task}
- */
-Task.prototype.initialize = FunctionUtil.seq(Task.prototype.initialize, function () {
-	this.past = ko.computed(function () {
-		return this.due() < DateUtil.today();
-	}, this);
-});
 
 /**
  * Dropped.
