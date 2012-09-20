@@ -84,10 +84,13 @@
 	</ul>
 	<ul class="nav pull-right">
 	<li class="dropdown">
-	<a href="#" class="dropdown-toggle" data-toggle="dropdown">タスクリスト <b class="caret"></b></a>
+	<a href="#" class="dropdown-toggle showtooltip" data-toggle="dropdown"
+		data-placement="bottom" title="タスクリスト">
+		<i class="icon-list"></i>&nbsp;<b class="caret"></b>
+	</a>
 	<ul class="dropdown-menu">
 		<!-- ko foreach: tasklists -->
-		<li class="dropdown-submenu">
+		<li data-bind="css: {'dropdown-submenu': !$root.settings.offline()}">
 			<!-- ko with: tasklist -->
 			<a data-bind="text: title, attr: {'data-tasklistcolor': colorCode}, click: $.noop"
 				class="tasklist" href="#"></a>
@@ -104,18 +107,24 @@
 			</ul>
 		</li>
 		<!-- /ko -->
+		<!-- ko ifnot: settings.offline -->
 		<li class="divider"></li>
 		<li><a data-bind="click: createTasklistDialog.open" href="#">新しいタスクリスト...</a></li>
+		<!-- /ko -->
 	</ul>
 	</li>
-	<li class="dropdown">
-	<a href="#" class="dropdown-toggle" data-toggle="dropdown">設定 <b class="caret"></b></a>
-	<ul class="dropdown-menu">
-		<li><label class="checkbox"><input data-bind="checked: settings.offline" type="checkbox"/>オフライン</label></li>
-		<li class="divider"></li>
-		<li><a data-bind="click: logout" href="#">ログアウト</a></li>
-	</ul>
-	</li>
+	<li><a data-bind="click: toggleOffline" href="#"
+			class="showtooltip" data-placement="bottom" title="オンラインとオフラインを<br/>切り替える">
+		<!-- ko ifnot: settings.offline -->
+		<i class="icon-signal"></i>
+		<!-- /ko -->
+		<!-- ko if: settings.offline -->
+		<i class="icon-circle-arrow-down"></i>
+		<!-- /ko -->
+		</a></li>
+	<li><a data-bind="click: logout" href="#"
+			class="showtooltip" data-placement="bottom" title="ログアウト">
+			<i class="icon-off"></i></a></li>
 	</ul>
 </div>
 </div>
@@ -126,6 +135,7 @@
 <section class="overview board nav-tabs-content container">
 	<div data-bind="template: {name: 'offline-status-template'}"></div>
 	<div data-bind="template: {name: 'expired-tasks-template'}"></div>
+	<div data-bind="template: {name: 'pending-transactions-template'}"></div>
 	<h2>今週</h2>
 	<div>
 		<!-- ko with: $root.thisWeek -->
@@ -179,6 +189,7 @@
 <section class="daily board nav-tabs-content margin-for-icebox">
 	<div data-bind="template: {name: 'offline-status-template'}"></div>
 	<div data-bind="template: {name: 'expired-tasks-template'}"></div>
+	<div data-bind="template: {name: 'pending-transactions-template'}"></div>
 	<table class="calendar">
 	<tbody data-bind="foreach: rows">
 	<tr data-bind="droppable: {
@@ -218,6 +229,7 @@
 <!-- ko with: weeklyCalendar -->
 <section class="weekly board nav-tabs-content margin-for-icebox">
 	<div data-bind="template: {name: 'offline-status-template'}"></div>
+	<div data-bind="template: {name: 'pending-transactions-template'}"></div>
 	<table class="calendar">
 	<tbody data-bind="foreach: rows">
 	<tr data-bind="droppable: {
@@ -253,6 +265,7 @@
 <!-- ko with: monthlyCalendar -->
 <section class="monthly board nav-tabs-content margin-for-icebox">
 	<div data-bind="template: {name: 'offline-status-template'}"></div>
+	<div data-bind="template: {name: 'pending-transactions-template'}"></div>
 	<table class="calendar">
 	<tbody data-bind="foreach: rows">
 	<tr data-bind="droppable: {
@@ -288,6 +301,7 @@
 <!-- ko with: pastTasks -->
 <section class="past board nav-tabs-content container">
 	<div data-bind="template: {name: 'offline-status-template'}"></div>
+	<div data-bind="template: {name: 'pending-transactions-template'}"></div>
 	<div data-bind="foreach: tasklists">
 	<div class="tasklist">
 	<div class="count"><span data-bind="text: tasks.length" class="badge"></span></div>
@@ -359,6 +373,42 @@
 	<!-- /ko -->
 </script>
 
+<script type="text/html" id="pending-transactions-template">
+	<!-- ko with: $root -->
+	<!-- ko if: pendingTasks().length > 0 -->
+	<div class="alert">
+		<div><strong>保留中の変更</strong>&nbsp;</div>
+		<!-- ko foreach: pendingTasks -->
+		<hr/>
+		<div class="pull-right">
+			<button data-bind="click: rollbackTransactions" class="btn">取り消す</button>
+			<button data-bind="click: executeTransactions, disable: $root.settings.offline"
+				class="btn">変更を送信</button>
+		</div>
+		<ul data-bind="foreach: transactions">
+			<li>
+			<span data-bind="text: $parent.title"></span>
+			<!-- ko if: meta.kind == 'create' -->
+				を作成します。
+			<!-- /ko -->
+			<!-- ko if: meta.kind == 'update' -->
+				を更新します。
+			<!-- /ko -->
+			<!-- ko if: meta.kind == 'move' -->
+				を別のタスクリストに移動します。
+			<!-- /ko -->
+			<!-- ko if: meta.kind == 'remove' -->
+				を削除します。
+			<!-- /ko -->
+			</li>
+		</ul>
+		<div style="clear: both;"></div>
+		<!-- /ko -->
+	</div>
+	<!-- /ko -->
+	<!-- /ko -->
+</script>
+
 <script type="text/html" id="task-template">
 <div data-bind="draggableByClone: {},
 	click: $root.updateTaskDialog.open,
@@ -376,6 +426,12 @@
 <!-- /ko -->
 <span data-bind="text: title" class="title"></span>
 <div data-bind="autolinkText: notes" class="notes"></div>
+<div class="icons">
+<!-- ko foreach: transactions -->
+<span class="showtooltip" title="保留中の変更"><i class="icon-refresh"/></span>
+<!-- /ko -->
+</div>
+<div style="clear: both;"></div>
 </div>
 </script>
 
