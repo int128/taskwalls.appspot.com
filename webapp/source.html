@@ -189,6 +189,7 @@
 <section class="daily board nav-tabs-content margin-for-icebox">
 	<div data-bind="template: {name: 'offline-status-template'}"></div>
 	<div data-bind="template: {name: 'expired-tasks-template'}"></div>
+	<div data-bind="template: {name: 'pending-transactions-template'}"></div>
 	<table class="calendar">
 	<tbody data-bind="foreach: rows">
 	<tr data-bind="droppable: {
@@ -228,6 +229,7 @@
 <!-- ko with: weeklyCalendar -->
 <section class="weekly board nav-tabs-content margin-for-icebox">
 	<div data-bind="template: {name: 'offline-status-template'}"></div>
+	<div data-bind="template: {name: 'pending-transactions-template'}"></div>
 	<table class="calendar">
 	<tbody data-bind="foreach: rows">
 	<tr data-bind="droppable: {
@@ -263,6 +265,7 @@
 <!-- ko with: monthlyCalendar -->
 <section class="monthly board nav-tabs-content margin-for-icebox">
 	<div data-bind="template: {name: 'offline-status-template'}"></div>
+	<div data-bind="template: {name: 'pending-transactions-template'}"></div>
 	<table class="calendar">
 	<tbody data-bind="foreach: rows">
 	<tr data-bind="droppable: {
@@ -298,6 +301,7 @@
 <!-- ko with: pastTasks -->
 <section class="past board nav-tabs-content container">
 	<div data-bind="template: {name: 'offline-status-template'}"></div>
+	<div data-bind="template: {name: 'pending-transactions-template'}"></div>
 	<div data-bind="foreach: tasklists">
 	<div class="tasklist">
 	<div class="count"><span data-bind="text: tasks.length" class="badge"></span></div>
