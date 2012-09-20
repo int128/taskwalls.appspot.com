@@ -1,6 +1,6 @@
-Task Wall
-=========
-Task Wall is a To Do management application.
+TaskWall
+========
+TaskWall is a To Do management application.
 
 [https://taskwalls.appspot.com/](https://taskwalls.appspot.com/)
 
