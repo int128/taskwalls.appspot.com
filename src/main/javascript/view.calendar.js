@@ -311,24 +311,6 @@ PastTasksViewModel.prototype.initialize = function (taskdata) {
 };
 
 /**
- * inject initializer to class {@link Tasklist}
- */
-Tasklist.prototype.initialize = FunctionUtil.seq(Tasklist.prototype.initialize, function () {
-	this.transactions = ko.observableArray();
-});
-
-/**
- * inject initializer to class {@link Task}
- */
-Task.prototype.initialize = FunctionUtil.seq(Task.prototype.initialize, function () {
-	// TODO: move to model class
-	this.past = ko.computed(function () {
-		return this.due() < DateUtil.today();
-	}, this);
-	this.transactions = ko.observableArray();
-});
-
-/**
  * Dropped.
  * 
  * @param {Task}
@@ -346,52 +328,4 @@ Task.prototype.dropped = function (task, e, viewModel) {
 			viewModel.dropped(task);
 		}
 	});
-};
-
-/**
- * Execute all transactions of this task sequentially.
- * 
- * If transactions <code>[t1, t2, t3]</code> are given:
- * <code><pre>
- * t1.execute().done(function () {
- *   t2.execute().done(function () {
- *     t3.execute();
- *   });
- * });
- * </pre></code>
- */
-Task.prototype.executeTransactions = function () {
-	this.transactions()
-		.map(function (transaction) {
-			return transaction.execute.bind(transaction);
-		})
-		.reduceRight(function (x, y) {
-			return function () {
-				y().done(x);
-			};
-		})();
-};
-
-/**
- * Roll back all transactions of this task sequentially.
- * 
- * If transactions <code>[t1, t2, t3]</code> are given:
- * <code><pre>
- * t3.rollback().done(function () {
- *   t2.rollback().done(function () {
- *     t1.rollback();
- *   });
- * });
- * </pre></code>
- */
-Task.prototype.rollbackTransactions = function () {
-	this.transactions()
-		.map(function (transaction) {
-			return transaction.rollback.bind(transaction);
-		})
-		.reduce(function (x, y) {
-			return function () {
-				y().done(x);
-			};
-		})();
 };
