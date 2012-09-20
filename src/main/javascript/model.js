@@ -56,6 +56,8 @@ Tasklist.prototype.initialize = function (object) {
 			return Math.abs(new String(object.id).hashCode()); // auto generate
 		}
 	})() % taskwalls.settings.tasklistColors);
+
+	this.transactions = ko.observableArray();
 };
 
 /**
@@ -206,6 +208,60 @@ Task.prototype.initialize = function (object, tasklist) {
 		},
 		owner: this
 	});
+
+	this.past = ko.computed(function () {
+		return this.due() < DateUtil.today();
+	}, this);
+
+	this.transactions = ko.observableArray();
+};
+
+/**
+ * Execute all transactions of this task sequentially.
+ * 
+ * If transactions <code>[t1, t2, t3]</code> are given:
+ * <code><pre>
+ * t1.execute().done(function () {
+ *   t2.execute().done(function () {
+ *     t3.execute();
+ *   });
+ * });
+ * </pre></code>
+ */
+Task.prototype.executeTransactions = function () {
+	this.transactions()
+		.map(function (transaction) {
+			return transaction.execute.bind(transaction);
+		})
+		.reduceRight(function (x, y) {
+			return function () {
+				y().done(x);
+			};
+		})();
+};
+
+/**
+ * Roll back all transactions of this task sequentially.
+ * 
+ * If transactions <code>[t1, t2, t3]</code> are given:
+ * <code><pre>
+ * t3.rollback().done(function () {
+ *   t2.rollback().done(function () {
+ *     t1.rollback();
+ *   });
+ * });
+ * </pre></code>
+ */
+Task.prototype.rollbackTransactions = function () {
+	this.transactions()
+		.map(function (transaction) {
+			return transaction.rollback.bind(transaction);
+		})
+		.reduce(function (x, y) {
+			return function () {
+				y().done(x);
+			};
+		})();
 };
 
 /**
