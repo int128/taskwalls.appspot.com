@@ -40,11 +40,15 @@ AuthorizedPageViewModel.prototype.initialize = function () {
 		});
 	};
 
-	// pending transactions
+	// pending transactions (off-line only)
 	this.pendingTasks = ko.computed(function () {
-		return this.taskdata.tasks().filter(function (task) {
-			return task.transactions().length > 0;
-		});
+		if (taskwalls.settings.offline()) {
+			return this.taskdata.tasks().filter(function (task) {
+				return task.transactions().length > 0;
+			});
+		} else {
+			return [];
+		}
 	}, this);
 
 	// views
