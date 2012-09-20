@@ -315,17 +315,7 @@ PastTasksViewModel.prototype.initialize = function (taskdata) {
  */
 Tasklist.prototype.initialize = FunctionUtil.seq(Tasklist.prototype.initialize, function () {
 	this.transactions = ko.observableArray();
-	// TODO: not needed
-	this.visible = ko.observable(true);
 });
-
-/**
- * Toggle visibility of the tasklist and its tasks.
- * @deprecated
- */
-Tasklist.prototype.toggleVisibility = function () {
-	this.visible(!this.visible());
-};
 
 /**
  * inject initializer to class {@link Task}

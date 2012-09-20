@@ -158,7 +158,7 @@
 		<div data-bind="foreach: tasklists">
 			<div class="tasklist">
 			<div data-bind="text: tasklist.title" class="title"></div>
-			<div data-bind="template: {name: 'task-template', foreach: tasks}, visible: tasklist.visible"></div>
+			<div data-bind="template: {name: 'task-template', foreach: tasks}"></div>
 			</div>
 		</div>
 		<div style="clear: both;"></div>
@@ -173,7 +173,7 @@
 		<div data-bind="foreach: tasklists">
 			<div class="tasklist">
 			<div data-bind="text: tasklist.title" class="title"></div>
-			<div data-bind="template: {name: 'task-template', foreach: tasks}, visible: tasklist.visible"></div>
+			<div data-bind="template: {name: 'task-template', foreach: tasks}"></div>
 			</div>
 		</div>
 		<div style="clear: both;"></div>
@@ -208,9 +208,7 @@
 	<td class="weekday"><div data-bind="text: weekdayName"></div></td>
 	<td class="tasks">
 		<div data-bind="foreach: tasklists">
-		<div data-bind="template: {name: 'task-template', foreach: tasks}, visible: tasklist.visible"
-			class="tasklist">
-		</div>
+		<div data-bind="template: {name: 'task-template', foreach: tasks}" class="tasklist"></div>
 		</div>
 		<div class="create">
 		<a data-bind="click: $root.createTaskDialog.open"
@@ -244,9 +242,7 @@
 	</th>
 	<td class="tasks">
 		<div data-bind="foreach: tasklists">
-		<div data-bind="template: {name: 'task-template', foreach: tasks}, visible: tasklist.visible"
-			class="tasklist">
-		</div>
+		<div data-bind="template: {name: 'task-template', foreach: tasks}" class="tasklist"></div>
 		</div>
 		<div class="create">
 		<a data-bind="click: $root.createTaskDialog.open"
@@ -280,9 +276,7 @@
 	</th>
 	<td class="tasks">
 		<div data-bind="foreach: tasklists">
-		<div data-bind="template: {name: 'task-template', foreach: tasks}, visible: tasklist.visible"
-			class="tasklist">
-		</div>
+		<div data-bind="template: {name: 'task-template', foreach: tasks}" class="tasklist"></div>
 		</div>
 		<div class="create">
 		<a data-bind="click: $root.createTaskDialog.open"
@@ -305,7 +299,7 @@
 	<div data-bind="foreach: tasklists">
 	<div class="tasklist">
 	<div class="count"><span data-bind="text: tasks.length" class="badge"></span></div>
-	<div data-bind="template: {name: 'task-template', foreach: tasks}, visible: tasklist.visible"></div>
+	<div data-bind="template: {name: 'task-template', foreach: tasks}"></div>
 	</div>
 	</div>
 	<div style="clear: both;"></div>
@@ -329,9 +323,7 @@
 	<div class="tasklist-header">
 	<span data-bind="text: tasks.length" class="badge"></span>
 	</div>
-	<div data-bind="template: {name: 'task-template', foreach: tasks}, visible: tasklist.visible"
-		class="tasklist">
-	</div>
+	<div data-bind="template: {name: 'task-template', foreach: tasks}" class="tasklist"></div>
 	</div>
 </section>
 <!-- /ko -->
@@ -361,7 +353,7 @@
 		<h4>期限切れのタスクをリスケしてください</h4>
 		<div data-bind="foreach: $root.expiredTasksGroups" class="tasklists">
 		<div class="tasklist">
-		<div data-bind="template: {name: 'task-template', foreach: tasks}, visible: tasklist.visible"></div>
+		<div data-bind="template: {name: 'task-template', foreach: tasks}"></div>
 		</div>
 		<div style="clear: both;"></div>
 		</div>
