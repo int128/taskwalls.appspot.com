@@ -213,6 +213,9 @@ TasklistService.create = function (taskdata, data) {
 	return transaction.promise();
 };
 
+/**
+ * @returns {Function} service operation
+ */
 TasklistService.create.executeFunction = function (taskdata, data, mock) {
 	return function () {
 		return $.post('/tasklists/create', data).pipe(function (object) {
@@ -224,6 +227,9 @@ TasklistService.create.executeFunction = function (taskdata, data, mock) {
 	};
 };
 
+/**
+ * @returns {Function} rollback the service operation
+ */
 TasklistService.create.rollbackFunction = function (taskdata, data, mock) {
 	return function () {
 		return taskdata.tasklists.remove(mock);
@@ -250,6 +256,9 @@ TasklistService.update = function (tasklist, data) {
 	return transaction.promise();
 };
 
+/**
+ * @returns {Function} service operation
+ */
 TasklistService.update.executeFunction = function (tasklist, data) {
 	var request = $.extend({
 		id: tasklist.id()
@@ -257,6 +266,9 @@ TasklistService.update.executeFunction = function (tasklist, data) {
 	return $.post.bind(null, '/tasklists/update', request);
 };
 
+/**
+ * @returns {Function} rollback the service operation
+ */
 TasklistService.update.rollbackFunction = function (tasklist, data) {
 	var originalData = {};
 	$.each(data, function (k, v) {
@@ -285,6 +297,9 @@ TasklistService.updateExtension = function (tasklist, data) {
 	return transaction.promise();
 };
 
+/**
+ * @returns {Function} service operation
+ */
 TasklistService.updateExtension.executeFunction = function (tasklist, data) {
 	var request = $.extend({
 		id: tasklist.id()
@@ -292,6 +307,9 @@ TasklistService.updateExtension.executeFunction = function (tasklist, data) {
 	return $.post.bind(null, '/tasklists/extension/update', request);
 };
 
+/**
+ * @returns {Function} rollback the service operation
+ */
 TasklistService.updateExtension.rollbackFunction = function (tasklist, data) {
 	var originalData = {};
 	$.each(data, function (k, v) {
@@ -318,6 +336,9 @@ TasklistService.remove = function (taskdata, tasklist) {
 	return transaction.promise();
 };
 
+/**
+ * @returns {Function} service operation
+ */
 TasklistService.remove.executeFunction = function (taskdata, tasklist) {
 	var identity = {
 		id: tasklist.id()
@@ -329,6 +350,9 @@ TasklistService.remove.executeFunction = function (taskdata, tasklist) {
 	};
 };
 
+/**
+ * @returns {Function} rollback the service operation
+ */
 TasklistService.remove.rollbackFunction = function (taskdata, tasklist) {
 	return function () {
 		return taskdata.tasklists.push(tasklist);
@@ -417,6 +441,9 @@ TaskService.create = function (taskdata, data) {
 	return transaction.promise();
 };
 
+/**
+ * @returns {Function} service operation
+ */
 TaskService.create.executeFunction = function (taskdata, data, mock) {
 	var due = {
 		// specify zero for icebox
@@ -434,6 +461,9 @@ TaskService.create.executeFunction = function (taskdata, data, mock) {
 	};
 };
 
+/**
+ * @returns {Function} rollback the service operation
+ */
 TaskService.create.rollbackFunction = function (taskdata, data, mock) {
 	return function () {
 		return taskdata.tasks.remove(mock);
@@ -468,6 +498,9 @@ TaskService.update = function (task, data) {
 	return transaction.promise();
 };
 
+/**
+ * @returns {Function} service operation
+ */
 TaskService.update.executeFunction = function (task, data) {
 	var identity = {
 		id: task.id(),
@@ -481,6 +514,9 @@ TaskService.update.executeFunction = function (task, data) {
 	return $.post.bind(null, '/tasks/update', request);
 };
 
+/**
+ * @returns {Function} rollback the service operation
+ */
 TaskService.update.rollbackFunction = function (task, data) {
 	var originalData = {};
 	$.each(data, function (k, v) {
@@ -510,6 +546,9 @@ TaskService.move = function (task, tasklist) {
 	return transaction.promise();
 };
 
+/**
+ * @returns {Function} service operation
+ */
 TaskService.move.executeFunction = function (task, tasklist) {
 	var request = {
 		id: task.id(),
@@ -519,6 +558,9 @@ TaskService.move.executeFunction = function (task, tasklist) {
 	return $.post.bind(null, '/tasks/move', request);
 };
 
+/**
+ * @returns {Function} rollback the service operation
+ */
 TaskService.move.rollbackFunction = function (task) {
 	return task.tasklist.bind(null, task.tasklist());
 };
@@ -542,6 +584,9 @@ TaskService.remove = function (taskdata, task) {
 	return transaction.promise();
 };
 
+/**
+ * @returns {Function} service operation
+ */
 TaskService.remove.executeFunction = function (taskdata, task) {
 	var request = {
 		id: task.id(),
@@ -554,6 +599,9 @@ TaskService.remove.executeFunction = function (taskdata, task) {
 	};
 };
 
+/**
+ * @returns {Function} rollback the service operation
+ */
 TaskService.remove.rollbackFunction = function (taskdata, task) {
 	return function () {
 		return taskdata.tasks.push(task);
