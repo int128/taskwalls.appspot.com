@@ -47,7 +47,6 @@ OAuth2Controller.handle = function (events) {
 	} else if (params['error']) {
 		this.logout();
 	} else if (localStorage['session']) {
-		this.setUpAjaxSession(localStorage['session']);
 		_(events.alreadyAuthorized)();
 	} else {
 		_(events.notAuthorizedYet)();
@@ -64,21 +63,5 @@ OAuth2Controller.processAuthorizationCode = function (code) {
 		location.replace(location.pathname);
 	}).fail(function (error) {
 		OAuth2Controller.logout();
-	});
-};
-
-OAuth2Controller.setUpAjaxSession = function (sessionId) {
-	$(document).ajaxSend(function (event, xhr) {
-		xhr.setRequestHeader('X-TaskWall-Session', sessionId);
-	});
-	$(document).ajaxError(function (event, xhr, e) {
-		if (xhr.status == 403) {
-			// session has been expired
-			location.replace(OAuth2Controller.getAuthorizationURL());
-		} else if (xhr.status == 400) {
-			OAuth2Controller.logout();
-		} else {
-			throw e;
-		}
 	});
 };
