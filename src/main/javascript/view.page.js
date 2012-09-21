@@ -98,7 +98,6 @@ function TryOutPageViewModel () {
 	this.initialize.apply(this, arguments);
 };
 
-$(function () {
 TryOutPageViewModel.prototype = new AuthorizedPageViewModel();
 
 TryOutPageViewModel.prototype.initialize = function () {
@@ -135,7 +134,6 @@ TryOutPageViewModel.prototype.load = function () {
 
 // prevent on-line
 TryOutPageViewModel.prototype.toggleOffline = $.noop;
-});
 
 /**
  * @class item of task lists menu
@@ -163,12 +161,10 @@ TasklistMenuItemViewModel.prototype.updateColor = function (colorCode) {
 	});
 };
 
-$(function () {
-	TasklistMenuItemViewModel.prototype.colorCodeArray = (function () {
-		var a = [];
-		for (var i = 0; i < taskwalls.settings.tasklistColors; i++) {
-			a[i] = i;
-		}
-		return a;
-	})();
-});
+TasklistMenuItemViewModel.prototype.colorCodeArray = (function () {
+	var a = [];
+	for (var i = 0; i < taskwalls.settings.tasklistColors; i++) {
+		a[i] = i;
+	}
+	return a;
+})();
