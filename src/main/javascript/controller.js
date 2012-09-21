@@ -5,7 +5,7 @@ $(function () {
 				$('.oauth2state:not(.authorized)').remove();
 				$('.oauth2state').show();
 				taskwalls.settings.offline(true);
-				ko.applyBindings(taskwalls.pagevm = new TryOutPageViewModel());
+				ko.applyBindings(taskwalls.pagevm = new DemoPageViewModel());
 				taskwalls.pagevm.load();
 			} else {
 				$('.oauth2state:not(.unauthorized)').remove();

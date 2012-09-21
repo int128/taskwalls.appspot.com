@@ -92,19 +92,19 @@ AuthorizedPageViewModel.prototype.logout = function () {
 };
 
 /**
- * @class View model for try out box in the unauthorized page.
+ * @class View model for demo page
  */
-function TryOutPageViewModel () {
+function DemoPageViewModel () {
 	this.initialize.apply(this, arguments);
 };
 
-TryOutPageViewModel.prototype = new AuthorizedPageViewModel();
+DemoPageViewModel.prototype = new AuthorizedPageViewModel();
 
-TryOutPageViewModel.prototype.initialize = function () {
+DemoPageViewModel.prototype.initialize = function () {
 	AuthorizedPageViewModel.prototype.initialize.apply(this, arguments);
 };
 
-TryOutPageViewModel.prototype.load = function () {
+DemoPageViewModel.prototype.load = function () {
 	$.getJSON('/tryoutdata.json').done(function (response) {
 		var delta = DateUtil.thisWeek() - DateUtil.clearTimePart(new Date(response.baseTime)).getTime();
 
@@ -133,7 +133,7 @@ TryOutPageViewModel.prototype.load = function () {
 };
 
 // prevent on-line
-TryOutPageViewModel.prototype.toggleOffline = $.noop;
+DemoPageViewModel.prototype.toggleOffline = $.noop;
 
 /**
  * @class item of task lists menu
