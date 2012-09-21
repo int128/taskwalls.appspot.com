@@ -473,6 +473,7 @@
 	<form data-bind="submit: save">
 	<div><input data-bind="value: title, hasfocus: titleFocus" type="text" placeholder="タスクの件名" /></div>
 	<div><textarea data-bind="value: notes" placeholder="備考"></textarea></div>
+	<div data-bind="template: {name: 'task-dialog-repeat-template'}"></div>
 	<div data-bind="foreach: tasklists" class="tasklist-selection">
 		<a data-bind="text: title,
 			attr: {'data-tasklistcolor': colorCode},
@@ -499,6 +500,7 @@
 	</p>
 	<div><input data-bind="value: title, hasfocus: true" type="text" placeholder="タスクの件名" /></div>
 	<div><textarea data-bind="value: notes" placeholder="備考"></textarea></div>
+	<div data-bind="template: {name: 'task-dialog-repeat-template'}"></div>
 	<button type="submit" class="btn btn-primary">タスクを更新</button>
 	</form>
 	<hr/>
@@ -544,6 +546,15 @@
 <div data-bind="click: close" class="dialog-background"></div>
 </section>
 <!-- /ko -->
+
+<script type="text/html" id="task-dialog-repeat-template">
+<select data-bind="value: repeat">
+	<option value="ONCE">繰り返さない</option>
+	<option value="WEEKLY">毎週のタスク</option>
+	<option value="MONTHLY">毎月のタスク</option>
+	<option value="YEARLY">毎年のタスク</option>
+</select>
+</script>
 
 </article>
 

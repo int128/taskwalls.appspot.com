@@ -185,6 +185,10 @@ Task.prototype.initialize = function (object, tasklist) {
 		this.notes = ko.observable();
 	}
 
+	if (object.repeat === undefined) {
+		this.repeat = ko.observable();
+	}
+
 	if (object.due) {
 		// convert to local Date (response is UTC string)
 		this.due(DateUtil.clearTimePart(new Date(this.due())));

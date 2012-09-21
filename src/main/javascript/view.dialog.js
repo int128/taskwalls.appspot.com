@@ -108,6 +108,7 @@ CreateTaskDialog.prototype.initialize = function (taskdata, due) {
 	this.due = ko.observable(due);
 	this.title = ko.observable();
 	this.notes = ko.observable();
+	this.repeat = ko.observable();
 
 	this.titleFocus = ko.observable(true);
 	this.tasklists = taskdata.tasklists();
@@ -168,13 +169,15 @@ UpdateTaskDialog.prototype.initialize = function (taskdata, task) {
 	this.due = ko.observable(this.task.due());
 	this.title = ko.observable(this.task.title());
 	this.notes = ko.observable(this.task.notes());
+	this.repeat = ko.observable(this.task.repeat());
 	this.save = function () {
 		if (this.title()) {
 			this.dialogTransaction(
 					TaskService.update(this.task, {
 						due: this.due(),
 						title: this.title(),
-						notes: this.notes()
+						notes: this.notes(),
+						repeat: this.repeat()
 					}));
 		}
 	}.bind(this);
