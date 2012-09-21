@@ -92,22 +92,19 @@ AuthorizedPageViewModel.prototype.logout = function () {
 };
 
 /**
- * @class View model for try out box in the unauthorized page.
+ * @class View model for demo page
  */
-function TryOutPageViewModel () {
+function DemoPageViewModel () {
 	this.initialize.apply(this, arguments);
 };
 
-/**
- */
-TryOutPageViewModel.prototype.initialize = function () {
-	this.prototype = new AuthorizedPageViewModel();
-	this.prototype.initialize.apply(this, arguments);
+DemoPageViewModel.prototype = new AuthorizedPageViewModel();
 
-	// behave as offline
-	taskwalls.settings.offline(true);
+DemoPageViewModel.prototype.initialize = function () {
+	AuthorizedPageViewModel.prototype.initialize.apply(this, arguments);
+};
 
-	// load example data
+DemoPageViewModel.prototype.load = function () {
 	$.getJSON('/tryoutdata.json').done(function (response) {
 		var delta = DateUtil.thisWeek() - DateUtil.clearTimePart(new Date(response.baseTime)).getTime();
 
@@ -135,6 +132,9 @@ TryOutPageViewModel.prototype.initialize = function () {
 	}.bind(this));
 };
 
+// prevent on-line
+DemoPageViewModel.prototype.toggleOffline = $.noop;
+
 /**
  * @class item of task lists menu
  */
@@ -161,12 +161,10 @@ TasklistMenuItemViewModel.prototype.updateColor = function (colorCode) {
 	});
 };
 
-$(function () {
-	TasklistMenuItemViewModel.prototype.colorCodeArray = (function () {
-		var a = [];
-		for (var i = 0; i < taskwalls.settings.tasklistColors; i++) {
-			a[i] = i;
-		}
-		return a;
-	})();
-});
+TasklistMenuItemViewModel.prototype.colorCodeArray = (function () {
+	var a = [];
+	for (var i = 0; i < taskwalls.settings.tasklistColors; i++) {
+		a[i] = i;
+	}
+	return a;
+})();
