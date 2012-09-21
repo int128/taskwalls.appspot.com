@@ -98,16 +98,14 @@ function TryOutPageViewModel () {
 	this.initialize.apply(this, arguments);
 };
 
-/**
- */
+$(function () {
+TryOutPageViewModel.prototype = new AuthorizedPageViewModel();
+
 TryOutPageViewModel.prototype.initialize = function () {
-	this.prototype = new AuthorizedPageViewModel();
-	this.prototype.initialize.apply(this, arguments);
+	AuthorizedPageViewModel.prototype.initialize.apply(this, arguments);
+};
 
-	// behave as offline
-	taskwalls.settings.offline(true);
-
-	// load example data
+TryOutPageViewModel.prototype.load = function () {
 	$.getJSON('/tryoutdata.json').done(function (response) {
 		var delta = DateUtil.thisWeek() - DateUtil.clearTimePart(new Date(response.baseTime)).getTime();
 
@@ -134,6 +132,10 @@ TryOutPageViewModel.prototype.initialize = function () {
 		}));
 	}.bind(this));
 };
+
+// prevent on-line
+TryOutPageViewModel.prototype.toggleOffline = $.noop;
+});
 
 /**
  * @class item of task lists menu
