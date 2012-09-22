@@ -1,17 +1,16 @@
-package org.hidetake.taskwalls.controller.tasks;
+package org.hidetake.taskwalls.controller;
 
-import org.hidetake.taskwalls.controller.ControllerBase;
 import org.slim3.controller.validator.Validators;
 
 import com.google.api.client.json.GenericJson;
 import com.google.api.services.tasks.model.Tasks;
 
 /**
- * Get tasks.
+ * Get tasks in the task list.
  * 
  * @author hidetake.org
  */
-public class ListController extends ControllerBase {
+public class TasksController extends ControllerBase {
 
 	@Override
 	public GenericJson execute() throws Exception {

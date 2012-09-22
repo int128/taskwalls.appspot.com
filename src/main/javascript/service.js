@@ -159,11 +159,11 @@ TasklistService.fetch = function () {
 };
 
 TasklistService.fetch.online = function () {
-	return $.getJSON('/tasklists/list').pipe(function (response, status, xhr) {
+	return $.getJSON('/tasklists').pipe(function (response, status, xhr) {
 		if (response) {
 			var items = response.items;
 			if ($.isArray(items)) {
-				localStorage['Tasklists.get'] = xhr.responseText;
+				localStorage['tasklists'] = xhr.responseText;
 				return items.map(function (item) {
 					return new Tasklist(item);
 				});
@@ -176,7 +176,7 @@ TasklistService.fetch.online = function () {
 
 TasklistService.fetch.offline = function () {
 	return $.Deferred().resolve((function () {
-		var response = $.parseJSON(localStorage['Tasklists.get']);
+		var response = $.parseJSON(localStorage['tasklists']);
 		if (response) {
 			var items = response.items;
 			if ($.isArray(items)) {
@@ -386,11 +386,11 @@ TaskService.fetch.online = function (tasklist) {
 	var request = {
 		tasklistID: tasklist.id()
 	};
-	return $.getJSON('/tasks/list', request).pipe(function (response, status, xhr) {
+	return $.getJSON('/tasks', request).pipe(function (response, status, xhr) {
 		if (response) {
 			var items = response.items;
 			if ($.isArray(items)) {
-				localStorage['Tasks.get.' + tasklist.id()] = xhr.responseText;
+				localStorage['tasks/' + tasklist.id()] = xhr.responseText;
 				return items.map(function (item) {
 					return new Task(item, tasklist);
 				});
@@ -403,7 +403,7 @@ TaskService.fetch.online = function (tasklist) {
 
 TaskService.fetch.offline = function (tasklist) {
 	return $.Deferred().resolve((function () {
-		var response = JSON.parse(localStorage['Tasks.get.' + tasklist.id()]);
+		var response = JSON.parse(localStorage['tasks/' + tasklist.id()]);
 		if (response) {
 			var items = response.items;
 			if ($.isArray(items)) {

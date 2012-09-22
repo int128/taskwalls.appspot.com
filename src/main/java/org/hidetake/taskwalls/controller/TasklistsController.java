@@ -1,17 +1,16 @@
-package org.hidetake.taskwalls.controller.tasklists;
+package org.hidetake.taskwalls.controller;
 
-import org.hidetake.taskwalls.controller.ControllerBase;
 import org.hidetake.taskwalls.service.TasklistExtensionService;
 
 import com.google.api.client.json.GenericJson;
 import com.google.api.services.tasks.model.TaskLists;
 
 /**
- * Get tasklists.
+ * Get task lists.
  * 
  * @author hidetake.org
  */
-public class ListController extends ControllerBase {
+public class TasklistsController extends ControllerBase {
 
 	@Override
 	public GenericJson execute() throws Exception {
