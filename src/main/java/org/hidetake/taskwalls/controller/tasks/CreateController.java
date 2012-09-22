@@ -9,7 +9,7 @@ import com.google.api.services.tasks.model.Task;
 public class CreateController extends ControllerBase {
 
 	@Override
-	protected GenericJson response() throws Exception {
+	protected GenericJson execute() throws Exception {
 		if (!AjaxPreconditions.hasJsonContent(request)) {
 			return preconditionFailed("request body should be JSON");
 		}

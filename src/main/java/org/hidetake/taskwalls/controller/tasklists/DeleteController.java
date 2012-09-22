@@ -8,7 +8,7 @@ import com.google.api.client.json.GenericJson;
 public class DeleteController extends ControllerBase {
 
 	@Override
-	public GenericJson response() throws Exception {
+	public GenericJson execute() throws Exception {
 		if (!validate()) {
 			return preconditionFailed(errors.toString());
 		}

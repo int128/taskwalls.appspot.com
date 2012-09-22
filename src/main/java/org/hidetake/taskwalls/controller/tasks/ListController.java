@@ -14,7 +14,7 @@ import com.google.api.services.tasks.model.Tasks;
 public class ListController extends ControllerBase {
 
 	@Override
-	public GenericJson response() throws Exception {
+	public GenericJson execute() throws Exception {
 		if (!validate()) {
 			return preconditionFailed(errors.toString());
 		}

@@ -46,7 +46,7 @@ public abstract class ControllerBase extends Controller {
 	 * 
 	 * @return JSON response
 	 */
-	protected abstract GenericJson response() throws Exception;
+	protected abstract GenericJson execute() throws Exception;
 
 	@Override
 	protected Navigation run() throws Exception {
@@ -69,7 +69,7 @@ public abstract class ControllerBase extends Controller {
 				.setJsonHttpRequestInitializer(new TasksRequestInitializer(request.getRemoteAddr()))
 				.build();
 
-		GenericJson jsonResponse = response();
+		GenericJson jsonResponse = execute();
 		if (jsonResponse != null) {
 			response.setHeader("X-Content-Type-Options", "nosniff");
 			response.setContentType("application/json");

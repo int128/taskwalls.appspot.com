@@ -9,7 +9,7 @@ import com.google.api.services.tasks.model.Task;
 public class UpdateController extends ControllerBase {
 
 	@Override
-	public GenericJson response() throws Exception {
+	public GenericJson execute() throws Exception {
 		Task task = parseJsonAs(Task.class);
 		String tasklistID = task.get("tasklistID").toString();
 

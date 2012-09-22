@@ -14,7 +14,7 @@ import com.google.api.services.tasks.model.TaskLists;
 public class ListController extends ControllerBase {
 
 	@Override
-	public GenericJson response() throws Exception {
+	public GenericJson execute() throws Exception {
 		TaskLists taskLists = tasksService.tasklists().list().execute();
 		TasklistExtensionService.extend(taskLists);
 		return taskLists;

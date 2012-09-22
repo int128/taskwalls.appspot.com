@@ -8,7 +8,7 @@ import com.google.api.services.tasks.model.TaskList;
 public class CreateController extends ControllerBase {
 
 	@Override
-	public GenericJson response() throws Exception {
+	public GenericJson execute() throws Exception {
 		TaskList taskList = parseJsonAs(TaskList.class);
 		TaskList created = tasksService.tasklists().insert(taskList).execute();
 		return created;

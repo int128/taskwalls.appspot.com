@@ -15,7 +15,7 @@ import com.google.api.services.tasks.model.TaskList;
 public class UpdateController extends ControllerBase {
 
 	@Override
-	public GenericJson response() throws Exception {
+	public GenericJson execute() throws Exception {
 		TaskList taskList = parseJsonAs(TaskList.class);
 		String id = taskList.get("id").toString();
 
