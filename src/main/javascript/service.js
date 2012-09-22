@@ -217,8 +217,9 @@ TasklistService.create = function (taskdata, data) {
  * @returns {Function} service operation
  */
 TasklistService.create.executeFunction = function (taskdata, data, mock) {
+	var request = JSON.stringify(data);
 	return function () {
-		return $.post('/tasklists/create', data).pipe(function (object) {
+		return $.post('/tasklists/create', request).pipe(function (object) {
 			return new Tasklist(object);
 		}).done(function (tasklist) {
 			taskdata.tasklists.push(tasklist);
@@ -260,9 +261,9 @@ TasklistService.update = function (tasklist, data) {
  * @returns {Function} service operation
  */
 TasklistService.update.executeFunction = function (tasklist, data) {
-	var request = $.extend({
+	var request = JSON.stringify($.extend({
 		id: tasklist.id()
-	}, data);
+	}, data));
 	return $.post.bind(null, '/tasklists/update', request);
 };
 
@@ -382,9 +383,10 @@ TaskService.fetch = function (tasklist) {
 };
 
 TaskService.fetch.online = function (tasklist) {
-	return $.getJSON('/tasks/list', {
+	var request = {
 		tasklistID: tasklist.id()
-	}).pipe(function (response, status, xhr) {
+	};
+	return $.getJSON('/tasks/list', request).pipe(function (response, status, xhr) {
 		if (response) {
 			var items = response.items;
 			if ($.isArray(items)) {
@@ -401,7 +403,7 @@ TaskService.fetch.online = function (tasklist) {
 
 TaskService.fetch.offline = function (tasklist) {
 	return $.Deferred().resolve((function () {
-		var response = $.parseJSON(localStorage['Tasks.get.' + tasklist.id()]);
+		var response = JSON.parse(localStorage['Tasks.get.' + tasklist.id()]);
 		if (response) {
 			var items = response.items;
 			if ($.isArray(items)) {
@@ -445,12 +447,9 @@ TaskService.create = function (taskdata, data) {
  * @returns {Function} service operation
  */
 TaskService.create.executeFunction = function (taskdata, data, mock) {
-	var due = {
-		// specify zero for icebox
-		due: data.due ? DateUtil.calculateTimeInUTC(data.due) : 0
-	};
+	var request = JSON.stringify(data);
 	return function () {
-		return $.post('/tasks/create', $.extend({}, data, due)).pipe(function (object) {
+		return $.post('/tasks/create', request).pipe(function (object) {
 			var task = new Task(object);
 			TaskService.create.fixTasklistReference(task, data.tasklistID, taskdata);
 			return task;
@@ -506,11 +505,7 @@ TaskService.update.executeFunction = function (task, data) {
 		id: task.id(),
 		tasklistID: task.tasklist().id()
 	};
-	var due = data.due === undefined ? {} : {
-		// set due=0 for the ice box
-		due: data.due ? DateUtil.calculateTimeInUTC(data.due) : 0
-	};
-	var request = $.extend(identity, data, due);
+	var request = JSON.stringify($.extend(identity, data));
 	return $.post.bind(null, '/tasks/update', request);
 };
 

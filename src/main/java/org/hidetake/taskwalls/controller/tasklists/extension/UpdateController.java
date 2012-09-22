@@ -17,22 +17,25 @@ import com.google.api.client.json.GenericJson;
 public class UpdateController extends ControllerBase {
 
 	@Override
-	protected boolean validate() {
+	public GenericJson response() throws Exception {
+		if (!validate()) {
+			return preconditionFailed(errors.toString());
+		}
+
+		TasklistExtensionMeta m = TasklistExtensionMeta.get();
+		TasklistExtension tasklistExtension = new TasklistExtension();
+		tasklistExtension.setKey(TasklistExtension.createKey(param("id")));
+		tasklistExtension.setColorCode(asInteger(m.colorCode));
+		TasklistExtensionService.put(tasklistExtension);
+		return null;
+	}
+
+	private boolean validate() {
 		TasklistExtensionMeta m = TasklistExtensionMeta.get();
 		Validators v = new Validators(request);
 		v.add("id", v.required());
 		v.add(m.colorCode, v.required(), v.integerType());
 		return v.validate();
-	}
-
-	@Override
-	public GenericJson response() throws Exception {
-		TasklistExtensionMeta m = TasklistExtensionMeta.get();
-		TasklistExtension tasklistExtension = new TasklistExtension();
-		tasklistExtension.setKey(TasklistExtension.createKey(asString("id")));
-		tasklistExtension.setColorCode(asInteger(m.colorCode));
-		TasklistExtensionService.put(tasklistExtension);
-		return null;
 	}
 
 }

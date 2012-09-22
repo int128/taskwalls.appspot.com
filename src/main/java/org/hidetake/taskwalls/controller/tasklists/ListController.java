@@ -14,11 +14,6 @@ import com.google.api.services.tasks.model.TaskLists;
 public class ListController extends ControllerBase {
 
 	@Override
-	protected boolean validate() {
-		return true;
-	}
-
-	@Override
 	public GenericJson response() throws Exception {
 		TaskLists taskLists = tasksService.tasklists().list().execute();
 		TasklistExtensionService.extend(taskLists);

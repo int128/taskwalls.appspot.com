@@ -18,6 +18,8 @@ import com.google.api.client.googleapis.auth.oauth2.GoogleCredential;
 import com.google.api.client.googleapis.auth.oauth2.GoogleTokenResponse;
 import com.google.api.client.http.HttpResponseException;
 import com.google.api.client.json.GenericJson;
+import com.google.api.client.json.JsonFactory;
+import com.google.api.client.json.JsonGenerator;
 import com.google.api.services.tasks.Tasks;
 
 /**
@@ -28,7 +30,6 @@ import com.google.api.services.tasks.Tasks;
  * <li>XHR</li>
  * <li>session header</li>
  * <li>valid access token</li>
- * <li>validation passed {@link #validate()}</li>
  * </ul>
  * </p>
  * 
@@ -41,36 +42,25 @@ public abstract class ControllerBase extends Controller {
 	protected Tasks tasksService;
 
 	/**
-	 * Validate the request.
-	 * 
-	 * @return true if valid
-	 */
-	protected abstract boolean validate();
-
-	/**
 	 * Process the request.
 	 * 
-	 * @return JSON object for response
+	 * @return JSON response
 	 */
 	protected abstract GenericJson response() throws Exception;
 
 	@Override
 	protected Navigation run() throws Exception {
 		if (!AjaxPreconditions.isXHR(request)) {
-			return errorStatus(Constants.STATUS_PRECONDITION_FAILED, "should be XHR");
+			return preconditionFailed("should be XHR");
 		}
 
 		String session = request.getHeader(Constants.HEADER_SESSION);
 		if (session == null) {
-			return errorStatus(Constants.STATUS_PRECONDITION_FAILED, "No session header");
+			return preconditionFailed("No session header");
 		}
 		GoogleTokenResponse tokenResponse = SessionManager.restore(session, AppCredential.CLIENT_CREDENTIAL);
 		if (tokenResponse == null) {
-			return errorStatus(Constants.STATUS_PRECONDITION_FAILED, "Invalid session header");
-		}
-
-		if (!validate()) {
-			return errorStatus(Constants.STATUS_PRECONDITION_FAILED, "Validation failed: " + errors.toString());
+			return preconditionFailed("Invalid session header");
 		}
 
 		GoogleCredential credential = GoogleOAuth2Service.buildCredential(tokenResponse,
@@ -79,15 +69,41 @@ public abstract class ControllerBase extends Controller {
 				.setJsonHttpRequestInitializer(new TasksRequestInitializer(request.getRemoteAddr()))
 				.build();
 
-		GenericJson responseJson = response();
-
-		if (responseJson != null) {
+		GenericJson jsonResponse = response();
+		if (jsonResponse != null) {
 			response.setHeader("X-Content-Type-Options", "nosniff");
 			response.setContentType("application/json");
 			response.setCharacterEncoding("UTF-8");
-			response.getWriter().append(responseJson.toString());
+			JsonGenerator jsonGenerator = JsonFactoryLocator.get().createJsonGenerator(response.getWriter());
+			jsonGenerator.serialize(jsonResponse);
+			jsonGenerator.close();
 			response.flushBuffer();
 		}
+		return null;
+	}
+
+	/**
+	 * Parse JSON from request body.
+	 * 
+	 * @param destinationClass
+	 * @return an instance
+	 * @throws IOException
+	 * @see {@link JsonFactory#fromReader(java.io.Reader, Class)}
+	 */
+	protected <T> T parseJsonAs(Class<T> destinationClass) throws IOException {
+		return JsonFactoryLocator.get().fromReader(request.getReader(), destinationClass);
+	}
+
+	/**
+	 * Send response as precondition failed.
+	 * 
+	 * @param logMessage
+	 * @return always <code>null</code>
+	 * @throws IOException
+	 */
+	protected <T> T preconditionFailed(String logMessage) throws IOException {
+		logger.warning(logMessage);
+		response.sendError(Constants.STATUS_PRECONDITION_FAILED);
 		return null;
 	}
 
@@ -98,16 +114,12 @@ public abstract class ControllerBase extends Controller {
 			logger.severe(httpResponseException.getStatusMessage());
 			logger.severe(StackTraceUtil.format(e));
 			if (httpResponseException.getStatusCode() == 401) {
-				return errorStatus(Constants.STATUS_NO_SESSION, "Google API returns 401 invalid credentials");
+				logger.warning("Google API returns 401 invalid credentials");
+				response.sendError(Constants.STATUS_NO_SESSION);
+				return null;
 			}
 		}
 		return super.handleError(e);
-	}
-
-	private Navigation errorStatus(int code, String logMessage) throws IOException {
-		logger.warning(logMessage);
-		response.sendError(code);
-		return null;
 	}
 
 }

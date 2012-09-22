@@ -14,17 +14,18 @@ import com.google.api.services.tasks.model.Tasks;
 public class ListController extends ControllerBase {
 
 	@Override
-	protected boolean validate() {
+	public GenericJson response() throws Exception {
+		if (!validate()) {
+			return preconditionFailed(errors.toString());
+		}
+		Tasks tasks = tasksService.tasks().list(param("tasklistID")).execute();
+		return tasks;
+	}
+
+	private boolean validate() {
 		Validators v = new Validators(request);
 		v.add("tasklistID", v.required());
 		return v.validate();
-	}
-
-	@Override
-	public GenericJson response() throws Exception {
-		String tasklistID = asString("tasklistID");
-		Tasks tasks = tasksService.tasks().list(tasklistID).execute();
-		return tasks;
 	}
 
 }

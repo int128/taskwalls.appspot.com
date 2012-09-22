@@ -19,6 +19,7 @@ $(function () {
 		},
 		alreadyAuthorized: function () {
 			$.ajaxSetup({
+				contentType: 'application/json; charset=UTF-8',
 				headers: {
 					'X-TaskWall-Session': localStorage['session']
 				},
