@@ -29,7 +29,13 @@ $(function () {
 					},
 					400: function (xhr, status, e) {
 						// precondition error
-						OAuth2Controller.logout();
+						if (taskwalls.settings.development()) {
+							throw e;
+						} else {
+							// Log out on production because change of API specification or data schema
+							// may cause this error.
+							OAuth2Controller.logout();
+						}
 					},
 					500: function (xhr, status, e) {
 						// server error
