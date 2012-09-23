@@ -447,6 +447,7 @@ TaskService.create = function (taskdata, data) {
  * @returns {Function} service operation
  */
 TaskService.create.executeFunction = function (taskdata, data, mock) {
+	// FIXME: calculate UTC time
 	var request = JSON.stringify(data);
 	return function () {
 		return $.post('/tasks', request).pipe(function (object) {
