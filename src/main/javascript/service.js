@@ -219,7 +219,7 @@ TasklistService.create = function (taskdata, data) {
 TasklistService.create.executeFunction = function (taskdata, data, mock) {
 	var request = JSON.stringify(data);
 	return function () {
-		return $.post('/tasklists/create', request).pipe(function (object) {
+		return $.post('/tasklists', request).pipe(function (object) {
 			return new Tasklist(object);
 		}).done(function (tasklist) {
 			taskdata.tasklists.push(tasklist);
@@ -449,7 +449,7 @@ TaskService.create = function (taskdata, data) {
 TaskService.create.executeFunction = function (taskdata, data, mock) {
 	var request = JSON.stringify(data);
 	return function () {
-		return $.post('/tasks/create', request).pipe(function (object) {
+		return $.post('/tasks', request).pipe(function (object) {
 			var task = new Task(object);
 			TaskService.create.fixTasklistReference(task, data.tasklistID, taskdata);
 			return task;
