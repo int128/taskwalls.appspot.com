@@ -5,7 +5,7 @@ import com.google.api.client.json.GenericJson;
 public class ControllerBaseTestController extends ControllerBase {
 
 	@Override
-	protected GenericJson execute() throws Exception {
+	protected GenericJson handle() throws Exception {
 		if (asBoolean("json") == null) {
 			return null;
 		} else {

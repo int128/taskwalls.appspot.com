@@ -176,7 +176,7 @@ TasklistService.fetch.online = function () {
 
 TasklistService.fetch.offline = function () {
 	return $.Deferred().resolve((function () {
-		var response = $.parseJSON(localStorage['tasklists']);
+		var response = JSON.parse(localStorage['tasklists']);
 		if (response) {
 			var items = response.items;
 			if ($.isArray(items)) {
@@ -219,7 +219,7 @@ TasklistService.create = function (taskdata, data) {
 TasklistService.create.executeFunction = function (taskdata, data, mock) {
 	var request = JSON.stringify(data);
 	return function () {
-		return $.post('/tasklists', request).pipe(function (object) {
+		return $.postJSON('/tasklists', request).pipe(function (object) {
 			return new Tasklist(object);
 		}).done(function (tasklist) {
 			taskdata.tasklists.push(tasklist);
@@ -264,7 +264,7 @@ TasklistService.update.executeFunction = function (tasklist, data) {
 	var request = JSON.stringify($.extend({
 		id: tasklist.id()
 	}, data));
-	return $.post.bind(null, '/tasklists/update', request);
+	return $.putJSON.bind(null, '/tasklists', request);
 };
 
 /**
@@ -305,7 +305,7 @@ TasklistService.updateExtension.executeFunction = function (tasklist, data) {
 	var request = $.extend({
 		id: tasklist.id()
 	}, data);
-	return $.post.bind(null, '/tasklists/extension/update', request);
+	return $.post.bind(null, '/tasklists/extension', request);
 };
 
 /**
@@ -345,7 +345,8 @@ TasklistService.remove.executeFunction = function (taskdata, tasklist) {
 		id: tasklist.id()
 	};
 	return function () {
-		return $.post('/tasklists/delete', identity).done(function () {
+		// FIXME: 400 bad request
+		return $.deleteEncoded('/tasklists', identity).done(function () {
 			taskdata.tasklists.remove(tasklist);
 		});
 	};
@@ -450,7 +451,7 @@ TaskService.create.executeFunction = function (taskdata, data, mock) {
 	// FIXME: calculate UTC time
 	var request = JSON.stringify(data);
 	return function () {
-		return $.post('/tasks', request).pipe(function (object) {
+		return $.postJSON('/tasks', request).pipe(function (object) {
 			var task = new Task(object);
 			TaskService.create.fixTasklistReference(task, data.tasklistID, taskdata);
 			return task;
@@ -507,7 +508,7 @@ TaskService.update.executeFunction = function (task, data) {
 		tasklistID: task.tasklist().id()
 	};
 	var request = JSON.stringify($.extend(identity, data));
-	return $.post.bind(null, '/tasks/update', request);
+	return $.putJSON.bind(null, '/tasks', request);
 };
 
 /**
@@ -589,7 +590,8 @@ TaskService.remove.executeFunction = function (taskdata, task) {
 		tasklistID: task.tasklist().id()
 	};
 	return function () {
-		return $.post('/tasks/delete', request).done(function () {
+		// FIXME: 400 bad request
+		return $.deleteEncoded('/tasks', request).done(function () {
 			taskdata.tasks.remove(task);
 		});
 	};
@@ -600,6 +602,7 @@ TaskService.remove.executeFunction = function (taskdata, task) {
  */
 TaskService.remove.rollbackFunction = function (taskdata, task) {
 	return function () {
+		// TODO: task duplicated when failed...?
 		return taskdata.tasks.push(task);
 	};
 };

@@ -91,6 +91,30 @@ $.extend({
 	}
 });
 
+(function () {
+	// see https://github.com/jquery/jquery/blob/master/src/ajax.js
+	var ajaxMethod = function (method, contentType, url, data, callback, type) {
+		// shift arguments if data argument was omitted
+		if (jQuery.isFunction(data)) {
+			type = type || callback;
+			callback = data;
+			data = undefined;
+		}
+
+		return jQuery.ajax({
+			type: method,
+			contentType: contentType,
+			url: url,
+			data: data,
+			success: callback,
+			dataType: type
+		});
+	};
+	$.postJSON = ajaxMethod.bind(null, 'POST', 'application/json; charset=UTF-8');
+	$.putJSON = ajaxMethod.bind(null, 'PUT', 'application/json; charset=UTF-8');
+	$.deleteEncoded = ajaxMethod.bind(null, 'DELETE', undefined);
+})();
+
 // bootstrap extensions
 $(function () {
 	$(document).tooltip({

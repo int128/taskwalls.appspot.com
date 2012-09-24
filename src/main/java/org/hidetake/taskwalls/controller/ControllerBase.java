@@ -3,6 +3,8 @@ package org.hidetake.taskwalls.controller;
 import java.io.IOException;
 import java.util.logging.Logger;
 
+import javax.servlet.http.HttpServletResponse;
+
 import org.hidetake.taskwalls.Constants;
 import org.hidetake.taskwalls.service.GoogleOAuth2Service;
 import org.hidetake.taskwalls.service.SessionManager;
@@ -41,13 +43,6 @@ public abstract class ControllerBase extends Controller {
 
 	protected Tasks tasksService;
 
-	/**
-	 * Process the request.
-	 * 
-	 * @return JSON response
-	 */
-	protected abstract GenericJson execute() throws Exception;
-
 	@Override
 	protected Navigation run() throws Exception {
 		if (!AjaxPreconditions.isXHR(request)) {
@@ -69,7 +64,7 @@ public abstract class ControllerBase extends Controller {
 				.setJsonHttpRequestInitializer(new TasksRequestInitializer(request.getRemoteAddr()))
 				.build();
 
-		GenericJson jsonResponse = execute();
+		GenericJson jsonResponse = handle();
 		if (jsonResponse != null) {
 			response.setHeader("X-Content-Type-Options", "nosniff");
 			response.setContentType("application/json");
@@ -79,6 +74,51 @@ public abstract class ControllerBase extends Controller {
 			jsonGenerator.close();
 			response.flushBuffer();
 		}
+		return null;
+	}
+
+	/**
+	 * Handle the request.
+	 * 
+	 * @return JSON response
+	 * @throws Exception
+	 */
+	protected GenericJson handle() throws Exception {
+		if (isGet()) {
+			return get();
+		} else if (isPost()) {
+			return post();
+		} else if (isPut()) {
+			return put();
+		} else if (isDelete()) {
+			return delete();
+		} else {
+			return handleUnknownMethod();
+		}
+	}
+
+	protected GenericJson get() throws Exception {
+		response.sendError(HttpServletResponse.SC_METHOD_NOT_ALLOWED);
+		return null;
+	}
+
+	protected GenericJson post() throws Exception {
+		response.sendError(HttpServletResponse.SC_METHOD_NOT_ALLOWED);
+		return null;
+	}
+
+	protected GenericJson put() throws Exception {
+		response.sendError(HttpServletResponse.SC_METHOD_NOT_ALLOWED);
+		return null;
+	}
+
+	protected GenericJson delete() throws Exception {
+		response.sendError(HttpServletResponse.SC_METHOD_NOT_ALLOWED);
+		return null;
+	}
+
+	protected GenericJson handleUnknownMethod() throws Exception {
+		response.sendError(HttpServletResponse.SC_METHOD_NOT_ALLOWED);
 		return null;
 	}
 

@@ -14,7 +14,7 @@ import com.google.api.services.tasks.model.Task;
 public class MoveController extends ControllerBase {
 
 	@Override
-	public GenericJson execute() throws Exception {
+	public GenericJson post() throws Exception {
 		if (!validate()) {
 			return preconditionFailed(errors.toString());
 		}

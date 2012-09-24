@@ -1,4 +1,4 @@
-package org.hidetake.taskwalls.controller.tasklists.extension;
+package org.hidetake.taskwalls.controller.tasklists;
 
 import org.hidetake.taskwalls.controller.ControllerBase;
 import org.hidetake.taskwalls.meta.TasklistExtensionMeta;
@@ -9,15 +9,14 @@ import org.slim3.controller.validator.Validators;
 import com.google.api.client.json.GenericJson;
 
 /**
- * Updates the task list extension.
- * TODO: rename URI
+ * Represents task list extension.
  * 
  * @author hidetake.org
  */
-public class UpdateController extends ControllerBase {
+public class ExtensionController extends ControllerBase {
 
 	@Override
-	public GenericJson execute() throws Exception {
+	public GenericJson post() throws Exception {
 		if (!validate()) {
 			return preconditionFailed(errors.toString());
 		}
