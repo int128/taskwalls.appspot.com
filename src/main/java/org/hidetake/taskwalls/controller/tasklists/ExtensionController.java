@@ -16,14 +16,14 @@ import com.google.api.client.json.GenericJson;
 public class ExtensionController extends ControllerBase {
 
 	@Override
-	public GenericJson post() throws Exception {
+	public GenericJson put() throws Exception {
 		if (!validate()) {
 			return preconditionFailed(errors.toString());
 		}
 
 		TasklistExtensionMeta m = TasklistExtensionMeta.get();
 		TasklistExtension tasklistExtension = new TasklistExtension();
-		tasklistExtension.setKey(TasklistExtension.createKey(param("id")));
+		tasklistExtension.setKey(TasklistExtension.createKey(param("tasklistID")));
 		tasklistExtension.setColorCode(asInteger(m.colorCode));
 		TasklistExtensionService.put(tasklistExtension);
 		return null;
@@ -32,7 +32,7 @@ public class ExtensionController extends ControllerBase {
 	private boolean validate() {
 		TasklistExtensionMeta m = TasklistExtensionMeta.get();
 		Validators v = new Validators(request);
-		v.add("id", v.required());
+		v.add("tasklistID", v.required());
 		v.add(m.colorCode, v.required(), v.integerType());
 		return v.validate();
 	}

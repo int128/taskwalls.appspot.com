@@ -21,7 +21,7 @@ public class MoveController extends ControllerBase {
 
 		String id = param("id");
 		String tasklistID = param("tasklistID");
-		String destinationTasklistID = param("destinationTasklistID");
+		String destinationTasklistID = param("to");
 
 		Task original = tasksService.tasks().get(tasklistID, id).execute();
 		Task task = new Task();
@@ -45,7 +45,7 @@ public class MoveController extends ControllerBase {
 		Validators v = new Validators(request);
 		v.add("id", v.required());
 		v.add("tasklistID", v.required());
-		v.add("destinationTasklistID", v.required());
+		v.add("to", v.required());
 		return v.validate();
 	}
 

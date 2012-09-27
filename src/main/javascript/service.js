@@ -86,6 +86,108 @@ ServiceTransaction.prototype.rollback = function () {
 };
 
 /**
+ * @class service end point
+ * @param {UriTemplate} uriTemplate
+ */
+function ServiceEndpoint (uriTemplate) {
+	this.uriTemplate = uriTemplate;
+}
+
+/**
+ * Perform a GET request.
+ * 
+ * @param {Object} parameters parameters for the URI template
+ * @returns {Deferred}
+ */
+ServiceEndpoint.prototype.get = function (parameters) {
+	return jQuery.ajax({
+		type: 'get',
+		url: this.uriTemplate.expand(parameters),
+		dataType: 'json'
+	});
+};
+
+/**
+ * Perform a POST request.
+ * 
+ * @param {Object} parameters parameters for the URI template
+ * @param {Object} data request body (encoded as query parameters)
+ * @returns {Deferred}
+ */
+ServiceEndpoint.prototype.post = function (parameters, data) {
+	return jQuery.ajax({
+		type: 'post',
+		data: data,
+		url: this.uriTemplate.expand(parameters),
+		dataType: 'json'
+	});
+};
+
+/**
+ * Perform a POST request.
+ * 
+ * @param {Object} parameters parameters for the URI template
+ * @param {Object} data request body (encoded as JSON string)
+ * @returns {Deferred}
+ */
+ServiceEndpoint.prototype.postJSON = function (parameters, data) {
+	return jQuery.ajax({
+		type: 'post',
+		contentType: 'application/json; Charset=UTF-8',
+		data: JSON.stringify(data),
+		url: this.uriTemplate.expand(parameters),
+		dataType: 'json'
+	});
+};
+
+/**
+ * Perform a PUT request.
+ * 
+ * @param {Object} parameters parameters for the URI template
+ * @param {Object} data request body (encoded as query parameters)
+ * @returns {Deferred}
+ */
+ServiceEndpoint.prototype.put = function (parameters, data) {
+	return jQuery.ajax({
+		type: 'put',
+		data: data,
+		url: this.uriTemplate.expand(parameters),
+		dataType: 'json'
+	});
+};
+
+/**
+ * Perform a PUT request.
+ * 
+ * @param {Object} parameters parameters for the URI template
+ * @param {Object} data request body (encoded as JSON string)
+ * @returns {Deferred}
+ */
+ServiceEndpoint.prototype.putJSON = function (parameters, data) {
+	return jQuery.ajax({
+		type: 'put',
+		contentType: 'application/json; Charset=UTF-8',
+		data: JSON.stringify(data),
+		url: this.uriTemplate.expand(parameters),
+		dataType: 'json'
+	});
+};
+
+/**
+ * Perform a DELETE request.
+ * 
+ * @param {Object} parameters parameters for the URI template
+ * @returns {Deferred}
+ */
+ServiceEndpoint.prototype.delete_ = function (parameters) {
+	return jQuery.ajax({
+		type: 'delete',
+		url: this.uriTemplate.expand(parameters),
+		dataType: 'json'
+	});
+};
+
+/**
  * @class service class for {@link Tasklist}
  */
 function TaskdataService () {
@@ -145,6 +247,12 @@ function TasklistService () {
 };
 TasklistService.prototype = {};
 
+TasklistService.endpoints = {
+		aggregate: new ServiceEndpoint(UriTemplate.parse('/tasklists/')),
+		single: new ServiceEndpoint(UriTemplate.parse('/tasklists/{tasklistID}')),
+		extension: new ServiceEndpoint(UriTemplate.parse('/tasklists/{tasklistID}/extension'))
+};
+
 /**
  * Asynchronously fetch task lists from server.
  * 
@@ -159,7 +267,7 @@ TasklistService.fetch = function () {
 };
 
 TasklistService.fetch.online = function () {
-	return $.getJSON('/tasklists').pipe(function (response, status, xhr) {
+	return TasklistService.endpoints.aggregate.get().pipe(function (response, status, xhr) {
 		if (response) {
 			var items = response.items;
 			if ($.isArray(items)) {
@@ -206,80 +314,52 @@ TasklistService.create = function (taskdata, data) {
 	taskdata.tasklists.push(mock);
 
 	var transaction = new ServiceTransaction(
-			TasklistService.create.executeFunction(taskdata, data, mock),
-			TasklistService.create.rollbackFunction(taskdata, data, mock));
-
+			function () {
+				return TasklistService.endpoints.aggregate.postJSON(null, data).pipe(function (response) {
+					return new Tasklist(response);
+				}).done(function (tasklist) {
+					taskdata.tasklists.push(tasklist);
+					taskdata.tasklists.remove(mock);
+				});
+			},
+			function () {
+				taskdata.tasklists.remove(mock);
+			});
 	transaction.register(mock.transactions);
 	return transaction.promise();
 };
 
 /**
- * @returns {Function} service operation
- */
-TasklistService.create.executeFunction = function (taskdata, data, mock) {
-	var request = JSON.stringify(data);
-	return function () {
-		return $.postJSON('/tasklists', request).pipe(function (object) {
-			return new Tasklist(object);
-		}).done(function (tasklist) {
-			taskdata.tasklists.push(tasklist);
-			taskdata.tasklists.remove(mock);
-		});
-	};
-};
-
-/**
- * @returns {Function} rollback the service operation
- */
-TasklistService.create.rollbackFunction = function (taskdata, data, mock) {
-	return function () {
-		return taskdata.tasklists.remove(mock);
-	};
-};
-
-/**
- * Save the task list.
+ * Update the task list.
  * 
  * @param {Tasklist}
  *            tasklist
  * @param {Object}
  *            data
- * @returns {Deferred}
+ * @returns {Deferred} call with updated {@link Tasklist}
  */
 TasklistService.update = function (tasklist, data) {
-	var transaction = new ServiceTransaction(
-			TasklistService.update.executeFunction(tasklist, data),
-			TasklistService.update.rollbackFunction(tasklist, data));
-
+	var originalData = {};
+	$.each(data, function (k, v) {
+		originalData[k] = tasklist[k]();
+	});
 	ko.extendObservables(tasklist, data);
 
+	var transaction = new ServiceTransaction(
+			function () {
+				return TasklistService.endpoints.single.putJSON({
+					tasklistID: tasklist.id()
+				}, data);
+			},
+			function () {
+				ko.extendObservables(tasklist, originalData);
+			});
 	transaction.register(tasklist.transactions);
 	return transaction.promise();
 };
 
 /**
- * @returns {Function} service operation
- */
-TasklistService.update.executeFunction = function (tasklist, data) {
-	var request = JSON.stringify($.extend({
-		id: tasklist.id()
-	}, data));
-	return $.putJSON.bind(null, '/tasklists', request);
-};
-
-/**
- * @returns {Function} rollback the service operation
- */
-TasklistService.update.rollbackFunction = function (tasklist, data) {
-	var originalData = {};
-	$.each(data, function (k, v) {
-		originalData[k] = tasklist[k]();
-	});
-	return ko.extendObservables.bind(null, tasklist, originalData);
-};
-
-/**
- * Save extension data of the task list.
+ * Update extension data of the task list.
  * 
  * @param {Tasklist}
  *            tasklist
@@ -288,35 +368,23 @@ TasklistService.update.rollbackFunction = function (tasklist, data) {
  * @returns {Deferred}
  */
 TasklistService.updateExtension = function (tasklist, data) {
-	var transaction = new ServiceTransaction(
-			TasklistService.updateExtension.executeFunction(tasklist, data),
-			TasklistService.updateExtension.rollbackFunction(tasklist, data));
-
-	ko.extendObservables(tasklist, data);
-
-	transaction.register(tasklist.transactions);
-	return transaction.promise();
-};
-
-/**
- * @returns {Function} service operation
- */
-TasklistService.updateExtension.executeFunction = function (tasklist, data) {
-	var request = $.extend({
-		id: tasklist.id()
-	}, data);
-	return $.post.bind(null, '/tasklists/extension', request);
-};
-
-/**
- * @returns {Function} rollback the service operation
- */
-TasklistService.updateExtension.rollbackFunction = function (tasklist, data) {
 	var originalData = {};
 	$.each(data, function (k, v) {
 		originalData[k] = tasklist[k]();
 	});
-	return ko.extendObservables.bind(null, tasklist, originalData);
+	ko.extendObservables(tasklist, data);
+
+	var transaction = new ServiceTransaction(
+			function () {
+				return TasklistService.endpoints.extension.put({
+					tasklistID: tasklist.id()
+				}, data);
+			},
+			function () {
+				ko.extendObservables(tasklist, originalData);
+			});
+	transaction.register(tasklist.transactions);
+	return transaction.promise();
 };
 
 /**
@@ -330,35 +398,16 @@ TasklistService.updateExtension.rollbackFunction = function (tasklist, data) {
  */
 TasklistService.remove = function (taskdata, tasklist) {
 	var transaction = new ServiceTransaction(
-			TasklistService.remove.executeFunction(taskdata, tasklist),
-			TasklistService.remove.rollbackFunction(taskdata, tasklist));
-
+			function () {
+				return TasklistService.endpoints.single.delete_({
+					tasklistID: tasklist.id()
+				}).done(function () {
+					taskdata.tasklists.remove(tasklist);
+				});
+			},
+			$.noop);
 	transaction.register(tasklist.transactions);
 	return transaction.promise();
-};
-
-/**
- * @returns {Function} service operation
- */
-TasklistService.remove.executeFunction = function (taskdata, tasklist) {
-	var identity = {
-		id: tasklist.id()
-	};
-	return function () {
-		// FIXME: 400 bad request
-		return $.deleteEncoded('/tasklists', identity).done(function () {
-			taskdata.tasklists.remove(tasklist);
-		});
-	};
-};
-
-/**
- * @returns {Function} rollback the service operation
- */
-TasklistService.remove.rollbackFunction = function (taskdata, tasklist) {
-	return function () {
-		return taskdata.tasklists.push(tasklist);
-	};
 };
 
 /**
@@ -367,6 +416,12 @@ TasklistService.remove.rollbackFunction = function (taskdata, tasklist) {
 function TaskService () {
 };
 TaskService.prototype = {};
+
+TaskService.endpoints = {
+		aggregate: new ServiceEndpoint(UriTemplate.parse('/tasklists/{tasklistID}/tasks/')),
+		single: new ServiceEndpoint(UriTemplate.parse('/tasklists/{tasklistID}/tasks/{id}')),
+		move: new ServiceEndpoint(UriTemplate.parse('/tasklists/{tasklistID}/tasks/{id}/move{?to}'))
+};
 
 /**
  * Asynchronously fetch tasks from server.
@@ -384,10 +439,9 @@ TaskService.fetch = function (tasklist) {
 };
 
 TaskService.fetch.online = function (tasklist) {
-	var request = {
+	return TaskService.endpoints.aggregate.get({
 		tasklistID: tasklist.id()
-	};
-	return $.getJSON('/tasks', request).pipe(function (response, status, xhr) {
+	}).pipe(function (response, status, xhr) {
 		if (response) {
 			var items = response.items;
 			if ($.isArray(items)) {
@@ -436,39 +490,25 @@ TaskService.create = function (taskdata, data) {
 	taskdata.tasks.push(mock);
 
 	var transaction = new ServiceTransaction(
-			TaskService.create.executeFunction(taskdata, data, mock),
-			TaskService.create.rollbackFunction(taskdata, data, mock),
+			function () {
+				// FIXME: calculate UTC time
+				return TaskService.endpoints.aggregate.postJSON({
+					tasklistID: data.tasklistID
+				}, data).pipe(function (response) {
+					var task = new Task(response);
+					TaskService.create.fixTasklistReference(task, data.tasklistID, taskdata);
+					return task;
+				}).done(function (task) {
+					taskdata.tasks.push(task);
+					taskdata.tasks.remove(mock);
+				});
+			},
+			function () {
+				taskdata.tasks.remove(mock);
+			},
 			{kind: 'create'});
-
 	transaction.register(mock.transactions);
 	return transaction.promise();
-};
-
-/**
- * @returns {Function} service operation
- */
-TaskService.create.executeFunction = function (taskdata, data, mock) {
-	// FIXME: calculate UTC time
-	var request = JSON.stringify(data);
-	return function () {
-		return $.postJSON('/tasks', request).pipe(function (object) {
-			var task = new Task(object);
-			TaskService.create.fixTasklistReference(task, data.tasklistID, taskdata);
-			return task;
-		}).done(function (task) {
-			taskdata.tasks.push(task);
-			taskdata.tasks.remove(mock);
-		});
-	};
-};
-
-/**
- * @returns {Function} rollback the service operation
- */
-TaskService.create.rollbackFunction = function (taskdata, data, mock) {
-	return function () {
-		return taskdata.tasks.remove(mock);
-	};
 };
 
 TaskService.create.fixTasklistReference = function (task, tasklistID, taskdata) {
@@ -488,38 +528,26 @@ TaskService.create.fixTasklistReference = function (task, tasklistID, taskdata) 
  * @returns {Deferred}
  */
 TaskService.update = function (task, data) {
-	var transaction = new ServiceTransaction(
-			TaskService.update.executeFunction(task, data),
-			TaskService.update.rollbackFunction(task, data),
-			{kind: 'update'});
-
-	ko.extendObservables(task, data);
-
-	transaction.register(task.transactions);
-	return transaction.promise();
-};
-
-/**
- * @returns {Function} service operation
- */
-TaskService.update.executeFunction = function (task, data) {
-	var identity = {
-		id: task.id(),
-		tasklistID: task.tasklist().id()
-	};
-	var request = JSON.stringify($.extend(identity, data));
-	return $.putJSON.bind(null, '/tasks', request);
-};
-
-/**
- * @returns {Function} rollback the service operation
- */
-TaskService.update.rollbackFunction = function (task, data) {
 	var originalData = {};
 	$.each(data, function (k, v) {
 		originalData[k] = task[k]();
 	});
-	return ko.extendObservables.bind(null, task, originalData);
+	ko.extendObservables(task, data);
+
+	var transaction = new ServiceTransaction(
+			function () {
+				// FIXME: calculate UTC time
+				return TaskService.endpoints.single.putJSON({
+					id: task.id(),
+					tasklistID: task.tasklist().id()
+				}, data);
+			},
+			function () {
+				ko.extendObservables(task, originalData);
+			},
+			{kind: 'update'});
+	transaction.register(task.transactions);
+	return transaction.promise();
 };
 
 /**
@@ -532,34 +560,23 @@ TaskService.update.rollbackFunction = function (task, data) {
  * @returns {Deferred}
  */
 TaskService.move = function (task, tasklist) {
-	var transaction = new ServiceTransaction(
-			TaskService.move.executeFunction(task, tasklist),
-			TaskService.move.rollbackFunction(task),
-			{kind: 'move'});
-
+	var originalTasklist = task.tasklist();
 	task.tasklist(tasklist);
 
+	var transaction = new ServiceTransaction(
+			function () {
+				return TaskService.endpoints.move.post({
+					id: task.id(),
+					tasklistID: originalTasklist.id(),
+					to: tasklist.id()
+				});
+			},
+			function () {
+				task.tasklist(originalTasklist);
+			},
+			{kind: 'move'});
 	transaction.register(task.transactions);
 	return transaction.promise();
-};
-
-/**
- * @returns {Function} service operation
- */
-TaskService.move.executeFunction = function (task, tasklist) {
-	var request = {
-		id: task.id(),
-		tasklistID: task.tasklist().id(),
-		destinationTasklistID: tasklist.id()
-	};
-	return $.post.bind(null, '/tasks/move', request);
-};
-
-/**
- * @returns {Function} rollback the service operation
- */
-TaskService.move.rollbackFunction = function (task) {
-	return task.tasklist.bind(null, task.tasklist());
 };
 
 /**
@@ -573,36 +590,16 @@ TaskService.move.rollbackFunction = function (task) {
  */
 TaskService.remove = function (taskdata, task) {
 	var transaction = new ServiceTransaction(
-			TaskService.remove.executeFunction(taskdata, task),
-			TaskService.remove.rollbackFunction(taskdata, task),
+			function () {
+				return TaskService.endpoints.single.delete_({
+					id: task.id(),
+					tasklistID: task.tasklist().id()
+				}).done(function () {
+					taskdata.tasks.remove(task);
+				});
+			},
+			$.noop,
 			{kind: 'remove'});
-
 	transaction.register(task.transactions);
 	return transaction.promise();
-};
-
-/**
- * @returns {Function} service operation
- */
-TaskService.remove.executeFunction = function (taskdata, task) {
-	var request = {
-		id: task.id(),
-		tasklistID: task.tasklist().id()
-	};
-	return function () {
-		// FIXME: 400 bad request
-		return $.deleteEncoded('/tasks', request).done(function () {
-			taskdata.tasks.remove(task);
-		});
-	};
-};
-
-/**
- * @returns {Function} rollback the service operation
- */
-TaskService.remove.rollbackFunction = function (taskdata, task) {
-	return function () {
-		// TODO: task duplicated when failed...?
-		return taskdata.tasks.push(task);
-	};
 };
