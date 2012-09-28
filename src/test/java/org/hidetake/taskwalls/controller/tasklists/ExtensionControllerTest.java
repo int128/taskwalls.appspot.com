@@ -17,10 +17,10 @@ import org.slim3.tester.ControllerTestCase;
 public class ExtensionControllerTest extends ControllerTestCase {
 
 	@Test
-	public void xhr() throws Exception {
+	public void notXHR() throws Exception {
 		enableSession(tester);
-		setMethodAsPost(tester);
-		tester.start("/tasklists/extension");
+		setMethodAsPut(tester);
+		tester.start("/tasklists/TASKLISTID/extension");
 		ExtensionController controller = tester.getController();
 		assertThat(controller, is(notNullValue()));
 		assertThat(tester.isRedirect(), is(false));
@@ -29,11 +29,11 @@ public class ExtensionControllerTest extends ControllerTestCase {
 	}
 
 	@Test
-	public void preconditionFailed() throws Exception {
+	public void badParameter() throws Exception {
 		enableSession(tester);
-		setMethodAsPost(tester);
+		setMethodAsPut(tester);
 		setXHR(tester);
-		tester.start("/tasklists/extension");
+		tester.start("/tasklists/TASKLISTID/extension");
 		ExtensionController controller = tester.getController();
 		assertThat(controller, is(notNullValue()));
 		assertThat(tester.isRedirect(), is(false));
@@ -42,20 +42,19 @@ public class ExtensionControllerTest extends ControllerTestCase {
 	}
 
 	@Test
-	public void valid() throws Exception {
+	public void test_put() throws Exception {
 		enableSession(tester);
-		setMethodAsPost(tester);
+		setMethodAsPut(tester);
 		setXHR(tester);
 		TasklistExtensionMeta m = TasklistExtensionMeta.get();
-		tester.param("id", "hogeId");
 		tester.param(m.colorCode, "5");
-		tester.start("/tasklists/extension");
+		tester.start("/tasklists/TASKLISTID/extension");
 		ExtensionController controller = tester.getController();
 		assertThat(controller, is(notNullValue()));
 		assertThat(tester.isRedirect(), is(false));
 		assertThat(tester.getDestinationPath(), is(nullValue()));
 		assertThat(tester.response.getStatus(), is(HttpServletResponse.SC_OK));
-		TasklistExtension actual = Datastore.get(m, TasklistExtension.createKey("hogeId"));
+		TasklistExtension actual = Datastore.get(m, TasklistExtension.createKey("TASKLISTID"));
 		assertThat(actual.getColorCode(), is(5));
 	}
 

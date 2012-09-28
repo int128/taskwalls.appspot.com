@@ -6,6 +6,7 @@ import java.io.FileInputStream;
 import org.apache.commons.io.IOUtils;
 import org.slim3.controller.Controller;
 import org.slim3.controller.Navigation;
+import org.slim3.util.AppEngineUtil;
 
 /**
  * Resource proxy.
@@ -16,7 +17,7 @@ public class FileController extends Controller {
 
 	@Override
 	public Navigation run() throws Exception {
-		if (isDevelopment()) {
+		if (!AppEngineUtil.isProduction()) {
 			response.setCharacterEncoding("UTF-8");
 			response.setContentType("text/" + param("type"));
 			File projectBase = new File(servletContext.getRealPath("/")).getParentFile();
