@@ -5,8 +5,8 @@ import java.util.logging.Logger;
 
 import org.hidetake.taskwalls.model.oauth2.ClientCredential;
 import org.hidetake.taskwalls.util.StackTraceUtil;
-import org.hidetake.taskwalls.util.googleapis.HttpTransportLocator;
-import org.hidetake.taskwalls.util.googleapis.JsonFactoryLocator;
+import org.hidetake.taskwalls.util.googleapi.HttpTransportLocator;
+import org.hidetake.taskwalls.util.googleapi.JsonFactoryLocator;
 
 import com.google.api.client.googleapis.auth.oauth2.GoogleAuthorizationCodeTokenRequest;
 import com.google.api.client.googleapis.auth.oauth2.GoogleCredential;

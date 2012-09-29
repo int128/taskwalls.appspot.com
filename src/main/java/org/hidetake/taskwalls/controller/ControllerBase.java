@@ -10,9 +10,9 @@ import org.hidetake.taskwalls.service.GoogleOAuth2Service;
 import org.hidetake.taskwalls.service.SessionManager;
 import org.hidetake.taskwalls.util.AjaxPreconditions;
 import org.hidetake.taskwalls.util.StackTraceUtil;
-import org.hidetake.taskwalls.util.googleapis.HttpTransportLocator;
-import org.hidetake.taskwalls.util.googleapis.JsonFactoryLocator;
-import org.hidetake.taskwalls.util.googleapis.TasksRequestInitializer;
+import org.hidetake.taskwalls.util.googleapi.HttpTransportLocator;
+import org.hidetake.taskwalls.util.googleapi.JsonFactoryLocator;
+import org.hidetake.taskwalls.util.googleapi.TasksRequestInitializer;
 import org.slim3.controller.Controller;
 import org.slim3.controller.Navigation;
 
