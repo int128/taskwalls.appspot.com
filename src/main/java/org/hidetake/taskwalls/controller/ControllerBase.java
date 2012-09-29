@@ -10,9 +10,8 @@ import org.hidetake.taskwalls.service.GoogleOAuth2Service;
 import org.hidetake.taskwalls.service.SessionManager;
 import org.hidetake.taskwalls.util.AjaxPreconditions;
 import org.hidetake.taskwalls.util.StackTraceUtil;
-import org.hidetake.taskwalls.util.googleapi.HttpTransportLocator;
 import org.hidetake.taskwalls.util.googleapi.JsonFactoryLocator;
-import org.hidetake.taskwalls.util.googleapi.TasksRequestInitializer;
+import org.hidetake.taskwalls.util.googleapi.TasksServiceFactoryLocator;
 import org.slim3.controller.Controller;
 import org.slim3.controller.Navigation;
 
@@ -60,9 +59,7 @@ public abstract class ControllerBase extends Controller {
 
 		GoogleCredential credential = GoogleOAuth2Service.buildCredential(tokenResponse,
 				AppCredential.CLIENT_CREDENTIAL);
-		tasksService = new Tasks.Builder(HttpTransportLocator.get(), JsonFactoryLocator.get(), credential)
-				.setJsonHttpRequestInitializer(new TasksRequestInitializer(request.getRemoteAddr()))
-				.build();
+		tasksService = TasksServiceFactoryLocator.get().build(credential, request.getRemoteAddr());
 
 		GenericJson jsonResponse = handle();
 		if (jsonResponse != null) {

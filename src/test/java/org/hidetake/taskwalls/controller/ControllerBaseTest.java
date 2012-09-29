@@ -54,31 +54,58 @@ public class ControllerBaseTest extends ControllerTestCase {
 	}
 
 	@Test
-	public void sessionEnabled() throws Exception {
+	public void get() throws Exception {
 		setXHR(tester);
 		enableSession(tester);
 		tester.start("/controllerBaseTest");
 		ControllerBaseTestController controller = tester.getController();
 		assertThat(controller, is(notNullValue()));
-		assertThat(tester.response.getStatus(), is(HttpServletResponse.SC_OK));
 		assertThat(tester.isRedirect(), is(false));
 		assertThat(tester.getDestinationPath(), is(nullValue()));
+		assertThat(tester.response.getStatus(), is(HttpServletResponse.SC_OK));
+		assertThat(controller.get, is(1));
 	}
 
 	@Test
-	public void parameterGiven() throws Exception {
+	public void post() throws Exception {
 		setXHR(tester);
+		setMethodAsPost(tester);
 		enableSession(tester);
-		tester.param("json", true);
 		tester.start("/controllerBaseTest");
 		ControllerBaseTestController controller = tester.getController();
 		assertThat(controller, is(notNullValue()));
 		assertThat(tester.isRedirect(), is(false));
 		assertThat(tester.getDestinationPath(), is(nullValue()));
 		assertThat(tester.response.getStatus(), is(HttpServletResponse.SC_OK));
-		assertThat(tester.response.getContentType(), is("application/json"));
-		assertThat(tester.response.getCharacterEncoding(), is("UTF-8"));
-		assertThat(tester.response.getHeader("X-Content-Type-Options"), is("nosniff"));
+		assertThat(controller.post, is(1));
+	}
+
+	@Test
+	public void put() throws Exception {
+		setXHR(tester);
+		setMethodAsPut(tester);
+		enableSession(tester);
+		tester.start("/controllerBaseTest");
+		ControllerBaseTestController controller = tester.getController();
+		assertThat(controller, is(notNullValue()));
+		assertThat(tester.isRedirect(), is(false));
+		assertThat(tester.getDestinationPath(), is(nullValue()));
+		assertThat(tester.response.getStatus(), is(HttpServletResponse.SC_OK));
+		assertThat(controller.put, is(1));
+	}
+
+	@Test
+	public void delete() throws Exception {
+		setXHR(tester);
+		setMethodAsDelete(tester);
+		enableSession(tester);
+		tester.start("/controllerBaseTest");
+		ControllerBaseTestController controller = tester.getController();
+		assertThat(controller, is(notNullValue()));
+		assertThat(tester.isRedirect(), is(false));
+		assertThat(tester.getDestinationPath(), is(nullValue()));
+		assertThat(tester.response.getStatus(), is(HttpServletResponse.SC_OK));
+		assertThat(controller.delete, is(1));
 	}
 
 	@Test
@@ -93,11 +120,30 @@ public class ControllerBaseTest extends ControllerTestCase {
 		tester.start("/controllerBaseTest");
 		ControllerBaseTestController controller = tester.getController();
 		assertThat(controller, is(notNullValue()));
+		assertThat(tester.isRedirect(), is(false));
+		assertThat(tester.getDestinationPath(), is(nullValue()));
+		assertThat(tester.response.getStatus(), is(HttpServletResponse.SC_OK));
 
 		GenericJson json = controller.parseJsonAs(GenericJson.class);
 		assertThat(json, is(notNullValue()));
 		assertThat((String) json.get("title"), is("hogehoge"));
 		assertThat((BigDecimal) json.get("id"), is(new BigDecimal(1)));
+	}
+
+	@Test
+	public void jsonResponse() throws Exception {
+		setXHR(tester);
+		enableSession(tester);
+		tester.param("json", true);
+		tester.start("/controllerBaseTest");
+		ControllerBaseTestController controller = tester.getController();
+		assertThat(controller, is(notNullValue()));
+		assertThat(tester.isRedirect(), is(false));
+		assertThat(tester.getDestinationPath(), is(nullValue()));
+		assertThat(tester.response.getStatus(), is(HttpServletResponse.SC_OK));
+		assertThat(tester.response.getHeader("X-Content-Type-Options"), is("nosniff"));
+		assertThat(tester.response.getContentType(), is("application/json"));
+		assertThat(tester.response.getCharacterEncoding(), is("UTF-8"));
 	}
 
 }
