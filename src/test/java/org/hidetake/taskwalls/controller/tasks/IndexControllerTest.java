@@ -29,11 +29,11 @@ public class IndexControllerTest extends ControllerTestCase {
 
 	@Test
 	public void get() throws Exception {
-		final List list = mock(List.class);
-		when(list.execute()).thenReturn(new com.google.api.services.tasks.model.Tasks());
-		final TasksOperations tasksOperations = mock(TasksOperations.class);
-		when(tasksOperations.list("TASKLISTID")).thenReturn(list);
-		final Tasks tasks = mock(Tasks.class);
+		List listApi = mock(List.class);
+		when(listApi.execute()).thenReturn(new com.google.api.services.tasks.model.Tasks());
+		TasksOperations tasksOperations = mock(TasksOperations.class);
+		when(tasksOperations.list("TASKLISTID")).thenReturn(listApi);
+		Tasks tasks = mock(Tasks.class);
 		when(tasks.tasks()).thenReturn(tasksOperations);
 
 		enableSession(tester);
@@ -47,23 +47,24 @@ public class IndexControllerTest extends ControllerTestCase {
 		assertThat(tester.response.getStatus(), is(HttpServletResponse.SC_OK));
 		assertThat(tester.response.getContentType(), is("application/json"));
 		assertThat(tester.response.getCharacterEncoding(), is("UTF-8"));
+		verify(listApi).execute();
 	}
 
 	@Test
 	public void post() throws Exception {
-		final Insert insert = mock(Insert.class);
-		when(insert.execute()).thenReturn(new Task());
-		final TasksOperations tasksOperations = mock(TasksOperations.class);
+		final Insert insertApi = mock(Insert.class);
+		when(insertApi.execute()).thenReturn(new Task());
+		TasksOperations tasksOperations = mock(TasksOperations.class);
 		when(tasksOperations.insert(eq("TASKLISTID"), Matchers.any(Task.class)))
-			.then(new Answer<Insert>() {
-				@Override
-				public Insert answer(InvocationOnMock invocation) throws Throwable {
-					Task task = (Task)invocation.getArguments()[1];
-					assertThat(task.getTitle(), is("hogehoge"));
-					return insert;
-				}
-			});
-		final Tasks tasks = mock(Tasks.class);
+				.then(new Answer<Insert>() {
+					@Override
+					public Insert answer(InvocationOnMock invocation) throws Throwable {
+						Task task = (Task) invocation.getArguments()[1];
+						assertThat(task.getTitle(), is("hogehoge"));
+						return insertApi;
+					}
+				});
+		Tasks tasks = mock(Tasks.class);
 		when(tasks.tasks()).thenReturn(tasksOperations);
 
 		String json = "{\"title\":\"hogehoge\"}";
@@ -84,6 +85,7 @@ public class IndexControllerTest extends ControllerTestCase {
 		assertThat(tester.response.getStatus(), is(HttpServletResponse.SC_OK));
 		assertThat(tester.response.getContentType(), is("application/json"));
 		assertThat(tester.response.getCharacterEncoding(), is("UTF-8"));
+		verify(insertApi).execute();
 	}
 
 }
