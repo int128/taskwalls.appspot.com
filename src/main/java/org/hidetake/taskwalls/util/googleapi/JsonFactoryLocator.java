@@ -1,4 +1,4 @@
-package org.hidetake.taskwalls.util.googleapis;
+package org.hidetake.taskwalls.util.googleapi;
 
 import com.google.api.client.json.JsonFactory;
 import com.google.api.client.json.jackson.JacksonFactory;

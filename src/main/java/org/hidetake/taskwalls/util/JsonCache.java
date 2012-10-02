@@ -3,7 +3,7 @@ package org.hidetake.taskwalls.util;
 import java.io.IOException;
 import java.io.Serializable;
 
-import org.hidetake.taskwalls.util.googleapis.JsonFactoryLocator;
+import org.hidetake.taskwalls.util.googleapi.JsonFactoryLocator;
 import org.slim3.memcache.Memcache;
 import org.slim3.util.AppEngineUtil;
 

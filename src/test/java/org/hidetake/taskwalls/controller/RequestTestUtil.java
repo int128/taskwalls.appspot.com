@@ -39,6 +39,24 @@ public class RequestTestUtil {
 	}
 
 	/**
+	 * Set the request method as PUT.
+	 * 
+	 * @param tester
+	 */
+	public static void setMethodAsPut(ControllerTester tester) {
+		tester.request.setMethod("PUT");
+	}
+
+	/**
+	 * Set the request method as DELETE.
+	 * 
+	 * @param tester
+	 */
+	public static void setMethodAsDelete(ControllerTester tester) {
+		tester.request.setMethod("DELETE");
+	}
+
+	/**
 	 * Set the request as XHR.
 	 * 
 	 * @param tester

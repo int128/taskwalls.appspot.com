@@ -1,4 +1,4 @@
-package org.hidetake.taskwalls.util.googleapis;
+package org.hidetake.taskwalls.util.googleapi;
 
 import com.google.api.client.extensions.appengine.http.UrlFetchTransport;
 import com.google.api.client.http.HttpTransport;

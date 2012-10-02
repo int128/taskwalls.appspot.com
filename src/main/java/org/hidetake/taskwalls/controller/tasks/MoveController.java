@@ -14,17 +14,16 @@ import com.google.api.services.tasks.model.Task;
 public class MoveController extends ControllerBase {
 
 	@Override
-	protected boolean validate() {
-		Validators v = new Validators(request);
-		v.add("tasklistID", v.required());
-		v.add("id", v.required());
-		v.add("destinationTasklistID", v.required());
-		return v.validate();
-	}
+	public GenericJson post() throws Exception {
+		if (!validate()) {
+			return preconditionFailed(errors.toString());
+		}
 
-	@Override
-	public GenericJson response() throws Exception {
-		Task original = tasksService.tasks().get(asString("tasklistID"), asString("id")).execute();
+		String id = param("id");
+		String tasklistID = param("tasklistID");
+		String destinationTasklistID = param("to");
+
+		Task original = tasksService.tasks().get(tasklistID, id).execute();
 		Task task = new Task();
 		task.setCompleted(original.getCompleted());
 		task.setDeleted(original.getDeleted());
@@ -37,9 +36,17 @@ public class MoveController extends ControllerBase {
 		task.setTitle(original.getTitle());
 		task.setUpdated(original.getUpdated());
 		// TODO: transaction
-		Task moved = tasksService.tasks().insert(asString("destinationTasklistID"), task).execute();
-		tasksService.tasks().delete(asString("tasklistID"), asString("id")).execute();
+		Task moved = tasksService.tasks().insert(destinationTasklistID, task).execute();
+		tasksService.tasks().delete(tasklistID, id).execute();
 		return moved;
+	}
+
+	private boolean validate() {
+		Validators v = new Validators(request);
+		v.add("id", v.required());
+		v.add("tasklistID", v.required());
+		v.add("to", v.required());
+		return v.validate();
 	}
 
 }

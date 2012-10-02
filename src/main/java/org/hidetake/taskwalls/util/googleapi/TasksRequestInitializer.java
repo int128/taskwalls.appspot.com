@@ -1,4 +1,4 @@
-package org.hidetake.taskwalls.util.googleapis;
+package org.hidetake.taskwalls.util.googleapi;
 
 import java.io.IOException;
 

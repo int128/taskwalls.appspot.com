@@ -20,4 +20,14 @@ public class AjaxPreconditions {
 		return XHR_HEADER_VALUE.equals(request.getHeader(XHR_HEADER_NAME));
 	}
 
+	/**
+	 * Check if the content is JSON.
+	 * 
+	 * @param request
+	 * @return 
+	 */
+	public static boolean hasJsonContent(HttpServletRequest request) {
+		return request.getContentType().startsWith("application/json");
+	}
+
 }

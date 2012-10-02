@@ -7,6 +7,7 @@ import java.util.Date;
 import org.apache.commons.io.FileUtils;
 import org.slim3.controller.Controller;
 import org.slim3.controller.Navigation;
+import org.slim3.util.AppEngineUtil;
 
 /**
  * Load assets.
@@ -22,7 +23,7 @@ public class IndexController extends Controller {
 
 	@Override
 	public Navigation run() throws Exception {
-		if (isDevelopment()) {
+		if (!AppEngineUtil.isProduction()) {
 			response.setCharacterEncoding("UTF-8");
 			response.setContentType("text/javascript");
 			writeAssets();

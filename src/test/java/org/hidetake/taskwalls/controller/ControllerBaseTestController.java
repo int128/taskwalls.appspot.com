@@ -1,25 +1,40 @@
 package org.hidetake.taskwalls.controller;
 
-import org.hidetake.taskwalls.util.googleapis.JsonFactoryLocator;
-
 import com.google.api.client.json.GenericJson;
 
 public class ControllerBaseTestController extends ControllerBase {
 
-	@Override
-	protected boolean validate() {
-		return true;
-	}
+	protected int get = 0;
+	protected int post = 0;
+	protected int put = 0;
+	protected int delete = 0;
 
 	@Override
-	protected GenericJson response() throws Exception {
+	protected GenericJson get() throws Exception {
+		get++;
 		if (asBoolean("json") == null) {
 			return null;
 		} else {
-			GenericJson json = new GenericJson();
-			json.setFactory(JsonFactoryLocator.get());
-			return json;
+			return new GenericJson();
 		}
+	}
+
+	@Override
+	protected GenericJson post() throws Exception {
+		post++;
+		return null;
+	}
+
+	@Override
+	protected GenericJson put() throws Exception {
+		put++;
+		return null;
+	}
+
+	@Override
+	protected GenericJson delete() throws Exception {
+		delete++;
+		return null;
 	}
 
 }
