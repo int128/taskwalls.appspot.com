@@ -29,9 +29,12 @@ public class TaskControllerTest extends ControllerTestCase {
 
 	@Test
 	public void put() throws Exception {
+		final Tasks tasks = mock(Tasks.class);
+		final TasksOperations tasksOperations = mock(TasksOperations.class);
+		when(tasks.tasks()).thenReturn(tasksOperations);
+
 		final Patch patch = mock(Patch.class);
 		when(patch.execute()).thenReturn(new Task());
-		final TasksOperations tasksOperations = mock(TasksOperations.class);
 		when(tasksOperations.patch(eq("TASKLISTID"), eq("TASKID"), Matchers.any(Task.class)))
 				.then(new Answer<Patch>() {
 					@Override
@@ -41,8 +44,6 @@ public class TaskControllerTest extends ControllerTestCase {
 						return patch;
 					}
 				});
-		final Tasks tasks = mock(Tasks.class);
-		when(tasks.tasks()).thenReturn(tasksOperations);
 
 		String json = "{\"title\":\"hogehoge\"}";
 

@@ -33,21 +33,22 @@ public class IndexControllerTest extends ControllerTestCase {
 
 	@Test
 	public void get() throws Exception {
+		Tasks tasksApi = mock(Tasks.class);
+		Tasklists tasklistsApi = mock(Tasklists.class);
+		when(tasksApi.tasklists()).thenReturn(tasklistsApi);
+
 		TasklistExtension extension1 = new TasklistExtension();
 		extension1.setKey(TasklistExtension.createKey("TASKLIST1"));
 		extension1.setColorCode(15);
 		Datastore.put(extension1);
 
+		final List listApi = mock(List.class);
 		TaskList taskList1 = new TaskList();
 		taskList1.setId("TASKLIST1");
 		TaskLists taskLists = new TaskLists();
 		taskLists.setItems(Arrays.asList(taskList1));
-		List listApi = mock(List.class);
 		when(listApi.execute()).thenReturn(taskLists);
-		Tasklists tasklistsApi = mock(Tasklists.class);
 		when(tasklistsApi.list()).thenReturn(listApi);
-		Tasks tasksApi = mock(Tasks.class);
-		when(tasksApi.tasklists()).thenReturn(tasklistsApi);
 
 		enableSession(tester);
 		setXHR(tester);
@@ -69,9 +70,12 @@ public class IndexControllerTest extends ControllerTestCase {
 
 	@Test
 	public void post() throws Exception {
+		Tasks tasksApi = mock(Tasks.class);
+		Tasklists tasklistsApi = mock(Tasklists.class);
+		when(tasksApi.tasklists()).thenReturn(tasklistsApi);
+
 		final Insert insertApi = mock(Insert.class);
 		when(insertApi.execute()).thenReturn(new TaskList());
-		Tasklists tasklistsApi = mock(Tasklists.class);
 		when(tasklistsApi.insert(Matchers.any(TaskList.class)))
 				.then(new Answer<Insert>() {
 					@Override
@@ -81,8 +85,6 @@ public class IndexControllerTest extends ControllerTestCase {
 						return insertApi;
 					}
 				});
-		Tasks tasksApi = mock(Tasks.class);
-		when(tasksApi.tasklists()).thenReturn(tasklistsApi);
 
 		String json = "{\"title\":\"hogehoge\"}";
 

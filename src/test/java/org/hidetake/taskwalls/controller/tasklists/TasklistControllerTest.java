@@ -29,12 +29,15 @@ public class TasklistControllerTest extends ControllerTestCase {
 
 	@Test
 	public void put() throws Exception {
+		Tasks tasksApi = mock(Tasks.class);
+		Tasklists tasklistsApi = mock(Tasklists.class);
+		when(tasksApi.tasklists()).thenReturn(tasklistsApi);
+
+		final Patch patchApi = mock(Patch.class);
 		TaskList tasklist1 = new TaskList();
 		tasklist1.setId("TASKLIST1");
 		tasklist1.setTitle("hogehoge");
-		final Patch patchApi = mock(Patch.class);
 		when(patchApi.execute()).thenReturn(tasklist1);
-		Tasklists tasklistsApi = mock(Tasklists.class);
 		when(tasklistsApi.patch(eq("TASKLIST1"), Matchers.any(TaskList.class)))
 				.then(new Answer<Patch>() {
 					@Override
@@ -44,8 +47,6 @@ public class TasklistControllerTest extends ControllerTestCase {
 						return patchApi;
 					}
 				});
-		Tasks tasksApi = mock(Tasks.class);
-		when(tasksApi.tasklists()).thenReturn(tasklistsApi);
 
 		String json = "{\"title\":\"hogehoge\"}";
 
@@ -70,11 +71,12 @@ public class TasklistControllerTest extends ControllerTestCase {
 
 	@Test
 	public void delete() throws Exception {
-		final Delete delete = mock(Delete.class);
-		final Tasklists tasksOperations = mock(Tasklists.class);
-		when(tasksOperations.delete(eq("TASKLIST1"))).thenReturn(delete);
-		final Tasks tasks = mock(Tasks.class);
+		Tasks tasks = mock(Tasks.class);
+		Tasklists tasksOperations = mock(Tasklists.class);
 		when(tasks.tasklists()).thenReturn(tasksOperations);
+
+		final Delete delete = mock(Delete.class);
+		when(tasksOperations.delete(eq("TASKLIST1"))).thenReturn(delete);
 
 		enableSession(tester);
 		setXHR(tester);

@@ -29,12 +29,13 @@ public class IndexControllerTest extends ControllerTestCase {
 
 	@Test
 	public void get() throws Exception {
+		Tasks tasks = mock(Tasks.class);
+		TasksOperations tasksOperations = mock(TasksOperations.class);
+		when(tasks.tasks()).thenReturn(tasksOperations);
+
 		List listApi = mock(List.class);
 		when(listApi.execute()).thenReturn(new com.google.api.services.tasks.model.Tasks());
-		TasksOperations tasksOperations = mock(TasksOperations.class);
 		when(tasksOperations.list("TASKLISTID")).thenReturn(listApi);
-		Tasks tasks = mock(Tasks.class);
-		when(tasks.tasks()).thenReturn(tasksOperations);
 
 		enableSession(tester);
 		setXHR(tester);
@@ -52,9 +53,12 @@ public class IndexControllerTest extends ControllerTestCase {
 
 	@Test
 	public void post() throws Exception {
+		Tasks tasks = mock(Tasks.class);
+		TasksOperations tasksOperations = mock(TasksOperations.class);
+		when(tasks.tasks()).thenReturn(tasksOperations);
+
 		final Insert insertApi = mock(Insert.class);
 		when(insertApi.execute()).thenReturn(new Task());
-		TasksOperations tasksOperations = mock(TasksOperations.class);
 		when(tasksOperations.insert(eq("TASKLISTID"), Matchers.any(Task.class)))
 				.then(new Answer<Insert>() {
 					@Override
@@ -64,8 +68,6 @@ public class IndexControllerTest extends ControllerTestCase {
 						return insertApi;
 					}
 				});
-		Tasks tasks = mock(Tasks.class);
-		when(tasks.tasks()).thenReturn(tasksOperations);
 
 		String json = "{\"title\":\"hogehoge\"}";
 
