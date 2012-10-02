@@ -21,6 +21,7 @@ import org.slim3.tester.ControllerTestCase;
 
 import com.google.api.services.tasks.Tasks;
 import com.google.api.services.tasks.Tasks.Tasklists;
+import com.google.api.services.tasks.Tasks.Tasklists.Delete;
 import com.google.api.services.tasks.Tasks.Tasklists.Patch;
 import com.google.api.services.tasks.model.TaskList;
 
@@ -69,7 +70,23 @@ public class TasklistControllerTest extends ControllerTestCase {
 
 	@Test
 	public void delete() throws Exception {
-		// TODO
+		final Delete delete = mock(Delete.class);
+		final Tasklists tasksOperations = mock(Tasklists.class);
+		when(tasksOperations.delete(eq("TASKLIST1"))).thenReturn(delete);
+		final Tasks tasks = mock(Tasks.class);
+		when(tasks.tasklists()).thenReturn(tasksOperations);
+
+		enableSession(tester);
+		setXHR(tester);
+		setMethodAsDelete(tester);
+		TasksServiceFactoryLocator.set(new MockTasksServiceFactory(tasks));
+		tester.start("/tasklists/TASKLIST1");
+		TasklistController controller = tester.getController();
+		assertThat(controller, is(notNullValue()));
+		assertThat(tester.isRedirect(), is(false));
+		assertThat(tester.getDestinationPath(), is(nullValue()));
+		assertThat(tester.response.getStatus(), is(HttpServletResponse.SC_OK));
+		verify(delete).execute();
 	}
 
 }
