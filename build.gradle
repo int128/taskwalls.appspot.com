@@ -62,9 +62,32 @@ task compileAptJava(overwrite: true) {
 compileJava.dependsOn compileAptJava
 compileJava.source sourceSets.apt.output.resourcesDir
 
+/*
+ * Eclipse configuration
+ */
 eclipse {
 	classpath {
-		defaultOutputDir = file('build/eclipse/classes')
 		plusConfigurations += configurations.toolsCompile
 	}
+}
+
+task eclipseAptFactory(type: Copy) {
+	from configurations.aptCompile.files
+	into new File(buildDir, 'eclipse/apt-factory')
+}
+
+task cleanEclipseWebInfLib(type: Delete) {
+	delete new File(projectDir, 'webapp/WEB-INF/lib')
+}
+
+task eclipseWebInfLib(type: Copy) {
+	dependsOn cleanEclipseWebInfLib
+	from configurations.runtime.files
+	into new File(projectDir, 'webapp/WEB-INF/lib')
+}
+
+// overwrite to prevent breaking Eclipse project files
+task eclipse(overwrite: true) {
+	dependsOn eclipseAptFactory
+	dependsOn eclipseWebInfLib
 }
