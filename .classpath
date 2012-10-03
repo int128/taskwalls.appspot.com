@@ -4,7 +4,6 @@
 	<classpathentry kind="src" output="target/test-classes" path="src/test/java"/>
 	<classpathentry kind="src" path="src/main/java"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-1.6"/>
-	<classpathentry kind="con" path="org.apache.ivyde.eclipse.cpcontainer.IVYDE_CONTAINER/?project=taskwalls.appspot.com&amp;ivyXmlPath=ivy.xml&amp;confs=compile%2Cprovided%2Ctools%2Ctest&amp;ivySettingsPath=%24%7Bworkspace_loc%3Ataskwalls.appspot.com%2Fivysettings.xml%7D&amp;loadSettingsOnDemand=false&amp;propertyFiles="/>
 	<classpathentry kind="src" path="target/apt-sources">
 		<attributes>
 			<attribute name="optional" value="true"/>
