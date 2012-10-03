@@ -1,0 +1,70 @@
+apply plugin: 'java'
+apply plugin: 'eclipse'
+
+sourceCompatibility = 1.6
+
+sourceSets {
+	apt
+	tools
+}
+
+repositories {
+	mavenCentral()
+	mavenRepo(url: 'http://maven.seasar.org/maven2/')
+	mavenRepo(url: 'http://mavenrepo.google-api-java-client.googlecode.com/hg')
+}
+
+def appengineVersion = '1.7.1'
+
+dependencies {
+	compile group: 'javax.servlet', name: 'servlet-api', version: '2.5'
+
+	compile group: 'com.google.appengine', name: 'appengine-api-1.0-sdk', version: appengineVersion
+	compile group: 'com.google.appengine', name: 'appengine-api-labs', version: appengineVersion
+	testCompile group: 'com.google.appengine', name: 'appengine-testing', version: appengineVersion
+	testCompile group: 'com.google.appengine', name: 'appengine-api-stubs', version: appengineVersion
+	//'com.google.appengine:appengine-java-sdk:1.7.1'
+
+	compile(group: 'org.slim3', name: 'slim3', version: '1.0.16') { exclude group: 'com.google.appengine' }
+	aptCompile(group: 'org.slim3', name: 'slim3-gen', version: '1.0.16') { exclude group: 'org.apache.ant' }
+	
+	testCompile group: 'junit', name: 'junit', version: '4.10'
+	testCompile group: 'org.mockito', name: 'mockito-core', version: '1.9.0'
+	testCompile group: 'commons-io', name: 'commons-io', version: '2.4'
+
+	compile group: 'com.google.apis', name: 'google-api-services-tasks', version: 'v1-rev3-1.7.2-beta'
+	compile group: 'com.google.http-client', name: 'google-http-client-appengine', version: '1.10.3-beta'
+
+	toolsCompile group: 'com.yahoo.platform.yui', name: 'yuicompressor', version: '2.4.7'
+	toolsCompile group: 'com.googlecode.htmlcompressor', name: 'htmlcompressor', version: '1.5.2'
+	toolsCompile group: 'commons-io', name: 'commons-io', version: '2.4'
+}
+
+task compileAptJava(overwrite: true) {
+	inputs.dir sourceSets.main.java.srcDirs
+	outputs.dir sourceSets.apt.output.resourcesDir
+	doLast {
+		sourceSets.apt.output.resourcesDir.mkdirs()
+		ant.path(id: 'aptFactoryPath', location: configurations.aptCompile.asPath)
+		ant.apt(compile: false,
+			includeAntRuntime: false,
+			factorypathref: 'aptFactoryPath',
+			classpath: configurations.compile.asPath,
+			preprocessdir: sourceSets.apt.output.resourcesDir,
+			encoding: 'UTF-8') {
+			sourceSets.main.java.srcDirs.each{
+				src(path: it)
+			}
+		}
+	}
+}
+
+compileJava.dependsOn compileAptJava
+compileJava.source sourceSets.apt.output.resourcesDir
+
+eclipse {
+	classpath {
+		defaultOutputDir = file('build/eclipse/classes')
+		plusConfigurations += configurations.toolsCompile
+	}
+}

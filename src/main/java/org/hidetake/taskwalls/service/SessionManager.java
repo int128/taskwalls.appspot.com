@@ -13,12 +13,12 @@ import javax.crypto.NoSuchPaddingException;
 import javax.crypto.spec.IvParameterSpec;
 import javax.crypto.spec.SecretKeySpec;
 
-import org.apache.commons.codec.binary.Base64;
 import org.hidetake.taskwalls.model.oauth2.ClientCredential;
 import org.hidetake.taskwalls.util.DigestGenerator;
 import org.hidetake.taskwalls.util.googleapi.JsonFactoryLocator;
 
 import com.google.api.client.googleapis.auth.oauth2.GoogleTokenResponse;
+import com.google.api.client.util.Base64;
 
 /**
  * This class provides serialization and restoring an OAuth2 token.
