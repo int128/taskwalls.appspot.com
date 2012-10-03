@@ -40,6 +40,9 @@ dependencies {
 	toolsCompile group: 'commons-io', name: 'commons-io', version: '2.4'
 }
 
+/*
+ * APT generation support 
+ */
 task compileAptJava(overwrite: true) {
 	inputs.dir sourceSets.main.java.srcDirs
 	outputs.dir sourceSets.apt.output.resourcesDir
@@ -63,7 +66,7 @@ compileJava.dependsOn compileAptJava
 compileJava.source sourceSets.apt.output.resourcesDir
 
 /*
- * Eclipse configuration
+ * Eclipse support
  */
 eclipse {
 	classpath {
