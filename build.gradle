@@ -23,21 +23,21 @@ dependencies {
 	compile group: 'com.google.appengine', name: 'appengine-api-labs', version: appengineVersion
 	testCompile group: 'com.google.appengine', name: 'appengine-testing', version: appengineVersion
 	testCompile group: 'com.google.appengine', name: 'appengine-api-stubs', version: appengineVersion
+	runtime group: 'com.google.appengine', name: 'appengine-tools-sdk', version: appengineVersion
 	//'com.google.appengine:appengine-java-sdk:1.7.1'
 
 	compile(group: 'org.slim3', name: 'slim3', version: '1.0.16') { exclude group: 'com.google.appengine' }
 	aptCompile(group: 'org.slim3', name: 'slim3-gen', version: '1.0.16') { exclude group: 'org.apache.ant' }
-	
+
 	testCompile group: 'junit', name: 'junit', version: '4.10'
 	testCompile group: 'org.mockito', name: 'mockito-core', version: '1.9.0'
-	testCompile group: 'commons-io', name: 'commons-io', version: '2.4'
 
 	compile group: 'com.google.apis', name: 'google-api-services-tasks', version: 'v1-rev3-1.7.2-beta'
 	compile group: 'com.google.http-client', name: 'google-http-client-appengine', version: '1.10.3-beta'
+	compile group: 'commons-io', name: 'commons-io', version: '2.4'
 
 	toolsCompile group: 'com.yahoo.platform.yui', name: 'yuicompressor', version: '2.4.7'
 	toolsCompile group: 'com.googlecode.htmlcompressor', name: 'htmlcompressor', version: '1.5.2'
-	toolsCompile group: 'commons-io', name: 'commons-io', version: '2.4'
 }
 
 /*
