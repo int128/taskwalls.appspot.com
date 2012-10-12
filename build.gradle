@@ -4,8 +4,6 @@ apply plugin: 'eclipse'
 buildscript {
 	ext {
 		appengineVersion = '1.7.1'
-		appengineSdkBaseDir = new File(projectDir, '..')
-		appengineSdkDir = new File(ext.appengineSdkBaseDir, "appengine-java-sdk-${ext.appengineVersion}")
 	}
 
 	repositories {
@@ -15,6 +13,13 @@ buildscript {
 	dependencies {
 		classpath group: 'com.google.appengine', name: 'appengine-tools-sdk', version: ext.appengineVersion 
 	}
+}
+
+ext {
+	appengineSdkBaseDir = file('../appengine-java-sdk')
+	appengineSdkDir = new File(appengineSdkBaseDir, "appengine-java-sdk-${appengineVersion}")
+	sourceWebappDir = file('webapp')
+	buildWebappDir = new File(buildDir, 'webapp')
 }
 
 sourceCompatibility = 1.6
@@ -117,23 +122,30 @@ task eclipse(overwrite: true) {
 /*
  * deployment support
  */
-task prepareWebapp {
-	// FIXME
+task buildWebappContents(type: Sync) {
+	from project.ext.sourceWebappDir
+	into project.ext.buildWebappDir
+	exclude 'WEB-INF/lib', 'WEB-INF/classes', 'WEB-INF/appengine-generated'
 }
 
-task appenginePrepareSdk {
-	outputs.dir project.ext.appengineSdkDir
-	doLast {
-		copy {
-			from zipTree(configurations.appengineSdk.singleFile)
-			into ext.appengineSdkDir
-		}
-	}
+task buildWebappLib(type: Sync) {
+	dependsOn jar
+	from configurations.runtime.files
+	from configurations.archives.artifacts.files
+	into new File(project.ext.buildWebappDir, 'WEB-INF/lib')
+}
+
+task buildWebapp {
+	dependsOn buildWebappContents, buildWebappLib
+}
+
+task prepareAppEngineSdk(type: Sync) {
+	from zipTree(configurations.appengineSdk.singleFile)
+	into project.ext.appengineSdkBaseDir
 }
 
 task deploy {
-	dependsOn appenginePrepareSdk
-	// TODO: prepare webapp dir
+	dependsOn prepareAppEngineSdk, buildWebapp
 	doLast {
 		System.setProperty 'appengine.sdk.root', project.ext.appengineSdkDir.path
 		String[] args = ['help']
