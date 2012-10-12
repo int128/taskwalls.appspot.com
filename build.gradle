@@ -1,11 +1,31 @@
 apply plugin: 'java'
 apply plugin: 'eclipse'
 
+buildscript {
+	ext {
+		appengineVersion = '1.7.1'
+		appengineSdkBaseDir = new File(projectDir, '..')
+		appengineSdkDir = new File(ext.appengineSdkBaseDir, "appengine-java-sdk-${ext.appengineVersion}")
+	}
+
+	repositories {
+		mavenCentral()
+	}
+
+	dependencies {
+		classpath group: 'com.google.appengine', name: 'appengine-tools-sdk', version: ext.appengineVersion 
+	}
+}
+
 sourceCompatibility = 1.6
 
 sourceSets {
 	apt
 	tools
+}
+
+configurations {
+	appengineSdk
 }
 
 repositories {
@@ -14,17 +34,14 @@ repositories {
 	mavenRepo(url: 'http://mavenrepo.google-api-java-client.googlecode.com/hg')
 }
 
-def appengineVersion = '1.7.1'
-
 dependencies {
 	compile group: 'javax.servlet', name: 'servlet-api', version: '2.5'
 
-	compile group: 'com.google.appengine', name: 'appengine-api-1.0-sdk', version: appengineVersion
-	compile group: 'com.google.appengine', name: 'appengine-api-labs', version: appengineVersion
-	testCompile group: 'com.google.appengine', name: 'appengine-testing', version: appengineVersion
-	testCompile group: 'com.google.appengine', name: 'appengine-api-stubs', version: appengineVersion
-	runtime group: 'com.google.appengine', name: 'appengine-tools-sdk', version: appengineVersion
-	//'com.google.appengine:appengine-java-sdk:1.7.1'
+	compile group: 'com.google.appengine', name: 'appengine-api-1.0-sdk', version: ext.appengineVersion
+	compile group: 'com.google.appengine', name: 'appengine-api-labs', version: ext.appengineVersion
+	testCompile group: 'com.google.appengine', name: 'appengine-testing', version: ext.appengineVersion
+	testCompile group: 'com.google.appengine', name: 'appengine-api-stubs', version: ext.appengineVersion
+	runtime group: 'com.google.appengine', name: 'appengine-tools-sdk', version: ext.appengineVersion
 
 	compile(group: 'org.slim3', name: 'slim3', version: '1.0.16') { exclude group: 'com.google.appengine' }
 	aptCompile(group: 'org.slim3', name: 'slim3-gen', version: '1.0.16') { exclude group: 'org.apache.ant' }
@@ -38,6 +55,8 @@ dependencies {
 
 	toolsCompile group: 'com.yahoo.platform.yui', name: 'yuicompressor', version: '2.4.7'
 	toolsCompile group: 'com.googlecode.htmlcompressor', name: 'htmlcompressor', version: '1.5.2'
+
+	appengineSdk group: 'com.google.appengine', name: 'appengine-java-sdk', version: ext.appengineVersion
 }
 
 /*
@@ -93,4 +112,31 @@ task eclipseWebInfLib(type: Copy) {
 task eclipse(overwrite: true) {
 	dependsOn eclipseAptFactory
 	dependsOn eclipseWebInfLib
+}
+
+/*
+ * deployment support
+ */
+task prepareWebapp {
+	// FIXME
+}
+
+task appenginePrepareSdk {
+	outputs.dir project.ext.appengineSdkDir
+	doLast {
+		copy {
+			from zipTree(configurations.appengineSdk.singleFile)
+			into ext.appengineSdkDir
+		}
+	}
+}
+
+task deploy {
+	dependsOn appenginePrepareSdk
+	// TODO: prepare webapp dir
+	doLast {
+		System.setProperty 'appengine.sdk.root', project.ext.appengineSdkDir.path
+		String[] args = ['help']
+		com.google.appengine.tools.admin.AppCfg.main args
+	}
 }
