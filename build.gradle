@@ -26,27 +26,9 @@ buildscript {
 	}
 }
 
-class YUICompressorErrorReporter implements ErrorReporter {
-	private final logger
-	YUICompressorErrorReporter(logger) {
-		this.logger = logger
-	}
-	void warning(String message, String sourceName, int line, String lineSource, int lineOffset) {
-		logger.warn(message)
-	}
-	void error(String message, String sourceName, int line, String lineSource, int lineOffset) {
-		logger.error(message)
-	}
-	EvaluatorException runtimeError(String message, String sourceName, int line, String lineSource, int lineOffset) {
-		logger.error(message)
-	}
-}
-
 ext {
 	appengineSdkBaseDir = file('../appengine-java-sdk')
 	appengineSdkDir = new File(appengineSdkBaseDir, "appengine-java-sdk-${appengineVersion}")
-	sourceWebappDir = file('webapp')
-	buildWebappDir = new File(buildDir, 'webapp')
 }
 
 sourceCompatibility = 1.6
@@ -58,8 +40,8 @@ configurations {
 
 repositories {
 	mavenCentral()
-	mavenRepo(url: 'http://maven.seasar.org/maven2/')
-	mavenRepo(url: 'http://mavenrepo.google-api-java-client.googlecode.com/hg')
+	maven { url 'http://maven.seasar.org/maven2/' }
+	maven { url 'http://mavenrepo.google-api-java-client.googlecode.com/hg' }
 }
 
 dependencies {
@@ -143,20 +125,25 @@ task eclipse(overwrite: true) {
 /*
  * deployment support
  */
-task buildWebappContents(type: Sync) {
+ext {
+	sourceWebappDir = file('webapp')
+	buildWebappDir = new File(buildDir, 'webapp')
+}
+
+task webappContents(type: Sync) {
 	from project.ext.sourceWebappDir
 	into project.ext.buildWebappDir
 	exclude 'WEB-INF/lib', 'WEB-INF/classes', 'WEB-INF/appengine-generated'
 }
 
-task buildWebappLib(type: Sync) {
+task webappLib(type: Sync) {
 	dependsOn jar
 	from configurations.runtime.files
 	from configurations.archives.artifacts.files
 	into new File(project.ext.buildWebappDir, 'WEB-INF/lib')
 }
 
-task buildWebappMinifiedHTML {
+task webappMinifiedHTML {
 	ext {
 		inputFile = new File(project.ext.sourceWebappDir, 'source.html')
 		outputFile = new File(project.ext.buildWebappDir, 'production.html')
@@ -184,7 +171,7 @@ task buildWebappMinifiedHTML {
 	}
 }
 
-task buildWebappMinifiedCSS {
+task webappMinifiedCSS {
 	ext {
 		inputBase = file('src/main/css')
 		inputFiles = new File(inputBase, 'assets.conf').readLines().collect { new File(inputBase, it) }
@@ -199,7 +186,7 @@ task buildWebappMinifiedCSS {
 	}
 }
 
-task buildWebappMinifiedJavaScript {
+task webappMinifiedJavaScript {
 	ext {
 		inputBase = file('src/main/javascript')
 		inputFiles = new File(inputBase, 'assets.conf').readLines().collect { new File(inputBase, it) }
@@ -228,9 +215,24 @@ task buildWebappMinifiedJavaScript {
 	}
 }
 
-task buildWebapp {
-	dependsOn buildWebappContents, buildWebappLib
-	dependsOn buildWebappMinifiedHTML, buildWebappMinifiedCSS, buildWebappMinifiedJavaScript
+class YUICompressorErrorReporter implements ErrorReporter {
+	private final logger
+	YUICompressorErrorReporter(logger) {
+		this.logger = logger
+	}
+	void warning(String message, String sourceName, int line, String lineSource, int lineOffset) {
+		logger.warn(message)
+	}
+	void error(String message, String sourceName, int line, String lineSource, int lineOffset) {
+		logger.error(message)
+	}
+	EvaluatorException runtimeError(String message, String sourceName, int line, String lineSource, int lineOffset) {
+		logger.error(message)
+	}
+}
+
+task webapp {
+	dependsOn webappContents, webappLib, webappMinifiedHTML, webappMinifiedCSS, webappMinifiedJavaScript
 }
 
 task prepareAppEngineSdk(type: Sync) {
@@ -239,7 +241,7 @@ task prepareAppEngineSdk(type: Sync) {
 }
 
 task deploy {
-	dependsOn prepareAppEngineSdk, buildWebapp
+	dependsOn prepareAppEngineSdk, webapp
 	doLast {
 		System.setProperty 'appengine.sdk.root', project.ext.appengineSdkDir.path
 		String[] args = ['help']
