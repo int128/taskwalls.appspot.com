@@ -1,3 +1,12 @@
+import java.util.Collections;
+
+import org.mozilla.javascript.ErrorReporter;
+import org.mozilla.javascript.EvaluatorException;
+
+import com.googlecode.htmlcompressor.compressor.HtmlCompressor;
+import com.yahoo.platform.yui.compressor.CssCompressor;
+import com.yahoo.platform.yui.compressor.JavaScriptCompressor;
+
 apply plugin: 'java'
 apply plugin: 'eclipse'
 
@@ -12,6 +21,24 @@ buildscript {
 
 	dependencies {
 		classpath group: 'com.google.appengine', name: 'appengine-tools-sdk', version: ext.appengineVersion 
+		classpath group: 'com.yahoo.platform.yui', name: 'yuicompressor', version: '2.4.7'
+		classpath group: 'com.googlecode.htmlcompressor', name: 'htmlcompressor', version: '1.5.2'
+	}
+}
+
+class YUICompressorErrorReporter implements ErrorReporter {
+	private final logger
+	YUICompressorErrorReporter(logger) {
+		this.logger = logger
+	}
+	void warning(String message, String sourceName, int line, String lineSource, int lineOffset) {
+		logger.warn(message)
+	}
+	void error(String message, String sourceName, int line, String lineSource, int lineOffset) {
+		logger.error(message)
+	}
+	EvaluatorException runtimeError(String message, String sourceName, int line, String lineSource, int lineOffset) {
+		logger.error(message)
 	}
 }
 
@@ -26,7 +53,6 @@ sourceCompatibility = 1.6
 
 sourceSets {
 	apt
-	tools
 }
 
 configurations {
@@ -57,9 +83,6 @@ dependencies {
 	compile group: 'com.google.apis', name: 'google-api-services-tasks', version: 'v1-rev3-1.7.2-beta'
 	compile group: 'com.google.http-client', name: 'google-http-client-appengine', version: '1.10.3-beta'
 	compile group: 'commons-io', name: 'commons-io', version: '2.4'
-
-	toolsCompile group: 'com.yahoo.platform.yui', name: 'yuicompressor', version: '2.4.7'
-	toolsCompile group: 'com.googlecode.htmlcompressor', name: 'htmlcompressor', version: '1.5.2'
 
 	appengineSdk group: 'com.google.appengine', name: 'appengine-java-sdk', version: ext.appengineVersion
 }
@@ -93,9 +116,6 @@ compileJava.source sourceSets.apt.output.resourcesDir
  * Eclipse support
  */
 eclipse {
-	classpath {
-		plusConfigurations += configurations.toolsCompile
-	}
 }
 
 task eclipseAptFactory(type: Copy) {
@@ -135,8 +155,81 @@ task buildWebappLib(type: Sync) {
 	into new File(project.ext.buildWebappDir, 'WEB-INF/lib')
 }
 
+task buildWebappMinifiedHTML {
+	ext {
+		inputFile = new File(project.ext.sourceWebappDir, 'source.html')
+		outputFile = new File(project.ext.buildWebappDir, 'production.html')
+		preservePatterns = [
+			// preserve knockout.js instructions
+			~/<!-- *\/?ko .*?-->/,
+			// preserve HTML templates
+			~/<script +?type="text\/html".*?>/
+		]
+		reporter = new YUICompressorErrorReporter(project.logger)
+	}
+	inputs.files ext.inputFile
+	outputs.files ext.outputFile
+	doLast {
+		def compressor = new HtmlCompressor()
+		compressor.with {
+			removeComments = false
+			compressCss = true
+			compressJavaScript = true
+			removeIntertagSpaces = true
+			preservePatterns = ext.preservePatterns
+			yuiErrorReporter = ext.reporter
+		}
+		ext.outputFile << compressor.compress(ext.inputFile.text)
+	}
+}
+
+task buildWebappMinifiedCSS {
+	ext {
+		inputBase = file('src/main/css')
+		inputFiles = new File(inputBase, 'assets.conf').readLines().collect { new File(inputBase, it) }
+		outputFile = new File(project.ext.buildWebappDir, 'production.css')
+	}
+	inputs.files ext.inputFiles
+	outputs.files ext.outputFile
+	doLast {
+		ext.outputFile.withWriter { writer ->
+			ext.inputFiles.each { it.withReader { new CssCompressor(it).compress(writer, -1) } }
+		}
+	}
+}
+
+task buildWebappMinifiedJavaScript {
+	ext {
+		inputBase = file('src/main/javascript')
+		inputFiles = new File(inputBase, 'assets.conf').readLines().collect { new File(inputBase, it) }
+		inputMinFiles = inputFiles.grep { it.path.endsWith('.min.js') }
+		inputRawFiles = inputFiles.grep { !(it.path.endsWith('.min.js')) }
+		outputFile = new File(project.ext.buildWebappDir, 'production.js')
+		reporter = new YUICompressorErrorReporter(project.logger)
+		prefix = '(function(){'
+		postfix = '})();'
+	}
+	inputs.files ext.inputFiles
+	outputs.files ext.outputFile
+	doLast {
+		ext.outputFile.withWriter { writer ->
+			ext.inputMinFiles.each { writer << it.text }
+			def streams = [
+				new ByteArrayInputStream(ext.prefix.bytes),
+				ext.inputRawFiles.collect { it.newInputStream() },
+				new ByteArrayInputStream(ext.postfix.bytes)
+			].flatten()
+			new SequenceInputStream(Collections.enumeration(streams)).withReader {
+				def compressor = new JavaScriptCompressor(it, ext.reporter)
+				compressor.compress(writer, -1, true, true, false, false)
+			}
+		}
+	}
+}
+
 task buildWebapp {
 	dependsOn buildWebappContents, buildWebappLib
+	dependsOn buildWebappMinifiedHTML, buildWebappMinifiedCSS, buildWebappMinifiedJavaScript
 }
 
 task prepareAppEngineSdk(type: Sync) {
