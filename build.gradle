@@ -74,6 +74,7 @@ ext {
 }
 
 task generateApt {
+	description 'Generates APT sources.'
 	inputs.dir sourceSets.main.java.srcDirs
 	outputs.dir project.ext.aptGeneratedDir
 	doLast {
@@ -101,23 +102,21 @@ compileJava {
 eclipse {
 }
 
-task eclipseAptFactory(type: Copy) {
+task eclipseAptFactory(type: Sync) {
+	description 'Prepares APT factory for Eclipse.'
 	from configurations.aptFactory.files
 	into new File(buildDir, 'eclipse/apt-factory')
 }
 
-task cleanEclipseWebInfLib(type: Delete) {
-	delete new File(projectDir, 'webapp/WEB-INF/lib')
-}
-
-task eclipseWebInfLib(type: Copy) {
-	dependsOn cleanEclipseWebInfLib
+task eclipseWebInfLib(type: Sync) {
+	description 'Prepares libraries to run DevAppServer.'
 	from configurations.runtime.files
 	into new File(projectDir, 'webapp/WEB-INF/lib')
 }
 
 // overwrite to prevent breaking Eclipse project files
 task eclipse(overwrite: true) {
+	description 'Prepares libraries for Eclipse and DevAppServer.'
 	dependsOn eclipseAptFactory
 	dependsOn eclipseWebInfLib
 }
@@ -131,12 +130,14 @@ ext {
 }
 
 task webappContents(type: Sync) {
+	description 'Builds webapp contents.'
 	from project.ext.sourceWebappDir
 	into project.ext.buildWebappDir
 	exclude 'WEB-INF/lib', 'WEB-INF/classes', 'WEB-INF/appengine-generated'
 }
 
 task webappLib(type: Sync) {
+	description 'Builds webapp libraries.'
 	dependsOn jar
 	from configurations.runtime.files
 	from configurations.archives.artifacts.files
@@ -144,6 +145,7 @@ task webappLib(type: Sync) {
 }
 
 task webappMinifiedHTML {
+	description 'Builds minified HTML.'
 	ext {
 		inputFile = new File(project.ext.sourceWebappDir, 'source.html')
 		outputFile = new File(project.ext.buildWebappDir, 'production.html')
@@ -172,6 +174,7 @@ task webappMinifiedHTML {
 }
 
 task webappMinifiedCSS {
+	description 'Builds minified CSS.'
 	ext {
 		inputBase = file('src/main/css')
 		inputFiles = new File(inputBase, 'assets.conf').readLines().collect { new File(inputBase, it) }
@@ -187,6 +190,7 @@ task webappMinifiedCSS {
 }
 
 task webappMinifiedJavaScript {
+	description 'Builds minified JavaScript.'
 	ext {
 		inputBase = file('src/main/javascript')
 		inputFiles = new File(inputBase, 'assets.conf').readLines().collect { new File(inputBase, it) }
@@ -232,15 +236,18 @@ class YUICompressorErrorReporter implements ErrorReporter {
 }
 
 task webapp {
+	description 'Builds webapp directory.'
 	dependsOn webappContents, webappLib, webappMinifiedHTML, webappMinifiedCSS, webappMinifiedJavaScript
 }
 
 task prepareAppEngineSdk(type: Sync) {
+	description 'Prepares App Engine SDK.'
 	from zipTree(configurations.appengineSdk.singleFile)
 	into project.ext.appengineSdkBaseDir
 }
 
 task deploy {
+	description 'Deploys the application on App Engine.'
 	dependsOn prepareAppEngineSdk, webapp
 	doLast {
 		System.setProperty 'appengine.sdk.root', project.ext.appengineSdkDir.path
