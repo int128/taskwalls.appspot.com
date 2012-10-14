@@ -8,7 +8,6 @@ import com.yahoo.platform.yui.compressor.CssCompressor;
 import com.yahoo.platform.yui.compressor.JavaScriptCompressor;
 
 apply plugin: 'java'
-apply plugin: 'eclipse'
 
 buildscript {
 	ext {
@@ -99,9 +98,6 @@ compileJava {
 /*
  * Eclipse support
  */
-eclipse {
-}
-
 task eclipseAptFactory(type: Sync) {
 	description 'Prepares APT factory for Eclipse.'
 	from configurations.aptFactory.files
@@ -112,13 +108,6 @@ task eclipseWebInfLib(type: Sync) {
 	description 'Prepares libraries to run DevAppServer.'
 	from configurations.runtime.files
 	into new File(projectDir, 'webapp/WEB-INF/lib')
-}
-
-// overwrite to prevent breaking Eclipse project files
-task eclipse(overwrite: true) {
-	description 'Prepares libraries for Eclipse and DevAppServer.'
-	dependsOn eclipseAptFactory
-	dependsOn eclipseWebInfLib
 }
 
 /*
