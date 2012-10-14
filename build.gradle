@@ -249,7 +249,12 @@ task deploy {
 	dependsOn prepareAppEngineSdk, webapp
 	doLast {
 		System.setProperty 'appengine.sdk.root', project.ext.appengineSdkDir.path
-		String[] args = ['update', project.ext.buildWebappDir]
+		def appVersionArgs = []
+		if (System.getenv('APP_VERSION')) {
+			appVersionArgs = ['-V', System.getenv('APP_VERSION')]
+		}
+		def updateArgs = ['update', project.ext.buildWebappDir]
+		String[] args = [appVersionArgs, updateArgs].flatten()
 		com.google.appengine.tools.admin.AppCfg.main args
 	}
 }
