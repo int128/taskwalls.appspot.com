@@ -240,7 +240,7 @@ task deploy {
 	dependsOn prepareAppEngineSdk, webapp
 	doLast {
 		System.setProperty 'appengine.sdk.root', project.ext.appengineSdkDir.path
-		String[] args = ['help']
+		String[] args = ['update', project.ext.buildWebappDir]
 		com.google.appengine.tools.admin.AppCfg.main args
 	}
 }
