@@ -229,10 +229,19 @@ task webapp {
 	dependsOn webappContents, webappLib, webappMinifiedHTML, webappMinifiedCSS, webappMinifiedJavaScript
 }
 
-task prepareAppEngineSdk(type: Sync) {
+task prepareAppEngineSdk {
 	description 'Prepares App Engine SDK.'
-	from zipTree(configurations.appengineSdk.singleFile)
-	into project.ext.appengineSdkBaseDir
+	doLast {
+		if (project.ext.appengineSdkDir.directory) {
+			logger.warn "App Engine SDK found at ${project.ext.appengineSdkDir}"
+		} else {
+			logger.warn "extracting App Engine SDK into ${project.ext.appengineSdkDir}"
+			copy {
+				from zipTree(configurations.appengineSdk.singleFile)
+				into project.ext.appengineSdkBaseDir
+			}
+		}
+	}
 }
 
 task deploy {
