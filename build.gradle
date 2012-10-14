@@ -51,11 +51,8 @@ ext {
 
 sourceCompatibility = 1.6
 
-sourceSets {
-	apt
-}
-
 configurations {
+	aptFactory
 	appengineSdk
 }
 
@@ -70,47 +67,51 @@ dependencies {
 
 	compile group: 'com.google.appengine', name: 'appengine-api-1.0-sdk', version: ext.appengineVersion
 	compile group: 'com.google.appengine', name: 'appengine-api-labs', version: ext.appengineVersion
-	testCompile group: 'com.google.appengine', name: 'appengine-testing', version: ext.appengineVersion
-	testCompile group: 'com.google.appengine', name: 'appengine-api-stubs', version: ext.appengineVersion
-	runtime group: 'com.google.appengine', name: 'appengine-tools-sdk', version: ext.appengineVersion
-
 	compile(group: 'org.slim3', name: 'slim3', version: '1.0.16') { exclude group: 'com.google.appengine' }
-	aptCompile(group: 'org.slim3', name: 'slim3-gen', version: '1.0.16') { exclude group: 'org.apache.ant' }
 
 	testCompile group: 'junit', name: 'junit', version: '4.10'
 	testCompile group: 'org.mockito', name: 'mockito-core', version: '1.9.0'
+	testCompile group: 'com.google.appengine', name: 'appengine-testing', version: ext.appengineVersion
+	testCompile group: 'com.google.appengine', name: 'appengine-api-stubs', version: ext.appengineVersion
 
 	compile group: 'com.google.apis', name: 'google-api-services-tasks', version: 'v1-rev3-1.7.2-beta'
 	compile group: 'com.google.http-client', name: 'google-http-client-appengine', version: '1.10.3-beta'
 	compile group: 'commons-io', name: 'commons-io', version: '2.4'
 
+	runtime group: 'com.google.appengine', name: 'appengine-tools-sdk', version: ext.appengineVersion
+
+	aptFactory(group: 'org.slim3', name: 'slim3-gen', version: '1.0.16') { exclude group: 'org.apache.ant' }
 	appengineSdk group: 'com.google.appengine', name: 'appengine-java-sdk', version: ext.appengineVersion
 }
 
 /*
  * APT generation support 
  */
-task compileAptJava(overwrite: true) {
+ext {
+	aptGeneratedDir = new File(buildDir, 'apt-generated')
+}
+
+task generateApt {
 	inputs.dir sourceSets.main.java.srcDirs
-	outputs.dir sourceSets.apt.output.resourcesDir
+	outputs.dir project.ext.aptGeneratedDir
 	doLast {
-		sourceSets.apt.output.resourcesDir.mkdirs()
-		ant.path(id: 'aptFactoryPath', location: configurations.aptCompile.asPath)
+		project.ext.aptGeneratedDir.mkdirs()
+		ant.path(id: 'aptFactoryPath', location: configurations.aptFactory.asPath)
 		ant.apt(compile: false,
 			includeAntRuntime: false,
 			factorypathref: 'aptFactoryPath',
 			classpath: configurations.compile.asPath,
-			preprocessdir: sourceSets.apt.output.resourcesDir,
+			preprocessdir: project.ext.aptGeneratedDir,
 			encoding: 'UTF-8') {
-			sourceSets.main.java.srcDirs.each{
-				src(path: it)
-			}
+			sourceSets.main.java.srcDirs.each{ src(path: it) }
 		}
 	}
 }
 
-compileJava.dependsOn compileAptJava
-compileJava.source sourceSets.apt.output.resourcesDir
+compileJava {
+	dependsOn generateApt
+	source project.ext.aptGeneratedDir
+}
 
 /*
  * Eclipse support
@@ -119,7 +120,7 @@ eclipse {
 }
 
 task eclipseAptFactory(type: Copy) {
-	from configurations.aptCompile.files
+	from configurations.aptFactory.files
 	into new File(buildDir, 'eclipse/apt-factory')
 }
 
