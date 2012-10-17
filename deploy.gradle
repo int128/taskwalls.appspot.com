@@ -1,0 +1,176 @@
+import java.util.Collections;
+
+import org.mozilla.javascript.ErrorReporter;
+import org.mozilla.javascript.EvaluatorException;
+
+import com.googlecode.htmlcompressor.compressor.HtmlCompressor;
+import com.yahoo.platform.yui.compressor.CssCompressor;
+import com.yahoo.platform.yui.compressor.JavaScriptCompressor;
+
+buildscript {
+	repositories {
+		mavenCentral()
+	}
+
+	dependencies {
+		classpath group: 'com.google.appengine', name: 'appengine-tools-sdk', version: ext.appengineVersion 
+		classpath group: 'com.yahoo.platform.yui', name: 'yuicompressor', version: '2.4.7'
+		classpath group: 'com.googlecode.htmlcompressor', name: 'htmlcompressor', version: '1.5.2'
+	}
+}
+
+ext {
+	sourceWebappDir = file('webapp')
+	buildWebappDir = new File(buildDir, 'webapp')
+	appengineSdkBaseDir = file('../appengine-java-sdk')
+	appengineSdkDir = new File(appengineSdkBaseDir, "appengine-java-sdk-${appengineVersion}")
+}
+
+configurations {
+	appengineSdk
+}
+
+dependencies {
+	appengineSdk group: 'com.google.appengine', name: 'appengine-java-sdk', version: ext.appengineVersion
+}
+
+task webappContents(type: Sync) {
+	description 'Builds webapp contents.'
+	from project.ext.sourceWebappDir
+	into project.ext.buildWebappDir
+	exclude 'WEB-INF/lib', 'WEB-INF/classes', 'WEB-INF/appengine-generated'
+}
+
+task webappLib(type: Sync) {
+	description 'Builds webapp libraries.'
+	dependsOn jar
+	from configurations.runtime.files
+	from configurations.archives.artifacts.files
+	into new File(project.ext.buildWebappDir, 'WEB-INF/lib')
+}
+
+task webappMinifiedHTML {
+	description 'Builds minified HTML.'
+	ext {
+		inputFile = new File(project.ext.sourceWebappDir, 'source.html')
+		outputFile = new File(project.ext.buildWebappDir, 'production.html')
+		preservePatterns = [
+			// preserve knockout.js instructions
+			~/<!-- *\/?ko .*?-->/,
+			// preserve HTML templates
+			~/<script +?type="text\/html".*?>/
+		]
+		reporter = new YUICompressorErrorReporter(project.logger)
+	}
+	inputs.files ext.inputFile
+	outputs.files ext.outputFile
+	doLast {
+		def compressor = new HtmlCompressor()
+		compressor.with {
+			removeComments = false
+			compressCss = true
+			compressJavaScript = true
+			removeIntertagSpaces = true
+			preservePatterns = ext.preservePatterns
+			yuiErrorReporter = ext.reporter
+		}
+		ext.outputFile << compressor.compress(ext.inputFile.text)
+	}
+}
+
+task webappMinifiedCSS {
+	description 'Builds minified CSS.'
+	ext {
+		inputBase = file('src/main/css')
+		inputFiles = new File(inputBase, 'assets.conf').readLines().collect { new File(inputBase, it) }
+		outputFile = new File(project.ext.buildWebappDir, 'production.css')
+	}
+	inputs.files ext.inputFiles
+	outputs.files ext.outputFile
+	doLast {
+		ext.outputFile.withWriter { writer ->
+			ext.inputFiles.each { it.withReader { new CssCompressor(it).compress(writer, -1) } }
+		}
+	}
+}
+
+task webappMinifiedJavaScript {
+	description 'Builds minified JavaScript.'
+	ext {
+		inputBase = file('src/main/javascript')
+		inputFiles = new File(inputBase, 'assets.conf').readLines().collect { new File(inputBase, it) }
+		inputMinFiles = inputFiles.grep { it.path.endsWith('.min.js') }
+		inputRawFiles = inputFiles.grep { !(it.path.endsWith('.min.js')) }
+		outputFile = new File(project.ext.buildWebappDir, 'production.js')
+		reporter = new YUICompressorErrorReporter(project.logger)
+		prefix = '(function(){'
+		postfix = '})();'
+	}
+	inputs.files ext.inputFiles
+	outputs.files ext.outputFile
+	doLast {
+		ext.outputFile.withWriter { writer ->
+			ext.inputMinFiles.each { writer << it.text }
+			def streams = [
+				new ByteArrayInputStream(ext.prefix.bytes),
+				ext.inputRawFiles.collect { it.newInputStream() },
+				new ByteArrayInputStream(ext.postfix.bytes)
+			].flatten()
+			new SequenceInputStream(Collections.enumeration(streams)).withReader {
+				def compressor = new JavaScriptCompressor(it, ext.reporter)
+				compressor.compress(writer, -1, true, true, false, false)
+			}
+		}
+	}
+}
+
+class YUICompressorErrorReporter implements ErrorReporter {
+	private final logger
+	YUICompressorErrorReporter(logger) {
+		this.logger = logger
+	}
+	void warning(String message, String sourceName, int line, String lineSource, int lineOffset) {
+		logger.warn(message)
+	}
+	void error(String message, String sourceName, int line, String lineSource, int lineOffset) {
+		logger.error(message)
+	}
+	EvaluatorException runtimeError(String message, String sourceName, int line, String lineSource, int lineOffset) {
+		logger.error(message)
+	}
+}
+
+task webapp {
+	description 'Builds webapp directory.'
+	dependsOn webappContents, webappLib, webappMinifiedHTML, webappMinifiedCSS, webappMinifiedJavaScript
+}
+
+task prepareAppEngineSdk {
+	description 'Prepares App Engine SDK.'
+	doLast {
+		if (project.ext.appengineSdkDir.directory) {
+			logger.warn "App Engine SDK found at ${project.ext.appengineSdkDir}"
+		} else {
+			logger.warn "extracting App Engine SDK into ${project.ext.appengineSdkDir}"
+			copy {
+				from zipTree(configurations.appengineSdk.singleFile)
+				into project.ext.appengineSdkBaseDir
+			}
+		}
+	}
+}
+
+task deploy {
+	description 'Deploys the application on App Engine.'
+	dependsOn prepareAppEngineSdk, webapp
+	doLast {
+		System.setProperty 'appengine.sdk.root', project.ext.appengineSdkDir.path
+		def appVersionArgs = []
+		if (System.getenv('APP_VERSION')) {
+			appVersionArgs = ['-V', System.getenv('APP_VERSION')]
+		}
+		def updateArgs = ['update', project.ext.buildWebappDir]
+		String[] args = [appVersionArgs, updateArgs].flatten()
+		com.google.appengine.tools.admin.AppCfg.main args
+	}
+}
