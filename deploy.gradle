@@ -20,7 +20,6 @@ buildscript {
 }
 
 ext {
-	sourceWebappDir = file('webapp')
 	buildWebappDir = new File(buildDir, 'webapp')
 	appengineSdkBaseDir = file('../appengine-java-sdk')
 	appengineSdkDir = new File(appengineSdkBaseDir, "appengine-java-sdk-${appengineVersion}")

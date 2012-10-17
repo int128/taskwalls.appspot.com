@@ -8,6 +8,10 @@ apply plugin: 'java'
 
 sourceCompatibility = 1.6
 
+ext {
+	sourceWebappDir = file('webapp')
+}
+
 configurations {
 	aptFactory
 }
@@ -83,5 +87,5 @@ task eclipseAptFactory(type: Sync) {
 task eclipseWebInfLib(type: Sync) {
 	description 'Prepares libraries to run DevAppServer.'
 	from configurations.runtime.files
-	into new File(projectDir, 'webapp/WEB-INF/lib')
+	into new File(project.ext.sourceWebappDir, 'WEB-INF/lib')
 }
