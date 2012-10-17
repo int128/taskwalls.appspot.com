@@ -16,7 +16,8 @@ for developers
 - Google App Engine Java SDK
 - JDK 6+
 - Eclipse 4+
-- Apache IvyDE
+- Gradle IDE plugin
+
 
 Architecture
 ------------
@@ -34,3 +35,24 @@ Server side:
 - Slim3
 - Google Tasks API
 - OAuth 2.0
+
+
+How to set up the project
+-------------------------
+Run the Gradle task 'eclipse' to prepare below:
+- APT factory library (slim3-gen)
+- webapp libraries
+
+In Eclipse, click [Run As]-[Gradle Build...] and choose task 'eclipse' there.
+
+
+How to start the development server
+-----------------------------------
+Use /DevAppServer.launch to start server.
+It requires App Engine SDK is placed at ${workspace_loc}/appengine-java-sdk-1.x.x
+
+
+How to deploy
+-------------
+Run the Gradle task 'deploy'
+It requires App Engine SDK is placed at ../appengine-java-sdk-1.x.x
